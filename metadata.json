@@ -1,0 +1,10 @@
+{
+  "name": "SLA & OLF Outbound Control Hub",
+  "description": "Integrated Outbound Control Panel tracking SLA, OLF, and performance armada with real-time spreadsheet updates and geolocation tracking.",
+  "requestFramePermissions": [
+    "geolocation"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
