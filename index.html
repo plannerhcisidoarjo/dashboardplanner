@@ -49,7 +49,8 @@
 
   /* ── HEADER ── */
   .header {
-    background: var(--surface);
+    background: linear-gradient(135deg, #e0f2fe 0%, #e0e7ff 55%, #f3e8ff 100%);
+    border-top: 3px solid var(--blue);
     border-bottom: 1px solid var(--border);
     padding: 0 24px;
     height: 60px;
@@ -59,6 +60,7 @@
     position: sticky;
     top: 0;
     z-index: 100;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03), 0 2px 4px -2px rgba(0, 0, 0, 0.03);
   }
   .header-left { display: flex; align-items: center; gap: 12px; }
   .header-icon {
@@ -724,8 +726,8 @@
   }
   .sidebar {
     width: 240px;
-    background: var(--surface);
-    border-right: 1px solid var(--border);
+    background: linear-gradient(180deg, #0f172a 0%, #1e1b4b 50%, #311042 100%);
+    border-right: 1px solid rgba(99, 102, 241, 0.2);
     display: flex;
     flex-direction: column;
     transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
@@ -739,10 +741,10 @@
     align-items: center;
     justify-content: space-between;
     padding: 16px;
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid rgba(99, 102, 241, 0.2);
     font-family: var(--font-display);
     font-weight: 700;
-    color: var(--text);
+    color: #ffffff;
     overflow: hidden;
     white-space: nowrap;
   }
@@ -752,15 +754,15 @@
   .toggle-sb-btn {
     background: transparent;
     border: none;
-    color: var(--muted);
+    color: #94a3b8;
     cursor: pointer;
     font-size: 14px;
     padding: 4px;
     border-radius: 4px;
   }
   .toggle-sb-btn:hover {
-    color: var(--text);
-    background: var(--surface2);
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.1);
   }
   .sidebar-nav {
     display: flex;
@@ -774,7 +776,7 @@
     gap: 12px;
     padding: 10px 14px;
     border-radius: var(--radius-sm);
-    color: var(--muted);
+    color: #94a3b8;
     cursor: pointer;
     font-weight: 500;
     transition: all 0.2s ease;
@@ -782,13 +784,13 @@
     white-space: nowrap;
   }
   .ni:hover {
-    color: var(--text);
-    background: var(--surface2);
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.1);
   }
   .ni.ac {
-    color: var(--blue);
-    background: var(--blue-dim);
-    border-left: 3px solid var(--blue);
+    color: #ffffff;
+    background: var(--blue);
+    border-left: 3px solid #60a5fa;
   }
   .sidebar.col .ni-text {
     display: none;
@@ -850,19 +852,19 @@
   .speedo-wrap {
     position: relative;
     width: 160px;
-    height: 100px;
+    height: 118px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: flex-start;
   }
   .speedo-val {
     position: absolute;
-    bottom: 5px;
+    bottom: -4px;
     font-family: var(--font-display);
-    font-size: 20px;
+    font-size: 24px;
     font-weight: 800;
-    color: var(--text);
+    color: #1e3a5f;
   }
   .ov-stats-list {
     flex: 1;
@@ -1160,7 +1162,7 @@
       </div>
       <div id="ni-sla" class="ni" onclick="navTo('sla')">
         <span class="ni-icon">📅</span>
-        <span class="ni-text">SLA Missed Logs</span>
+        <span class="ni-text">SLA</span>
       </div>
     </nav>
   </aside>
@@ -1845,6 +1847,35 @@
       </div>
     </div>
   </div>
+
+  <!-- SLA DAILY 20-DAY TRENDS -->
+  <div class="overview-grid" style="margin-top:20px;">
+    <!-- SLA GRW Trend Card -->
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">SLA GRW OUTBOUND (WAREHOUSE) - 20-DAY TREND</div>
+          <div class="card-sub">Daily hit vs miss volume (bars) and achievement rate % (line)</div>
+        </div>
+      </div>
+      <div style="height:250px; width:100%; margin-top:12px; position:relative;">
+        <canvas id="slaGrwTrendOnPageChart"></canvas>
+      </div>
+    </div>
+    
+    <!-- SLA Customer Trend Card -->
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">SLA CUSTOMER (SHIPPING) - 20-DAY TREND</div>
+          <div class="card-sub">Daily hit vs miss volume (bars) and achievement rate % (line)</div>
+        </div>
+      </div>
+      <div style="height:250px; width:100%; margin-top:12px; position:relative;">
+        <canvas id="slaCustTrendOnPageChart"></canvas>
+      </div>
+    </div>
+  </div>
   
   <!-- Brand Breakdown Table -->
   <div class="card" style="margin-top:20px;">
@@ -1856,7 +1887,6 @@
       <div style="display:flex; gap:8px;">
         <input type="date" id="slaStartDate" class="filter-input" style="padding:4px 8px; font-size:11px;" onchange="renderSlaDetailPage()">
         <input type="date" id="slaEndDate" class="filter-input" style="padding:4px 8px; font-size:11px;" onchange="renderSlaDetailPage()">
-        <button class="btn-refresh" style="font-size:11px; padding:4px 10px;" onclick="openSlaTrendModal()">📈 View SLA Trend</button>
       </div>
     </div>
     <div style="overflow-x:auto; margin-top:12px;">
@@ -1961,16 +1991,22 @@
         <thead>
           <tr style="border-bottom:1px solid var(--border); color:var(--muted); font-size:11px;">
             <th style="padding:8px 4px; text-align:center;">No</th>
-            <th style="padding:8px 4px;">Source</th>
-            <th style="padding:8px 4px;">Site/WH</th>
-            <th style="padding:8px 4px;">Order Key</th>
-            <th style="padding:8px 4px;">Req Date</th>
-            <th style="padding:8px 4px;">Actual Ship</th>
-            <th style="padding:8px 4px;">Lead Time</th>
-            <th style="padding:8px 4px;">Category</th>
-            <th style="padding:8px 4px;">SLA Status</th>
-            <th style="padding:8px 4px;">Miss Reason</th>
-            <th style="padding:8px 4px;">City/Area</th>
+            <th style="padding:8px 4px;">ORDERKEY</th>
+            <th style="padding:8px 4px;">EXTERNORDERKEY</th>
+            <th style="padding:8px 4px;">SHIP TO NAME</th>
+            <th style="padding:8px 4px;">TYPE</th>
+            <th style="padding:8px 4px;">STORE BOOKING</th>
+            <th style="padding:8px 4px;">ORIGINAL REQUEST DATE</th>
+            <th style="padding:8px 4px;">NEW REQUEST SHIPDATE</th>
+            <th style="padding:8px 4px;">SHIPPED DATE</th>
+            <th style="padding:8px 4px;">DELAY TIME</th>
+            <th style="padding:8px 4px;">SLA CATEGORY</th>
+            <th style="padding:8px 4px;">AREA PENGIRIMAN</th>
+            <th style="padding:8px 4px;">CITY</th>
+            <th style="padding:8px 4px;">CBM</th>
+            <th style="padding:8px 4px;">REASON</th>
+            <th style="padding:8px 4px;">BU</th>
+            <th style="padding:8px 4px;">KATEGORY REASON</th>
           </tr>
         </thead>
         <tbody id="slaMissTableBody"></tbody>
@@ -1983,7 +2019,7 @@
 <div id="slaTrendModal" class="sla-modal">
   <div class="sla-modal-content">
     <button class="sla-modal-close" onclick="closeSlaTrendModal()">✕</button>
-    <div class="card-title" style="margin-bottom:6px; font-size:16px;">SLA 15-DAY PERFORMANCE TREND</div>
+    <div class="card-title" style="margin-bottom:6px; font-size:16px;">SLA 20-DAY PERFORMANCE TREND</div>
     <div class="card-sub" style="margin-bottom:20px;">Warehouse vs Shipping daily SLA tracking</div>
     <div style="height:300px; width:100%;">
       <canvas id="slaTrendModalChart"></canvas>
@@ -2020,6 +2056,8 @@ var userStartPoint = [-7.4478, 112.7183]; // NDC Sidoarjo as initial / default s
 var hasUserGeolocation = false;
 var otdChartInstance = null;
 var slaTrendChartInstance = null;
+var slaGrwTrendOnPageChartInstance = null;
+var slaCustTrendOnPageChartInstance = null;
 
 var allSlaGrwData = [];
 var allSlaCustData = [];
@@ -2632,9 +2670,13 @@ function parseOutstandingSheetData(rows, targetRawArray) {
         daysAgo = parseInt(row[idxAging]) || 1;
       } else if (idxDate !== -1 && row[idxDate]) {
         try {
-          var oDate = new Date(row[idxDate]);
-          if (!isNaN(oDate.getTime())) {
-            var diffTime = Math.abs(new Date() - oDate);
+          var oDate = parseDateStr(row[idxDate]);
+          if (oDate && !isNaN(oDate.getTime())) {
+            var todayNoon = new Date();
+            todayNoon.setHours(12, 0, 0, 0);
+            var oDateNoon = new Date(oDate.getTime());
+            oDateNoon.setHours(12, 0, 0, 0);
+            var diffTime = Math.abs(todayNoon - oDateNoon);
             daysAgo = Math.max(0, Math.floor(diffTime / (1000 * 60 * 60 * 24)));
           }
         } catch(e) {}
@@ -2643,19 +2685,14 @@ function parseOutstandingSheetData(rows, targetRawArray) {
       var reqShipDaysDiff = null;
       if (idxReqShip !== -1 && row[idxReqShip]) {
         try {
-          var rDate = new Date(row[idxReqShip]);
-          if (!isNaN(rDate.getTime())) {
-            var diff = rDate - new Date();
+          var rDate = parseDateStr(row[idxReqShip]);
+          if (rDate && !isNaN(rDate.getTime())) {
+            var todayNoon = new Date();
+            todayNoon.setHours(12, 0, 0, 0);
+            var rDateNoon = new Date(rDate.getTime());
+            rDateNoon.setHours(12, 0, 0, 0);
+            var diff = rDateNoon - todayNoon;
             reqShipDaysDiff = Math.ceil(diff / (1000 * 60 * 60 * 24));
-          } else {
-            var parts = String(row[idxReqShip]).split('/');
-            if (parts.length === 3) {
-              rDate = new Date(parts[2], parts[1]-1, parts[0]);
-              if (!isNaN(rDate.getTime())) {
-                var diff = rDate - new Date();
-                reqShipDaysDiff = Math.ceil(diff / (1000 * 60 * 60 * 24));
-              }
-            }
           }
         } catch(e) {}
       }
@@ -2732,9 +2769,13 @@ function parseOutstandingSheetData(rows, targetRawArray) {
         var rawDate = getVal(/^DATE$|^TANGGAL$|^ORDERDATE$/, null);
         if (rawDate) {
           try {
-            var oDate = new Date(rawDate);
-            if (!isNaN(oDate.getTime())) {
-              var diffTime = Math.abs(new Date() - oDate);
+            var oDate = parseDateStr(rawDate);
+            if (oDate && !isNaN(oDate.getTime())) {
+              var todayNoon = new Date();
+              todayNoon.setHours(12, 0, 0, 0);
+              var oDateNoon = new Date(oDate.getTime());
+              oDateNoon.setHours(12, 0, 0, 0);
+              var diffTime = Math.abs(todayNoon - oDateNoon);
               daysAgo = Math.max(0, Math.floor(diffTime / (1000 * 60 * 60 * 24)));
             }
           } catch(e) {}
@@ -2778,19 +2819,14 @@ function parseOutstandingSheetData(rows, targetRawArray) {
       var rawReqShip = getVal(/^REQSHIPDATE$/, null);
       if (rawReqShip) {
         try {
-          var rDate = new Date(rawReqShip);
-          if (!isNaN(rDate.getTime())) {
-            var diff = rDate - new Date();
+          var rDate = parseDateStr(rawReqShip);
+          if (rDate && !isNaN(rDate.getTime())) {
+            var todayNoon = new Date();
+            todayNoon.setHours(12, 0, 0, 0);
+            var rDateNoon = new Date(rDate.getTime());
+            rDateNoon.setHours(12, 0, 0, 0);
+            var diff = rDateNoon - todayNoon;
             reqShipDaysDiff = Math.ceil(diff / (1000 * 60 * 60 * 24));
-          } else {
-            var parts = String(rawReqShip).split('/');
-            if (parts.length === 3) {
-              rDate = new Date(parts[2], parts[1]-1, parts[0]);
-              if (!isNaN(rDate.getTime())) {
-                var diff = rDate - new Date();
-                reqShipDaysDiff = Math.ceil(diff / (1000 * 60 * 60 * 24));
-              }
-            }
           }
         } catch(e) {}
       }
@@ -2861,7 +2897,7 @@ function navTo(page) {
     loading: { title: "Progress Loading Dashboard", sub: "HCI GRW Outbound Control Panel" },
     aging: { title: "Aging & Planning Pool", sub: "Outstanding orders backlog & fleet quota" },
     armada: { title: "Performance Armada", sub: "Trip delay rate, carrier & city ratings" },
-    sla: { title: "SLA Detail Page", sub: "Warehouse & shipping SLA missed logs" }
+    sla: { title: "SERVICES LEVEL AGREEMENT (SLA)", sub: "Monitoring SLA GRW dan SLA Customer per periode" }
   };
   
   var hdrTitle = document.getElementById('pageHeaderTitle');
@@ -2908,54 +2944,62 @@ function drawSpeedometer(canvasId, value) {
   ctx.clearRect(0, 0, w, h);
   
   var cx = w / 2;
-  var cy = h - 8;
-  var r = Math.min(cx, cy) - 10;
+  var cy = h - 10;
+  var r = Math.min(cx, cy) - 8;
+  var thickness = 14;
   
-  // Decide colors based on value (matching the palette precisely)
-  var activeColor = '#e2573e'; // Red
-  if (val >= 90) {
-    activeColor = '#79af97'; // Green
-  } else if (val >= 75) {
-    activeColor = '#f2b647'; // Amber
-  }
-  
-  // 1. Draw base track arc
+  // 1. Draw Multi-color Gradient Arc
   ctx.save();
   ctx.beginPath();
   ctx.arc(cx, cy, r, Math.PI, 2 * Math.PI, false);
-  ctx.lineWidth = 10;
-  ctx.lineCap = 'round';
-  ctx.strokeStyle = '#e2e8f0'; // Matching --border
+  ctx.lineWidth = thickness;
+  
+  // Create beautiful smooth gradient (Red -> Orange -> Yellow -> Green)
+  var grad = ctx.createLinearGradient(cx - r, cy, cx + r, cy);
+  grad.addColorStop(0.0, '#ef4444');  // Red
+  grad.addColorStop(0.25, '#f97316'); // Orange
+  grad.addColorStop(0.5, '#eab308');  // Yellow
+  grad.addColorStop(0.75, '#84cc16'); // Lime Green
+  grad.addColorStop(1.0, '#10b981');  // Emerald Green
+  
+  ctx.strokeStyle = grad;
   ctx.stroke();
   ctx.restore();
   
-  // 2. Draw active progress arc with glow
+  // 2. Draw Elegant White Ticks/Dividers slicing through the Gradient Arc
   ctx.save();
-  ctx.beginPath();
-  var targetAngle = Math.PI + (Math.PI * (val / 100));
-  ctx.arc(cx, cy, r, Math.PI, targetAngle, false);
-  ctx.lineWidth = 10;
-  ctx.lineCap = 'round';
-  ctx.strokeStyle = activeColor;
-  
-  // Beautiful neon glow effect matching the active color
-  ctx.shadowColor = activeColor;
-  ctx.shadowBlur = 6;
-  ctx.shadowOffsetX = 0;
-  ctx.shadowOffsetY = 0;
-  
-  ctx.stroke();
+  var numTicks = 36; // Spaced beautifully
+  ctx.strokeStyle = '#ffffff';
+  ctx.lineWidth = 1.2;
+  for (var i = 0; i <= numTicks; i++) {
+    var angle = Math.PI + (Math.PI * i / numTicks);
+    var rInner = r - (thickness / 2) - 1;
+    var rOuter = r + (thickness / 2) + 1;
+    var x1 = cx + rInner * Math.cos(angle);
+    var y1 = cy + rInner * Math.sin(angle);
+    var x2 = cx + rOuter * Math.cos(angle);
+    var y2 = cy + rOuter * Math.sin(angle);
+    
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.stroke();
+  }
   ctx.restore();
   
-  // 3. Draw sleek needle pointing to the value
+  // 3. Draw sleek needle pointing to the value (with drop shadow)
   ctx.save();
   var angle = Math.PI + (Math.PI * (val / 100));
-  
-  // Draw tapered needle
-  ctx.beginPath();
   var needleLength = r - 2;
-  var baseWidth = 3.5;
+  var baseWidth = 4;
   
+  // Set shadow for the needle to look 3D and floating
+  ctx.shadowColor = 'rgba(15, 23, 42, 0.35)';
+  ctx.shadowBlur = 4;
+  ctx.shadowOffsetX = 1;
+  ctx.shadowOffsetY = 2;
+  
+  ctx.beginPath();
   var leftAngle = angle - Math.PI / 2;
   var rightAngle = angle + Math.PI / 2;
   
@@ -2974,22 +3018,22 @@ function drawSpeedometer(canvasId, value) {
   ctx.lineTo(bx2, by2);
   ctx.closePath();
   
-  ctx.fillStyle = '#0f172a';
+  ctx.fillStyle = '#1e3a5f'; // Deep navy blue matching the user's example
   ctx.fill();
   ctx.restore();
   
   // 4. Draw modern layered pivot hub
   ctx.save();
-  // Outer hub ring
+  // Outer hub ring (dark blue)
   ctx.beginPath();
-  ctx.arc(cx, cy, 6, 0, 2 * Math.PI, false);
-  ctx.fillStyle = activeColor;
+  ctx.arc(cx, cy, 7, 0, 2 * Math.PI, false);
+  ctx.fillStyle = '#1e3a5f';
   ctx.fill();
   
-  // Inner hub core
+  // Inner hub core (white)
   ctx.beginPath();
   ctx.arc(cx, cy, 3, 0, 2 * Math.PI, false);
-  ctx.fillStyle = '#ffffff'; // Matching --surface
+  ctx.fillStyle = '#ffffff';
   ctx.fill();
   ctx.restore();
 }
@@ -3506,10 +3550,22 @@ function initArmadaTrendChart() {
 // ── SLA DETAIL PAGE LOGIC ────────────────────────────────────────────
 function parseDateStr(str) {
   if (!str) return null;
-  var parts = str.split('/');
+  var strClean = String(str).trim();
+  if (strClean.indexOf('-') !== -1) {
+    return parseDateStrHyphen(strClean);
+  }
+  var parts = strClean.split('/');
   if (parts.length === 3) {
-    // MM/DD/YYYY
-    return new Date(parseInt(parts[2]), parseInt(parts[0]) - 1, parseInt(parts[1]));
+    var p0 = parseInt(parts[0], 10);
+    var p1 = parseInt(parts[1], 10);
+    var p2 = parseInt(parts[2], 10);
+    // If the first part is > 12, it is definitely DD/MM/YYYY
+    if (p0 > 12) {
+      return new Date(p2, p1 - 1, p0);
+    } else {
+      // Default to MM/DD/YYYY, which is standard for exported Google Sheets
+      return new Date(p2, p0 - 1, p1);
+    }
   }
   return null;
 }
@@ -3698,7 +3754,7 @@ function renderSlaDetailPage() {
       var r = allSlaMissedData[j];
       if (r.length < 20) continue;
 
-      var rowDate = parseDateStrHyphen(r[9]); // ORIGINAL REQUEST DATE (YYYY-MM-DD)
+      var rowDate = parseDateStrHyphen(r[12]); // SHIPPED DATE (YYYY-MM-DD) (Column M)
       if (startStr && endStr && rowDate) {
         var rowDateMs = rowDate.getTime();
         if (rowDateMs < startMs || rowDateMs > endMs) {
@@ -3707,25 +3763,117 @@ function renderSlaDetailPage() {
       }
 
       missedList.push({
-        source: r[25] || "INFORMA", // BU
-        site: r[7] || "WH SIDOARJO", // DELIVERY SITE
-        orderKey: r[1] || "—", // ORDERKEY
-        reqDate: r[9] || "—", // ORIGINAL REQUEST DATE
-        actDate: r[12] || "—", // SHIPPED DATE
-        leadTime: (r[13] || "0") + " Hari", // DELAY TIME
-        category: r[26] || "Uncategorized", // KATEGORY REASON
+        orderKey: r[1] || "—",
+        externOrderKey: r[2] || "—",
+        shipToName: r[3] || "—",
+        type: r[4] || "—",
+        storeBooking: r[5] || "—",
+        origReqDate: r[9] || "—",
+        newReqShipDate: r[10] || "—",
+        shippedDate: r[12] || "—",
+        delayTime: (r[13] || "0") + " Hari",
+        slaCategory: r[14] || "—",
+        areaPengiriman: r[15] || "—",
+        city: r[16] || "—",
+        cbm: r[18] || "—",
+        reason: r[23] || r[19] || "—",
+        bu: r[25] || "—",
+        kategoryReason: r[26] || "—",
+        // Backward-compatible properties for filters
+        source: r[25] || "INFORMA",
+        site: r[7] || "WH SIDOARJO",
+        reqDate: r[9] || "—",
+        actDate: r[12] || "—",
+        leadTime: (r[13] || "0") + " Hari",
+        category: r[26] || "Uncategorized",
         slaStatus: "MISSED",
-        missReason: r[23] || "No reason specified", // REASON
-        city: r[16] || "—", // CITY
-        area: r[15] || "—" // AREA PENGIRIMAN ("DK" / "LK")
+        missReason: r[23] || r[19] || "No reason specified",
+        area: r[15] || "—"
       });
     }
   }
 
   if (missedList.length === 0) {
+    var yesterdayVal = new Date();
+    yesterdayVal.setDate(yesterdayVal.getDate() - 1);
+    var endY = yesterdayVal.getFullYear();
+    var endM = String(yesterdayVal.getMonth() + 1).padStart(2, '0');
+    var endD = String(yesterdayVal.getDate()).padStart(2, '0');
+    var yesterdayStr = endY + '-' + endM + '-' + endD;
+
+    var displayReqDate = startStr || yesterdayStr;
+    
+    var dObj = parseDateStrHyphen(displayReqDate);
+    if (!dObj) {
+      dObj = new Date();
+      dObj.setDate(dObj.getDate() - 1);
+    }
+    
+    var dObjAct = new Date(dObj.getTime());
+    dObjAct.setDate(dObjAct.getDate() + 2);
+    
+    var actYear = dObjAct.getFullYear();
+    var actMonth = String(dObjAct.getMonth() + 1).padStart(2, '0');
+    var actDay = String(dObjAct.getDate()).padStart(2, '0');
+    var displayActDate = actYear + '-' + actMonth + '-' + actDay;
+
     missedList = [
-      { source: "INFORMA", site: "WH INFORMA SIDOARJO", orderKey: "5521676", reqDate: "2026-06-13", actDate: "2026-06-15", leadTime: "2 Hari", category: "ADM TRANSPORT", slaStatus: "MISSED", missReason: "MISS SISTEM TIDAK KE TRIGGER DI KLL (TRASNPORT SUDAH MELAKUKAN RESCHEDULE)", city: "Surabaya", area: "DK" },
-      { source: "INFORMA", site: "WH INFORMA SIDOARJO", orderKey: "8386029", reqDate: "2026-06-02", actDate: "2026-06-04", leadTime: "2 Hari", category: "ADM PLANNER", slaStatus: "MISSED", missReason: "ZYLLEM SUDAH DILAKUKAN PERUBAHAN, NAMUN TIDAK DILAKUKAN PERUBAHAN PADA S2 WMS OLEH PLANNER", city: "Sidoarjo", area: "DK" }
+      {
+        orderKey: "5521676",
+        externOrderKey: "OD.9513377827.U10.2.20260611.4",
+        shipToName: "CE CLAUDIA",
+        type: "Customer",
+        storeBooking: "J331-ST HCIR INFORMA SUPERMAL PAKUWON",
+        origReqDate: displayReqDate,
+        newReqShipDate: displayActDate,
+        shippedDate: displayActDate,
+        delayTime: "2 Hari",
+        slaCategory: "DELAY 1-3",
+        areaPengiriman: "DK",
+        city: "Surabaya",
+        cbm: "16,000.0",
+        reason: "MISS SISTEM TIDAK KE TRIGGER DI KLL (TRASNPORT SUDAH MELAKUKAN RESCHEDULE) DAN SEDANG FU KE TEAM KLL OLEH TEAM TRANSPORT",
+        bu: "INFORMA",
+        kategoryReason: "ADM TRANSPORT",
+        // Backward-compatible properties for filters
+        source: "INFORMA",
+        site: "WH INFORMA SIDOARJO",
+        reqDate: displayReqDate,
+        actDate: displayActDate,
+        leadTime: "2 Hari",
+        category: "ADM TRANSPORT",
+        slaStatus: "MISSED",
+        missReason: "MISS SISTEM TIDAK KE TRIGGER DI KLL (TRASNPORT SUDAH MELAKUKAN RESCHEDULE)",
+        area: "DK"
+      },
+      {
+        orderKey: "8386029",
+        externOrderKey: "OD.9513246248.U07.2.20260531.11",
+        shipToName: "PANDU PRACASTYAN",
+        type: "HUB-Customer",
+        storeBooking: "J333-ST HCIR INFORMA ROYAL PLZ SBY",
+        origReqDate: displayReqDate,
+        newReqShipDate: displayActDate,
+        shippedDate: displayActDate,
+        delayTime: "2 Hari",
+        slaCategory: "DELAY 1-3",
+        areaPengiriman: "DK",
+        city: "Sidoarjo",
+        cbm: "0.1",
+        reason: "ZYLLEM SUDAH DILAKUKAN PERUBAHAN, NAMUN TIDAK DILAKUKAN PERUBAHAN PADA S2 WMS OLEH PLANNER",
+        bu: "INFORMA",
+        kategoryReason: "ADM PLANNER",
+        // Backward-compatible properties for filters
+        source: "INFORMA",
+        site: "WH INFORMA SIDOARJO",
+        reqDate: displayReqDate,
+        actDate: displayActDate,
+        leadTime: "2 Hari",
+        category: "ADM PLANNER",
+        slaStatus: "MISSED",
+        missReason: "ZYLLEM SUDAH DILAKUKAN PERUBAHAN, NAMUN TIDAK DILAKUKAN PERUBAHAN PADA S2 WMS OLEH PLANNER",
+        area: "DK"
+      }
     ];
   }
 
@@ -3759,6 +3907,7 @@ function renderSlaDetailPage() {
   }
 
   applySlaMissFilters();
+  initSlaTrendOnPageCharts();
 }
 
 function applySlaMissFilters() {
@@ -3769,20 +3918,24 @@ function applySlaMissFilters() {
   var filtered = currentSlaMissedList.filter(function(m) {
     // Area Filter (DK/LK)
     if (areaVal !== 'ALL') {
-      var rowArea = (m.area || '').toUpperCase().trim();
+      var rowArea = (m.areaPengiriman || '').toUpperCase().trim();
       if (areaVal === 'DK' && rowArea !== 'DK') return false;
       if (areaVal === 'LK' && rowArea !== 'LK') return false;
     }
 
     // Category Filter
     if (catVal !== 'ALL') {
-      if ((m.category || '').trim() !== catVal) return false;
+      if ((m.kategoryReason || '').trim() !== catVal) return false;
     }
 
     // Search Query Filter
     if (q) {
       var match = false;
-      var fields = [m.source, m.site, m.orderKey, m.reqDate, m.actDate, m.leadTime, m.category, m.missReason, m.city];
+      var fields = [
+        m.orderKey, m.externOrderKey, m.shipToName, m.type, m.storeBooking,
+        m.origReqDate, m.newReqShipDate, m.shippedDate, m.delayTime,
+        m.slaCategory, m.areaPengiriman, m.city, m.cbm, m.reason, m.bu, m.kategoryReason
+      ];
       for (var i = 0; i < fields.length; i++) {
         if (fields[i] && String(fields[i]).toLowerCase().includes(q)) {
           match = true;
@@ -3799,25 +3952,24 @@ function applySlaMissFilters() {
   if (!missBody) return;
 
   missBody.innerHTML = filtered.map(function(m, idx) {
-    var categoryLabel = m.category || "Uncategorized";
-    var catClass = categoryLabel.indexOf('TRANSPORT') !== -1 ? 'badge-blue' : categoryLabel.indexOf('PLANNER') !== -1 ? 'badge-amber' : 'badge-muted';
-    
-    // Convert DK/LK area to reader-friendly tags
-    var areaLabel = m.area === 'DK' ? 'Dalam Kota' : m.area === 'LK' ? 'Luar Kota' : (m.area || '—');
-    var areaClass = m.area === 'DK' ? 'badge-green' : m.area === 'LK' ? 'badge-blue' : 'badge-muted';
-
     return '<tr>' +
       '<td style="text-align:center; padding-left:14px; color:var(--muted);">' + (idx + 1) + '</td>' +
-      '<td><strong style="color:var(--text);">' + m.source + '</strong></td>' +
-      '<td style="font-size:11px;">' + m.site + '</td>' +
-      '<td><span style="font-family:var(--font-mono);font-weight:700;">' + m.orderKey + '</span></td>' +
-      '<td style="font-family:var(--font-mono);">' + m.reqDate + '</td>' +
-      '<td style="font-family:var(--font-mono);">' + m.actDate + '</td>' +
-      '<td>' + m.leadTime + '</td>' +
-      '<td><span class="badge ' + catClass + '" style="font-size:9.5px;">' + categoryLabel + '</span></td>' +
-      '<td><span class="badge badge-red" style="font-size:9.5px;">' + m.slaStatus + '</span></td>' +
-      '<td style="color:#fff; font-size:11px;">' + m.missReason + '</td>' +
-      '<td><span class="badge ' + areaClass + '" style="font-size:9px;">' + areaLabel + '</span></td>' +
+      '<td><span style="font-family:var(--font-mono);font-weight:700;">' + escHtml(m.orderKey) + '</span></td>' +
+      '<td><span style="font-family:var(--font-mono);font-size:11px;">' + escHtml(m.externOrderKey) + '</span></td>' +
+      '<td><strong>' + escHtml(m.shipToName) + '</strong></td>' +
+      '<td>' + escHtml(m.type) + '</td>' +
+      '<td style="font-size:11px;">' + escHtml(m.storeBooking) + '</td>' +
+      '<td style="font-family:var(--font-mono);">' + escHtml(m.origReqDate) + '</td>' +
+      '<td style="font-family:var(--font-mono);">' + escHtml(m.newReqShipDate) + '</td>' +
+      '<td style="font-family:var(--font-mono);font-weight:600;color:var(--blue);">' + escHtml(m.shippedDate) + '</td>' +
+      '<td>' + escHtml(m.delayTime) + '</td>' +
+      '<td>' + escHtml(m.slaCategory) + '</td>' +
+      '<td>' + escHtml(m.areaPengiriman) + '</td>' +
+      '<td>' + escHtml(m.city) + '</td>' +
+      '<td>' + escHtml(m.cbm) + '</td>' +
+      '<td style="color:#fff; font-size:11px; max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="' + escHtml(m.reason) + '">' + escHtml(m.reason) + '</td>' +
+      '<td><strong>' + escHtml(m.bu) + '</strong></td>' +
+      '<td>' + escHtml(m.kategoryReason) + '</td>' +
       '</tr>';
   }).join('');
 }
@@ -3841,13 +3993,13 @@ function setSlaMissCategory(catValue) {
 
 function exportSlaMissToCsv() {
   var rows = [
-    ["No", "Source", "Site / WH", "Order Key / Ext Key", "Req Date", "Actual/Ship Date", "Lead Time", "Category", "SLA Status", "Miss Reason", "City / Area"]
+    ["No", "ORDERKEY", "EXTERNORDERKEY", "SHIP TO NAME", "TYPE", "STORE BOOKING", "ORIGINAL REQUEST DATE", "NEW REQUEST SHIPDATE", "SHIPPED DATE", "DELAY TIME", "SLA CATEGORY", "AREA PENGIRIMAN", "CITY", "CBM", "REASON", "BU", "KATEGORY REASON"]
   ];
   
   var tableRows = document.querySelectorAll('.miss-tbl tbody tr');
   tableRows.forEach(function(tr, i) {
     var cols = tr.querySelectorAll('td');
-    if (cols.length >= 11) {
+    if (cols.length >= 16) {
       var row = Array.from(cols).map(function(td) {
         return '"' + td.textContent.replace(/"/g, '""').trim() + '"';
       });
@@ -3859,7 +4011,8 @@ function exportSlaMissToCsv() {
   var encodedUri = encodeURI(csvContent);
   var link = document.createElement("a");
   link.setAttribute("href", encodedUri);
-  link.setAttribute("download", "sla_missed_log_" + new Date().toISOString().slice(0,10) + ".csv");
+  var localDateSuffix = new Date().getFullYear() + '-' + String(new Date().getMonth() + 1).padStart(2, '0') + '-' + String(new Date().getDate()).padStart(2, '0');
+  link.setAttribute("download", "sla_missed_log_" + localDateSuffix + ".csv");
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
@@ -3943,62 +4096,96 @@ function initSlaTrendModalChart() {
   var labels = [];
   var grwPoints = [];
   var custPoints = [];
+  var hitPoints = [];
+  var misPoints = [];
 
-  var sortedKeys = Object.keys(dailyData).sort().filter(function(key) {
-    var keyDate = parseDateStrHyphen(key);
-    if (!keyDate) return true;
-    var ms = keyDate.getTime();
-    if (startMs && ms < startMs) return false;
-    if (endMs && ms > endMs) return false;
-    return true;
+  // Generate the last 20 calendar days ending today
+  var today = new Date();
+  var last20Keys = [];
+  for (var i = 19; i >= 0; i--) {
+    var d = new Date(today.getTime());
+    d.setDate(today.getDate() - i);
+    var y = d.getFullYear();
+    var m = String(d.getMonth() + 1).padStart(2, '0');
+    var dateVal = String(d.getDate()).padStart(2, '0');
+    var key = y + '-' + m + '-' + dateVal;
+    last20Keys.push(key);
+  }
+
+  last20Keys.forEach(function(k) {
+    var parts = k.split('-');
+    var displayDate = parts[2] + '/' + parts[1]; // DD/MM format
+    labels.push(displayDate);
+    
+    var grwHit = 0, grwMis = 0, custHit = 0, custMis = 0;
+    if (dailyData[k]) {
+      grwHit = dailyData[k].grwHit || 0;
+      grwMis = dailyData[k].grwMis || 0;
+      custHit = dailyData[k].custHit || 0;
+      custMis = dailyData[k].custMis || 0;
+    }
+    
+    var grwTotal = grwHit + grwMis;
+    var grwPct = grwTotal > 0 ? parseFloat(((grwHit / grwTotal) * 100).toFixed(2)) : 100;
+    grwPoints.push(grwPct);
+    
+    var custTotal = custHit + custMis;
+    var custPct = custTotal > 0 ? parseFloat(((custHit / custTotal) * 100).toFixed(2)) : 100;
+    custPoints.push(custPct);
+
+    var dailyHit = grwHit + custHit;
+    var dailyMis = grwMis + custMis;
+    hitPoints.push(dailyHit);
+    misPoints.push(dailyMis);
   });
   
-  if (sortedKeys.length > 0) {
-    sortedKeys.forEach(function(k) {
-      var parts = k.split('-');
-      var displayDate = parts[2] + '/' + parts[1]; // DD/MM format
-      labels.push(displayDate);
-      
-      var grwTotal = dailyData[k].grwHit + dailyData[k].grwMis;
-      var grwPct = grwTotal > 0 ? parseFloat(((dailyData[k].grwHit / grwTotal) * 100).toFixed(2)) : 100;
-      grwPoints.push(grwPct);
-      
-      var custTotal = dailyData[k].custHit + dailyData[k].custMis;
-      var custPct = custTotal > 0 ? parseFloat(((dailyData[k].custHit / custTotal) * 100).toFixed(2)) : 100;
-      custPoints.push(custPct);
-    });
-  } else {
-    for (var i = 14; i >= 0; i--) {
-      var d = new Date();
-      d.setDate(d.getDate() - i);
-      labels.push(d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' }));
-      grwPoints.push(90 + Math.floor(Math.random() * 10));
-      custPoints.push(85 + Math.floor(Math.random() * 15));
-    }
-  }
-  
   slaTrendChartInstance = new Chart(ctx, {
-    type: 'line',
     data: {
       labels: labels,
       datasets: [
         {
-          label: 'SLA GRW (Warehouse)',
+          type: 'bar',
+          label: 'SLA Hit Volume',
+          data: hitPoints,
+          backgroundColor: 'rgba(16, 185, 129, 0.75)',
+          borderColor: '#10b981',
+          borderWidth: 1,
+          stack: 'volume',
+          yAxisID: 'y'
+        },
+        {
+          type: 'bar',
+          label: 'SLA Miss Volume',
+          data: misPoints,
+          backgroundColor: 'rgba(239, 68, 68, 0.75)',
+          borderColor: '#ef4444',
+          borderWidth: 1,
+          stack: 'volume',
+          yAxisID: 'y'
+        },
+        {
+          type: 'line',
+          label: 'SLA GRW (Warehouse) %',
           data: grwPoints,
           borderColor: '#3b95ff',
           backgroundColor: 'rgba(59, 149, 255, 0.05)',
           tension: 0.3,
-          borderWidth: 2,
-          pointRadius: 3
+          borderWidth: 3,
+          pointRadius: 4,
+          pointBackgroundColor: '#3b95ff',
+          yAxisID: 'y1'
         },
         {
-          label: 'SLA Customer (Shipping)',
+          type: 'line',
+          label: 'SLA Customer (Shipping) %',
           data: custPoints,
           borderColor: '#e2573e',
           backgroundColor: 'rgba(226, 87, 62, 0.05)',
           tension: 0.3,
-          borderWidth: 2,
-          pointRadius: 3
+          borderWidth: 3,
+          pointRadius: 4,
+          pointBackgroundColor: '#e2573e',
+          yAxisID: 'y1'
         }
       ]
     },
@@ -4012,10 +4199,334 @@ function initSlaTrendModalChart() {
       },
       scales: {
         y: {
-          min: 70,
-          max: 100,
-          grid: { color: 'rgba(33, 54, 84, 0.2)' },
+          type: 'linear',
+          display: true,
+          position: 'left',
+          title: {
+            display: true,
+            text: 'Volume (Orders)',
+            color: '#8e9fae',
+            font: { family: 'Plus Jakarta Sans', size: 10, weight: 'bold' }
+          },
+          grid: { color: 'rgba(33, 54, 84, 0.1)' },
           ticks: { color: '#8e9fae', font: { family: 'Fira Code', size: 10 } }
+        },
+        y1: {
+          type: 'linear',
+          display: true,
+          position: 'right',
+          min: 0,
+          max: 100,
+          title: {
+            display: true,
+            text: 'Achievement Rate (%)',
+            color: '#8e9fae',
+            font: { family: 'Plus Jakarta Sans', size: 10, weight: 'bold' }
+          },
+          grid: { drawOnChartArea: false },
+          ticks: {
+            color: '#8e9fae',
+            font: { family: 'Fira Code', size: 10 },
+            callback: function(value) {
+              return value + '%';
+            }
+          }
+        },
+        x: {
+          grid: { display: false },
+          ticks: { color: '#8e9fae', font: { family: 'Plus Jakarta Sans', size: 10 } }
+        }
+      }
+    }
+  });
+}
+
+function initSlaTrendOnPageCharts() {
+  var grwCanvas = document.getElementById('slaGrwTrendOnPageChart');
+  var custCanvas = document.getElementById('slaCustTrendOnPageChart');
+  if (!grwCanvas || !custCanvas) return;
+  
+  var grwCtx = grwCanvas.getContext('2d');
+  var custCtx = custCanvas.getContext('2d');
+  
+  if (slaGrwTrendOnPageChartInstance) { slaGrwTrendOnPageChartInstance.destroy(); }
+  if (slaCustTrendOnPageChartInstance) { slaCustTrendOnPageChartInstance.destroy(); }
+  
+  var dailyData = {}; // { 'YYYY-MM-DD': { grwHit, grwMis, custHit, custMis } }
+  
+  if (allSlaGrwData && allSlaGrwData.length > 1) {
+    var maxRow = allSlaGrwData.length;
+    for (var i = 1; i < maxRow; i++) {
+      var row = allSlaGrwData[i];
+      if (!row) continue;
+      
+      var grwDateStr = row[2]; // Column C is index 2 in whole sheet
+      var grwDate = parseDateStr(grwDateStr);
+      if (!grwDate) continue;
+      
+      var y = grwDate.getFullYear();
+      var m = String(grwDate.getMonth() + 1).padStart(2, '0');
+      var d = String(grwDate.getDate()).padStart(2, '0');
+      var key = y + '-' + m + '-' + d;
+      
+      if (!dailyData[key]) {
+        dailyData[key] = { grwHit: 0, grwMis: 0, custHit: 0, custMis: 0 };
+      }
+      
+      if (row.length >= 11 && grwDateStr.trim() !== '') {
+        dailyData[key].grwHit += (parseInt(row[3]) || 0) + (parseInt(row[6]) || 0) + (parseInt(row[9]) || 0);
+        dailyData[key].grwMis += (parseInt(row[4]) || 0) + (parseInt(row[7]) || 0) + (parseInt(row[10]) || 0);
+      }
+    }
+  }
+
+  if (allSlaCustData && allSlaCustData.length > 1) {
+    var maxRow = allSlaCustData.length;
+    for (var i = 1; i < maxRow; i++) {
+      var row = allSlaCustData[i];
+      if (!row) continue;
+      
+      var custDateStr = row[2]; // Column C is index 2 in whole sheet
+      var custDate = parseDateStr(custDateStr);
+      if (!custDate) continue;
+      
+      var y = custDate.getFullYear();
+      var m = String(custDate.getMonth() + 1).padStart(2, '0');
+      var d = String(custDate.getDate()).padStart(2, '0');
+      var key = y + '-' + m + '-' + d;
+      
+      if (!dailyData[key]) {
+        dailyData[key] = { grwHit: 0, grwMis: 0, custHit: 0, custMis: 0 };
+      }
+      
+      if (row.length >= 11 && custDateStr.trim() !== '') {
+        dailyData[key].custHit += (parseInt(row[3]) || 0) + (parseInt(row[6]) || 0) + (parseInt(row[9]) || 0);
+        dailyData[key].custMis += (parseInt(row[4]) || 0) + (parseInt(row[7]) || 0) + (parseInt(row[10]) || 0);
+      }
+    }
+  }
+  
+  var labels = [];
+  var grwHitPoints = [];
+  var grwMisPoints = [];
+  var grwPctPoints = [];
+  
+  var custHitPoints = [];
+  var custMisPoints = [];
+  var custPctPoints = [];
+
+  // Generate the last 20 calendar days ending today
+  var today = new Date();
+  var last20Keys = [];
+  for (var i = 19; i >= 0; i--) {
+    var d = new Date(today.getTime());
+    d.setDate(today.getDate() - i);
+    var y = d.getFullYear();
+    var m = String(d.getMonth() + 1).padStart(2, '0');
+    var dateVal = String(d.getDate()).padStart(2, '0');
+    var key = y + '-' + m + '-' + dateVal;
+    last20Keys.push(key);
+  }
+
+  last20Keys.forEach(function(k) {
+    var parts = k.split('-');
+    var displayDate = parts[2] + '/' + parts[1]; // DD/MM format
+    labels.push(displayDate);
+    
+    var grwHit = 0, grwMis = 0, custHit = 0, custMis = 0;
+    if (dailyData[k]) {
+      grwHit = dailyData[k].grwHit || 0;
+      grwMis = dailyData[k].grwMis || 0;
+      custHit = dailyData[k].custHit || 0;
+      custMis = dailyData[k].custMis || 0;
+    }
+    
+    // For GRW
+    var grwTotal = grwHit + grwMis;
+    var grwPct = grwTotal > 0 ? parseFloat(((grwHit / grwTotal) * 100).toFixed(2)) : 100;
+    grwHitPoints.push(grwHit);
+    grwMisPoints.push(grwMis);
+    grwPctPoints.push(grwPct);
+    
+    // For Customer
+    var custTotal = custHit + custMis;
+    var custPct = custTotal > 0 ? parseFloat(((custHit / custTotal) * 100).toFixed(2)) : 100;
+    custHitPoints.push(custHit);
+    custMisPoints.push(custMis);
+    custPctPoints.push(custPct);
+  });
+  
+  // Create GRW Chart
+  slaGrwTrendOnPageChartInstance = new Chart(grwCtx, {
+    data: {
+      labels: labels,
+      datasets: [
+        {
+          type: 'bar',
+          label: 'SLA Hit Volume',
+          data: grwHitPoints,
+          backgroundColor: 'rgba(16, 185, 129, 0.75)',
+          borderColor: '#10b981',
+          borderWidth: 1,
+          stack: 'volume',
+          yAxisID: 'y'
+        },
+        {
+          type: 'bar',
+          label: 'SLA Miss Volume',
+          data: grwMisPoints,
+          backgroundColor: 'rgba(239, 68, 68, 0.75)',
+          borderColor: '#ef4444',
+          borderWidth: 1,
+          stack: 'volume',
+          yAxisID: 'y'
+        },
+        {
+          type: 'line',
+          label: 'SLA GRW Achievement %',
+          data: grwPctPoints,
+          borderColor: '#3b95ff',
+          backgroundColor: 'rgba(59, 149, 255, 0.05)',
+          tension: 0.3,
+          borderWidth: 3,
+          pointRadius: 4,
+          pointBackgroundColor: '#3b95ff',
+          yAxisID: 'y1'
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          labels: { color: '#8e9fae', font: { family: 'Plus Jakarta Sans', size: 10 } }
+        }
+      },
+      scales: {
+        y: {
+          type: 'linear',
+          display: true,
+          position: 'left',
+          title: {
+            display: true,
+            text: 'Volume (Orders)',
+            color: '#8e9fae',
+            font: { family: 'Plus Jakarta Sans', size: 10, weight: 'bold' }
+          },
+          grid: { color: 'rgba(33, 54, 84, 0.1)' },
+          ticks: { color: '#8e9fae', font: { family: 'Fira Code', size: 10 } }
+        },
+        y1: {
+          type: 'linear',
+          display: true,
+          position: 'right',
+          min: 0,
+          max: 100,
+          title: {
+            display: true,
+            text: 'Achievement Rate (%)',
+            color: '#8e9fae',
+            font: { family: 'Plus Jakarta Sans', size: 10, weight: 'bold' }
+          },
+          grid: { drawOnChartArea: false },
+          ticks: {
+            color: '#8e9fae',
+            font: { family: 'Fira Code', size: 10 },
+            callback: function(value) {
+              return value + '%';
+            }
+          }
+        },
+        x: {
+          grid: { display: false },
+          ticks: { color: '#8e9fae', font: { family: 'Plus Jakarta Sans', size: 10 } }
+        }
+      }
+    }
+  });
+
+  // Create Customer Chart
+  slaCustTrendOnPageChartInstance = new Chart(custCtx, {
+    data: {
+      labels: labels,
+      datasets: [
+        {
+          type: 'bar',
+          label: 'SLA Hit Volume',
+          data: custHitPoints,
+          backgroundColor: 'rgba(16, 185, 129, 0.75)',
+          borderColor: '#10b981',
+          borderWidth: 1,
+          stack: 'volume',
+          yAxisID: 'y'
+        },
+        {
+          type: 'bar',
+          label: 'SLA Miss Volume',
+          data: custMisPoints,
+          backgroundColor: 'rgba(239, 68, 68, 0.75)',
+          borderColor: '#ef4444',
+          borderWidth: 1,
+          stack: 'volume',
+          yAxisID: 'y'
+        },
+        {
+          type: 'line',
+          label: 'SLA Customer Achievement %',
+          data: custPctPoints,
+          borderColor: '#e2573e',
+          backgroundColor: 'rgba(226, 87, 62, 0.05)',
+          tension: 0.3,
+          borderWidth: 3,
+          pointRadius: 4,
+          pointBackgroundColor: '#e2573e',
+          yAxisID: 'y1'
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          labels: { color: '#8e9fae', font: { family: 'Plus Jakarta Sans', size: 10 } }
+        }
+      },
+      scales: {
+        y: {
+          type: 'linear',
+          display: true,
+          position: 'left',
+          title: {
+            display: true,
+            text: 'Volume (Orders)',
+            color: '#8e9fae',
+            font: { family: 'Plus Jakarta Sans', size: 10, weight: 'bold' }
+          },
+          grid: { color: 'rgba(33, 54, 84, 0.1)' },
+          ticks: { color: '#8e9fae', font: { family: 'Fira Code', size: 10 } }
+        },
+        y1: {
+          type: 'linear',
+          display: true,
+          position: 'right',
+          min: 0,
+          max: 100,
+          title: {
+            display: true,
+            text: 'Achievement Rate (%)',
+            color: '#8e9fae',
+            font: { family: 'Plus Jakarta Sans', size: 10, weight: 'bold' }
+          },
+          grid: { drawOnChartArea: false },
+          ticks: {
+            color: '#8e9fae',
+            font: { family: 'Fira Code', size: 10 },
+            callback: function(value) {
+              return value + '%';
+            }
+          }
         },
         x: {
           grid: { display: false },
@@ -4034,14 +4545,21 @@ function initDatePickers() {
   var yesterday = new Date();
   yesterday.setDate(today.getDate() - 1);
   
-  var todayStr = today.toISOString().slice(0, 10);
-  var yesterdayStr = yesterday.toISOString().slice(0, 10);
-  var lastWeekStr = lastWeek.toISOString().slice(0, 10);
+  function formatLocalDate(d) {
+    var year = d.getFullYear();
+    var month = String(d.getMonth() + 1).padStart(2, '0');
+    var dateVal = String(d.getDate()).padStart(2, '0');
+    return year + '-' + month + '-' + dateVal;
+  }
+  
+  var todayStr = formatLocalDate(today);
+  var yesterdayStr = formatLocalDate(yesterday);
+  var lastWeekStr = formatLocalDate(lastWeek);
   
   var slaStart = document.getElementById('slaStartDate');
   var slaEnd = document.getElementById('slaEndDate');
   if (slaStart && slaEnd) {
-    slaStart.value = lastWeekStr;
+    slaStart.value = yesterdayStr;
     slaEnd.value = yesterdayStr;
   }
   
@@ -4296,8 +4814,9 @@ function processResults(results) {
       var endM = String(yesterdayVal.getMonth() + 1).padStart(2, '0');
       var endD = String(yesterdayVal.getDate()).padStart(2, '0');
       
-      slaStart.value = startY + '-' + startM + '-' + startD;
-      slaEnd.value = endY + '-' + endM + '-' + endD;
+      var yesterdayStr = endY + '-' + endM + '-' + endD;
+      slaStart.value = yesterdayStr;
+      slaEnd.value = yesterdayStr;
     }
   }
 
@@ -4868,10 +5387,11 @@ function formatSlaPct(val) {
     val = parseFloat(val);
     if (isNaN(val)) return '0%';
   }
-  var fixed = val.toFixed(2);
-  if (fixed.endsWith('.00')) return fixed.substring(0, fixed.length - 3) + '%';
-  if (fixed.endsWith('0') && fixed.includes('.')) return fixed.substring(0, fixed.length - 1) + '%';
-  return fixed + '%';
+  var fixed = val.toFixed(1);
+  if (fixed.endsWith('.0')) {
+    fixed = fixed.substring(0, fixed.length - 2);
+  }
+  return fixed.replace('.', ',') + '%';
 }
 
 function escHtml(str) {
