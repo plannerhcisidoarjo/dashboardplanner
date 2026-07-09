@@ -1953,10 +1953,6 @@
       <div>
         <div class="card-title">SLA MISSED TRANSACTION LOGS</div>
         <div class="card-sub">Detailed audit trail of all orders missing the 95% threshold</div>
-        <div class="card-sub" style="margin-top: 6px; display: flex; align-items: center; gap: 6px; color: #ff8a65; font-size: 11px;">
-          <span>⚠️ Silakan buka spreadsheet detail keterlambatan (Delay) dari kolom N2 Sheet SLA CUSTOMER:</span>
-          <a id="slaMissedSourceLink" href="https://docs.google.com/spreadsheets/d/1PklbBrPhF8myX5ONshtYKzTT4WACMXsbViH1LdDXACU/edit?gid=0#gid=0" target="_blank" style="text-decoration: underline; font-weight: bold; color: #ff8a65;">Buka Spreadsheet Detail Delay (N2)</a>
-        </div>
       </div>
       <div style="display:flex; gap:12px; align-items: center; flex-wrap: wrap; width: 100%; margin-top: 10px; border-top: 1px solid var(--border); padding-top: 12px;">
         <!-- Area Toggle -->
@@ -1966,6 +1962,17 @@
             <button class="active" onclick="setSlaMissArea('ALL', this)">Semua</button>
             <button onclick="setSlaMissArea('DK', this)">Dalam Kota</button>
             <button onclick="setSlaMissArea('LK', this)">Luar Kota</button>
+          </div>
+        </div>
+
+        <div class="filter-divider" style="height: 24px;"></div>
+
+        <!-- Date Filter -->
+        <div class="filter-group">
+          <span class="filter-label">Tanggal (Shipped Date):</span>
+          <div style="display:flex; gap:8px;">
+            <input type="date" id="slaMissStartDate" class="filter-input" style="padding:4px 8px; font-size:11px;" onchange="applySlaMissFilters()">
+            <input type="date" id="slaMissEndDate" class="filter-input" style="padding:4px 8px; font-size:11px;" onchange="applySlaMissFilters()">
           </div>
         </div>
 
@@ -3754,13 +3761,7 @@ function renderSlaDetailPage() {
       var r = allSlaMissedData[j];
       if (r.length < 20) continue;
 
-      var rowDate = parseDateStrHyphen(r[12]); // SHIPPED DATE (YYYY-MM-DD) (Column M)
-      if (startStr && endStr && rowDate) {
-        var rowDateMs = rowDate.getTime();
-        if (rowDateMs < startMs || rowDateMs > endMs) {
-          continue;
-        }
-      }
+      // Date filtering logic removed; it will be handled by applySlaMissFilters()
 
       missedList.push({
         orderKey: r[1] || "—",
@@ -3791,11 +3792,6 @@ function renderSlaDetailPage() {
         area: r[15] || "—"
       });
     }
-  }
-
-  if (missedList.length === 0) {
-    missBody.innerHTML = "<tr><td colspan=\"16\" style=\"text-align:center; padding:20px; color:var(--muted);\">No SLA missed data for this date range.</td></tr>";
-    return;
   }
 
   currentSlaMissedList = missedList;
@@ -3836,7 +3832,24 @@ function applySlaMissFilters() {
   var catVal = slaMissCategoryFilter; // 'ALL' or specific category
   var q = document.getElementById('slaMissSearch') ? document.getElementById('slaMissSearch').value.toLowerCase().trim() : '';
 
+  var missStartStr = document.getElementById('slaMissStartDate') ? document.getElementById('slaMissStartDate').value : '';
+  var missEndStr = document.getElementById('slaMissEndDate') ? document.getElementById('slaMissEndDate').value : '';
+  var missStartMs = missStartStr ? parseDateStrHyphen(missStartStr).getTime() : null;
+  var missEndMs = missEndStr ? parseDateStrHyphen(missEndStr).getTime() : null;
+
   var filtered = currentSlaMissedList.filter(function(m) {
+    // Date filter (by shippedDate)
+    var mDate = parseDateStrHyphen(m.shippedDate);
+    if (mDate) {
+      var ms = mDate.getTime();
+      if (missStartMs && ms < missStartMs) return false;
+      if (missEndMs && ms > missEndMs) return false;
+    } else if (missStartMs || missEndMs) {
+      // If date is empty but filter is applied, exclude it? Or include it?
+      // Usually exclude
+      return false;
+    }
+
     // Area Filter (DK/LK)
     if (areaVal !== 'ALL') {
       var rowArea = (m.areaPengiriman || '').toUpperCase().trim();
@@ -3871,6 +3884,11 @@ function applySlaMissFilters() {
 
   var missBody = document.getElementById('slaMissTableBody');
   if (!missBody) return;
+
+  if (filtered.length === 0) {
+    missBody.innerHTML = '<tr><td colspan="17" style="text-align:center; padding:20px; color:var(--muted);">Tidak ada data yang sesuai dengan filter.</td></tr>';
+    return;
+  }
 
   missBody.innerHTML = filtered.map(function(m, idx) {
     return '<tr>' +
@@ -4653,23 +4671,11 @@ function loadData() {
             // Update source UI link dynamically
             var fullEditUrl = 'https://docs.google.com/spreadsheets/d/' + spreadsheetId + '/edit';
             if (gid) fullEditUrl += '?gid=' + gid;
-            var linkEl = document.getElementById('slaMissedSourceLink');
-            if (linkEl) {
-              linkEl.href = fullEditUrl;
-              linkEl.textContent = 'Spreadsheet Detail Delay (N2)';
-            }
           }
         }
       }
 
       var finalSlaMissedUrl = targetUrl || 'https://docs.google.com/spreadsheets/d/1PklbBrPhF8myX5ONshtYKzTT4WACMXsbViH1LdDXACU/gviz/tq?tqx=out:csv&gid=0';
-      if (!targetUrl) {
-        var linkEl = document.getElementById('slaMissedSourceLink');
-        if (linkEl) {
-          linkEl.href = 'https://docs.google.com/spreadsheets/d/1PklbBrPhF8myX5ONshtYKzTT4WACMXsbViH1LdDXACU/edit?gid=0';
-          linkEl.textContent = 'Spreadsheet Detail Delay (Default)';
-        }
-      }
 
       Papa.parse(finalSlaMissedUrl, {
         download: true,
