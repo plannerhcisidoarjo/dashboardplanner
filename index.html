@@ -3794,87 +3794,8 @@ function renderSlaDetailPage() {
   }
 
   if (missedList.length === 0) {
-    var yesterdayVal = new Date();
-    yesterdayVal.setDate(yesterdayVal.getDate() - 1);
-    var endY = yesterdayVal.getFullYear();
-    var endM = String(yesterdayVal.getMonth() + 1).padStart(2, '0');
-    var endD = String(yesterdayVal.getDate()).padStart(2, '0');
-    var yesterdayStr = endY + '-' + endM + '-' + endD;
-
-    var displayReqDate = startStr || yesterdayStr;
-    
-    var dObj = parseDateStrHyphen(displayReqDate);
-    if (!dObj) {
-      dObj = new Date();
-      dObj.setDate(dObj.getDate() - 1);
-    }
-    
-    var dObjAct = new Date(dObj.getTime());
-    dObjAct.setDate(dObjAct.getDate() + 2);
-    
-    var actYear = dObjAct.getFullYear();
-    var actMonth = String(dObjAct.getMonth() + 1).padStart(2, '0');
-    var actDay = String(dObjAct.getDate()).padStart(2, '0');
-    var displayActDate = actYear + '-' + actMonth + '-' + actDay;
-
-    missedList = [
-      {
-        orderKey: "5521676",
-        externOrderKey: "OD.9513377827.U10.2.20260611.4",
-        shipToName: "CE CLAUDIA",
-        type: "Customer",
-        storeBooking: "J331-ST HCIR INFORMA SUPERMAL PAKUWON",
-        origReqDate: displayReqDate,
-        newReqShipDate: displayActDate,
-        shippedDate: displayActDate,
-        delayTime: "2 Hari",
-        slaCategory: "DELAY 1-3",
-        areaPengiriman: "DK",
-        city: "Surabaya",
-        cbm: "16,000.0",
-        reason: "MISS SISTEM TIDAK KE TRIGGER DI KLL (TRASNPORT SUDAH MELAKUKAN RESCHEDULE) DAN SEDANG FU KE TEAM KLL OLEH TEAM TRANSPORT",
-        bu: "INFORMA",
-        kategoryReason: "ADM TRANSPORT",
-        // Backward-compatible properties for filters
-        source: "INFORMA",
-        site: "WH INFORMA SIDOARJO",
-        reqDate: displayReqDate,
-        actDate: displayActDate,
-        leadTime: "2 Hari",
-        category: "ADM TRANSPORT",
-        slaStatus: "MISSED",
-        missReason: "MISS SISTEM TIDAK KE TRIGGER DI KLL (TRASNPORT SUDAH MELAKUKAN RESCHEDULE)",
-        area: "DK"
-      },
-      {
-        orderKey: "8386029",
-        externOrderKey: "OD.9513246248.U07.2.20260531.11",
-        shipToName: "PANDU PRACASTYAN",
-        type: "HUB-Customer",
-        storeBooking: "J333-ST HCIR INFORMA ROYAL PLZ SBY",
-        origReqDate: displayReqDate,
-        newReqShipDate: displayActDate,
-        shippedDate: displayActDate,
-        delayTime: "2 Hari",
-        slaCategory: "DELAY 1-3",
-        areaPengiriman: "DK",
-        city: "Sidoarjo",
-        cbm: "0.1",
-        reason: "ZYLLEM SUDAH DILAKUKAN PERUBAHAN, NAMUN TIDAK DILAKUKAN PERUBAHAN PADA S2 WMS OLEH PLANNER",
-        bu: "INFORMA",
-        kategoryReason: "ADM PLANNER",
-        // Backward-compatible properties for filters
-        source: "INFORMA",
-        site: "WH INFORMA SIDOARJO",
-        reqDate: displayReqDate,
-        actDate: displayActDate,
-        leadTime: "2 Hari",
-        category: "ADM PLANNER",
-        slaStatus: "MISSED",
-        missReason: "ZYLLEM SUDAH DILAKUKAN PERUBAHAN, NAMUN TIDAK DILAKUKAN PERUBAHAN PADA S2 WMS OLEH PLANNER",
-        area: "DK"
-      }
-    ];
+    missBody.innerHTML = "<tr><td colspan=\"16\" style=\"text-align:center; padding:20px; color:var(--muted);\">No SLA missed data for this date range.</td></tr>";
+    return;
   }
 
   currentSlaMissedList = missedList;
@@ -3967,7 +3888,7 @@ function applySlaMissFilters() {
       '<td>' + escHtml(m.areaPengiriman) + '</td>' +
       '<td>' + escHtml(m.city) + '</td>' +
       '<td>' + escHtml(m.cbm) + '</td>' +
-      '<td style="color:#fff; font-size:11px; max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="' + escHtml(m.reason) + '">' + escHtml(m.reason) + '</td>' +
+      '<td style="font-size:11px; max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="' + escHtml(m.reason) + '">' + escHtml(m.reason) + '</td>' +
       '<td><strong>' + escHtml(m.bu) + '</strong></td>' +
       '<td>' + escHtml(m.kategoryReason) + '</td>' +
       '</tr>';
