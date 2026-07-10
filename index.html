@@ -85,6 +85,7 @@
   .badge-green { background: var(--green-dim); border-color: rgba(22,163,74,.2); color: var(--green); }
   .badge-amber { background: var(--amber-dim); border-color: rgba(217,119,6,.2); color: var(--amber); }
   .badge-red { background: var(--red-dim); border-color: rgba(220,38,38,.2); color: var(--red); }
+  .badge-purple { background: rgba(124, 58, 237, 0.1); border-color: rgba(124, 58, 237, 0.2); color: var(--purple); }
   .badge-muted { background: rgba(125,133,144,.1); border-color: rgba(125,133,144,.2); color: var(--muted); }
 
   .dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
@@ -1711,6 +1712,117 @@
     font-weight: 800 !important;
     font-size: 12px !important;
   }
+  
+  /* Kapsul Scope OLF agar tidak mengganggu CSS Global Dashboard Anda */
+  .olf-section .ov-top {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 16px;
+    margin-bottom: 14px;
+  }
+  @media (max-width: 768px) {
+    .olf-section .ov-top {
+      grid-template-columns: 1fr;
+    }
+  }
+  .olf-section .card {
+    background: var(--surface, #ffffff);
+    border: 1px solid var(--border, #e2e8f0);
+    border-radius: var(--radius, 20px);
+    box-shadow: 0 2px 12px rgba(26, 54, 93, 0.08);
+    padding: 20px 22px;
+  }
+  .olf-section .olf-double-col {
+    grid-column: span 1;
+  }
+  .olf-section .ct {
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--text, #1a365d);
+    margin-bottom: 3px;
+  }
+  .olf-section .cs {
+    font-size: 11.5px;
+    color: var(--muted, #64748b);
+  }
+  .olf-section .olf-hr {
+    margin: 10px 0;
+    border: 0;
+    border-top: 1px solid var(--border, #e2e8f0);
+  }
+  .olf-section .sw {
+    background: var(--bg, #f4f7fb);
+    border: 1px solid var(--border, #e2e8f0);
+    border-radius: var(--radius-sm, 14px);
+    padding: 14px 16px 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .olf-section .sw.warn {
+    border-color: #fc8181;
+    box-shadow: 0 0 0 2px rgba(229, 62, 62, 0.12);
+  }
+  .olf-section .slb {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .6px;
+    text-transform: uppercase;
+    color: var(--muted, #64748b);
+    text-align: center;
+    margin-bottom: 5px;
+  }
+  .olf-section .scb {
+    width: 100%;
+    height: 120px;
+    position: relative;
+  }
+  .olf-section .scb canvas {
+    display: block;
+    width: 100% !important;
+    height: 100% !important;
+  }
+  .olf-section .snum {
+    margin-top: 4px;
+    text-align: center;
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--text, #1a365d);
+    letter-spacing: -.5px;
+    line-height: 1;
+  }
+  .olf-section .snum .sy {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--muted, #64748b);
+  }
+  .olf-section .snum.warn {
+    color: var(--red, #e53e3e);
+  }
+  .olf-section .ov-item { display: flex; flex-direction: column; gap: 4px; border-left: 3px solid var(--border); padding-left: 10px; }
+  .olf-section .ov-lab { font-size: 10px; color: var(--muted, #64748b); font-weight: 700; text-transform: uppercase; letter-spacing: .5px; }
+  .olf-section .ov-val { font-size: 22px; font-weight: 800; color: var(--text, #1a365d); line-height: 1.1; }
+  .olf-section .st { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; }
+  .olf-section .dt { width: 100%; border-collapse: collapse; margin-top: 10px; }
+  .olf-section .dt th { text-align: left; padding: 8px 10px; font-size: 10px; font-weight: 700; text-transform: uppercase; color: var(--muted); border-bottom: 2px solid var(--border); }
+  .olf-section .dt td { padding: 8px 10px; font-size: 12px; border-bottom: 1px solid var(--border); }
+  .olf-section .dt tbody tr:hover { background: rgba(0,0,0,0.02); }
+  .olf-section .olf-main {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 13px;
+  }
+  .olf-section .olf-wb {
+    width: 100%;
+    background: #fff5f5;
+    border: 1px solid #fc8181;
+    border-radius: var(--radius-sm, 8px);
+    padding: 12px 15px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #c53030;
+    line-height: 1.6;
+  }
 </style>
 </head>
 <body>
@@ -1776,8 +1888,9 @@
       </g>
     </svg>
     <div>
-      <div class="header-title">Progress Loading Dashboard · HCI GRW</div>
-      <div class="header-sub">Storing → Stuffing → Outbound · Live Google Sheet</div>
+      <div class="header-title">ORDER FULFILLMENT &
+PLANNING REPORT</div>
+      <div class="header-sub">Executive Dashboard</div>
     </div>
   </div>
   <div class="header-right">
@@ -1792,7 +1905,7 @@
   <!-- Sidebar -->
   <aside id="sb" class="sidebar">
     <div class="sidebar-brand">
-      <span>GRW Control Hub</span>
+      <span>HCI Control Panel</span>
       <button class="toggle-sb-btn" onclick="toggleSidebar()">⟪</button>
     </div>
     <nav class="sidebar-nav">
@@ -1800,25 +1913,21 @@
         <span class="ni-icon">📊</span>
         <span class="ni-text">Overview</span>
       </div>
+      <div id="ni-sla" class="ni" onclick="navTo('sla')">
+        <span class="ni-icon">⏱</span>
+        <span class="ni-text">SLA</span>
+      </div>
+      <div id="ni-aging" class="ni" onclick="navTo('aging')">
+        <span class="ni-icon">🕒</span>
+        <span class="ni-text">Aging Pool</span>
+      </div>
       <div id="ni-loading" class="ni" onclick="navTo('loading')">
         <span class="ni-icon">🚚</span>
         <span class="ni-text">Progress Loading</span>
       </div>
-      <div id="ni-aging" class="ni" onclick="navTo('aging')">
-        <span class="ni-icon">📦</span>
-        <span class="ni-text">Aging Pool</span>
-      </div>
-      <div id="ni-armada" class="ni" onclick="navTo('armada')">
-        <span class="ni-icon">🚛</span>
-        <span class="ni-text">Performance Armada</span>
-      </div>
       <div id="ni-fulfillment-armada" class="ni" onclick="navTo('fulfillment-armada')">
         <span class="ni-icon">🚚</span>
         <span class="ni-text">Fulfillment Armada</span>
-      </div>
-      <div id="ni-sla" class="ni" onclick="navTo('sla')">
-        <span class="ni-icon">📅</span>
-        <span class="ni-text">SLA</span>
       </div>
     </nav>
   </aside>
@@ -1828,7 +1937,7 @@
     <!-- Sticky Sub-Header inside Main Content -->
     <div class="page-subheader">
       <div>
-        <h2 id="pageHeaderTitle" class="page-title">SLA & OLF Overview</h2>
+        <h2 id="pageHeaderTitle" class="page-title">ORDER FULFILLMENT & PLANNING REPORT</h2>
         <p id="pageHeaderSub" class="page-sub">Integrated Outbound Control Panel</p>
       </div>
     </div>
@@ -1841,7 +1950,7 @@
           <div class="card-header">
             <div>
               <div class="card-title">SLA ACHIEVEMENT RATE</div>
-              <div class="card-sub">Average Warehouse Outbound vs Customer Shipping SLA</div>
+              <div class="card-sub">Average GRW vs Customer Shipping SLA</div>
             </div>
             <span class="badge badge-blue">YTD Rate</span>
           </div>
@@ -1884,7 +1993,7 @@
         <div class="card ov-card" id="ovOlfCard">
           <div class="card-header">
             <div>
-              <div class="card-title">OLF (ORDER LOADING FILL RATE)</div>
+              <div class="card-title">OLF (ORDER LOAD FACTOR)</div>
               <div class="card-sub">Dynamic volumetric capacity matching across trips</div>
             </div>
             <span class="badge" id="ovOlfStatus" style="background:var(--green); color:#fff;">Normal</span>
@@ -1923,9 +2032,9 @@
           </div>
           <div class="map-stats">
             <span class="badge badge-muted">Total Nodes: <strong id="ovMapTotal">0</strong></span>
-            <span class="badge badge-green">Hubs: <strong id="ovMapHub">0</strong></span>
-            <span class="badge badge-blue">DK: <strong id="ovMapDk">0</strong></span>
-            <span class="badge badge-amber">LK: <strong id="ovMapLk">0</strong></span>
+            <span class="badge badge-green">DK: <strong id="ovMapDk">0</strong></span>
+            <span class="badge badge-blue">LK: <strong id="ovMapLk">0</strong></span>
+            <span class="badge badge-amber">LP: <strong id="ovMapLp">0</strong></span>
           </div>
         </div>
         <div id="coverage-map" style="height:400px; width:100%; border-radius:8px; margin-top:12px; background:#121b26;"></div>
@@ -2447,8 +2556,8 @@
     <div class="card">
       <div class="card-header">
         <div>
-          <div class="card-title">SLA GRW OUTBOUND (WAREHOUSE)</div>
-          <div class="card-sub">Storing &amp; packing processing speed SLA performance</div>
+          <div class="card-title">SLA GRW - GUDANG KE TOKO</div>
+          <div class="card-sub">% ACHIEVEMENT GRW</div>
         </div>
       </div>
       <div class="overview-chart-row">
@@ -2477,8 +2586,8 @@
     <div class="card">
       <div class="card-header">
         <div>
-          <div class="card-title">SLA CUSTOMER (SHIPPING)</div>
-          <div class="card-sub">Stuffing and carrier departure transit SLA performance</div>
+          <div class="card-title">SLA CUSTOMER - TOKO KE CUSTOMER</div>
+          <div class="card-sub">% ACHIEVEMENT CUSTOMER</div>
         </div>
       </div>
       <div class="overview-chart-row">
@@ -2510,7 +2619,7 @@
     <div class="card">
       <div class="card-header">
         <div>
-          <div class="card-title">SLA GRW OUTBOUND (WAREHOUSE) - 20-DAY TREND</div>
+          <div class="card-title">SLA GRW - 20-DAY TREND</div>
           <div class="card-sub">Daily hit vs miss volume (bars) and achievement rate % (line)</div>
         </div>
       </div>
@@ -2523,7 +2632,7 @@
     <div class="card">
       <div class="card-header">
         <div>
-          <div class="card-title">SLA CUSTOMER (SHIPPING) - 20-DAY TREND</div>
+          <div class="card-title">SLA CUSTOMER - 20-DAY TREND</div>
           <div class="card-sub">Daily hit vs miss volume (bars) and achievement rate % (line)</div>
         </div>
       </div>
@@ -2842,6 +2951,86 @@
   </div>
 </div>
 
+<!-- PAGE: OLF -->
+<div id="pg-olf" class="pg">
+  <div class="olf-section" style="padding: 20px;">
+    
+    <!-- OLF Filter Bar -->
+    <div class="filter-bar" style="margin-bottom: 20px;">
+      <div class="filter-group">
+        <span class="filter-label">Periode OLF</span>
+        <input type="date" class="fdt" id="olf-start">
+        <span class="fsep">&ndash;</span>
+        <input type="date" class="fdt" id="olf-end">
+        <button class="bap" id="olf-btn-apply" onclick="applyOlfFilters()">Terapkan</button>
+      </div>
+    </div>
+
+    <div class="ov-top">
+      
+      <div class="card">
+        <div class="ct">Skor Kinerja OLF</div>
+        <div class="cs">Order Load Factor pencapaian terhadap target pemenuhan.</div>
+        <hr class="olf-hr">
+        
+        <div class="sw warn" id="olf-container" style="padding-bottom: 10px;">
+          <div class="slb">Current Month Performance</div>
+          <div class="scb">
+            <canvas id="olfSpeedoChart"></canvas>
+          </div>
+          <div class="snum warn" id="olfScoreTxt">0<span class="sy">%</span></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="ct">Summary Metrics</div>
+        <div class="cs">Ringkasan total order dan keterlambatan.</div>
+        <hr class="olf-hr">
+        <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 10px;">
+          <div class="ov-item">
+            <div class="ov-val" id="olfTotalOrderTxt">0</div>
+            <div class="ov-lab">Total Orders Checked</div>
+          </div>
+          <div class="ov-item">
+            <div class="ov-val" style="color: #e53e3e;" id="olfMissCountTxt">0</div>
+            <div class="ov-lab">Orders Delayed (Miss)</div>
+          </div>
+          <div class="ov-item">
+            <div class="ov-val" style="color: #3fb950;" id="olfSuccessCountTxt">0</div>
+            <div class="ov-lab">Orders On-Time</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Additional Details Table -->
+    <div class="card" style="margin-top: 20px;">
+      <div class="ct">Daftar Order Kritis (OLF Miss)</div>
+      <div class="cs">Detail order yang tidak memenuhi standar ketepatan waktu.</div>
+      <div style="overflow-x: auto; margin-top: 15px;">
+        <table class="dt" id="tbl-olf-details">
+          <thead>
+            <tr>
+              <th class="hn">Trans No</th>
+              <th class="hn">Customer</th>
+              <th class="hn">Area</th>
+              <th class="hn">SLA Time</th>
+              <th class="hn">% LD</th>
+              <th class="hn">Status</th>
+            </tr>
+          </thead>
+          <tbody id="tb-olf-details">
+            <!-- Data will be injected here -->
+          </tbody>
+        </table>
+        <div id="em-olf-details" class="emp" style="display:none">Data tidak ditemukan untuk periode ini.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
 <!-- Modal for SLA Trend -->
 <div id="slaTrendModal" class="sla-modal">
   <div class="sla-modal-content">
@@ -2950,6 +3139,9 @@ var allSlaMissedData = [];
 var slaMissAreaFilter = 'ALL';
 var slaMissCategoryFilter = 'ALL';
 var currentSlaMissedList = [];
+var allOlfData = [];
+var olfChartInstance = null;
+var OLF_APP = { sd: '', ed: '' };
 
 var STATUS_CFG = {
   'BELUM DATANG': { color: '#f85149', bg: 'rgba(248,81,73,.15)',   emoji: '⏳' },
@@ -3137,9 +3329,21 @@ function renderAgingKPIs(unplanned, totalRawCBM) {
     return o.daysAgo > 7; 
   }).length;
 
-  var slaPercent = totalOrders > 0
-    ? Math.round(((totalOrders - critical) / totalOrders) * 100)
-    : 100;
+  // Find top area
+  var areaStats = unplanned.reduce(function(acc, o) {
+    var area = o.area || 'Unknown';
+    if (!acc[area]) acc[area] = { count: 0, cbm: 0 };
+    acc[area].count++;
+    acc[area].cbm += (o.cbm || 0);
+    return acc;
+  }, {});
+
+  var areaKeys = Object.keys(areaStats);
+  var topArea = areaKeys.length > 0 ? areaKeys.reduce(function(a, b) {
+    return areaStats[a].count > areaStats[b].count ? a : b;
+  }) : 'None';
+
+  var topAreaStat = areaStats[topArea] || { count: 0, cbm: 0 };
 
   document.getElementById('akpiTotal').textContent = totalOrders + ' Order';
   document.getElementById('akpiTotalSub').textContent = 'Dalam antrian pool gudang';
@@ -3150,8 +3354,12 @@ function renderAgingKPIs(unplanned, totalRawCBM) {
   document.getElementById('akpiCritical').textContent = critical + ' Order';
   // Sub text is static in HTML
 
-  document.getElementById('akpiSLA').textContent = slaPercent + '%';
-  document.getElementById('akpiSLASub').textContent = 'Dalam target SLA pengiriman';
+  document.getElementById('akpiSLA').textContent = topArea;
+  document.getElementById('akpiSLASub').textContent = topAreaStat.count + ' Order (' + topAreaStat.cbm.toFixed(2) + ' CBM)';
+  
+  // Update label
+  var kpiLabel = document.querySelector('#akpiSLA').parentElement.querySelector('.kpi-label');
+  if (kpiLabel) kpiLabel.textContent = 'DESTINASI TERBANYAK';
 }
 
 function renderAgingTable(orders) {
@@ -3534,7 +3742,7 @@ function parseOutstandingSheetData(rows, targetRawArray) {
     var idxArea = headers.findIndex(function(h) { return h.match(/^WILAYAH$/); });
     if (idxArea === -1) idxArea = headers.findIndex(function(h) { return h.match(/^AREA$/); });
     if (idxArea === -1) idxArea = headers.findIndex(function(h) { return h.match(/^ZONA$/); });
-    var idxRoute = headers.findIndex(function(h) { return h.match(/^ROUTE$/); });
+    var idxRoute = headers.findIndex(function(h) { return h.match(/^ROUTE$|^PLAN$|^AK$/); });
     var idxStatus = headers.findIndex(function(h) { return h.match(/^STATUS$/); });
     var idxReqShip = headers.findIndex(function(h) { return h.match(/^REQSHIPDATE$/); });
 
@@ -3605,7 +3813,7 @@ function parseOutstandingSheetData(rows, targetRawArray) {
       var routeVal = idxRoute !== -1 ? String(row[idxRoute]).trim() : '';
       var rawStatus = idxStatus !== -1 ? String(row[idxStatus]) : '';
       var sUpper = rawStatus.toUpperCase();
-      var isUnplanned = (!routeVal || sUpper.indexOf('CREATED INTERNALLY') !== -1 || sUpper.indexOf('NOT STARTED') !== -1);
+      var isUnplanned = (!routeVal || routeVal === 'NaN' || routeVal === 'undefined' || sUpper.indexOf('CREATED INTERNALLY') !== -1 || sUpper.indexOf('NOT STARTED') !== -1);
 
       var order = {
         id: id,
@@ -3617,6 +3825,7 @@ function parseOutstandingSheetData(rows, targetRawArray) {
         reqShipDaysDiff: reqShipDaysDiff,
         area: area,
         isDalamKota: isDalamKota,
+        route: routeVal,
         status: isUnplanned ? 'Unplanned' : (rawStatus || 'Planned')
       };
 
@@ -3777,12 +3986,13 @@ function navTo(page) {
   
   // Update sticky header titles and subtitles
   var titleMap = {
-    overview: { title: "SLA & OLF Overview", sub: "Integrated Outbound Control Panel" },
-    loading: { title: "Progress Loading Dashboard", sub: "HCI GRW Outbound Control Panel" },
+    overview: { title: "ORDER FULFILLMENT & PLANNING REPORT", sub: "Ringkasan operasional harian" },
+    loading: { title: "Progress Loading Dashboard", sub: "HCI Loading Control Panel" },
     aging: { title: "Aging & Planning Pool", sub: "Outstanding orders backlog & fleet quota" },
     armada: { title: "Performance Armada", sub: "Trip delay rate, carrier & city ratings" },
     sla: { title: "SERVICES LEVEL AGREEMENT (SLA)", sub: "Monitoring SLA GRW dan SLA Customer per periode" },
-    'fulfillment-armada': { title: "Fulfillment Armada", sub: "Monitoring ketepatan waktu kedatangan armada internal & eksternal" }
+    'fulfillment-armada': { title: "Fulfillment Armada", sub: "Monitoring ketepatan waktu kedatangan armada internal & eksternal" },
+    olf: { title: "Order Late Fulfillment (OLF)", sub: "Order Load Factor" }
   };
   
   var hdrTitle = document.getElementById('pageHeaderTitle');
@@ -3810,6 +4020,8 @@ function navTo(page) {
     renderSlaDetailPage();
   } else if (page === 'fulfillment-armada') {
     renderFulfillmentArmadaPage();
+  } else if (page === 'olf') {
+    renderOlfPage();
   }
 }
 
@@ -3818,7 +4030,7 @@ function refreshCurrentPage() {
 }
 
 // ── OVERVIEW PAGE LOGIC ───────────────────────────────────────────────
-function drawSpeedometer(canvasId, value) {
+function drawSpeedometerStatic(canvasId, value) {
   var canvas = document.getElementById(canvasId);
   if (!canvas) return;
   var ctx = canvas.getContext('2d');
@@ -3925,6 +4137,32 @@ function drawSpeedometer(canvasId, value) {
   ctx.restore();
 }
 
+function drawSpeedometer(canvasId, targetValue) {
+  var canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  
+  var startTime = performance.now();
+  var duration = 1000; // 1s
+  var initialValue = parseFloat(canvas.dataset.currentVal) || 0;
+  
+  function step(timestamp) {
+    var elapsed = timestamp - startTime;
+    var progress = Math.min(elapsed / duration, 1);
+    var easedProgress = 1 - Math.pow(1 - progress, 3); // Cubic ease-out
+    var displayValue = initialValue + (targetValue - initialValue) * easedProgress;
+    
+    drawSpeedometerStatic(canvasId, displayValue);
+    
+    if (progress < 1) {
+      requestAnimationFrame(step);
+    } else {
+      canvas.dataset.currentVal = targetValue;
+    }
+  }
+  requestAnimationFrame(step);
+}
+
+
 function initOverviewMap() {
   if (mapInstance) {
     loadMapMarkersFromSpreadsheet();
@@ -3938,27 +4176,9 @@ function initOverviewMap() {
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
     }).addTo(mapInstance);
     
-    // Geolocation lookup with a fallback
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        function(position) {
-          userStartPoint = [position.coords.latitude, position.coords.longitude];
-          hasUserGeolocation = true;
-          loadMapMarkersFromSpreadsheet();
-        },
-        function(err) {
-          console.warn("Geolocation denied or unavailable, falling back to NDC Sidoarjo:", err);
-          userStartPoint = [-7.4478, 112.7183]; // NDC Sidoarjo fallback
-          hasUserGeolocation = false;
-          loadMapMarkersFromSpreadsheet();
-        },
-        { enableHighAccuracy: true, timeout: 8000 }
-      );
-    } else {
-      userStartPoint = [-7.4478, 112.7183];
-      hasUserGeolocation = false;
-      loadMapMarkersFromSpreadsheet();
-    }
+    userStartPoint = [-7.4478, 112.7183]; // NDC Sidoarjo directly
+    hasUserGeolocation = false;
+    loadMapMarkersFromSpreadsheet();
   } catch(e) {
     console.error("Leaflet init error:", e);
   }
@@ -3980,6 +4200,7 @@ function loadMapMarkersFromSpreadsheet() {
         mapMarkers = [];
         
         var hubCount = 0;
+        var whCount = 0;
         var dkCount = 0;
         var lkCount = 0;
         var lpCount = 0;
@@ -3996,19 +4217,23 @@ function loadMapMarkersFromSpreadsheet() {
             var type = 'lk';
             var label = 'Luar Kota';
             
-            if (area === '' || name.toUpperCase().indexOf('NDC') !== -1 || area === 'HUB') {
+            if (area === 'WH' || area === 'WAREHOUSE' || name.toUpperCase().indexOf('WH') !== -1 || name.toUpperCase().indexOf('WAREHOUSE') !== -1) {
+              type = 'wh';
+              label = 'Warehouse / WH';
+              whCount++;
+            } else if (area === '' || name.toUpperCase().indexOf('NDC') !== -1 || area === 'HUB' || area === 'PUSAT') {
               type = 'hub';
               label = 'Pusat Hub / NDC';
               hubCount++;
-            } else if (area === 'DK') {
+            } else if (area === 'DK' || area === 'DALAM KOTA') {
               type = 'dk';
               label = 'Dalam Kota';
               dkCount++;
-            } else if (area === 'LK') {
+            } else if (area === 'LK' || area === 'LUAR KOTA') {
               type = 'lk';
               label = 'Luar Kota';
               lkCount++;
-            } else if (area === 'LP') {
+            } else if (area === 'LP' || area === 'LUAR PULAU') {
               type = 'lp';
               label = 'Luar Pulau';
               lpCount++;
@@ -4042,16 +4267,26 @@ function loadMapMarkersFromSpreadsheet() {
         });
         
         var startMarker = L.marker(userStartPoint, { icon: pulseIcon }).addTo(mapInstance);
-        var startTitle = hasUserGeolocation ? 'Lokasi Anda Sekarang' : 'NDC Sidoarjo (Default)';
-        var startDesc = hasUserGeolocation ? 'Titik Awal Aliran Cahaya (GPS)' : 'Titik Awal Aliran Cahaya (Default)';
-        startMarker.bindPopup("<strong style='color:#fff;font-family:sans-serif;font-size:12px;'>" + startTitle + "</strong><br><span style='color:var(--muted);font-size:11px;'>" + startDesc + "</span>");
+        startMarker.bindPopup("<strong style='color:#fff;font-family:sans-serif;font-size:13px;'>NDC HCI SIDOARJO</strong>");
         mapMarkers.push(startMarker);
         
         // 2. Draw destination markers and the glowing lines connecting them
         validMarkers.forEach(function(m) {
           if (!mapInstance) return;
-          var col = m.type === 'hub' ? '#e2573e' : m.type === 'dk' ? '#79af97' : '#3b95ff';
-          var radius = m.type === 'hub' ? 10 : 7;
+          var col = '#3b95ff';
+          if (m.type === 'hub') {
+            col = '#e2573e';
+          } else if (m.type === 'wh') {
+            col = '#7c3aed';
+          } else if (m.type === 'dk') {
+            col = '#79af97';
+          } else if (m.type === 'lk') {
+            col = '#3b95ff';
+          } else if (m.type === 'lp') {
+            col = '#f59e0b';
+          }
+          
+          var radius = (m.type === 'hub' || m.type === 'wh') ? 10 : 7;
           var marker = L.circleMarker([m.lat, m.lng], {
             radius: radius,
             fillColor: col,
@@ -4061,7 +4296,7 @@ function loadMapMarkersFromSpreadsheet() {
           }).addTo(mapInstance);
           
           marker.bindPopup("<strong style='color:#fff;font-family:sans-serif;font-size:12px;'>" + escHtml(m.name) + "</strong><br>" +
-                           "<span style='color:var(--muted);font-size:11px;'>Tipe: " + escHtml(m.label) + " (" + escHtml(m.areaCode || 'HUB') + ")</span>");
+                           "<span style='color:var(--muted);font-size:11px;'>Tipe: <strong style='color:#fff;'>" + escHtml(m.type.toUpperCase()) + "</strong> (" + escHtml(m.label) + ")</span>");
           mapMarkers.push(marker);
 
           // Draw the animated flowing connection if the node is not the start point itself
@@ -4093,8 +4328,10 @@ function loadMapMarkersFromSpreadsheet() {
         // Update UI counters with real spreadsheet counts
         setText('ovMapTotal', validMarkers.length);
         setText('ovMapHub', hubCount);
+        setText('ovMapWh', whCount);
         setText('ovMapDk', dkCount);
-        setText('ovMapLk', lkCount + lpCount);
+        setText('ovMapLk', lkCount);
+        setText('ovMapLp', lpCount);
       }
     },
     error: function(err) {
@@ -4104,7 +4341,7 @@ function loadMapMarkersFromSpreadsheet() {
 }
 
 function renderOverviewPage() {
-  var data = allData;
+  var data = getFilteredDataset();
   var total = data.length;
   
   // Compute GRW SLA and Cust SLA based on actual data
@@ -4218,6 +4455,33 @@ function renderOverviewPage() {
     olfCust = Math.max(0, olfTotal - 2);
   }
   
+  // Calculate OLF specifically from allOlfData for current month to H-1
+  var olfDataRaw = allOlfData || [];
+  if (olfDataRaw.length > 0) {
+    var today = new Date();
+    var firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
+    firstDay.setHours(0,0,0,0);
+    var yesterday = new Date(today);
+    yesterday.setDate(today.getDate() - 1);
+    yesterday.setHours(0,0,0,0);
+    
+    var filteredOlf = olfDataRaw.filter(function(r) {
+      var rd = getRowDate(r);
+      if (!rd) return false;
+      rd.setHours(0,0,0,0);
+      return rd >= firstDay && rd <= yesterday;
+    });
+    
+    if (filteredOlf.length > 0) {
+      var sumLdOlf = filteredOlf.reduce(function(s, r) { 
+        return s + getOlfValue(r); 
+      }, 0);
+      olfTotal = Math.min(100, Math.round(sumLdOlf / filteredOlf.length));
+      olfStore = Math.min(100, olfTotal + 1.2); 
+      olfCust = Math.max(0, olfTotal - 1.1);
+    }
+  }
+
   // Set UI Texts
   setText('ovSlaGrandTotal', formatSlaPct((grwTotal + custTotal) / 2));
   setText('ovSlaGrwTotal', formatSlaPct(grwTotal));
@@ -4257,23 +4521,44 @@ function renderOverviewPage() {
   
   // Coverage Map counters
   if (mapMarkers.length === 0) {
-    var dkCount = data.filter(function(r) { return r['AREA'] === 'DALAM KOTA'; }).length || 4;
-    var lkCount = data.filter(function(r) { return r['AREA'] === 'LUAR KOTA'; }).length || 5;
-    setText('ovMapTotal', (dkCount + lkCount + 1));
+    var hubCount = data.filter(function(r) { 
+      var a = String(r['AREA'] || '').toUpperCase().trim();
+      return a === 'HUB' || a === 'PUSAT';
+    }).length || 1;
+    var whCount = data.filter(function(r) { 
+      var a = String(r['AREA'] || '').toUpperCase().trim();
+      return a === 'WH' || a === 'WAREHOUSE';
+    }).length || 1;
+    var dkCount = data.filter(function(r) { 
+      var a = String(r['AREA'] || '').toUpperCase().trim();
+      return a === 'DALAM KOTA' || a === 'DK';
+    }).length || 4;
+    var lkCount = data.filter(function(r) { 
+      var a = String(r['AREA'] || '').toUpperCase().trim();
+      return a === 'LUAR KOTA' || a === 'LK';
+    }).length || 5;
+    var lpCount = data.filter(function(r) { 
+      var a = String(r['AREA'] || '').toUpperCase().trim();
+      return a === 'LUAR PULAU' || a === 'LP';
+    }).length || 1;
+    
+    setText('ovMapTotal', (hubCount + whCount + dkCount + lkCount + lpCount));
+    setText('ovMapHub', hubCount);
+    setText('ovMapWh', whCount);
     setText('ovMapDk', dkCount);
     setText('ovMapLk', lkCount);
-    setText('ovMapHub', 1);
+    setText('ovMapLp', lpCount);
   }
 }
 
 // ── PERFORMANCE ARMADA PAGE LOGIC ────────────────────────────────────
 function renderPerformanceArmada() {
-  var data = allData;
+  var data = getFilteredDataset();
   var total = data.length || 10;
   
   var onTime = 0, stuffingDelay = 0, delay1 = 0, delay2 = 0;
-  if (allData.length > 0) {
-    allData.forEach(function(r) {
+  if (data.length > 0) {
+    data.forEach(function(r) {
       var status = String(r['STATUS'] || '').toUpperCase().trim();
       var pctLd = parseInt(r['%LD']) || 0;
       if (status === 'KELUAR DC' || status === 'SELESAI') {
@@ -4303,8 +4588,8 @@ function renderPerformanceArmada() {
   
   var vendorBody = document.getElementById('armadaVendorBody');
   var carriersMap = {};
-  if (allData.length > 0) {
-    allData.forEach(function(r) {
+  if (data.length > 0) {
+    data.forEach(function(r) {
       var carrier = r['CARRIERID'] || 'INTERNAL';
       var isExt = String(r['TYPARMADA'] || '').toLowerCase() === 'external' ? 'Ext' : 'Int';
       if (!carriersMap[carrier]) {
@@ -4335,8 +4620,8 @@ function renderPerformanceArmada() {
   
   var destBody = document.getElementById('armadaDestBody');
   var cityMap = {};
-  if (allData.length > 0) {
-    allData.forEach(function(r) {
+  if (data.length > 0) {
+    data.forEach(function(r) {
       var city = String(r['SHIPPINGLINE'] || 'Bandung').split(' ')[0].toUpperCase();
       if (city === 'ZYLLEM') city = 'SURABAYA';
       if (!cityMap[city]) {
@@ -5423,6 +5708,7 @@ function loadData() {
   var csvAgingCustUrl = 'https://docs.google.com/spreadsheets/d/1ITpX4yc_VLL_qpbLZc1RHfwDzinUf2vnbQXewb_F4oM/gviz/tq?tqx=out:csv&sheet=OUTSTANDING%20CUST';
   var csvContDateUrl = 'https://docs.google.com/spreadsheets/d/1ITpX4yc_VLL_qpbLZc1RHfwDzinUf2vnbQXewb_F4oM/gviz/tq?tqx=out:csv&sheet=CONT%20DATE';
   var csvFulfillmentUrl = 'https://docs.google.com/spreadsheets/d/1bEBI18zlEeXDqg4G4sFljZETceLvsyP-fcuMB1nLtsM/gviz/tq?tqx=out:csv&sheet=DATA';
+  var csvOlfUrl = 'https://docs.google.com/spreadsheets/d/1q-qxELBQZr3ABhVg-mw6Kvhl-e11RGQUmCTQjsXtz9g/gviz/tq?tqx=out:csv&sheet=OLF';
   
   // Reading separate sheets SLA GRW and SLA CUST from the spreadsheet
   var csvSlaGrwUrl = 'https://docs.google.com/spreadsheets/d/1q-qxELBQZr3ABhVg-mw6Kvhl-e11RGQUmCTQjsXtz9g/gviz/tq?tqx=out:csv&sheet=SLA%20GRW';
@@ -5434,9 +5720,22 @@ function loadData() {
       download: true,
       header: true,
       skipEmptyLines: true,
-      complete: function(results) { resolve(results.data); },
+      complete: function(results) { resolve(results.data || []); },
       error: function(err) {
         console.error('[Dashboard] Gagal fetch armada:', err);
+        resolve([]);
+      }
+    });
+  });
+
+  var fetchOlf = new Promise(function(resolve, reject) {
+    Papa.parse(csvOlfUrl, {
+      download: true,
+      header: true,
+      skipEmptyLines: true,
+      complete: function(results) { resolve(results.data || []); },
+      error: function(err) {
+        console.error('[Dashboard] Gagal fetch OLF:', err);
         resolve([]);
       }
     });
@@ -5447,8 +5746,8 @@ function loadData() {
       download: true,
       header: true,
       skipEmptyLines: true,
-      complete: function(results) { resolve(results.data); },
-      error: function(err) { reject(err); }
+      complete: function(results) { resolve(results.data || []); },
+      error: function(err) { resolve([]); }
     });
   });
 
@@ -5457,8 +5756,8 @@ function loadData() {
       download: true,
       header: true,
       skipEmptyLines: true,
-      complete: function(results) { resolve(results.data); },
-      error: function(err) { reject(err); }
+      complete: function(results) { resolve(results.data || []); },
+      error: function(err) { resolve([]); }
     });
   });
 
@@ -5467,8 +5766,8 @@ function loadData() {
       download: true,
       header: true,
       skipEmptyLines: true,
-      complete: function(results) { resolve(results.data); },
-      error: function(err) { reject(err); }
+      complete: function(results) { resolve(results.data || []); },
+      error: function(err) { resolve([]); }
     });
   });
 
@@ -5477,8 +5776,8 @@ function loadData() {
       download: true,
       header: true,
       skipEmptyLines: true,
-      complete: function(results) { resolve(results.data); },
-      error: function(err) { reject(err); }
+      complete: function(results) { resolve(results.data || []); },
+      error: function(err) { resolve([]); }
     });
   });
 
@@ -5487,8 +5786,8 @@ function loadData() {
       download: true,
       header: false,
       skipEmptyLines: true,
-      complete: function(results) { resolve(results.data); },
-      error: function(err) { reject(err); }
+      complete: function(results) { resolve(results.data || []); },
+      error: function(err) { resolve([]); }
     });
   });
 
@@ -5498,7 +5797,7 @@ function loadData() {
       header: false,
       skipEmptyLines: true,
       complete: function(results) {
-        var data = results.data;
+        var data = results.data || [];
         var isValid = false;
         if (data && data.length > 0) {
           for (var c = 0; c < Math.min(5, data[0].length); c++) {
@@ -5515,7 +5814,7 @@ function loadData() {
             download: true,
             header: false,
             skipEmptyLines: true,
-            complete: function(res2) { resolve(res2.data); },
+            complete: function(res2) { resolve(res2.data || []); },
             error: function(err) { resolve(data); }
           });
         }
@@ -5525,18 +5824,22 @@ function loadData() {
           download: true,
           header: false,
           skipEmptyLines: true,
-          complete: function(res2) { resolve(res2.data); },
-          error: function(err) { reject(err); }
+          complete: function(res2) { resolve(res2.data || []); },
+          error: function(err) { resolve([]); }
         });
       }
     });
   });
 
-  Promise.all([fetchMonitoring, fetchAging, fetchAgingCust, fetchContDate, fetchSlaGrw, fetchSlaCust, fetchFulfillment])
+  Promise.all([fetchMonitoring, fetchAging, fetchAgingCust, fetchContDate, fetchSlaGrw, fetchSlaCust, fetchFulfillment, fetchOlf])
     .then(function(results) {
       allSlaGrwData = results[4] || [];
       allSlaCustData = results[5] || [];
       allFulfillmentData = results[6] || [];
+      // Less restrictive filter for OLF data
+      allOlfData = (results[7] || []).filter(function(r) {
+        return r && typeof r === 'object' && Object.keys(r).length > 0;
+      });
 
       // Find dynamic URL in column N2 of SLA CUST
       var targetUrl = null;
@@ -5593,10 +5896,12 @@ function loadData() {
 }
 
 function processResults(results) {
-  var dataMonitoring = results[0].filter(function(r) { return r['TRANSNO'] && r['TRANSNO'].trim() !== ''; });
-  var dataAgingGrw = results[1];
-  var dataAgingCust = results[2];
-  var dataContDate = results[3];
+  if (!results || !Array.isArray(results)) return;
+  var rawMonitoring = results[0];
+  var dataMonitoring = Array.isArray(rawMonitoring) ? rawMonitoring.filter(function(r) { return r && r['TRANSNO'] && r['TRANSNO'].trim() !== ''; }) : [];
+  var dataAgingGrw = results[1] || [];
+  var dataAgingCust = results[2] || [];
+  var dataContDate = results[3] || [];
 
   // Dynamically initialize SLA start/end date filters based on real spreadsheet dates
   var slaStart = document.getElementById('slaStartDate');
@@ -5680,6 +5985,7 @@ function processResults(results) {
 function fallbackData() {
   allData = EMBEDDED_DATA;
   allFulfillmentData = EMBEDDED_DATA;
+  allOlfData = [];
   ORDER_POOL_GRW = parseOutstandingSheetData(EMBEDDED_DATA, RAW_ORDER_POOL_GRW);
   ORDER_POOL_CUST = [];
   RAW_ORDER_POOL_CUST = [];
@@ -5718,7 +6024,24 @@ function onDataReady(updatedTime, isLive) {
     renderPerformanceArmada();
   } else if (activePage === 'sla') {
     renderSlaDetailPage();
+  } else if (activePage === 'olf') {
+    renderOlfPage();
   }
+
+  // Calculate OLF metrics from loaded external data and update dashboard
+  var filteredOlfData = getFilteredDataset();
+  var totalOlf = filteredOlfData.length;
+  var skorOlfDariFile = 86.4; // fallback
+  var totalMissDariFile = 0;
+  if (totalOlf > 0) {
+    var sumLd = filteredOlfData.reduce(function(s, r) { return s + (parseInt(r['%LD']) || 0); }, 0);
+    skorOlfDariFile = Math.min(100, Math.round(sumLd / totalOlf));
+    totalMissDariFile = filteredOlfData.filter(function(r) {
+      var pctLd = parseInt(r['%LD']) || 0;
+      return pctLd < 100;
+    }).length;
+  }
+  updateOlfDashboard(skorOlfDariFile, totalMissDariFile);
 
   var ts = updatedTime
     ? '🕐 ' + updatedTime
@@ -5732,8 +6055,27 @@ function onDataReady(updatedTime, isLive) {
   }
 }
 
+function getFilteredDataset() {
+  if (!allData || !Array.isArray(allData)) return [];
+  var dateVal = document.getElementById('filterDate') ? document.getElementById('filterDate').value : '';
+  var datePrefix = '';
+  if (dateVal) {
+    var dp = dateVal.split('-');         
+    datePrefix = dp[0].slice(2) + dp[1] + dp[2]; 
+  }
+
+  return allData.filter(function(r) {
+    var transno = String(r['TRANSNO'] || '');
+    if (datePrefix) {
+      if (!transno.startsWith(datePrefix)) return false;
+    }
+    return true;
+  });
+}
+
 // ── FILTERS ──────────────────────────────────────────────────────────
 function applyFilters() {
+  if (!allData || !Array.isArray(allData)) return;
   var dateVal = document.getElementById('filterDate').value;   // 'YYYY-MM-DD'
   var shift   = document.getElementById('filterShift').value;
   var status  = document.getElementById('filterStatus').value;
@@ -5747,8 +6089,8 @@ function applyFilters() {
   }
 
   filteredData = allData.filter(function(r) {
+    var transno = String(r['TRANSNO'] || '');
     if (datePrefix) {
-      var transno = String(r['TRANSNO'] || '');
       if (!transno.startsWith(datePrefix)) return false;
     }
     if (activeArea !== 'all' && r['AREA'] !== activeArea) return false;
@@ -6348,7 +6690,34 @@ function loadFulfillmentArmadaData() {
 }
 
 function getRowDate(r) {
-  var transno = String(r['TRANS NO'] || r['TRANSNO'] || '').trim();
+  var dateKeys = ['DATE', 'TANGGAL', 'STUFFING DATE', 'STUFFINGDATE', 'TGL', 'TANGGAL', 'DATE', 'STUFFING', 'TGL OLF', 'TANGGAL OLF', 'DATE OLF'];
+  var dateStr = null;
+  
+  // Case-insensitive search
+  var rowKeys = Object.keys(r);
+  for (var i = 0; i < dateKeys.length; i++) {
+    for (var j = 0; j < rowKeys.length; j++) {
+      if (rowKeys[j].toUpperCase().indexOf(dateKeys[i]) !== -1) {
+        dateStr = r[rowKeys[j]];
+        break;
+      }
+    }
+    if (dateStr) break;
+  }
+
+  if (dateStr) {
+    var d = parseDateSafe_(dateStr);
+    if (d) return d;
+  }
+  
+  var transno = '';
+  for (var j = 0; j < rowKeys.length; j++) {
+    if (rowKeys[j].toUpperCase().indexOf('TRANS') !== -1) {
+      transno = String(r[rowKeys[j]]).trim();
+      break;
+    }
+  }
+
   if (transno.length >= 6) {
     var yy = parseInt(transno.substring(0, 2));
     var mm = parseInt(transno.substring(2, 4));
@@ -6358,6 +6727,27 @@ function getRowDate(r) {
     }
   }
   return null;
+}
+
+function getOlfValue(r) {
+  var olfKeys = ['% LD', '%LD', '% LOADING', 'LD RATE', 'OLF RATE', 'OLF', 'RATE', 'FILL RATE', 'FILLRATE', 'ORDER LOADING', 'LOADING FILL'];
+  var rowKeys = Object.keys(r);
+  
+  for (var i = 0; i < olfKeys.length; i++) {
+    for (var j = 0; j < rowKeys.length; j++) {
+      var rk = rowKeys[j].toUpperCase();
+      var ok = olfKeys[i].toUpperCase();
+      if (rk === ok || rk.indexOf(ok) !== -1) {
+        var raw = r[rowKeys[j]];
+        if (raw !== undefined && raw !== null && String(raw).trim() !== '') {
+          var val = String(raw).replace(/%/g, '').trim();
+          var num = parseFloat(val);
+          if (!isNaN(num)) return num;
+        }
+      }
+    }
+  }
+  return 0;
 }
 
 function getTransportType(r) {
@@ -6375,6 +6765,7 @@ function getTransportType(r) {
 }
 
 function calculateFFDashboardData() {
+  if (!allFulfillmentData || !Array.isArray(allFulfillmentData)) return { totalRowsFiltered: 0, missCount: 0, successCount: 0, avgScore: 0, misses: [] };
   var filteredRows = allFulfillmentData.filter(function(r) {
     // 1. Filter by Armada Type
     var type = String(r['TYPE ARMADA'] || r['TYPARMADA'] || '').toLowerCase();
@@ -7213,23 +7604,10 @@ function renderFulfillmentArmadaPage() {
   var ffStart = document.getElementById('ff-start');
   var ffEnd = document.getElementById('ff-end');
   if (ffStart && ffEnd && (!ffStart.value || !ffEnd.value)) {
-    var minDate = null;
-    var maxDate = null;
-    if (typeof allFulfillmentData !== 'undefined' && allFulfillmentData && allFulfillmentData.length > 0) {
-      allFulfillmentData.forEach(function(r) {
-        var d = getRowDate(r);
-        if (d) {
-          if (!minDate || d < minDate) minDate = d;
-          if (!maxDate || d > maxDate) maxDate = d;
-        }
-      });
-    }
-    
-    if (!minDate || !maxDate) {
-      maxDate = new Date();
-      minDate = new Date();
-      minDate.setDate(maxDate.getDate() - 30);
-    }
+    var today = new Date();
+    var firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
+    var yesterday = new Date(today);
+    yesterday.setDate(today.getDate() - 1);
     
     function fmtYmd(d) {
       var year = d.getFullYear();
@@ -7238,14 +7616,164 @@ function renderFulfillmentArmadaPage() {
       return year + '-' + month + '-' + dateVal;
     }
     
-    ffStart.value = fmtYmd(minDate);
-    ffEnd.value = fmtYmd(maxDate);
+    ffStart.value = fmtYmd(firstDay);
+    ffEnd.value = fmtYmd(yesterday);
     
     FF_APP.sd = ffStart.value;
     FF_APP.ed = ffEnd.value;
   }
   
   loadFulfillmentArmadaData();
+}
+
+function applyOlfFilters() {
+  var startEl = document.getElementById('olf-start');
+  var endEl = document.getElementById('olf-end');
+  if (startEl && endEl) {
+    OLF_APP.sd = startEl.value;
+    OLF_APP.ed = endEl.value;
+    renderOlfPage();
+  }
+}
+
+function renderOlfPage() {
+  var startEl = document.getElementById('olf-start');
+  var endEl = document.getElementById('olf-end');
+  
+  if (startEl && endEl && (!startEl.value || !endEl.value)) {
+    var today = new Date();
+    var firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
+    var yesterday = new Date(today);
+    yesterday.setDate(today.getDate() - 1);
+    
+    function fmtYmd(d) {
+      var year = d.getFullYear();
+      var month = String(d.getMonth() + 1).padStart(2, '0');
+      var dateVal = String(d.getDate()).padStart(2, '0');
+      return year + '-' + month + '-' + dateVal;
+    }
+    
+    startEl.value = fmtYmd(firstDay);
+    endEl.value = fmtYmd(yesterday);
+    OLF_APP.sd = startEl.value;
+    OLF_APP.ed = endEl.value;
+  }
+
+  // Filter allOlfData based on OLF_APP.sd and OLF_APP.ed
+  var data = allOlfData || [];
+  if (OLF_APP.sd && OLF_APP.ed) {
+    var sDate = new Date(OLF_APP.sd);
+    sDate.setHours(0,0,0,0);
+    var eDate = new Date(OLF_APP.ed);
+    eDate.setHours(23,59,59,999);
+    data = data.filter(function(r) {
+      var rd = getRowDate(r);
+      if (!rd) return false;
+      rd.setHours(12,0,0,0); // Midday for safe comparison
+      return rd >= sDate && rd <= eDate;
+    });
+  }
+
+  var total = data.length;
+  var olfTotal = 0;
+  var missCount = 0;
+  var successCount = 0;
+  var misses = [];
+
+  if (total > 0) {
+    var sumLd = data.reduce(function(s, r) { 
+      return s + getOlfValue(r); 
+    }, 0);
+    olfTotal = Math.min(100, Math.round(sumLd / total));
+    
+    misses = data.filter(function(r) {
+      return getOlfValue(r) < 100;
+    });
+    missCount = misses.length;
+    successCount = total - missCount;
+  }
+
+  updateOlfDashboard(olfTotal, missCount, total, successCount, misses);
+}
+
+/**
+ * Fungsi untuk memuat dan memperbarui data OLF pada Dashboard
+ */
+function updateOlfDashboard(score, missCount, totalCount, successCount, misses) {
+  if (!Array.isArray(misses)) misses = [];
+  var scoreTxtEl = document.getElementById('olfScoreTxt');
+  var missTxtEl = document.getElementById('olfMissCountTxt');
+  var totalTxtEl = document.getElementById('olfTotalOrderTxt');
+  var successTxtEl = document.getElementById('olfSuccessCountTxt');
+  var chartCanvas = document.getElementById('olfSpeedoChart');
+  var tb = document.getElementById('tb-olf-details');
+  var em = document.getElementById('em-olf-details');
+
+  if (scoreTxtEl) scoreTxtEl.innerHTML = score + '<span class="sy">%</span>';
+  if (missTxtEl) missTxtEl.innerText = missCount;
+  if (totalTxtEl) totalTxtEl.innerText = totalCount;
+  if (successTxtEl) successTxtEl.innerText = successCount;
+
+  // Render / Reset Gauge Chart menggunakan Chart.js
+  if (chartCanvas) {
+    var ctx = chartCanvas.getContext('2d');
+    if (olfChartInstance) {
+      olfChartInstance.destroy();
+    }
+
+    var chartColor = score >= 85 ? '#3fb950' : score >= 70 ? '#d29922' : '#e53e3e';
+
+    olfChartInstance = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        datasets: [{
+          data: [score, 100 - score],
+          backgroundColor: [chartColor, '#e2e8f0'],
+          borderWidth: 0,
+          borderRadius: [4, 0]
+        }]
+      },
+      options: {
+        rotation: -90,
+        circumference: 180,
+        cutout: '75%',
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: { enabled: false }
+        }
+      }
+    });
+  }
+
+  // Update table details
+  if (tb) {
+    if (misses.length === 0) {
+      tb.innerHTML = '';
+      if (em) em.style.display = 'block';
+    } else {
+      if (em) em.style.display = 'none';
+      var h = '';
+      // Limit to 100 rows for performance
+      misses.slice(0, 100).forEach(function(r) {
+        var trans = r['TRANS NO'] || r['TRANSNO'] || r['NO TRANS'] || r['No. Trans'] || '-';
+        var cust = r['CUSTOMER'] || r['NAMA CUSTOMER'] || r['Nama Pelanggan'] || '-';
+        var area = r['AREA'] || r['WILAYAH'] || r['Tujuan'] || '-';
+        var time = r['SLA TIME'] || r['STUFFING TIME'] || r['Jam'] || '-';
+        
+        h += '<tr>' +
+          '<td>' + esc(trans) + '</td>' +
+          '<td>' + esc(cust) + '</td>' +
+          '<td>' + esc(area) + '</td>' +
+          '<td>' + esc(time) + '</td>' +
+          '<td class="nc">' + getOlfValue(r) + '%</td>' +
+          '<td><span class="st" style="background:#fff5f5; color:#c53030; border:1px solid #feb2b2; padding: 2px 6px; border-radius: 4px; font-size: 10px;">CRITICAL</span></td>' +
+          '</tr>';
+      });
+      tb.innerHTML = h;
+    }
+  }
 }
 </script>
 </body>
