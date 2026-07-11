@@ -47,6 +47,24 @@
     line-height: 1.5;
   }
 
+  .plan-kpi-row { display: flex; gap: 10px; margin: 14px 0; flex-wrap: wrap; }
+.plan-filter-bar { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+.plan-table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: var(--radius-sm); }
+.plan-table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 1100px; }
+.plan-table thead tr:first-child th {
+  background: var(--surface2); position: sticky; top: 0; z-index: 5;
+  padding: 8px 10px; font-size: 10px; font-weight: 800; text-transform: uppercase;
+  letter-spacing: .4px; color: var(--muted); border-bottom: 1px solid var(--border);
+  white-space: nowrap; cursor: pointer;
+}
+.plan-table thead tr:first-child th:hover { color: var(--blue); }
+.plan-table thead tr:nth-child(2) th { background: var(--surface2); padding: 4px 6px; border-bottom: 2px solid var(--border); }
+.plan-table tbody tr.plan-row { border-bottom: 1px solid var(--border); cursor: pointer; transition: background .15s; }
+.plan-table tbody tr.plan-row:hover { background: rgba(37,99,235,.04); }
+.plan-table tbody td { padding: 8px 10px; white-space: nowrap; }
+.plan-table tfoot td { padding: 10px; background: var(--text); color: #fff; font-weight: 800; font-family: var(--font-mono); }
+.plan-day-cell { transition: background .3s ease; border-radius: 4px; }
+
   /* ── HEADER ── */
   .header {
     background: linear-gradient(135deg, #e0f2fe 0%, #e0e7ff 55%, #f3e8ff 100%);
@@ -148,83 +166,132 @@
     gap: 12px;
     margin-bottom: 20px;
   }
-  .kpi-card {
-    background: linear-gradient(145deg, var(--surface) 0%, var(--surface2) 100%);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 18px 16px;
-    position: relative;
-    overflow: hidden;
-    transition: border-color .4s cubic-bezier(0.16, 1, 0.3, 1), 
-                transform .4s cubic-bezier(0.16, 1, 0.3, 1), 
-                box-shadow .4s cubic-bezier(0.16, 1, 0.3, 1);
-    cursor: default;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  }
-  .kpi-card:hover {
-    border-color: var(--blue);
-    transform: translateY(-8px) scale(1.025);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08), 0 0 25px rgba(37, 99, 235, 0.1);
-  }
-  /* Diagonal light pass sweep */
-  .kpi-card::after {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -150%;
-    width: 60%;
-    height: 200%;
-    background: linear-gradient(
-      90deg,
-      rgba(255, 255, 255, 0) 0%,
-      rgba(255, 255, 255, 0.3) 30%,
-      rgba(255, 255, 255, 0.6) 50%,
-      rgba(255, 255, 255, 0.3) 70%,
-      rgba(255, 255, 255, 0) 100%
-    );
-    transform: rotate(30deg);
-    transition: none;
-    pointer-events: none;
-    z-index: 5;
-  }
-  .kpi-card:hover::after {
-    left: 150%;
-    transition: left 0.85s cubic-bezier(0.25, 1, 0.5, 1);
-  }
-  .kpi-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 4px;
-    border-radius: var(--radius) var(--radius) 0 0;
-    z-index: 2;
-  }
-  .kpi-blue::before { background: linear-gradient(90deg, var(--blue), var(--purple)); }
-  .kpi-green::before { background: linear-gradient(90deg, var(--green), var(--cyan)); }
-  .kpi-amber::before { background: var(--amber); }
-  .kpi-red::before { background: var(--red); }
-  .kpi-purple::before { background: var(--purple); }
-  .kpi-cyan::before { background: var(--cyan); }
+ .kpi-card {
+  position: relative;
+  background: linear-gradient(145deg, var(--surface) 0%, var(--surface2) 100%);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: visible;           /* biar popover detail tidak terpotong */
+  min-height: 112px; height: 100%; display: flex; flex-direction: column;
+  transition: border-color .4s cubic-bezier(0.16,1,0.3,1),
+              transform .4s cubic-bezier(0.16,1,0.3,1),
+              box-shadow .4s cubic-bezier(0.16,1,0.3,1);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+.kpi-card:hover {
+  border-color: var(--blue);
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.08), 0 0 25px rgba(37,99,235,0.1);
+  z-index: 15;
+}
+.kpi-card.kpi-has-detail { cursor: pointer; }
+
+/* isi dalam, tempat efek shine & konten — ini yang dipotong rapi */
+.kpi-card-inner {
+  position: relative;
+  flex: 1;
+  padding: 16px 16px 14px;
+  border-radius: inherit;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.kpi-card-inner::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  border-radius: var(--radius) var(--radius) 0 0;
+  z-index: 2;
+}
+.kpi-blue  .kpi-card-inner::before { background: linear-gradient(90deg, var(--blue), var(--purple)); }
+.kpi-green .kpi-card-inner::before { background: linear-gradient(90deg, var(--green), var(--cyan)); }
+.kpi-amber .kpi-card-inner::before { background: var(--amber); }
+.kpi-red   .kpi-card-inner::before { background: var(--red); }
+.kpi-purple.kpi-card-inner::before,
+.kpi-purple .kpi-card-inner::before { background: var(--purple); }
+.kpi-cyan  .kpi-card-inner::before { background: var(--cyan); }
+
+.kpi-card-inner::after {
+  content: '';
+  position: absolute;
+  top: -50%; left: -150%;
+  width: 60%; height: 200%;
+  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.3) 30%, rgba(255,255,255,.6) 50%, rgba(255,255,255,.3) 70%, rgba(255,255,255,0) 100%);
+  transform: rotate(30deg);
+  pointer-events: none;
+  z-index: 5;
+}
+.kpi-card:hover .kpi-card-inner::after {
+  left: 150%;
+  transition: left 0.85s cubic-bezier(0.25,1,0.5,1);
+}
+
+.kpi-header { display: flex; justify-content: space-between; align-items: flex-start; }
+.kpi-label { font-family: var(--font-display); font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); }
+.kpi-icon { font-size: 18px; opacity: .85; transition: transform .4s ease, opacity .3s; }
+.kpi-card:hover .kpi-icon { transform: scale(1.15) rotate(5deg); opacity: 1; }
+.kpi-value { font-family: var(--font-display); font-size: clamp(20px, 2.5vw, 28px); font-weight: 800; letter-spacing: -.5px; line-height: 1.1; color: var(--text); word-break: break-word; }
+.kpi-sub { font-size: 11px; color: var(--muted); display: flex; align-items: center; gap: 5px; }
+
+/* petunjuk kecil kalau card punya detail tambahan */
+.kpi-detail-hint {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--blue);
+  background: var(--blue-dim);
+  padding: 1px 6px;
+  border-radius: 8px;
+  white-space: nowrap;
+}
+
+/* POPOVER DETAIL — muncul saat hover / klik, tidak menambah tinggi card */
+.kpi-detail-pop {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0; right: 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 16px 32px rgba(15,23,42,0.16);
+  padding: 12px 14px;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(-6px);
+  transition: opacity .22s ease, transform .22s cubic-bezier(0.16,1,0.3,1), visibility .22s;
+  z-index: 30;
+}
+.kpi-detail-title {
+  font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .5px;
+  color: var(--muted); margin-bottom: 8px;
+}
+.kpi-card.kpi-has-detail:hover .kpi-detail-pop,
+.kpi-card.kpi-has-detail.kpi-open .kpi-detail-pop {
+  opacity: 1; visibility: visible; pointer-events: auto; transform: translateY(0);
+}
+
+@media (max-width: 1200px) { .kpi-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 768px)  { .kpi-grid { grid-template-columns: repeat(2, 1fr); } }
  
-  .kpi-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
-  .kpi-label { font-family: var(--font-display); font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); }
-  .kpi-icon { font-size: 19px; opacity: .85; transition: transform 0.4s ease, opacity 0.3s; }
-  .kpi-card:hover .kpi-icon { transform: scale(1.2) rotate(5deg); opacity: 1; }
-  .kpi-value { 
-    font-family: var(--font-display); 
-    font-size: 32px; 
-    font-weight: 800; 
-    letter-spacing: -0.5px; 
-    line-height: 1; 
-    margin-bottom: 4px; 
-    color: var(--text);
-    transition: text-shadow 0.3s;
+  
+  .kpi-grid-4 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
   }
-  .kpi-card:hover .kpi-value {
-    text-shadow: 0 0 10px rgba(0,0,0,0.05);
+  @media (max-width: 1200px) {
+    .kpi-grid-4 { grid-template-columns: repeat(2, 1fr); }
   }
-  .kpi-sub { font-size: 11px; color: var(--muted); }
- 
+  @media (max-width: 768px) {
+    .kpi-grid-4 { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 480px) {
+    .kpi-grid-4 { grid-template-columns: 1fr; }
+  }
+
   /* ── CHARTS ROW ── */
   .charts-row {
     display: grid;
@@ -460,44 +527,76 @@
     animation: progress-bar-stripes 1s linear infinite;
   }
 
-  /* ── MINI KPI ROW ── */
-  .mini-kpi-row { display: flex; gap: 12px; margin-bottom: 20px; }
-  .mini-kpi {
-    flex: 1;
-    background: linear-gradient(145deg, var(--surface) 0%, rgba(22, 27, 34, 0.8) 100%);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 12px 14px;
-    display: flex; align-items: center; gap: 12px;
-    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-  }
-  .mini-kpi:hover {
-    transform: translateY(-4px);
-    border-color: var(--blue-dim);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.35);
-  }
-  .mini-kpi::after {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -150%;
-    width: 50%;
-    height: 200%;
-    background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0) 100%);
-    transform: rotate(30deg);
-    pointer-events: none;
-  }
-  .mini-kpi:hover::after {
-    left: 150%;
-    transition: left 0.8s ease-in-out;
-  }
-  .mini-kpi-icon { font-size: 22px; transition: transform 0.3s ease; }
-  .mini-kpi:hover .mini-kpi-icon { transform: scale(1.15); }
-  .mini-kpi-val { font-family: var(--font-display); font-size: 22px; font-weight: 800; letter-spacing: -.5px; color: #fff; }
-  .mini-kpi-lbl { font-family: var(--font-display); font-size: 10px; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: .5px; }
+ /* ── MINI KPI ROW ── */
+.mini-kpi-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.mini-kpi {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  display: flex; align-items: center; gap: 12px;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+}
+.mini-kpi::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; bottom: 0;
+  width: 4px;
+  background: var(--mk-accent, var(--blue));
+}
+.mini-kpi:hover {
+  transform: translateY(-4px);
+  border-color: var(--mk-accent, var(--blue));
+  box-shadow: 0 12px 22px rgba(15, 23, 42, 0.12);
+}
+.mini-kpi::after {
+  content: '';
+  position: absolute;
+  top: -50%; left: -150%;
+  width: 50%; height: 200%;
+  background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.6) 50%, rgba(255,255,255,0) 100%);
+  transform: rotate(30deg);
+  pointer-events: none;
+}
+.mini-kpi:hover::after { left: 150%; transition: left 0.8s ease-in-out; }
+
+.mini-kpi-icon {
+  font-size: 20px;
+  width: 40px; height: 40px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--mk-accent-bg, var(--blue-dim));
+  transition: transform 0.3s ease;
+}
+.mini-kpi:hover .mini-kpi-icon { transform: scale(1.12) rotate(-4deg); }
+
+.mini-kpi-val { font-family: var(--font-display); font-size: 21px; font-weight: 800; letter-spacing: -.5px; color: var(--text); line-height: 1.15; white-space: nowrap; }
+.mini-kpi-lbl { font-family: var(--font-display); font-size: 10px; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: .5px; margin-top: 2px; white-space: nowrap; }
+
+.mk-blue   { --mk-accent: #2563eb; --mk-accent-bg: #dbeafe; }
+.mk-green  { --mk-accent: #16a34a; --mk-accent-bg: #dcfce7; }
+.mk-cyan   { --mk-accent: #0891b2; --mk-accent-bg: #cffafe; }
+.mk-amber  { --mk-accent: #d97706; --mk-accent-bg: #fef3c7; }
+.mk-purple { --mk-accent: #7c3aed; --mk-accent-bg: #ede9fe; }
+.mk-teal   { --mk-accent: #0d9488; --mk-accent-bg: #ccfbf1; }
+.mk-indigo { --mk-accent: #4f46e5; --mk-accent-bg: #e0e7ff; }
+.mk-rose   { --mk-accent: #e11d48; --mk-accent-bg: #ffe4e6; }
+
+@media (max-width: 1200px) {
+  .mini-kpi-row { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 768px) {
+  .mini-kpi-row { grid-template-columns: repeat(2, 1fr); }
+}
 
   /* ── TABS ── */
   .tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 16px; }
@@ -836,6 +935,8 @@
   }
   .overview-grid {
     display: grid;
+    grid-auto-rows: 1fr;
+    align-items: stretch;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     gap: 20px;
   }
@@ -906,13 +1007,13 @@
     background: var(--surface2);
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
-    padding: 8px 10px;
+    padding: 12px 14px;
     display: flex;
     flex-direction: column;
     gap: 4px;
   }
   .bu-name {
-    font-size: 9.5px;
+    font-size: 14px;
     font-weight: 800;
     color: var(--muted);
     text-transform: uppercase;
@@ -924,7 +1025,8 @@
   .bu-row {
     display: flex;
     justify-content: space-between;
-    font-size: 10px;
+    font-size: 16px;
+    margin-top: 4px;
   }
   .bu-row span {
     color: var(--muted);
@@ -933,6 +1035,22 @@
     font-family: var(--font-mono);
     color: var(--text);
   }
+  .bu-logo {
+    height: 120px;
+    max-width: 100%;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto 12px;
+  }
+.bu-name-fallback {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-align: center;
+  display: none;
+}
   .map-card {
     display: flex;
     flex-direction: column;
@@ -1785,7 +1903,7 @@
   .olf-section .snum {
     margin-top: 4px;
     text-align: center;
-    font-size: 28px;
+    font-size: clamp(20px, 2.5vw, 28px);
     font-weight: 900;
     color: var(--text, #1a365d);
     letter-spacing: -.5px;
@@ -1822,7 +1940,23 @@
     font-weight: 700;
     color: #c53030;
     line-height: 1.6;
-  }
+  }.plan-kpi-row { display: flex; gap: 10px; margin: 14px 0; flex-wrap: wrap; }
+.plan-filter-bar { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+.plan-table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: var(--radius-sm); }
+.plan-table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 1100px; }
+.plan-table thead tr:first-child th {
+  background: var(--surface2); position: sticky; top: 0; z-index: 5;
+  padding: 8px 10px; font-size: 10px; font-weight: 800; text-transform: uppercase;
+  letter-spacing: .4px; color: var(--muted); border-bottom: 1px solid var(--border);
+  white-space: nowrap; cursor: pointer;
+}
+.plan-table thead tr:first-child th:hover { color: var(--blue); }
+.plan-table thead tr:nth-child(2) th { background: var(--surface2); padding: 4px 6px; border-bottom: 2px solid var(--border); }
+.plan-table tbody tr.plan-row { border-bottom: 1px solid var(--border); cursor: pointer; transition: background .15s; }
+.plan-table tbody tr.plan-row:hover { background: rgba(37,99,235,.04); }
+.plan-table tbody td { padding: 8px 10px; white-space: nowrap; }
+.plan-table tfoot td { padding: 10px; background: var(--text); color: #fff; font-weight: 800; font-family: var(--font-mono); }
+.plan-day-cell { transition: background .3s ease; border-radius: 4px; }
 </style>
 </head>
 <body>
@@ -1830,63 +1964,8 @@
 <!-- ═══ HEADER ═══ -->
 <header class="header">
   <div class="header-left">
-    <!-- SVG Informa 22th Anniversary Logo -->
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 70" width="170" height="35" style="display: inline-block; vertical-align: middle; margin-right: 8px;">
-      <!-- Informa text -->
-      <g transform="translate(5, 5)">
-        <!-- Letters i, n, f -->
-        <text x="0" y="42" font-family="'Outfit', 'Plus Jakarta Sans', sans-serif" font-size="40" font-weight="800" fill="var(--text)" letter-spacing="-2">inf</text>
-        
-        <!-- Letter o (4 quadrants) -->
-        <g transform="translate(68, 25)">
-          <!-- Top Left quadrant -->
-          <path d="M 0 0 L -14 0 A 14 14 0 0 1 0 -14 Z" fill="#79af97" stroke="var(--bg)" stroke-width="1.2" />
-          <!-- Top Right quadrant -->
-          <path d="M 0 0 L 0 -14 A 14 14 0 0 1 14 0 Z" fill="#e2573e" stroke="var(--bg)" stroke-width="1.2" />
-          <!-- Bottom Left quadrant -->
-          <path d="M 0 0 L 0 14 A 14 14 0 0 1 -14 0 Z" fill="#f2b647" stroke="var(--bg)" stroke-width="1.2" />
-          <!-- Bottom Right quadrant -->
-          <path d="M 0 0 L 14 0 A 14 14 0 0 1 0 14 Z" fill="#5f879d" stroke="var(--bg)" stroke-width="1.2" />
-          <!-- Inner hole for the 'o' look -->
-          <circle cx="0" cy="0" r="5" fill="var(--bg)" />
-        </g>
-        
-        <!-- Letters r, m, a -->
-        <text x="88" y="42" font-family="'Outfit', 'Plus Jakarta Sans', sans-serif" font-size="40" font-weight="800" fill="var(--text)" letter-spacing="-2">rma</text>
-        <!-- Trademark -->
-        <text x="165" y="16" font-family="'Outfit', sans-serif" font-size="9" font-weight="600" fill="var(--muted)">®</text>
-      </g>
-      
-      <!-- Divider -->
-      <line x1="190" y1="12" x2="190" y2="48" stroke="var(--border)" stroke-width="1.5" />
-      
-      <!-- 22th Anniversary -->
-      <g transform="translate(202, 5)">
-        <defs>
-          <linearGradient id="gradGreen" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#79af97" />
-            <stop offset="100%" stop-color="#4e7f67" />
-          </linearGradient>
-          <linearGradient id="gradOrange" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#e2573e" />
-            <stop offset="60%" stop-color="#f2b647" />
-            <stop offset="100%" stop-color="#e2573e" />
-          </linearGradient>
-        </defs>
-        
-        <!-- First '2' -->
-        <text x="0" y="32" font-family="'Outfit', sans-serif" font-size="34" font-weight="900" fill="url(#gradGreen)" letter-spacing="-1">2</text>
-        <!-- Second '2' -->
-        <text x="17" y="32" font-family="'Outfit', sans-serif" font-size="34" font-weight="900" fill="url(#gradOrange)" letter-spacing="-1">2</text>
-        
-        <!-- 'TH' badge -->
-        <circle cx="41" cy="10" r="5.5" fill="#3b95ff" />
-        <text x="41" y="13" font-family="'Outfit', sans-serif" font-size="7.5" font-weight="900" fill="#fff" text-anchor="middle">TH</text>
-        
-        <!-- 'ANNIVERSARY' -->
-        <text x="0" y="44" font-family="'Outfit', sans-serif" font-size="8" font-weight="800" fill="#8e9fae" letter-spacing="0.5">ANNIVERSARY</text>
-      </g>
-    </svg>
+    <!-- Informa Logo -->
+    <img src="https://lh3.googleusercontent.com/d/1T_T9ruGoVeGQjy4raxb7XdsEUM6tS2JU" alt="Informa" style="display: inline-block; vertical-align: middle; margin-right: 12px; height: 120px; width: auto; object-fit: contain;">
     <div>
       <div class="header-title">ORDER FULFILLMENT &
 PLANNING REPORT</div>
@@ -1971,22 +2050,31 @@ PLANNING REPORT</div>
             </div>
           </div>
           <div class="bu-sla-breakdown">
-            <div class="bu-col">
-              <div class="bu-name">INFORMA</div>
-              <div class="bu-row"><span>GRW:</span><strong id="ovSlaGrwInf">0%</strong></div>
-              <div class="bu-row"><span>CUST:</span><strong id="ovSlaCustInf">0%</strong></div>
-            </div>
-            <div class="bu-col">
-              <div class="bu-name">ELECTRONICS</div>
-              <div class="bu-row"><span>GRW:</span><strong id="ovSlaGrwIel">0%</strong></div>
-              <div class="bu-row"><span>CUST:</span><strong id="ovSlaCustIel">0%</strong></div>
-            </div>
-            <div class="bu-col">
-              <div class="bu-name">SELMA</div>
-              <div class="bu-row"><span>GRW:</span><strong id="ovSlaGrwSel">0%</strong></div>
-              <div class="bu-row"><span>CUST:</span><strong id="ovSlaCustSel">0%</strong></div>
-            </div>
-          </div>
+  <div class="bu-col">
+    <div class="bu-name" style="border-bottom:none; padding-bottom:0;">
+      <img class="bu-logo" src="https://lh3.googleusercontent.com/d/1T_T9ruGoVeGQjy4raxb7XdsEUM6tS2JU" alt="Informa" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+      <span class="bu-name-fallback">INFORMA</span>
+    </div>
+    <div class="bu-row"><span>GRW:</span><strong id="ovSlaGrwInf">0%</strong></div>
+    <div class="bu-row"><span>CUST:</span><strong id="ovSlaCustInf">0%</strong></div>
+  </div>
+  <div class="bu-col">
+    <div class="bu-name" style="border-bottom:none; padding-bottom:0;">
+      <img class="bu-logo" src="https://lh3.googleusercontent.com/d/19sBMv6tjckvdw434w5-aFCjS8NDLM6S0" alt="Informa Electronics" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+      <span class="bu-name-fallback">ELECTRONICS</span>
+    </div>
+    <div class="bu-row"><span>GRW:</span><strong id="ovSlaGrwIel">0%</strong></div>
+    <div class="bu-row"><span>CUST:</span><strong id="ovSlaCustIel">0%</strong></div>
+  </div>
+  <div class="bu-col">
+    <div class="bu-name" style="border-bottom:none; padding-bottom:0;">
+      <img class="bu-logo" src="https://lh3.googleusercontent.com/d/1-K9Fmdmex6tysQbdpxTGXsubY945sayH" alt="Selma" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+      <span class="bu-name-fallback">SELMA</span>
+    </div>
+    <div class="bu-row"><span>GRW:</span><strong id="ovSlaGrwSel">0%</strong></div>
+    <div class="bu-row"><span>CUST:</span><strong id="ovSlaCustSel">0%</strong></div>
+  </div>
+</div>
         </div>
         
         <!-- OLF Card -->
@@ -2100,102 +2188,123 @@ PLANNING REPORT</div>
 
   <!-- KPI CARDS -->
   <div class="kpi-grid" id="kpiGrid">
-    <div class="kpi-card kpi-blue">
+  <div class="kpi-card kpi-blue">
+    <div class="kpi-card-inner">
       <div class="kpi-header"><span class="kpi-label">Total Trip</span><span class="kpi-icon">🚛</span></div>
       <div class="kpi-value" id="kpiTotal">—</div>
       <div class="kpi-sub" id="kpiTotalSub">—</div>
     </div>
-    <div class="kpi-card kpi-cyan" style="display: flex; flex-direction: column; justify-content: space-between;">
-      <div>
-        <div class="kpi-header"><span class="kpi-label">Total CBM Plan</span><span class="kpi-icon">📦</span></div>
-        <div class="kpi-value" id="kpiCBM">—</div>
+  </div>
+
+  <div class="kpi-card kpi-cyan kpi-has-detail" onclick="this.classList.toggle('kpi-open')">
+    <div class="kpi-card-inner">
+      <div class="kpi-header"><span class="kpi-label">Total CBM Plan</span><span class="kpi-icon">📦</span></div>
+      <div class="kpi-value" id="kpiCBM">—</div>
+      <div class="kpi-sub">
+        <span id="kpiCBMSub">—</span>
+        <span class="kpi-detail-hint">ⓘ rincian</span>
       </div>
-      <div id="kpiCBMBreakdown" style="font-size: 11px; margin: 4px 0 8px 0; display: flex; flex-direction: column; gap: 4px;">
-        <!-- Rendered via JS -->
-      </div>
-      <div class="kpi-sub" id="kpiCBMSub">—</div>
     </div>
-    <div class="kpi-card kpi-green">
+    <div class="kpi-detail-pop" onclick="event.stopPropagation()">
+      <div class="kpi-detail-title">Rincian CBM</div>
+      <div id="kpiCBMBreakdown" style="display:flex; flex-direction:column; gap:6px;">
+        <!-- Rendered via JS, id & isinya tidak berubah -->
+      </div>
+    </div>
+  </div>
+
+  <div class="kpi-card kpi-green">
+    <div class="kpi-card-inner">
       <div class="kpi-header"><span class="kpi-label">Sudah Keluar DC</span><span class="kpi-icon">✅</span></div>
       <div class="kpi-value" id="kpiOut">—</div>
       <div class="kpi-sub" id="kpiOutSub">—</div>
     </div>
-    <div class="kpi-card kpi-amber">
+  </div>
+
+  <div class="kpi-card kpi-amber">
+    <div class="kpi-card-inner">
       <div class="kpi-header"><span class="kpi-label">Sedang Proses</span><span class="kpi-icon">⚙️</span></div>
       <div class="kpi-value" id="kpiProcess">—</div>
       <div class="kpi-sub" id="kpiProcessSub">—</div>
     </div>
-    <div class="kpi-card kpi-red">
+  </div>
+
+  <div class="kpi-card kpi-red">
+    <div class="kpi-card-inner">
       <div class="kpi-header"><span class="kpi-label">Belum Datang</span><span class="kpi-icon">⏳</span></div>
       <div class="kpi-value" id="kpiBelum">—</div>
       <div class="kpi-sub" id="kpiBelumSub">—</div>
     </div>
-    <div class="kpi-card kpi-purple">
+  </div>
+
+  <div class="kpi-card kpi-purple">
+    <div class="kpi-card-inner">
       <div class="kpi-header"><span class="kpi-label">Antri</span><span class="kpi-icon">🔄</span></div>
       <div class="kpi-value" id="kpiAntri">—</div>
       <div class="kpi-sub" id="kpiAntriSub">—</div>
     </div>
   </div>
+</div>
 
   <!-- MINI KPI ROW -->
   <div class="mini-kpi-row">
-    <div class="mini-kpi">
-      <span class="mini-kpi-icon">📋</span>
-      <div>
-        <div class="mini-kpi-val" id="mkpiCaseid">—</div>
-        <div class="mini-kpi-lbl">Total Case ID</div>
-      </div>
-    </div>
-    <div class="mini-kpi">
-      <span class="mini-kpi-icon">🏠</span>
-      <div>
-        <div class="mini-kpi-val" id="mkpiDalamKota">—</div>
-        <div class="mini-kpi-lbl">Dalam Kota</div>
-      </div>
-    </div>
-    <div class="mini-kpi">
-      <span class="mini-kpi-icon">🌍</span>
-      <div>
-        <div class="mini-kpi-val" id="mkpiLuarKota">—</div>
-        <div class="mini-kpi-lbl">Luar Kota</div>
-      </div>
-    </div>
-    <div class="mini-kpi">
-      <span class="mini-kpi-icon">⚡</span>
-      <div>
-        <div class="mini-kpi-val" id="mkpiShift1">—</div>
-        <div class="mini-kpi-lbl">Shift 1</div>
-      </div>
-    </div>
-    <div class="mini-kpi">
-      <span class="mini-kpi-icon">🌙</span>
-      <div>
-        <div class="mini-kpi-val" id="mkpiShift2">—</div>
-        <div class="mini-kpi-lbl">Shift 2</div>
-      </div>
-    </div>
-    <div class="mini-kpi">
-      <span class="mini-kpi-icon">📊</span>
-      <div>
-        <div class="mini-kpi-val" id="mkpiPctOut">—</div>
-        <div class="mini-kpi-lbl">% Keluar DC</div>
-      </div>
-    </div>
-    <div class="mini-kpi">
-      <span class="mini-kpi-icon">🚢</span>
-      <div>
-        <div class="mini-kpi-val" id="mkpiCarriers">—</div>
-        <div class="mini-kpi-lbl">Carrier Aktif</div>
-      </div>
-    </div>
-    <div class="mini-kpi">
-      <span class="mini-kpi-icon">🚐</span>
-      <div>
-        <div class="mini-kpi-val" id="mkpiInternal">—</div>
-        <div class="mini-kpi-lbl">Internal / Ext</div>
-      </div>
+  <div class="mini-kpi mk-blue">
+    <span class="mini-kpi-icon">📋</span>
+    <div>
+      <div class="mini-kpi-val" id="mkpiCaseid">—</div>
+      <div class="mini-kpi-lbl">Total Case ID</div>
     </div>
   </div>
+  <div class="mini-kpi mk-green">
+    <span class="mini-kpi-icon">🏠</span>
+    <div>
+      <div class="mini-kpi-val" id="mkpiDalamKota">—</div>
+      <div class="mini-kpi-lbl">Dalam Kota</div>
+    </div>
+  </div>
+  <div class="mini-kpi mk-cyan">
+    <span class="mini-kpi-icon">🌍</span>
+    <div>
+      <div class="mini-kpi-val" id="mkpiLuarKota">—</div>
+      <div class="mini-kpi-lbl">Luar Kota</div>
+    </div>
+  </div>
+  <div class="mini-kpi mk-amber">
+    <span class="mini-kpi-icon">⚡</span>
+    <div>
+      <div class="mini-kpi-val" id="mkpiShift1">—</div>
+      <div class="mini-kpi-lbl">Shift 1</div>
+    </div>
+  </div>
+  <div class="mini-kpi mk-purple">
+    <span class="mini-kpi-icon">🌙</span>
+    <div>
+      <div class="mini-kpi-val" id="mkpiShift2">—</div>
+      <div class="mini-kpi-lbl">Shift 2</div>
+    </div>
+  </div>
+  <div class="mini-kpi mk-teal">
+    <span class="mini-kpi-icon">📊</span>
+    <div>
+      <div class="mini-kpi-val" id="mkpiPctOut">—</div>
+      <div class="mini-kpi-lbl">% Keluar DC</div>
+    </div>
+  </div>
+  <div class="mini-kpi mk-indigo">
+    <span class="mini-kpi-icon">🚢</span>
+    <div>
+      <div class="mini-kpi-val" id="mkpiCarriers">—</div>
+      <div class="mini-kpi-lbl">Carrier Aktif</div>
+    </div>
+  </div>
+  <div class="mini-kpi mk-rose">
+    <span class="mini-kpi-icon">🚐</span>
+    <div>
+      <div class="mini-kpi-val" id="mkpiInternal">—</div>
+      <div class="mini-kpi-lbl">Internal / Ext</div>
+    </div>
+  </div>
+</div>
 
   <!-- CHARTS ROW -->
   <div class="charts-row">
@@ -2332,26 +2441,37 @@ PLANNING REPORT</div>
 
   <main class="main">
     <!-- AGING KPI CARDS -->
-    <div class="kpi-grid" style="margin-bottom: 20px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
-      <div class="kpi-card kpi-purple" style="border-left: 4px solid var(--purple);">
-        <div class="kpi-header"><span class="kpi-label" style="color:var(--purple); font-weight:700;">TOTAL POOL ORDER</span><span class="kpi-icon">📦</span></div>
-        <div class="kpi-value" id="akpiTotal">—</div>
-        <div class="kpi-sub" id="akpiTotalSub">—</div>
+    <div class="kpi-grid-4" style="margin-bottom: 20px;">
+      <div class="kpi-card kpi-purple">
+        <div class="kpi-card-inner">
+          <div class="kpi-header"><span class="kpi-label">TOTAL POOL ORDER</span><span class="kpi-icon">📦</span></div>
+          <div class="kpi-value" id="akpiTotal">—</div>
+          <div class="kpi-sub" id="akpiTotalSub">—</div>
+        </div>
       </div>
-      <div class="kpi-card kpi-cyan" style="border-left: 4px solid var(--cyan);">
-        <div class="kpi-header"><span class="kpi-label" style="color:var(--cyan); font-weight:700;">VOLUME CBM POOL</span><span class="kpi-icon">📐</span></div>
-        <div class="kpi-value" id="akpiCBM">—</div>
-        <div class="kpi-sub" id="akpiCBMSub">—</div>
+      <div class="kpi-card kpi-cyan">
+        <div class="kpi-card-inner">
+          <div class="kpi-header"><span class="kpi-label">VOLUME CBM POOL</span><span class="kpi-icon">📐</span></div>
+          <div class="kpi-value" id="akpiCBM">—</div>
+          <div class="kpi-sub" id="akpiCBMSub">—</div>
+        </div>
       </div>
-      <div class="kpi-card kpi-red" style="border-left: 4px solid var(--red);">
-        <div class="kpi-header"><span class="kpi-label" style="color:var(--red); font-weight:700;">CRITICAL AGING</span><span class="kpi-icon">⏳</span></div>
-        <div class="kpi-value" id="akpiCritical">—</div>
-        <div class="kpi-sub" id="akpiCriticalSub">Melewati SLA (DK >3 Hari, LK >7 Hari)</div>
+      <div class="kpi-card kpi-red">
+        <div class="kpi-card-inner">
+          <div class="kpi-header"><span class="kpi-label">CRITICAL AGING</span><span class="kpi-icon">⏳</span></div>
+          <div class="kpi-value" id="akpiCritical">—</div>
+          <div class="kpi-sub" id="akpiCriticalSub">Melewati SLA (DK >3 Hari, LK >7 Hari)</div>
+        </div>
       </div>
-      <div class="kpi-card kpi-amber" style="border-left: 4px solid var(--amber);">
-        <div class="kpi-header"><span class="kpi-label" style="color:var(--amber); font-weight:700;">SLA ACHIEVEMENT</span><span class="kpi-icon">🎯</span></div>
-        <div class="kpi-value" id="akpiSLA">—</div>
-        <div class="kpi-sub" id="akpiSLASub">—</div>
+      <div class="kpi-card kpi-amber kpi-has-detail">
+        <div class="kpi-card-inner">
+          <div class="kpi-header"><span class="kpi-label">DESTINASI TERBANYAK</span><span class="kpi-icon">🎯</span></div>
+          <div class="kpi-value" id="akpiSLA">—</div>
+          <div class="kpi-sub">
+            <span id="akpiSLASub">—</span>
+            <span class="kpi-detail-hint">ⓘ top 5</span>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -2435,6 +2555,59 @@ PLANNING REPORT</div>
       </div>
 
     </div>
+
+  <div class="card" style="margin-top:16px;">
+  <div class="card-header">
+    <div>
+      <div class="card-title">📅 Planning Delivery (CBM)</div>
+      <div class="card-sub">Proyeksi pengiriman CBM per tujuan untuk 4 hari ke depan</div>
+    </div>
+    <span class="badge badge-blue" id="planLastUpdate">—</span>
+  </div>
+
+  <div class="plan-kpi-row" id="planKpiRow"></div>
+
+  <div class="plan-filter-bar">
+    <input type="text" class="search-box" id="planSearch" placeholder="Cari tujuan…" oninput="applyPlanFilters()">
+        <select class="filter-select" id="planSourceFilter" onchange="initPlanningDeliverySection()">
+      <option value="ALL">Semua Data (GRW + Cust)</option>
+      <option value="GRW">GRW Saja</option>
+      <option value="CUST">Customer Saja</option>
+    </select>
+    <select class="filter-select" id="planTypeFilter" onchange="applyPlanFilters()">
+      <option value="">Semua Jenis Armada</option>
+    </select>
+    <span class="badge badge-muted" id="planCount">0 tujuan</span>
+  </div>
+
+  <div class="plan-table-wrap">
+    <table class="plan-table" id="planTable">
+      <thead>
+        <tr>
+          <th onclick="sortPlanTable('tujuan')">Tujuan</th>
+          <th onclick="sortPlanTable('type')">Jenis Armada</th>
+          <th style="text-align:right" onclick="sortPlanTable('cust')">Cust (CBM)</th>
+          <th style="text-align:right" onclick="sortPlanTable('grw')">GRW (CBM)</th>
+          <th style="text-align:right" onclick="sortPlanTable('total')">CBM Total</th>
+          <th style="text-align:center" onclick="sortPlanTable('armada')">Armada</th>
+          <th>Cont Date</th>
+          <th colspan="4" style="text-align:center; background:linear-gradient(90deg,#fde68a,#fcd34d); color:#78350f;">Planning Delivery (CBM)</th>
+          <th style="text-align:right" onclick="sortPlanTable('notplan')">Not Plan</th>
+          <th style="text-align:right" onclick="sortPlanTable('konversi')">Konversi</th>
+          <th>Remark</th>
+        </tr>
+        <tr id="planDayHeaderRow"></tr>
+      </thead>
+      <tbody id="planTableBody"></tbody>
+      <tfoot id="planTableFoot"></tfoot>
+    </table>
+    <div id="planEmpty" class="empty-state" style="display:none;">
+      <div class="empty-icon">📭</div>
+      <div>Tidak ada data planning delivery.</div>
+    </div>
+  </div>
+</div>
+
   </main>
 </div> <!-- /#pg-aging -->
 
@@ -2613,13 +2786,13 @@ PLANNING REPORT</div>
     </div>
   </div>
 
-  <!-- SLA DAILY 20-DAY TRENDS -->
+  <!-- SLA DAILY TRENDS -->
   <div class="overview-grid" style="margin-top:20px;">
     <!-- SLA GRW Trend Card -->
     <div class="card">
       <div class="card-header">
         <div>
-          <div class="card-title">SLA GRW - 20-DAY TREND</div>
+          <div class="card-title">SLA GRW - GRAFIK TREND</div>
           <div class="card-sub">Daily hit vs miss volume (bars) and achievement rate % (line)</div>
         </div>
       </div>
@@ -2632,7 +2805,7 @@ PLANNING REPORT</div>
     <div class="card">
       <div class="card-header">
         <div>
-          <div class="card-title">SLA CUSTOMER - 20-DAY TREND</div>
+          <div class="card-title">SLA CUSTOMER - GRAFIK TREND</div>
           <div class="card-sub">Daily hit vs miss volume (bars) and achievement rate % (line)</div>
         </div>
       </div>
@@ -3031,11 +3204,24 @@ PLANNING REPORT</div>
   </div>
 </div>
 
+
+<!-- Modal for Top Destinasi -->
+<div id="topDestModal" class="sla-modal">
+  <div class="sla-modal-content" style="max-width: 500px;">
+    <button class="sla-modal-close" onclick="closeTopDestModal()">✕</button>
+    <div class="card-title" style="margin-bottom:6px; font-size:16px;">TOP 5 DESTINASI (OUTSTANDING CBM)</div>
+    <div class="card-sub" style="margin-bottom:20px;">Menampilkan tujuan dengan volume outstanding terbanyak</div>
+    <div id="topDestModalList" style="display:flex; flex-direction:column; gap:10px;">
+      <!-- list injected here -->
+    </div>
+  </div>
+</div>
+
 <!-- Modal for SLA Trend -->
 <div id="slaTrendModal" class="sla-modal">
   <div class="sla-modal-content">
     <button class="sla-modal-close" onclick="closeSlaTrendModal()">✕</button>
-    <div class="card-title" style="margin-bottom:6px; font-size:16px;">SLA 20-DAY PERFORMANCE TREND</div>
+    <div class="card-title" style="margin-bottom:6px; font-size:16px;">SLA PERFORMANCE TREND</div>
     <div class="card-sub" style="margin-bottom:20px;">Warehouse vs Shipping daily SLA tracking</div>
     <div style="height:300px; width:100%;">
       <canvas id="slaTrendModalChart"></canvas>
@@ -3329,34 +3515,45 @@ function renderAgingKPIs(unplanned, totalRawCBM) {
     return o.daysAgo > 7; 
   }).length;
 
-  // Find top area
-  var areaStats = unplanned.reduce(function(acc, o) {
-    var area = o.area || 'Unknown';
-    if (!acc[area]) acc[area] = { count: 0, cbm: 0 };
-    acc[area].count++;
-    acc[area].cbm += (o.cbm || 0);
+  // Find top destination
+  var destStats = unplanned.reduce(function(acc, o) {
+    var dest = o.destination || 'Unknown';
+    if (!acc[dest]) acc[dest] = { count: 0, cbm: 0 };
+    acc[dest].count++;
+    acc[dest].cbm += (o.cbm || 0);
     return acc;
   }, {});
 
-  var areaKeys = Object.keys(areaStats);
-  var topArea = areaKeys.length > 0 ? areaKeys.reduce(function(a, b) {
-    return areaStats[a].count > areaStats[b].count ? a : b;
+  var destKeys = Object.keys(destStats);
+  var topDest = destKeys.length > 0 ? destKeys.reduce(function(a, b) {
+    return destStats[a].cbm > destStats[b].cbm ? a : b;
   }) : 'None';
-
-  var topAreaStat = areaStats[topArea] || { count: 0, cbm: 0 };
+  var topDestStat = destStats[topDest] || { count: 0, cbm: 0 };
+  
+  window.currentDestStats = destStats; // Save for modal
 
   document.getElementById('akpiTotal').textContent = totalOrders + ' Order';
   document.getElementById('akpiTotalSub').textContent = 'Dalam antrian pool gudang';
-
   document.getElementById('akpiCBM').textContent = totalCBM.toFixed(2) + ' CBM';
   document.getElementById('akpiCBMSub').textContent = 'Estimasi total volume cargo';
-
   document.getElementById('akpiCritical').textContent = critical + ' Order';
   // Sub text is static in HTML
 
-  document.getElementById('akpiSLA').textContent = topArea;
-  document.getElementById('akpiSLASub').textContent = topAreaStat.count + ' Order (' + topAreaStat.cbm.toFixed(2) + ' CBM)';
+  var kpiSLAEl = document.getElementById('akpiSLA');
+  kpiSLAEl.textContent = topDest;
+  document.getElementById('akpiSLASub').textContent = topDestStat.count + ' Order (' + topDestStat.cbm.toFixed(2) + ' CBM)';
   
+  // Make card clickable
+  var kpiSLACard = kpiSLAEl.closest('.kpi-card');
+  if (kpiSLACard) {
+    kpiSLACard.style.cursor = 'pointer';
+    kpiSLACard.onclick = function() {
+      if (typeof openTopDestModal === 'function') {
+        openTopDestModal(window.currentDestStats);
+      }
+    };
+  }
+
   // Update label
   var kpiLabel = document.querySelector('#akpiSLA').parentElement.querySelector('.kpi-label');
   if (kpiLabel) kpiLabel.textContent = 'DESTINASI TERBANYAK';
@@ -5131,6 +5328,43 @@ function closeSlaTrendModal() {
   document.getElementById('slaTrendModal').classList.remove('active');
 }
 
+function openTopDestModal(destStats) {
+  var listEl = document.getElementById('topDestModalList');
+  if (!listEl) return;
+  
+  var keys = Object.keys(destStats);
+  var sortedDests = keys.sort(function(a, b) {
+    return destStats[b].cbm - destStats[a].cbm;
+  }).slice(0, 5);
+  
+  var html = '';
+  sortedDests.forEach(function(dest, i) {
+    var stat = destStats[dest];
+    html += '<div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); padding-bottom:8px;">';
+    html += '  <div style="display:flex; align-items:center; gap:10px;">';
+    html += '    <div style="width:24px; height:24px; border-radius:50%; background:rgba(33,136,255,0.1); color:var(--blue); display:flex; justify-content:center; align-items:center; font-weight:bold; font-size:12px;">' + (i+1) + '</div>';
+    html += '    <span style="font-weight:600; color:#fff;">' + dest + '</span>';
+    html += '  </div>';
+    html += '  <div style="text-align:right;">';
+    html += '    <div style="color:var(--blue); font-family:var(--font-mono); font-weight:700;">' + stat.cbm.toFixed(2) + ' CBM</div>';
+    html += '    <div style="font-size:10px; color:var(--gray-text);">' + stat.count + ' Order</div>';
+    html += '  </div>';
+    html += '</div>';
+  });
+  
+  if (sortedDests.length === 0) {
+    html = '<div style="color:var(--gray-text); text-align:center; padding: 20px;">Tidak ada data.</div>';
+  }
+  
+  listEl.innerHTML = html;
+  document.getElementById('topDestModal').classList.add('active');
+}
+
+function closeTopDestModal() {
+  document.getElementById('topDestModal').classList.remove('active');
+}
+
+
 function initSlaTrendModalChart() {
   var canvas = document.getElementById('slaTrendModalChart');
   if (!canvas) return;
@@ -5203,20 +5437,30 @@ function initSlaTrendModalChart() {
   var hitPoints = [];
   var misPoints = [];
 
-  // Generate the last 20 calendar days ending today
+  // Generate current month days up to yesterday (H-1)
   var today = new Date();
-  var last20Keys = [];
-  for (var i = 19; i >= 0; i--) {
-    var d = new Date(today.getTime());
-    d.setDate(today.getDate() - i);
-    var y = d.getFullYear();
-    var m = String(d.getMonth() + 1).padStart(2, '0');
-    var dateVal = String(d.getDate()).padStart(2, '0');
+  var currentMonth = today.getMonth();
+  var currentYear = today.getFullYear();
+  var iterDate = new Date(currentYear, currentMonth, 1);
+  var endDate = new Date(today.getTime());
+  endDate.setDate(today.getDate() - 1);
+  endDate.setHours(23, 59, 59, 999);
+  
+  if (endDate < iterDate) {
+    iterDate = new Date(currentYear, currentMonth - 1, 1);
+  }
+  
+  var keysList = [];
+  while (iterDate <= endDate) {
+    var y = iterDate.getFullYear();
+    var m = String(iterDate.getMonth() + 1).padStart(2, '0');
+    var dateVal = String(iterDate.getDate()).padStart(2, '0');
     var key = y + '-' + m + '-' + dateVal;
-    last20Keys.push(key);
+    keysList.push(key);
+    iterDate.setDate(iterDate.getDate() + 1);
   }
 
-  last20Keys.forEach(function(k) {
+  keysList.forEach(function(k) {
     var parts = k.split('-');
     var displayDate = parts[2] + '/' + parts[1]; // DD/MM format
     labels.push(displayDate);
@@ -5240,7 +5484,7 @@ function initSlaTrendModalChart() {
     var dailyHit = grwHit + custHit;
     var dailyMis = grwMis + custMis;
     hitPoints.push(dailyHit);
-    misPoints.push(dailyMis);
+    misPoints.push(dailyMis > 0 ? dailyMis : null);
   });
   
   slaTrendChartInstance = new Chart(ctx, {
@@ -5259,7 +5503,7 @@ function initSlaTrendModalChart() {
         },
         {
           type: 'bar',
-          label: 'SLA Miss Volume',
+          label: 'SLA Miss Volume', minBarLength: 5,
           data: misPoints,
           backgroundColor: 'rgba(239, 68, 68, 0.75)',
           borderColor: '#ef4444',
@@ -5302,7 +5546,7 @@ function initSlaTrendModalChart() {
         }
       },
       scales: {
-        y: {
+        y: { stacked: true,
           type: 'linear',
           display: true,
           position: 'left',
@@ -5336,7 +5580,7 @@ function initSlaTrendModalChart() {
             }
           }
         },
-        x: {
+        x: { stacked: true,
           grid: { display: false },
           ticks: { color: '#8e9fae', font: { family: 'Plus Jakarta Sans', size: 10 } }
         }
@@ -5419,20 +5663,30 @@ function initSlaTrendOnPageCharts() {
   var custMisPoints = [];
   var custPctPoints = [];
 
-  // Generate the last 20 calendar days ending today
+  // Generate current month days up to yesterday (H-1)
   var today = new Date();
-  var last20Keys = [];
-  for (var i = 19; i >= 0; i--) {
-    var d = new Date(today.getTime());
-    d.setDate(today.getDate() - i);
-    var y = d.getFullYear();
-    var m = String(d.getMonth() + 1).padStart(2, '0');
-    var dateVal = String(d.getDate()).padStart(2, '0');
+  var currentMonth = today.getMonth();
+  var currentYear = today.getFullYear();
+  var iterDate = new Date(currentYear, currentMonth, 1);
+  var endDate = new Date(today.getTime());
+  endDate.setDate(today.getDate() - 1);
+  endDate.setHours(23, 59, 59, 999);
+  
+  if (endDate < iterDate) {
+    iterDate = new Date(currentYear, currentMonth - 1, 1);
+  }
+  
+  var keysList = [];
+  while (iterDate <= endDate) {
+    var y = iterDate.getFullYear();
+    var m = String(iterDate.getMonth() + 1).padStart(2, '0');
+    var dateVal = String(iterDate.getDate()).padStart(2, '0');
     var key = y + '-' + m + '-' + dateVal;
-    last20Keys.push(key);
+    keysList.push(key);
+    iterDate.setDate(iterDate.getDate() + 1);
   }
 
-  last20Keys.forEach(function(k) {
+  keysList.forEach(function(k) {
     var parts = k.split('-');
     var displayDate = parts[2] + '/' + parts[1]; // DD/MM format
     labels.push(displayDate);
@@ -5449,14 +5703,14 @@ function initSlaTrendOnPageCharts() {
     var grwTotal = grwHit + grwMis;
     var grwPct = grwTotal > 0 ? parseFloat(((grwHit / grwTotal) * 100).toFixed(2)) : 100;
     grwHitPoints.push(grwHit);
-    grwMisPoints.push(grwMis);
+    grwMisPoints.push(grwMis > 0 ? grwMis : null);
     grwPctPoints.push(grwPct);
     
     // For Customer
     var custTotal = custHit + custMis;
     var custPct = custTotal > 0 ? parseFloat(((custHit / custTotal) * 100).toFixed(2)) : 100;
     custHitPoints.push(custHit);
-    custMisPoints.push(custMis);
+    custMisPoints.push(custMis > 0 ? custMis : null);
     custPctPoints.push(custPct);
   });
   
@@ -5477,7 +5731,7 @@ function initSlaTrendOnPageCharts() {
         },
         {
           type: 'bar',
-          label: 'SLA Miss Volume',
+          label: 'SLA Miss Volume', minBarLength: 5,
           data: grwMisPoints,
           backgroundColor: 'rgba(239, 68, 68, 0.75)',
           borderColor: '#ef4444',
@@ -5508,7 +5762,7 @@ function initSlaTrendOnPageCharts() {
         }
       },
       scales: {
-        y: {
+        y: { stacked: true,
           type: 'linear',
           display: true,
           position: 'left',
@@ -5542,7 +5796,7 @@ function initSlaTrendOnPageCharts() {
             }
           }
         },
-        x: {
+        x: { stacked: true,
           grid: { display: false },
           ticks: { color: '#8e9fae', font: { family: 'Plus Jakarta Sans', size: 10 } }
         }
@@ -5567,7 +5821,7 @@ function initSlaTrendOnPageCharts() {
         },
         {
           type: 'bar',
-          label: 'SLA Miss Volume',
+          label: 'SLA Miss Volume', minBarLength: 5,
           data: custMisPoints,
           backgroundColor: 'rgba(239, 68, 68, 0.75)',
           borderColor: '#ef4444',
@@ -5598,7 +5852,7 @@ function initSlaTrendOnPageCharts() {
         }
       },
       scales: {
-        y: {
+        y: { stacked: true,
           type: 'linear',
           display: true,
           position: 'left',
@@ -5632,7 +5886,7 @@ function initSlaTrendOnPageCharts() {
             }
           }
         },
-        x: {
+        x: { stacked: true,
           grid: { display: false },
           ticks: { color: '#8e9fae', font: { family: 'Plus Jakarta Sans', size: 10 } }
         }
@@ -5673,6 +5927,266 @@ function initDatePickers() {
     armStart.value = lastWeekStr;
     armEnd.value = todayStr;
   }
+}
+  // ── PLANNING DELIVERY (turunan dari OUTSTANDING GRW + OUTSTANDING CUST + CONT DATE) ──
+var PLAN_DATA = [];
+var PLAN_FILTERED = [];
+var planSortCol = 'total';
+var planSortDir = -1;
+var PLAN_DAYS = [];
+var CONT_DATE_ROWS = [];
+var DAY_NAMES_ID = ['MINGGU','SENIN','SELASA','RABU','KAMIS','JUMAT','SABTU'];
+var DAY_NAMES_EN = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+function buildAreaScheduleMap(rows) {
+  var map = {};
+  (rows || []).forEach(function(row) {
+    var area = String(row['WILAYAH/DAY'] || row['WILAYAH'] || '').toUpperCase().trim();
+    if (!area) return;
+    var days = [];
+    DAY_NAMES_ID.forEach(function(d) {
+      if (String(row[d] || '').toUpperCase().trim() === 'PLAN') days.push(d);
+    });
+    map[area] = days;
+  });
+  return map;
+}
+
+function formatContDateLabel(days) {
+  if (!days || !days.length) return '-';
+  if (days.length === 7) return 'DAILY SERVICE';
+  return days.join(',');
+}
+
+function getArmadaTypeCapacity(areaName) {
+  var a = String(areaName).toUpperCase();
+  if (a.match(/JAKARTA|BALI|DENPASAR|BADUNG|LOMBOK|NTB|MATARAM/)) return { type: 'WINGBOX', capacity: 40 };
+  if (a.match(/SULAWESI|NTT|TARAKAN|TERNATE|AMBON|KENDARI|SUMATERA|PALU|JAYAPURA|SORONG|KALIMANTAN|MAKASSAR|BANJARMASIN|BALIKPAPAN|SAMARINDA|PONTIANAK|PALANGKARAYA|MANADO|GORONTALO|KUPANG|MEDAN|PADANG|PEKANBARU|PALEMBANG|JAMBI|BENGKULU|LAMPUNG|BATAM|PAPUA|MALUKU/)) return { type: 'CONT 20', capacity: 25 };
+  if (a.match(/LUAR KOTA/)) return { type: 'FUSO', capacity: 25 };
+  return { type: 'CDD LONG', capacity: 15 };
+}
+
+function computePlanDays() {
+  var days = [];
+  for (var i = 1; i <= 4; i++) {
+    var d = new Date();
+    d.setDate(d.getDate() + i);
+    days.push({
+      key: DAY_NAMES_ID[d.getDay()],
+      label: DAY_NAMES_EN[d.getDay()],
+      dateStr: (d.getMonth()+1) + '/' + d.getDate() + '/' + d.getFullYear()
+    });
+  }
+  PLAN_DAYS = days;
+}
+
+function parsePlanningData() {
+  var sourceFilter = (document.getElementById('planSourceFilter') || {}).value || 'ALL';
+  computePlanDays();
+  var scheduleMap = buildAreaScheduleMap(CONT_DATE_ROWS);
+  var grwPool = (RAW_ORDER_POOL_GRW || []).filter(function(o){ return o.status === 'Unplanned'; });
+  var custPool = (RAW_ORDER_POOL_CUST || []).filter(function(o){ return o.status === 'Unplanned'; });
+
+  if (sourceFilter === 'GRW') {
+    custPool = [];
+  } else if (sourceFilter === 'CUST') {
+    grwPool = [];
+  }
+
+  var areaMap = {};
+  function ensure(area) {
+    if (!areaMap[area]) areaMap[area] = { tujuan: area, cust: 0, grw: 0 };
+    return areaMap[area];
+  }
+  grwPool.forEach(function(o){ ensure(o.area).grw += o.cbm; });
+  custPool.forEach(function(o){ ensure(o.area).cust += o.cbm; });
+
+  return Object.keys(areaMap).map(function(area) {
+    var d = areaMap[area];
+    var total = d.cust + d.grw;
+    var cap = getArmadaTypeCapacity(area);
+    var schedDays = scheduleMap[area] || [];
+    var qualifyingDays = PLAN_DAYS.filter(function(pd){ return schedDays.indexOf(pd.key) !== -1; });
+
+    var dayVals = {};
+    PLAN_DAYS.forEach(function(pd){ dayVals[pd.key] = 0; });
+
+    var allocated = 0;
+    if (qualifyingDays.length > 0 && total > 0) {
+      var perDay = total / qualifyingDays.length;
+      qualifyingDays.forEach(function(pd) {
+        dayVals[pd.key] = perDay;
+        allocated += perDay;
+      });
+    }
+    var notPlan = Math.max(0, total - allocated);
+    var totalArmada = Math.floor(total / cap.capacity);
+    var konversi = cap.capacity > 0 ? +(total / cap.capacity).toFixed(1) : 0;
+
+    return {
+      tujuan: area,
+      type: cap.type,
+      cust: d.cust,
+      grw: d.grw,
+      total: total,
+      armada: totalArmada,
+      contDate: formatContDateLabel(schedDays),
+      days: dayVals,
+      notplan: notPlan,
+      konversi: konversi,
+      remark: ((notPlan > 0.05 && notPlan < cap.capacity) || (konversi > 0 && konversi < 1)) ? 'Need Support' : 'Ok'
+    };
+  });
+}
+
+function renderPlanDayHeader() {
+  var row = document.getElementById('planDayHeaderRow');
+  if (!row) return;
+  var html = '<th></th><th></th><th></th><th></th><th></th><th></th><th></th>';
+  PLAN_DAYS.forEach(function(d) {
+    html += '<th style="text-align:center; font-weight:700; color:#b45309;">' + d.label + '<br><span style="font-weight:500;color:var(--muted);">' + d.dateStr + '</span></th>';
+  });
+  html += '<th></th><th></th><th></th>';
+  row.innerHTML = html;
+}
+
+function planMaxDayVal() {
+  var max = 0;
+  PLAN_DATA.forEach(function(r){ PLAN_DAYS.forEach(function(d){ if (r.days[d.key] > max) max = r.days[d.key]; }); });
+  return max || 1;
+}
+
+function renderPlanKpis() {
+  var totalTujuan = PLAN_FILTERED.length;
+  var totalCbm = PLAN_FILTERED.reduce(function(s,r){ return s + r.total; }, 0);
+  var totalArmada = PLAN_FILTERED.reduce(function(s,r){ return s + r.armada; }, 0);
+  var needSupport = PLAN_FILTERED.filter(function(r){ return /NEED SUPPORT/i.test(r.remark); }).length;
+  var avgKonversi = totalTujuan ? (PLAN_FILTERED.reduce(function(s,r){return s+r.konversi;},0) / totalTujuan) : 0;
+
+  var kpis = [
+    { icon:'📍', val: totalTujuan, lbl:'Total Tujuan', cls:'mk-blue' },
+    { icon:'📦', val: totalCbm.toFixed(1)+' CBM', lbl:'Total CBM Plan', cls:'mk-cyan' },
+    { icon:'🚛', val: totalArmada, lbl:'Total Armada', cls:'mk-indigo' },
+    { icon:'⚠️', val: needSupport, lbl:'Need Support', cls:'mk-rose' },
+    { icon:'🔄', val: avgKonversi.toFixed(1), lbl:'Avg Konversi Armada', cls:'mk-amber' }
+  ];
+  var el = document.getElementById('planKpiRow');
+  if (el) el.innerHTML = kpis.map(function(k){
+    return '<div class="mini-kpi '+k.cls+'"><span class="mini-kpi-icon">'+k.icon+'</span><div><div class="mini-kpi-val">'+k.val+'</div><div class="mini-kpi-lbl">'+k.lbl+'</div></div></div>';
+  }).join('');
+}
+
+function populatePlanTypeFilter() {
+  var sel = document.getElementById('planTypeFilter');
+  if (!sel) return;
+  var cur = sel.value;
+  var types = Array.from(new Set(PLAN_DATA.map(function(r){ return r.type; }).filter(Boolean))).sort();
+  sel.innerHTML = '<option value="">Semua Jenis Armada</option>' + types.map(function(t){ return '<option value="'+esc(t)+'">'+esc(t)+'</option>'; }).join('');
+  if (types.indexOf(cur) !== -1) sel.value = cur;
+}
+
+function applyPlanFilters() {
+  var q = ((document.getElementById('planSearch')||{}).value || '').toLowerCase().trim();
+  var typeFilter = (document.getElementById('planTypeFilter')||{}).value || '';
+
+  PLAN_FILTERED = PLAN_DATA.filter(function(r) {
+    if (typeFilter && r.type !== typeFilter) return false;
+    if (q && r.tujuan.toLowerCase().indexOf(q) === -1) return false;
+    return true;
+  });
+
+  PLAN_FILTERED.sort(function(a,b) {
+    var va = a[planSortCol], vb = b[planSortCol];
+    if (typeof va === 'string') { va = va.toLowerCase(); vb = String(vb).toLowerCase(); return va < vb ? -1*planSortDir : va > vb ? 1*planSortDir : 0; }
+    return (va - vb) * planSortDir;
+  });
+
+  renderPlanKpis();
+  renderPlanTable();
+}
+
+function sortPlanTable(col) {
+  if (planSortCol === col) planSortDir *= -1;
+  else { planSortCol = col; planSortDir = -1; }
+  applyPlanFilters();
+}
+
+function renderPlanTable() {
+  var tbody = document.getElementById('planTableBody');
+  var foot = document.getElementById('planTableFoot');
+  var empty = document.getElementById('planEmpty');
+  var table = document.getElementById('planTable');
+  setText('planCount', PLAN_FILTERED.length + ' tujuan');
+
+  if (!PLAN_FILTERED.length) {
+    tbody.innerHTML = ''; if (foot) foot.innerHTML = '';
+    if (empty) empty.style.display = 'flex';
+    if (table) table.style.display = 'none';
+    return;
+  }
+  if (empty) empty.style.display = 'none';
+  if (table) table.style.display = 'table';
+
+  var maxDay = planMaxDayVal();
+  var sums = { cust:0, grw:0, total:0, armada:0, notplan:0, days:{} };
+  PLAN_DAYS.forEach(function(d){ sums.days[d.key]=0; });
+  var colCount = 11 + PLAN_DAYS.length;
+
+  tbody.innerHTML = PLAN_FILTERED.map(function(r) {
+    sums.cust += r.cust; sums.grw += r.grw; sums.total += r.total; sums.armada += r.armada; sums.notplan += r.notplan;
+    PLAN_DAYS.forEach(function(d){ sums.days[d.key] += r.days[d.key]; });
+
+    var dayCells = PLAN_DAYS.map(function(d) {
+      var v = r.days[d.key];
+      if (!v) return '<td class="plan-day-cell" style="text-align:center;color:var(--muted);">0.0</td>';
+      var intensity = Math.min(1, v / maxDay);
+      var bg = 'rgba(22,163,74,' + (0.12 + intensity*0.45).toFixed(2) + ')';
+      return '<td class="plan-day-cell" style="text-align:center; background:'+bg+'; font-weight:700; color:#166534;">' + v.toFixed(1) + '</td>';
+    }).join('');
+
+    var isOk = /^OK$/i.test(r.remark);
+    var remarkBadge = r.remark
+      ? '<span class="badge '+(isOk ? 'badge-green' : 'badge-red')+'" style="font-size:10px;">' + (isOk ? '✅ ' : '⚠️ ') + esc(r.remark) + '</span>'
+      : '<span class="badge badge-muted" style="font-size:10px;">—</span>';
+
+    return '<tr class="plan-row" onclick="var d=this.nextElementSibling; d.style.display = d.style.display===\'none\'?\'table-row\':\'none\';">' +
+      '<td style="font-weight:700;">' + esc(r.tujuan) + '</td>' +
+      '<td><span class="badge badge-blue" style="font-size:10px;">' + esc(r.type) + '</span></td>' +
+      '<td style="text-align:right; font-family:var(--font-mono);">' + r.cust.toFixed(1) + '</td>' +
+      '<td style="text-align:right; font-family:var(--font-mono);">' + r.grw.toFixed(1) + '</td>' +
+      '<td style="text-align:right; font-family:var(--font-mono); font-weight:800; color:var(--blue);">' + r.total.toFixed(1) + '</td>' +
+      '<td style="text-align:center; font-weight:700;">' + r.armada + '</td>' +
+      '<td style="font-size:11px; color:var(--muted);">' + esc(r.contDate) + '</td>' +
+      dayCells +
+      '<td style="text-align:right; font-family:var(--font-mono);">' + r.notplan.toFixed(1) + '</td>' +
+      '<td style="text-align:right; font-family:var(--font-mono); font-weight:700;">' + r.konversi.toFixed(1) + '</td>' +
+      '<td>' + remarkBadge + '</td>' +
+    '</tr>' +
+    '<tr class="plan-row-detail" style="display:none; background:var(--surface2);">' +
+      '<td colspan="'+colCount+'" style="font-size:11px; color:var(--muted); padding:10px 14px;">' +
+        '<strong style="color:var(--text);">Detail ' + esc(r.tujuan) + ':</strong> Cust ' + r.cust.toFixed(1) + ' CBM · GRW ' + r.grw.toFixed(1) + ' CBM · Armada terjadwal ' + r.armada + ' unit · Belum terencana ' + r.notplan.toFixed(1) + ' CBM · Rasio konversi armada ' + r.konversi.toFixed(1) + '.' +
+      '</td>' +
+    '</tr>';
+  }).join('');
+
+  var footDays = PLAN_DAYS.map(function(d){ return '<td style="text-align:center;">' + sums.days[d.key].toFixed(1) + '</td>'; }).join('');
+  if (foot) {
+    foot.innerHTML = '<tr class="tot"><td colspan="2">TOTAL</td>' +
+      '<td style="text-align:right;">' + sums.cust.toFixed(1) + '</td>' +
+      '<td style="text-align:right;">' + sums.grw.toFixed(1) + '</td>' +
+      '<td style="text-align:right;">' + sums.total.toFixed(1) + '</td>' +
+      '<td style="text-align:center;">' + sums.armada + '</td><td></td>' + footDays +
+      '<td style="text-align:right;">' + sums.notplan.toFixed(1) + '</td><td></td><td></td></tr>';
+  }
+}
+
+function initPlanningDeliverySection() {
+  PLAN_DATA = parsePlanningData();
+  populatePlanTypeFilter();
+  renderPlanDayHeader();
+  PLAN_FILTERED = PLAN_DATA.slice();
+  applyPlanFilters();
+  setText('planLastUpdate', '🕐 ' + new Date().toLocaleTimeString('id-ID'));
 }
 
 // ── INIT ─────────────────────────────────────────────────────────────
@@ -5902,6 +6416,7 @@ function processResults(results) {
   var dataAgingGrw = results[1] || [];
   var dataAgingCust = results[2] || [];
   var dataContDate = results[3] || [];
+  CONT_DATE_ROWS = dataContDate;
 
   // Dynamically initialize SLA start/end date filters based on real spreadsheet dates
   var slaStart = document.getElementById('slaStartDate');
@@ -5976,6 +6491,7 @@ function processResults(results) {
     isLiveData = true;
     onDataReady(new Date().toLocaleTimeString('id-ID'), true);
     applyAgingFilters(); // applyAgingFilters will populate area and set ORDER_POOL
+    initPlanningDeliverySection();
   } else {
     console.warn('[Dashboard] Data kosong dari spreadsheet');
     fallbackData();
@@ -6361,14 +6877,14 @@ function renderJenisArmada(data) {
 
     var detailHtml = item.items.map(function(r) {
       return '<div style="display:flex; justify-content:space-between; border-bottom:1px solid var(--border); padding:4px 0; font-size:10px;">' +
-        '<div style="max-width:120px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">' + escHtml(r['TRANSNO'] || '—') + '<br><span style="color:var(--muted)">' + escHtml(r['STATUS'] || '—') + '</span></div>' +
-        '<div style="text-align:right;">CBM: ' + (parseFloat(r['TOTAL CBM']) || 0).toFixed(2) + '<br><span style="color:var(--blue)">' + escHtml(r['Nama Driver'] || r['CARRIERID'] || '-') + '</span></div>' +
+        '<div style="max-width:120px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color: #e2e8f0;">' + escHtml(r['TRANSNO'] || '—') + '<br><span style="color:#cbd5e1;">' + escHtml(r['STATUS'] || '—') + '</span></div>' +
+        '<div style="text-align:right; color: #e2e8f0;">CBM: ' + (parseFloat(r['TOTAL CBM']) || 0).toFixed(2) + '<br><span style="color:#93c5fd;">' + escHtml(r['Nama Driver'] || r['CARRIERID'] || '-') + '</span></div>' +
       '</div>';
     }).join('');
 
     return '<div class="armada-item" style="border: 1px solid var(--border); padding: 10px; border-radius: 6px; background: rgba(255,255,255,0.015); display: flex; flex-direction: column; gap: 6px; cursor: pointer;" onclick="var d=this.querySelector(&apos;.armada-details&apos;); d.style.display = d.style.display===&apos;none&apos;?&apos;block&apos;:&apos;none&apos;;">' +
       '  <div style="display: flex; justify-content: space-between; align-items: center;">' +
-      '    <span style="font-family: var(--font-display); font-size: 11px; font-weight: 700; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 180px;" title="' + escHtml(item.name) + '">' + escHtml(item.name) + '</span>' +
+      '    <span style="font-family: var(--font-display); font-size: 11px; font-weight: 700; color: #000; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 180px;" title="' + escHtml(item.name) + '">' + escHtml(item.name) + '</span>' +
       '    <span style="font-size: 11px; font-weight: 700; font-family: var(--font-mono); color: var(--blue);">' + item.trips + ' trip</span>' +
       '  </div>' +
       '  ' +
@@ -6557,9 +7073,11 @@ function formatSlaPct(val) {
     val = parseFloat(val);
     if (isNaN(val)) return '0%';
   }
-  var fixed = val.toFixed(1);
-  if (fixed.endsWith('.0')) {
-    fixed = fixed.substring(0, fixed.length - 2);
+  var fixed = val.toFixed(2);
+  if (fixed.endsWith('.00')) {
+    fixed = fixed.substring(0, fixed.length - 3);
+  } else if (fixed.endsWith('0')) {
+    fixed = fixed.substring(0, fixed.length - 1);
   }
   return fixed.replace('.', ',') + '%';
 }
