@@ -3241,8 +3241,7 @@ PLANNING REPORT</div>
 
 <script>
 function getProxyUrl(originalUrl) {
-  if (!originalUrl) return '';
-  return '/api/sheet-proxy?url=' + encodeURIComponent(originalUrl);
+  return originalUrl;
 }
 function fetchAndParseCsv(url, options, resolveCallback) {
   fetch(url)
