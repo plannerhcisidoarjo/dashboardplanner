@@ -2026,12 +2026,19 @@ PLANNING REPORT</div>
       <div class="overview-grid">
         <!-- SLA Card -->
         <div class="card ov-card" id="ovSlaCard">
-          <div class="card-header">
-            <div>
-              <div class="card-title">SLA ACHIEVEMENT RATE</div>
-              <div class="card-sub">Average GRW vs Customer Shipping SLA</div>
+          <div class="card-header" style="align-items: flex-start; flex-direction: column; gap: 8px;">
+            <div style="display: flex; justify-content: space-between; width: 100%; align-items: flex-start;">
+              <div>
+                <div class="card-title">SLA ACHIEVEMENT RATE</div>
+                <div class="card-sub">Average GRW vs Customer Shipping SLA</div>
+              </div>
+              <div style="display: flex; gap: 6px; align-items: center;">
+                <input type="date" id="ovSlaStartDate" class="date-input" style="font-size:11px; padding:2px 6px;">
+                <span style="font-size:11px; color:var(--muted);">to</span>
+                <input type="date" id="ovSlaEndDate" class="date-input" style="font-size:11px; padding:2px 6px;">
+                <button class="filter-btn" style="padding:2px 8px; font-size:11px;" onclick="renderOverviewPage()">Go</button>
+              </div>
             </div>
-            <span class="badge badge-blue">YTD Rate</span>
           </div>
           <div class="overview-chart-row">
             <div class="speedo-wrap">
@@ -3233,6 +3240,29 @@ PLANNING REPORT</div>
 </div> <!-- /#dashboard-container -->
 
 <script>
+function getProxyUrl(originalUrl) {
+  if (!originalUrl) return '';
+  return '/api/sheet-proxy?url=' + encodeURIComponent(originalUrl);
+}
+function fetchAndParseCsv(url, options, resolveCallback) {
+  fetch(url)
+    .then(function(res) {
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      return res.text();
+    })
+    .then(function(text) {
+      Papa.parse(text, Object.assign({}, options, {
+        download: false,
+        complete: function(results) {
+          resolveCallback(results.data || []);
+        }
+      }));
+    })
+    .catch(function(err) {
+      console.error('Error fetching/parsing CSV:', url, err);
+      resolveCallback([]);
+    });
+}
 function fn(n){return(n===null||n===undefined)?'0':Number(n).toLocaleString('id-ID');}
 function fp(n){return(n===null||n===undefined)?'0':Number(n).toLocaleString('id-ID',{minimumFractionDigits:1,maximumFractionDigits:1});}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
@@ -4382,27 +4412,32 @@ function initOverviewMap() {
 }
 
 function loadMapMarkersFromSpreadsheet() {
-  var spreadsheetUrl = 'https://docs.google.com/spreadsheets/d/1apHi3pK7HvL7oOLIpE5NofACpn6TU_aHE9TSHr7vT3A/gviz/tq?tqx=out:csv';
+  var spreadsheetUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1apHi3pK7HvL7oOLIpE5NofACpn6TU_aHE9TSHr7vT3A/gviz/tq?tqx=out:csv');
   
-  Papa.parse(spreadsheetUrl, {
-    download: true,
-    header: true,
-    skipEmptyLines: true,
-    complete: function(results) {
-      if (results && results.data) {
-        // Clear old markers and lines
-        mapMarkers.forEach(function(m) {
-          if (mapInstance) mapInstance.removeLayer(m);
-        });
-        mapMarkers = [];
-        
-        var hubCount = 0;
-        var whCount = 0;
-        var dkCount = 0;
-        var lkCount = 0;
-        var lpCount = 0;
-        
-        var validMarkers = [];
+  fetch(spreadsheetUrl)
+    .then(function(res) {
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      return res.text();
+    })
+    .then(function(text) {
+      Papa.parse(text, {
+        header: true,
+        skipEmptyLines: true,
+        complete: function(results) {
+          if (results && results.data) {
+            // Clear old markers and lines
+            mapMarkers.forEach(function(m) {
+              if (mapInstance) mapInstance.removeLayer(m);
+            });
+            mapMarkers = [];
+            
+            var hubCount = 0;
+            var whCount = 0;
+            var dkCount = 0;
+            var lkCount = 0;
+            var lpCount = 0;
+            
+            var validMarkers = [];
         
         results.data.forEach(function(row) {
           var area = String(row['AREA'] || '').trim().toUpperCase();
@@ -4535,6 +4570,10 @@ function loadMapMarkersFromSpreadsheet() {
       console.error("Gagal memuat markers dari spreadsheet:", err);
     }
   });
+  })
+  .catch(function(err) {
+    console.error("Gagal memuat markers dari spreadsheet:", err);
+  });
 }
 
 function renderOverviewPage() {
@@ -4562,18 +4601,36 @@ function renderOverviewPage() {
   var realCustIelHit = 0, realCustIelTotal = 0;
   var realCustSelHit = 0, realCustSelTotal = 0;
 
+
+  var startStr = '';
+  var endStr = '';
+  if (document.getElementById('ovSlaStartDate')) startStr = document.getElementById('ovSlaStartDate').value;
+  if (document.getElementById('ovSlaEndDate')) endStr = document.getElementById('ovSlaEndDate').value;
+  var startMs = startStr ? parseDateStrHyphen(startStr).getTime() : null;
+  var endMs = endStr ? parseDateStrHyphen(endStr).getTime() : null;
+
   if (allSlaGrwData && allSlaGrwData.length > 1) {
     hasRealSlaData = true;
     for (var i = 1; i < allSlaGrwData.length; i++) {
       var row = allSlaGrwData[i];
       if (row && row.length >= 11 && row[2] && row[2].trim() !== '') {
+        var rowDate = parseDateStr(row[2]);
+        var inRange = true;
+        if (rowDate) {
+          var ms = rowDate.getTime();
+          if (startMs && ms < startMs) inRange = false;
+          if (endMs && ms > endMs) inRange = false;
+        } else if (startMs || endMs) {
+          inRange = false;
+        }
+        if (!inRange) continue;
+
         var infHit = parseInt(row[3]) || 0;
         var infMis = parseInt(row[4]) || 0;
         var ielHit = parseInt(row[6]) || 0;
         var ielMis = parseInt(row[7]) || 0;
         var selHit = parseInt(row[9]) || 0;
         var selMis = parseInt(row[10]) || 0;
-
         realGrwInfHit += infHit; realGrwInfTotal += (infHit + infMis);
         realGrwIelHit += ielHit; realGrwIelTotal += (ielHit + ielMis);
         realGrwSelHit += selHit; realGrwSelTotal += (selHit + selMis);
@@ -4582,19 +4639,29 @@ function renderOverviewPage() {
     realGrwHit = realGrwInfHit + realGrwIelHit + realGrwSelHit;
     realGrwTotal = realGrwInfTotal + realGrwIelTotal + realGrwSelTotal;
   }
-
+  
   if (allSlaCustData && allSlaCustData.length > 1) {
     hasRealSlaData = true;
     for (var i = 1; i < allSlaCustData.length; i++) {
       var row = allSlaCustData[i];
       if (row && row.length >= 11 && row[2] && row[2].trim() !== '') {
+        var rowDate = parseDateStr(row[2]);
+        var inRange = true;
+        if (rowDate) {
+          var ms = rowDate.getTime();
+          if (startMs && ms < startMs) inRange = false;
+          if (endMs && ms > endMs) inRange = false;
+        } else if (startMs || endMs) {
+          inRange = false;
+        }
+        if (!inRange) continue;
+
         var infHit = parseInt(row[3]) || 0;
         var infMis = parseInt(row[4]) || 0;
         var ielHit = parseInt(row[6]) || 0;
         var ielMis = parseInt(row[7]) || 0;
         var selHit = parseInt(row[9]) || 0;
         var selMis = parseInt(row[10]) || 0;
-
         realCustInfHit += infHit; realCustInfTotal += (infHit + infMis);
         realCustIelHit += ielHit; realCustIelTotal += (ielHit + ielMis);
         realCustSelHit += selHit; realCustSelTotal += (selHit + selMis);
@@ -4603,6 +4670,7 @@ function renderOverviewPage() {
     realCustHit = realCustInfHit + realCustIelHit + realCustSelHit;
     realCustTotal = realCustInfTotal + realCustIelTotal + realCustSelTotal;
   }
+
 
   if (hasRealSlaData) {
     grwTotal = realGrwTotal > 0 ? (realGrwHit / realGrwTotal) * 100 : 100;
@@ -5921,13 +5989,26 @@ function initDatePickers() {
     slaEnd.value = yesterdayStr;
   }
   
+
   var armStart = document.getElementById('armadaStartDate');
   var armEnd = document.getElementById('armadaEndDate');
   if (armStart && armEnd) {
     armStart.value = lastWeekStr;
     armEnd.value = todayStr;
   }
+
+  // Set default dates for Overview SLA (Current Month to H-1)
+  var firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+  var firstDayStr = formatLocalDate(firstDayOfMonth);
+  
+  var ovSlaStart = document.getElementById('ovSlaStartDate');
+  var ovSlaEnd = document.getElementById('ovSlaEndDate');
+  if (ovSlaStart && ovSlaEnd) {
+    ovSlaStart.value = firstDayStr;
+    ovSlaEnd.value = yesterdayStr;
+  }
 }
+
   // ── PLANNING DELIVERY (turunan dari OUTSTANDING GRW + OUTSTANDING CUST + CONT DATE) ──
 var PLAN_DATA = [];
 var PLAN_FILTERED = [];
@@ -6217,129 +6298,62 @@ function loadData() {
   document.getElementById('dataTable').style.display = 'none';
   document.getElementById('lastUpdate').textContent = '⟳ Menghubungi server...';
 
-  var csvMonitoringUrl = 'https://docs.google.com/spreadsheets/d/1ITpX4yc_VLL_qpbLZc1RHfwDzinUf2vnbQXewb_F4oM/gviz/tq?tqx=out:csv';
-  var csvAgingUrl = 'https://docs.google.com/spreadsheets/d/1ITpX4yc_VLL_qpbLZc1RHfwDzinUf2vnbQXewb_F4oM/gviz/tq?tqx=out:csv&sheet=OUTSTANDING%20GRW';
-  var csvAgingCustUrl = 'https://docs.google.com/spreadsheets/d/1ITpX4yc_VLL_qpbLZc1RHfwDzinUf2vnbQXewb_F4oM/gviz/tq?tqx=out:csv&sheet=OUTSTANDING%20CUST';
-  var csvContDateUrl = 'https://docs.google.com/spreadsheets/d/1ITpX4yc_VLL_qpbLZc1RHfwDzinUf2vnbQXewb_F4oM/gviz/tq?tqx=out:csv&sheet=CONT%20DATE';
-  var csvFulfillmentUrl = 'https://docs.google.com/spreadsheets/d/1bEBI18zlEeXDqg4G4sFljZETceLvsyP-fcuMB1nLtsM/gviz/tq?tqx=out:csv&sheet=DATA';
-  var csvOlfUrl = 'https://docs.google.com/spreadsheets/d/1q-qxELBQZr3ABhVg-mw6Kvhl-e11RGQUmCTQjsXtz9g/gviz/tq?tqx=out:csv&sheet=OLF';
+  var csvMonitoringUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1ITpX4yc_VLL_qpbLZc1RHfwDzinUf2vnbQXewb_F4oM/gviz/tq?tqx=out:csv');
+  var csvAgingUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1ITpX4yc_VLL_qpbLZc1RHfwDzinUf2vnbQXewb_F4oM/gviz/tq?tqx=out:csv&sheet=OUTSTANDING%20GRW');
+  var csvAgingCustUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1ITpX4yc_VLL_qpbLZc1RHfwDzinUf2vnbQXewb_F4oM/gviz/tq?tqx=out:csv&sheet=OUTSTANDING%20CUST');
+  var csvContDateUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1ITpX4yc_VLL_qpbLZc1RHfwDzinUf2vnbQXewb_F4oM/gviz/tq?tqx=out:csv&sheet=CONT%20DATE');
+  var csvFulfillmentUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1bEBI18zlEeXDqg4G4sFljZETceLvsyP-fcuMB1nLtsM/gviz/tq?tqx=out:csv&sheet=DATA');
+  var csvOlfUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1q-qxELBQZr3ABhVg-mw6Kvhl-e11RGQUmCTQjsXtz9g/gviz/tq?tqx=out:csv&sheet=OLF');
   
   // Reading separate sheets SLA GRW and SLA CUST from the spreadsheet
-  var csvSlaGrwUrl = 'https://docs.google.com/spreadsheets/d/1q-qxELBQZr3ABhVg-mw6Kvhl-e11RGQUmCTQjsXtz9g/gviz/tq?tqx=out:csv&sheet=SLA%20GRW';
-  var csvSlaCustUrl1 = 'https://docs.google.com/spreadsheets/d/1q-qxELBQZr3ABhVg-mw6Kvhl-e11RGQUmCTQjsXtz9g/gviz/tq?tqx=out:csv&sheet=SLA%20CUST';
-  var csvSlaCustUrl2 = 'https://docs.google.com/spreadsheets/d/1q-qxELBQZr3ABhVg-mw6Kvhl-e11RGQUmCTQjsXtz9g/gviz/tq?tqx=out:csv&sheet=SLA%20CUSTOMER';
+  var csvSlaGrwUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1q-qxELBQZr3ABhVg-mw6Kvhl-e11RGQUmCTQjsXtz9g/gviz/tq?tqx=out:csv&sheet=SLA%20GRW');
+  var csvSlaCustUrl1 = getProxyUrl('https://docs.google.com/spreadsheets/d/1q-qxELBQZr3ABhVg-mw6Kvhl-e11RGQUmCTQjsXtz9g/gviz/tq?tqx=out:csv&sheet=SLA%20CUST');
+  var csvSlaCustUrl2 = getProxyUrl('https://docs.google.com/spreadsheets/d/1q-qxELBQZr3ABhVg-mw6Kvhl-e11RGQUmCTQjsXtz9g/gviz/tq?tqx=out:csv&sheet=SLA%20CUSTOMER');
 
-  var fetchFulfillment = new Promise(function(resolve, reject) {
-    Papa.parse(csvFulfillmentUrl, {
-      download: true,
-      header: true,
-      skipEmptyLines: true,
-      complete: function(results) { resolve(results.data || []); },
-      error: function(err) {
-        console.error('[Dashboard] Gagal fetch armada:', err);
-        resolve([]);
-      }
-    });
+  var fetchFulfillment = new Promise(function(resolve) {
+    fetchAndParseCsv(csvFulfillmentUrl, { header: true, skipEmptyLines: true }, resolve);
   });
 
-  var fetchOlf = new Promise(function(resolve, reject) {
-    Papa.parse(csvOlfUrl, {
-      download: true,
-      header: true,
-      skipEmptyLines: true,
-      complete: function(results) { resolve(results.data || []); },
-      error: function(err) {
-        console.error('[Dashboard] Gagal fetch OLF:', err);
-        resolve([]);
-      }
-    });
+  var fetchOlf = new Promise(function(resolve) {
+    fetchAndParseCsv(csvOlfUrl, { header: true, skipEmptyLines: true }, resolve);
   });
 
-  var fetchMonitoring = new Promise(function(resolve, reject) {
-    Papa.parse(csvMonitoringUrl, {
-      download: true,
-      header: true,
-      skipEmptyLines: true,
-      complete: function(results) { resolve(results.data || []); },
-      error: function(err) { resolve([]); }
-    });
+  var fetchMonitoring = new Promise(function(resolve) {
+    fetchAndParseCsv(csvMonitoringUrl, { header: true, skipEmptyLines: true }, resolve);
   });
 
-  var fetchAging = new Promise(function(resolve, reject) {
-    Papa.parse(csvAgingUrl, {
-      download: true,
-      header: true,
-      skipEmptyLines: true,
-      complete: function(results) { resolve(results.data || []); },
-      error: function(err) { resolve([]); }
-    });
+  var fetchAging = new Promise(function(resolve) {
+    fetchAndParseCsv(csvAgingUrl, { header: true, skipEmptyLines: true }, resolve);
   });
 
-  var fetchAgingCust = new Promise(function(resolve, reject) {
-    Papa.parse(csvAgingCustUrl, {
-      download: true,
-      header: true,
-      skipEmptyLines: true,
-      complete: function(results) { resolve(results.data || []); },
-      error: function(err) { resolve([]); }
-    });
+  var fetchAgingCust = new Promise(function(resolve) {
+    fetchAndParseCsv(csvAgingCustUrl, { header: true, skipEmptyLines: true }, resolve);
   });
 
-  var fetchContDate = new Promise(function(resolve, reject) {
-    Papa.parse(csvContDateUrl, {
-      download: true,
-      header: true,
-      skipEmptyLines: true,
-      complete: function(results) { resolve(results.data || []); },
-      error: function(err) { resolve([]); }
-    });
+  var fetchContDate = new Promise(function(resolve) {
+    fetchAndParseCsv(csvContDateUrl, { header: true, skipEmptyLines: true }, resolve);
   });
 
-  var fetchSlaGrw = new Promise(function(resolve, reject) {
-    Papa.parse(csvSlaGrwUrl, {
-      download: true,
-      header: false,
-      skipEmptyLines: true,
-      complete: function(results) { resolve(results.data || []); },
-      error: function(err) { resolve([]); }
-    });
+  var fetchSlaGrw = new Promise(function(resolve) {
+    fetchAndParseCsv(csvSlaGrwUrl, { header: false, skipEmptyLines: true }, resolve);
   });
 
-  var fetchSlaCust = new Promise(function(resolve, reject) {
-    Papa.parse(csvSlaCustUrl1, {
-      download: true,
-      header: false,
-      skipEmptyLines: true,
-      complete: function(results) {
-        var data = results.data || [];
-        var isValid = false;
-        if (data && data.length > 0) {
-          for (var c = 0; c < Math.min(5, data[0].length); c++) {
-            if (data[0][c] && data[0][c].toUpperCase().indexOf('TGL') !== -1) {
-              isValid = true;
-              break;
-            }
+  var fetchSlaCust = new Promise(function(resolve) {
+    fetchAndParseCsv(csvSlaCustUrl1, { header: false, skipEmptyLines: true }, function(data) {
+      var isValid = false;
+      if (data && data.length > 0) {
+        for (var c = 0; c < Math.min(5, data[0].length); c++) {
+          if (data[0][c] && data[0][c].toUpperCase().indexOf('TGL') !== -1) {
+            isValid = true;
+            break;
           }
         }
-        if (isValid) {
-          resolve(data);
-        } else {
-          Papa.parse(csvSlaCustUrl2, {
-            download: true,
-            header: false,
-            skipEmptyLines: true,
-            complete: function(res2) { resolve(res2.data || []); },
-            error: function(err) { resolve(data); }
-          });
-        }
-      },
-      error: function() {
-        Papa.parse(csvSlaCustUrl2, {
-          download: true,
-          header: false,
-          skipEmptyLines: true,
-          complete: function(res2) { resolve(res2.data || []); },
-          error: function(err) { resolve([]); }
+      }
+      if (isValid) {
+        resolve(data);
+      } else {
+        fetchAndParseCsv(csvSlaCustUrl2, { header: false, skipEmptyLines: true }, function(data2) {
+          resolve(data2.length > 0 ? data2 : data);
         });
       }
     });
@@ -6365,8 +6379,8 @@ function loadData() {
           for (var c = 0; c < rowCells.length; c++) {
             var cellStr = String(rowCells[c] || '');
             if (cellStr.indexOf('docs.google.com/spreadsheets/d/') !== -1) {
-              foundMatch = cellStr;
-              break;
+               foundMatch = cellStr;
+               break;
             }
           }
           if (foundMatch) break;
@@ -6387,20 +6401,11 @@ function loadData() {
         }
       }
 
-      var finalSlaMissedUrl = targetUrl || 'https://docs.google.com/spreadsheets/d/1PklbBrPhF8myX5ONshtYKzTT4WACMXsbViH1LdDXACU/gviz/tq?tqx=out:csv&gid=0';
+      var finalSlaMissedUrl = getProxyUrl(targetUrl || 'https://docs.google.com/spreadsheets/d/1PklbBrPhF8myX5ONshtYKzTT4WACMXsbViH1LdDXACU/gviz/tq?tqx=out:csv&gid=0');
 
-      Papa.parse(finalSlaMissedUrl, {
-        download: true,
-        header: false,
-        skipEmptyLines: true,
-        complete: function(missedResults) {
-          allSlaMissedData = missedResults.data || [];
-          processResults(results);
-        },
-        error: function() {
-          allSlaMissedData = [];
-          processResults(results);
-        }
+      fetchAndParseCsv(finalSlaMissedUrl, { header: false, skipEmptyLines: true }, function(missedData) {
+        allSlaMissedData = missedData || [];
+        processResults(results);
       });
     })
     .catch(function(err) {
