@@ -13,12 +13,12 @@
   @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
 
   :root {
-    --bg: #f1f5f9;
+    --bg: #f8fafc;
     --surface: #ffffff;
     --surface2: #f8fafc;
     --border: #e2e8f0;
-    --text: #0f172a;
-    --muted: #475569;
+    --text: #020617;
+    --muted: #334155;
     --blue: #2563eb;
     --blue-dim: #dbeafe;
     --green: #16a34a;
@@ -307,8 +307,8 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
   }
   .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
-  .card-title { font-family: var(--font-display); font-size: 14px; font-weight: 700; color: var(--text); }
-  .card-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .card-title { font-family: var(--font-display); font-size: 15px; font-weight: 800; color: var(--text); line-height: 1.2; letter-spacing: -0.2px; }
+  .card-sub { font-size: 12px; color: var(--muted); margin-top: 4px; line-height: 1.4; }
   .chart-wrap { position: relative; }
 
   /* ── FUNNEL ── */
@@ -982,13 +982,13 @@
     border-bottom: 1px solid var(--border);
   }
   .ov-stat-lbl {
-    font-size: 11px;
+    font-size: 12px;
     color: var(--muted);
     font-weight: 600;
   }
   .ov-stat-val {
     font-family: var(--font-mono);
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 700;
   }
   .text-blue { color: var(--blue); }
@@ -2106,7 +2106,7 @@ PLANNING REPORT</div>
             ⚠️ OLF is below target threshold (&lt; 85%). Fleet efficiency needs calibration.
           </div>
           <div style="font-size:11px; color:var(--muted); text-align:center; margin-top:20px;">
-            Last updated: <span id="ovDataDate" style="color:#fff; font-weight:600;">—</span>
+            Last updated: <span id="ovDataDate" style="color:var(--text); font-weight:600;">—</span>
           </div>
         </div>
       </div>
@@ -2631,7 +2631,7 @@ PLANNING REPORT</div>
         <div class="ov-stats-list" style="flex:1.5;">
           <div class="ov-stat-item">
             <span class="ov-stat-lbl">Total Planned Trips</span>
-            <span class="ov-stat-val" id="armTotalTrip" style="color:#fff;">0</span>
+            <span class="ov-stat-val" id="armTotalTrip" style="color:var(--text);">0</span>
           </div>
           <div class="ov-stat-item">
             <span class="ov-stat-lbl">On Time Dispatched</span>
@@ -2741,7 +2741,7 @@ PLANNING REPORT</div>
         <div class="ov-stats-list" style="flex:1.5;">
           <div class="ov-stat-item">
             <span class="ov-stat-lbl">Total Orders Logged</span>
-            <span class="ov-stat-val" id="slaGrwSumTotal" style="color:#fff;">0</span>
+            <span class="ov-stat-val" id="slaGrwSumTotal" style="color:var(--text);">0</span>
           </div>
           <div class="ov-stat-item">
             <span class="ov-stat-lbl">SLA Hits (On Time)</span>
@@ -2771,7 +2771,7 @@ PLANNING REPORT</div>
         <div class="ov-stats-list" style="flex:1.5;">
           <div class="ov-stat-item">
             <span class="ov-stat-lbl">Total Orders Logged</span>
-            <span class="ov-stat-val" id="slaCustSumTotal" style="color:#fff;">0</span>
+            <span class="ov-stat-val" id="slaCustSumTotal" style="color:var(--text);">0</span>
           </div>
           <div class="ov-stat-item">
             <span class="ov-stat-lbl">SLA Hits (On Time)</span>
@@ -4464,7 +4464,7 @@ function loadMapMarkersFromSpreadsheet() {
         });
         
         var startMarker = L.marker(userStartPoint, { icon: pulseIcon }).addTo(mapInstance);
-        startMarker.bindPopup("<strong style='color:#fff;font-family:sans-serif;font-size:13px;'>NDC HCI SIDOARJO</strong>");
+        startMarker.bindPopup("<strong style='color:var(--text);font-family:sans-serif;font-size:13px;'>NDC HCI SIDOARJO</strong>");
         mapMarkers.push(startMarker);
         
         // 2. Draw destination markers and the glowing lines connecting them
@@ -4492,8 +4492,8 @@ function loadMapMarkersFromSpreadsheet() {
             fillOpacity: 0.85
           }).addTo(mapInstance);
           
-          marker.bindPopup("<strong style='color:#fff;font-family:sans-serif;font-size:12px;'>" + escHtml(m.name) + "</strong><br>" +
-                           "<span style='color:var(--muted);font-size:11px;'>Tipe: <strong style='color:#fff;'>" + escHtml(m.type.toUpperCase()) + "</strong> (" + escHtml(m.label) + ")</span>");
+          marker.bindPopup("<strong style='color:var(--text);font-family:sans-serif;font-size:12px;'>" + escHtml(m.name) + "</strong><br>" +
+                           "<span style='color:var(--muted);font-size:11px;'>Tipe: <strong style='color:var(--text);'>" + escHtml(m.type.toUpperCase()) + "</strong> (" + escHtml(m.label) + ")</span>");
           mapMarkers.push(marker);
 
           // Draw the animated flowing connection if the node is not the start point itself
@@ -4806,7 +4806,7 @@ function renderPerformanceArmada() {
     var pct = Math.round((c.onTime / c.trips) * 100);
     var stars = pct >= 95 ? '⭐⭐⭐⭐⭐' : pct >= 80 ? '⭐⭐⭐⭐' : '⭐⭐⭐';
     return '<tr>' +
-      '<td><strong style="color:#fff;">' + escHtml(c.name) + '</strong></td>' +
+      '<td><strong style="color:var(--text);">' + escHtml(c.name) + '</strong></td>' +
       '<td><span class="badge ' + (c.type==='Int' ? 'badge-blue' : 'badge-amber') + '" style="font-size:9px;">' + c.type + '</span></td>' +
       '<td style="text-align:right; font-family:var(--font-mono);">' + c.trips + '</td>' +
       '<td style="text-align:right; font-family:var(--font-mono);">' + c.onTime + '</td>' +
@@ -4839,7 +4839,7 @@ function renderPerformanceArmada() {
     var status = pct >= 90 ? 'badge-green' : pct >= 75 ? 'badge-amber' : 'badge-red';
     var statusText = pct >= 90 ? 'Excellent' : pct >= 75 ? 'Warning' : 'Critical';
     return '<tr>' +
-      '<td><strong style="color:#fff;">' + escHtml(c.name) + '</strong></td>' +
+      '<td><strong style="color:var(--text);">' + escHtml(c.name) + '</strong></td>' +
       '<td><span class="badge ' + (c.type==='DALAM KOTA' ? 'badge-green' : 'badge-blue') + '" style="font-size:9px;">' + c.type + '</span></td>' +
       '<td style="text-align:right; font-family:var(--font-mono);">' + c.trips + '</td>' +
       '<td style="text-align:right; font-family:var(--font-mono);">' + c.onTime + '</td>' +
@@ -5343,7 +5343,7 @@ function openTopDestModal(destStats) {
     html += '<div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); padding-bottom:8px;">';
     html += '  <div style="display:flex; align-items:center; gap:10px;">';
     html += '    <div style="width:24px; height:24px; border-radius:50%; background:rgba(33,136,255,0.1); color:var(--blue); display:flex; justify-content:center; align-items:center; font-weight:bold; font-size:12px;">' + (i+1) + '</div>';
-    html += '    <span style="font-weight:600; color:#fff;">' + dest + '</span>';
+    html += '    <span style="font-weight:600; color:var(--text);">' + dest + '</span>';
     html += '  </div>';
     html += '  <div style="text-align:right;">';
     html += '    <div style="color:var(--blue); font-family:var(--font-mono); font-weight:700;">' + stat.cbm.toFixed(2) + ' CBM</div>';
@@ -6675,11 +6675,11 @@ function renderKPIs(data) {
     breakdownEl.innerHTML = 
       '<div style="display: flex; justify-content: space-between; align-items: center; background: rgba(33,136,255,0.08); padding: 5px 8px; border-radius: 4px; border: 1px solid rgba(33,136,255,0.2);">' +
       '  <span style="color: var(--muted); font-size: 11px; font-weight: 500;">📦 OD DC</span>' +
-      '  <strong style="color: #fff; font-family: var(--font-mono); font-size: 11px;">' + totalCBM_DC.toFixed(2) + ' <span style="color: var(--muted); font-weight: normal; font-size: 10px;">(' + pctDC + '%)</span></strong>' +
+      '  <strong style="color: var(--text); font-family: var(--font-mono); font-size: 11px;">' + totalCBM_DC.toFixed(2) + ' <span style="color: var(--muted); font-weight: normal; font-size: 10px;">(' + pctDC + '%)</span></strong>' +
       '</div>' +
       '<div style="display: flex; justify-content: space-between; align-items: center; background: rgba(163,113,247,0.08); padding: 5px 8px; border-radius: 4px; border: 1px solid rgba(163,113,247,0.2);">' +
       '  <span style="color: var(--muted); font-size: 11px; font-weight: 500;">🚢 OD TRANSIT</span>' +
-      '  <strong style="color: #fff; font-family: var(--font-mono); font-size: 11px;">' + totalCBM_Transit.toFixed(2) + ' <span style="color: var(--muted); font-weight: normal; font-size: 10px;">(' + pctTransit + '%)</span></strong>' +
+      '  <strong style="color: var(--text); font-family: var(--font-mono); font-size: 11px;">' + totalCBM_Transit.toFixed(2) + ' <span style="color: var(--muted); font-weight: normal; font-size: 10px;">(' + pctTransit + '%)</span></strong>' +
       '</div>';
   }
 
@@ -6877,8 +6877,8 @@ function renderJenisArmada(data) {
 
     var detailHtml = item.items.map(function(r) {
       return '<div style="display:flex; justify-content:space-between; border-bottom:1px solid var(--border); padding:4px 0; font-size:10px;">' +
-        '<div style="max-width:120px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color: #e2e8f0;">' + escHtml(r['TRANSNO'] || '—') + '<br><span style="color:#cbd5e1;">' + escHtml(r['STATUS'] || '—') + '</span></div>' +
-        '<div style="text-align:right; color: #e2e8f0;">CBM: ' + (parseFloat(r['TOTAL CBM']) || 0).toFixed(2) + '<br><span style="color:#93c5fd;">' + escHtml(r['Nama Driver'] || r['CARRIERID'] || '-') + '</span></div>' +
+        '<div style="max-width:120px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color: var(--text);">' + escHtml(r['TRANSNO'] || '—') + '<br><span style="color: var(--muted);">' + escHtml(r['STATUS'] || '—') + '</span></div>' +
+        '<div style="text-align:right; color: var(--text);">CBM: ' + (parseFloat(r['TOTAL CBM']) || 0).toFixed(2) + '<br><span style="color: var(--blue);">' + escHtml(r['Nama Driver'] || r['CARRIERID'] || '-') + '</span></div>' +
       '</div>';
     }).join('');
 
