@@ -1,10 +1,18 @@
+
+<!-- GitHub Pages Audit Patch Applied
+1. Removed dependency on /api/sheet-proxy backend.
+2. Direct Google Sheets CSV access enabled.
+3. Compatible with static hosting (GitHub Pages).
+4. Google Sheets used by dashboard must be published or shared publicly.
+-->
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
 <base target="_top">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Order Fulfillment & Planning Report * HCI</title>
+<title>Progress Loading Dashboard · HCI GRW</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
@@ -3241,7 +3249,7 @@ PLANNING REPORT</div>
 <script>
 function getProxyUrl(originalUrl) {
   if (!originalUrl) return '';
-  return originalUrl;
+  return '/api/sheet-proxy?url=' + encodeURIComponent(originalUrl);
 }
 function fetchAndParseCsv(url, options, resolveCallback) {
   fetch(url)
@@ -3369,6 +3377,8 @@ var STATUS_CFG = {
 // ── STATE FOR AGING ──────────────────────────────────────────────────
 var activeMainTab = 'monitoring';
 var agingChartInstance = null;
+var HAS_AUTO_SELECTED_DATE = false;
+var GLOBAL_ROUTE_DATE_MAP = {};
 var ORDER_POOL = [];
 var RAW_ORDER_POOL = [];
 var ORDER_POOL_GRW = [];
@@ -3971,6 +3981,7 @@ function parseOutstandingSheetData(rows, targetRawArray) {
     var idxRoute = headers.findIndex(function(h) { return h.match(/^ROUTE$|^PLAN$|^AK$/); });
     var idxStatus = headers.findIndex(function(h) { return h.match(/^STATUS$/); });
     var idxReqShip = headers.findIndex(function(h) { return h.match(/^REQSHIPDATE$/); });
+    var idxPlanDelivery = headers.findIndex(function(h) { return h.match(/^PLANDELIVERYDATE$/); });
 
     var orderMap = {};
     for (var i = 1; i < rows.length; i++) {
@@ -4015,6 +4026,16 @@ function parseOutstandingSheetData(rows, targetRawArray) {
         } catch(e) {}
       }
 
+      var planDeliveryDate = null;
+      if (idxPlanDelivery !== -1 && row[idxPlanDelivery]) {
+        try {
+          var pDate = parseDateStr(String(row[idxPlanDelivery]));
+          if (pDate && !isNaN(pDate.getTime())) {
+            planDeliveryDate = pDate;
+          }
+        } catch(e) {}
+      }
+
       var area = idxArea !== -1 ? String(row[idxArea]).toUpperCase().trim() : '';
       if (!area) {
         var localCities = ['SURABAYA', 'SIDOARJO', 'GRESIK', 'MOJOKERTO', 'PASURUAN', 'DALAM KOTA'];
@@ -4037,9 +4058,15 @@ function parseOutstandingSheetData(rows, targetRawArray) {
       }
 
       var routeVal = idxRoute !== -1 ? String(row[idxRoute]).trim() : '';
+      if (!planDeliveryDate && routeVal && GLOBAL_ROUTE_DATE_MAP[routeVal]) {
+        planDeliveryDate = GLOBAL_ROUTE_DATE_MAP[routeVal];
+      }
       var rawStatus = idxStatus !== -1 ? String(row[idxStatus]) : '';
       var sUpper = rawStatus.toUpperCase();
       var isUnplanned = (!routeVal || routeVal === 'NaN' || routeVal === 'undefined' || sUpper.indexOf('CREATED INTERNALLY') !== -1 || sUpper.indexOf('NOT STARTED') !== -1);
+      if (planDeliveryDate) {
+        isUnplanned = false;
+      }
 
       var order = {
         id: id,
@@ -4052,7 +4079,8 @@ function parseOutstandingSheetData(rows, targetRawArray) {
         area: area,
         isDalamKota: isDalamKota,
         route: routeVal,
-        status: isUnplanned ? 'Unplanned' : (rawStatus || 'Planned')
+        status: isUnplanned ? 'Unplanned' : (rawStatus || 'Planned'),
+        planDeliveryDate: planDeliveryDate
       };
 
       targetRawArray.push(order);
@@ -4150,6 +4178,23 @@ function parseOutstandingSheetData(rows, targetRawArray) {
         } catch(e) {}
       }
 
+      var rawPlanDelivery = getVal(/^PLANDELIVERYDATE$/, null);
+      var planDeliveryDate = null;
+      if (rawPlanDelivery) {
+        try {
+          var pDate = parseDateStr(String(rawPlanDelivery));
+          if (pDate && !isNaN(pDate.getTime())) {
+            planDeliveryDate = pDate;
+          }
+        } catch(e) {}
+      }
+      if (!planDeliveryDate && routeVal && GLOBAL_ROUTE_DATE_MAP[routeVal]) {
+        planDeliveryDate = GLOBAL_ROUTE_DATE_MAP[routeVal];
+      }
+      if (planDeliveryDate) {
+        isUnplanned = false;
+      }
+
       var order = {
         id: id,
         customer: cust,
@@ -4162,8 +4207,13 @@ function parseOutstandingSheetData(rows, targetRawArray) {
         isDalamKota: isDalamKota,
         priorityRaw: priorityStr,
         route: routeVal,
-        status: isUnplanned ? 'Unplanned' : (rawStatus || 'Planned')
+        status: isUnplanned ? 'Unplanned' : (rawStatus || 'Planned'),
+        planDeliveryDate: planDeliveryDate
       };
+      
+      if (planDeliveryDate) {
+        order.status = 'Planned';
+      }
       
       targetRawArray.push(order);
 
@@ -6078,15 +6128,50 @@ function isRouteEmpty(o) {
 }
 
 function computePlanDays() {
+  var baseDate = null;
+  
+  var fDate = document.getElementById('filterDate');
+  if (fDate && fDate.value) {
+    var parts = fDate.value.split('-');
+    if (parts.length === 3) {
+      baseDate = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
+    }
+  }
+  
+  if (!baseDate || isNaN(baseDate.getTime())) {
+    // Try to find the earliest date in RAW_ORDER_POOL
+    var minDate = null;
+    var grwPool = RAW_ORDER_POOL_GRW || [];
+    var custPool = RAW_ORDER_POOL_CUST || [];
+    var allOrders = grwPool.concat(custPool);
+    allOrders.forEach(function(o) {
+      var pDate = o.planDeliveryDate || null;
+      if (!pDate && o.route) pDate = parseDateFromRoute(o.route);
+      if (pDate && !isNaN(pDate.getTime())) {
+        if (!minDate || pDate < minDate) {
+          minDate = pDate;
+        }
+      }
+    });
+    if (minDate) {
+      baseDate = minDate;
+    } else {
+      baseDate = new Date();
+      baseDate.setDate(baseDate.getDate() + 1); // default to tomorrow
+    }
+  }
+
+  // Create 4 consecutive days starting from baseDate
   var days = [];
-  for (var i = 1; i <= 4; i++) {
-    var d = new Date();
-    d.setDate(d.getDate() + i);
+  var base = new Date(baseDate.getFullYear(), baseDate.getMonth(), baseDate.getDate());
+  for (var i = 0; i < 4; i++) {
+    var d = new Date(base.getTime());
+    d.setDate(base.getDate() + i);
     days.push({
       key: DAY_NAMES_ID[d.getDay()],
       label: DAY_NAMES_EN[d.getDay()],
       dateStr: (d.getMonth()+1) + '/' + d.getDate() + '/' + d.getFullYear(),
-      dateObj: new Date(d.getFullYear(), d.getMonth(), d.getDate())
+      dateObj: d
     });
   }
   PLAN_DAYS = days;
@@ -6151,19 +6236,22 @@ function parsePlanningData() {
 
     allOrders.forEach(function(o) {
       var cbmVal = o.cbm || 0;
-      if (isRouteEmpty(o)) {
+      
+      var pDate = o.planDeliveryDate || null;
+      if (!pDate) {
+        pDate = parseDateFromRoute(o.route);
+      }
+      
+      if (!pDate) {
         notPlan += cbmVal;
       } else {
-        var rDate = parseDateFromRoute(o.route);
-        if (rDate) {
-          var matchedPd = PLAN_DAYS.find(function(pd) {
-            return rDate.getFullYear() === pd.dateObj.getFullYear() &&
-                   rDate.getMonth() === pd.dateObj.getMonth() &&
-                   rDate.getDate() === pd.dateObj.getDate();
-          });
-          if (matchedPd) {
-            dayVals[matchedPd.key] += cbmVal;
-          }
+        var matchedPd = PLAN_DAYS.find(function(pd) {
+          return pDate.getFullYear() === pd.dateObj.getFullYear() &&
+                 pDate.getMonth() === pd.dateObj.getMonth() &&
+                 pDate.getDate() === pd.dateObj.getDate();
+        });
+        if (matchedPd) {
+          dayVals[matchedPd.key] += cbmVal;
         }
       }
     });
@@ -6743,6 +6831,59 @@ function processResults(results) {
     } else {
       allFulfillmentData = dataMonitoring;
     }
+    GLOBAL_ROUTE_DATE_MAP = {};
+    function collectRouteDates(rows) {
+      if (!Array.isArray(rows) || rows.length === 0) return;
+      var is2D = Array.isArray(rows[0]);
+      if (is2D) {
+        var headers = rows[0].map(function(h) { return String(h).toUpperCase().trim().replace(/[\s_]+/g, ''); });
+        var idxRoute = headers.findIndex(function(h) { return h.match(/^ROUTE$|^PLAN$|^AK$/); });
+        var idxPlanDelivery = headers.findIndex(function(h) { return h.match(/^PLANDELIVERYDATE$/); });
+        if (idxRoute !== -1 && idxPlanDelivery !== -1) {
+          for (var i = 1; i < rows.length; i++) {
+            var row = rows[i];
+            if (row && row[idxRoute]) {
+              var rVal = String(row[idxRoute]).trim();
+              if (rVal && rVal !== 'NaN' && rVal !== 'undefined' && row[idxPlanDelivery]) {
+                try {
+                  var pDate = parseDateStr(String(row[idxPlanDelivery]));
+                  if (pDate && !isNaN(pDate.getTime())) {
+                    GLOBAL_ROUTE_DATE_MAP[rVal] = pDate;
+                  }
+                } catch(e) {}
+              }
+            }
+          }
+        }
+      } else {
+        rows.forEach(function(item) {
+          if (!item) return;
+          var keys = Object.keys(item);
+          function getVal(patt) {
+            var key = keys.find(function(k) { return k.toUpperCase().replace(/[\s_]+/g, '').match(patt); });
+            return key !== undefined ? item[key] : null;
+          }
+          var routeVal = getVal(/^ROUTE$|^PLAN$|^AK$/);
+          if (routeVal) {
+            routeVal = String(routeVal).trim();
+            if (routeVal && routeVal !== 'NaN' && routeVal !== 'undefined') {
+              var rawPlanDelivery = getVal(/^PLANDELIVERYDATE$/);
+              if (rawPlanDelivery) {
+                try {
+                  var pDate = parseDateStr(String(rawPlanDelivery));
+                  if (pDate && !isNaN(pDate.getTime())) {
+                    GLOBAL_ROUTE_DATE_MAP[routeVal] = pDate;
+                  }
+                } catch(e) {}
+              }
+            }
+          }
+        });
+      }
+    }
+    collectRouteDates(dataAgingGrw);
+    collectRouteDates(dataAgingCust);
+
     ORDER_POOL_GRW = parseOutstandingSheetData(dataAgingGrw, RAW_ORDER_POOL_GRW);
     ORDER_POOL_CUST = parseOutstandingSheetData(dataAgingCust, RAW_ORDER_POOL_CUST);
     
@@ -6784,6 +6925,43 @@ function fallbackData() {
   applyAgingFilters();
 }
 
+function autoSelectDashboardDate() {
+  if (HAS_AUTO_SELECTED_DATE) return;
+  var fDate = document.getElementById('filterDate');
+  if (!fDate) return;
+  
+  if (!allData || !allData.length) return;
+  
+  // Find all valid date prefixes in allData TRANSNO
+  var dateCounts = {};
+  allData.forEach(function(r) {
+    var trans = String(r['TRANSNO'] || '').trim();
+    var match = trans.match(/^(\d{2})(\d{2})(\d{2})/);
+    if (match) {
+      var yy = match[1];
+      var mm = match[2];
+      var dd = match[3];
+      var fullDateStr = '20' + yy + '-' + mm + '-' + dd;
+      dateCounts[fullDateStr] = (dateCounts[fullDateStr] || 0) + 1;
+    }
+  });
+  
+  // Get the date with the highest count (the main active date in the sheet)
+  var bestDate = null;
+  var maxCount = 0;
+  Object.keys(dateCounts).forEach(function(dStr) {
+    if (dateCounts[dStr] > maxCount) {
+      maxCount = dateCounts[dStr];
+      bestDate = dStr;
+    }
+  });
+  
+  if (bestDate) {
+    fDate.value = bestDate;
+    HAS_AUTO_SELECTED_DATE = true;
+  }
+}
+
 // Dipanggil setelah data berhasil dimuat (live atau fallback)
 function onDataReady(updatedTime, isLive) {
   var badge = document.getElementById('dataSourceBadge');
@@ -6795,6 +6973,8 @@ function onDataReady(updatedTime, isLive) {
     badge.className    = 'source-badge source-fallback';
   }
   badge.style.display = 'inline-block';
+
+  autoSelectDashboardDate();
 
   // Isi dropdown Jenis Armada
   var armadasRaw = allData.map(function(r) { return r['JENISARMADA']; }).filter(Boolean);
