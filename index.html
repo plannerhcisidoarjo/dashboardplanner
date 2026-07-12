@@ -3186,17 +3186,16 @@ PLANNING REPORT</div>
 
     <!-- Additional Details Table -->
     <div class="card" style="margin-top: 20px;">
-      <div class="ct">Daftar Order Kritis (OLF Miss)</div>
-      <div class="cs">Detail order yang tidak memenuhi standar ketepatan waktu.</div>
+      <div class="ct">Daftar Harian Kinerja OLF (Di Bawah Target)</div>
+      <div class="cs">Detail kinerja harian yang tidak mencapai target standar OLF (85%).</div>
       <div style="overflow-x: auto; margin-top: 15px;">
         <table class="dt" id="tbl-olf-details">
           <thead>
             <tr>
-              <th class="hn">Trans No</th>
-              <th class="hn">Customer</th>
-              <th class="hn">Area</th>
-              <th class="hn">SLA Time</th>
-              <th class="hn">% LD</th>
+              <th class="hn">Tanggal</th>
+              <th class="hn">OLF Store</th>
+              <th class="hn">OLF Customer</th>
+              <th class="hn">OLF Total</th>
               <th class="hn">Status</th>
             </tr>
           </thead>
@@ -3241,7 +3240,8 @@ PLANNING REPORT</div>
 
 <script>
 function getProxyUrl(originalUrl) {
-  return originalUrl;
+  if (!originalUrl) return '';
+  return '/api/sheet-proxy?url=' + encodeURIComponent(originalUrl);
 }
 function fetchAndParseCsv(url, options, resolveCallback) {
   fetch(url)
@@ -4129,7 +4129,7 @@ function parseOutstandingSheetData(rows, targetRawArray) {
 
       var priorityStr = getVal(/^PRIORITY$/, '');
 
-      var routeVal = getVal(/^ROUTE$/, '');
+      var routeVal = getVal(/^ROUTE$|^PLAN$|^AK$/, '');
       var rawStatus = item['STATUS'] || '';
       var sUpper = rawStatus.toUpperCase();
       var isUnplanned = (!routeVal || String(routeVal).trim() === '' || sUpper.indexOf('CREATED INTERNALLY') !== -1 || sUpper.indexOf('NOT STARTED') !== -1);
@@ -4161,6 +4161,7 @@ function parseOutstandingSheetData(rows, targetRawArray) {
         area: area,
         isDalamKota: isDalamKota,
         priorityRaw: priorityStr,
+        route: routeVal,
         status: isUnplanned ? 'Unplanned' : (rawStatus || 'Planned')
       };
       
@@ -4730,19 +4731,25 @@ function renderOverviewPage() {
     yesterday.setHours(0,0,0,0);
     
     var filteredOlf = olfDataRaw.filter(function(r) {
-      var rd = getRowDate(r);
+      var rd = r.DATE_OBJ || getRowDate(r);
       if (!rd) return false;
       rd.setHours(0,0,0,0);
       return rd >= firstDay && rd <= yesterday;
     });
     
     if (filteredOlf.length > 0) {
-      var sumLdOlf = filteredOlf.reduce(function(s, r) { 
-        return s + getOlfValue(r); 
-      }, 0);
-      olfTotal = Math.min(100, Math.round(sumLdOlf / filteredOlf.length));
-      olfStore = Math.min(100, olfTotal + 1.2); 
-      olfCust = Math.max(0, olfTotal - 1.1);
+      var sumStore = 0;
+      var sumCust = 0;
+      var sumTotal = 0;
+      for (var k = 0; k < filteredOlf.length; k++) {
+        sumStore += filteredOlf[k]['OLF_STORE'];
+        sumCust += filteredOlf[k]['OLF_CUSTOMER'];
+        sumTotal += filteredOlf[k]['OLF_TOTAL'];
+      }
+      var count = filteredOlf.length;
+      olfStore = (sumStore / count).toFixed(2);
+      olfCust = (sumCust / count).toFixed(2);
+      olfTotal = Math.round(sumTotal / count);
     }
   }
 
@@ -6046,6 +6053,30 @@ function getArmadaTypeCapacity(areaName) {
   return { type: 'CDD LONG', capacity: 15 };
 }
 
+function parseDateFromRoute(routeStr) {
+  if (!routeStr) return null;
+  var s = String(routeStr).trim();
+  // Search for any 6 consecutive digits in the string, which typically represents YYMMDD
+  var match = s.match(/(\d{6})/);
+  if (match) {
+    var val = match[1]; // e.g. "260714"
+    var yy = parseInt(val.slice(0, 2), 10);
+    var mm = parseInt(val.slice(2, 4), 10) - 1;
+    var dd = parseInt(val.slice(4, 6), 10);
+    var year = 2000 + yy;
+    if (mm >= 0 && mm < 12 && dd >= 1 && dd <= 31) {
+      return new Date(year, mm, dd);
+    }
+  }
+  return null;
+}
+
+function isRouteEmpty(o) {
+  if (!o || !o.route) return true;
+  var r = String(o.route).trim().toUpperCase();
+  return r === '' || r === 'NAN' || r === 'UNDEFINED' || r === '-';
+}
+
 function computePlanDays() {
   var days = [];
   for (var i = 1; i <= 4; i++) {
@@ -6054,7 +6085,8 @@ function computePlanDays() {
     days.push({
       key: DAY_NAMES_ID[d.getDay()],
       label: DAY_NAMES_EN[d.getDay()],
-      dateStr: (d.getMonth()+1) + '/' + d.getDate() + '/' + d.getFullYear()
+      dateStr: (d.getMonth()+1) + '/' + d.getDate() + '/' + d.getFullYear(),
+      dateObj: new Date(d.getFullYear(), d.getMonth(), d.getDate())
     });
   }
   PLAN_DAYS = days;
@@ -6064,8 +6096,10 @@ function parsePlanningData() {
   var sourceFilter = (document.getElementById('planSourceFilter') || {}).value || 'ALL';
   computePlanDays();
   var scheduleMap = buildAreaScheduleMap(CONT_DATE_ROWS);
-  var grwPool = (RAW_ORDER_POOL_GRW || []).filter(function(o){ return o.status === 'Unplanned'; });
-  var custPool = (RAW_ORDER_POOL_CUST || []).filter(function(o){ return o.status === 'Unplanned'; });
+  
+  // We use all orders here to support showing planned orders on specific days
+  var grwPool = RAW_ORDER_POOL_GRW || [];
+  var custPool = RAW_ORDER_POOL_CUST || [];
 
   if (sourceFilter === 'GRW') {
     custPool = [];
@@ -6075,48 +6109,85 @@ function parsePlanningData() {
 
   var areaMap = {};
   function ensure(area) {
-    if (!areaMap[area]) areaMap[area] = { tujuan: area, cust: 0, grw: 0 };
+    if (!areaMap[area]) {
+      areaMap[area] = {
+        tujuan: area,
+        custOrders: [],
+        grwOrders: []
+      };
+    }
     return areaMap[area];
   }
-  grwPool.forEach(function(o){ ensure(o.area).grw += o.cbm; });
-  custPool.forEach(function(o){ ensure(o.area).cust += o.cbm; });
 
-  return Object.keys(areaMap).map(function(area) {
+  grwPool.forEach(function(o) {
+    if (o && o.area) {
+      ensure(o.area).grwOrders.push(o);
+    }
+  });
+
+  custPool.forEach(function(o) {
+    if (o && o.area) {
+      ensure(o.area).custOrders.push(o);
+    }
+  });
+
+  var resultList = [];
+  Object.keys(areaMap).forEach(function(area) {
     var d = areaMap[area];
-    var total = d.cust + d.grw;
+    var allOrders = d.grwOrders.concat(d.custOrders);
+    
+    var totalCustCbm = d.custOrders.reduce(function(s, o) { return s + (o.cbm || 0); }, 0);
+    var totalGrwCbm = d.grwOrders.reduce(function(s, o) { return s + (o.cbm || 0); }, 0);
+    var total = totalCustCbm + totalGrwCbm;
+    if (total === 0) return;
+
     var cap = getArmadaTypeCapacity(area);
     var schedDays = scheduleMap[area] || [];
-    var qualifyingDays = PLAN_DAYS.filter(function(pd){ return schedDays.indexOf(pd.key) !== -1; });
 
     var dayVals = {};
-    PLAN_DAYS.forEach(function(pd){ dayVals[pd.key] = 0; });
+    PLAN_DAYS.forEach(function(pd) { dayVals[pd.key] = 0; });
 
-    var allocated = 0;
-    if (qualifyingDays.length > 0 && total > 0) {
-      var perDay = total / qualifyingDays.length;
-      qualifyingDays.forEach(function(pd) {
-        dayVals[pd.key] = perDay;
-        allocated += perDay;
-      });
-    }
-    var notPlan = Math.max(0, total - allocated);
+    var notPlan = 0;
+
+    allOrders.forEach(function(o) {
+      var cbmVal = o.cbm || 0;
+      if (isRouteEmpty(o)) {
+        notPlan += cbmVal;
+      } else {
+        var rDate = parseDateFromRoute(o.route);
+        if (rDate) {
+          var matchedPd = PLAN_DAYS.find(function(pd) {
+            return rDate.getFullYear() === pd.dateObj.getFullYear() &&
+                   rDate.getMonth() === pd.dateObj.getMonth() &&
+                   rDate.getDate() === pd.dateObj.getDate();
+          });
+          if (matchedPd) {
+            dayVals[matchedPd.key] += cbmVal;
+          }
+        }
+      }
+    });
+
     var totalArmada = Math.floor(total / cap.capacity);
-    var konversi = cap.capacity > 0 ? +(total / cap.capacity).toFixed(1) : 0;
+    var konversi = cap.capacity > 0 ? +(notPlan / cap.capacity).toFixed(1) : 0;
+    var remarkVal = (konversi < 1) ? 'Need Support' : 'Ok';
 
-    return {
+    resultList.push({
       tujuan: area,
       type: cap.type,
-      cust: d.cust,
-      grw: d.grw,
+      cust: totalCustCbm,
+      grw: totalGrwCbm,
       total: total,
       armada: totalArmada,
       contDate: formatContDateLabel(schedDays),
       days: dayVals,
       notplan: notPlan,
       konversi: konversi,
-      remark: ((notPlan > 0.05 && notPlan < cap.capacity) || (konversi > 0 && konversi < 1)) ? 'Need Support' : 'Ok'
-    };
+      remark: remarkVal
+    });
   });
+
+  return resultList;
 }
 
 function renderPlanDayHeader() {
@@ -6287,6 +6358,201 @@ window.onload = function() {
   setInterval(loadData, 120000);
 };
 
+function parseWordDate(s) {
+  if (!s) return null;
+  s = String(s).trim().toLowerCase().replace(/,/g, '');
+  var parts = s.split(/\s+/);
+  if (parts.length === 3) {
+    var day = parseInt(parts[0], 10);
+    var monthStr = parts[1];
+    var year = parseInt(parts[2], 10);
+    
+    var months = {
+      'jan': 0, 'januari': 0, 'january': 0,
+      'feb': 1, 'februari': 1, 'february': 1,
+      'mar': 2, 'maret': 2, 'march': 2,
+      'apr': 3, 'april': 3,
+      'mei': 4, 'may': 4,
+      'jun': 5, 'juni': 5, 'june': 5,
+      'jul': 6, 'juli': 6, 'july': 6,
+      'agt': 7, 'ags': 7, 'agust': 7, 'agustus': 7, 'aug': 7, 'august': 7,
+      'sep': 8, 'september': 8,
+      'okt': 9, 'oktober': 9, 'oct': 9, 'october': 9,
+      'nov': 10, 'november': 10,
+      'des': 11, 'desember': 11, 'dec': 11, 'december': 11
+    };
+    
+    var month = -1;
+    for (var key in months) {
+      if (monthStr.indexOf(key) === 0) {
+        month = months[key];
+        break;
+      }
+    }
+    
+    if (day >= 1 && day <= 31 && month >= 0 && month <= 11 && year >= 2000) {
+      return new Date(year, month, day);
+    }
+  }
+  
+  var d = new Date(s);
+  return isNaN(d.getTime()) ? null : d;
+}
+
+function parseOlfSheet(rawData) {
+  var list = [];
+  if (!rawData || !Array.isArray(rawData)) return list;
+  for (var i = 0; i < rawData.length; i++) {
+    var row = rawData[i];
+    if (!row || row.length < 5) continue;
+    
+    var dateStr = String(row[2] || '').trim();
+    if (!dateStr || dateStr.toLowerCase().indexOf('tanggal') !== -1 || dateStr.toLowerCase().indexOf('per') !== -1) {
+      continue;
+    }
+    
+    var d = parseDateSafe_(dateStr);
+    if (!d) continue;
+    
+    var storeVal = String(row[3] || '').replace(/%/g, '').trim();
+    var custVal = String(row[4] || '').replace(/%/g, '').trim();
+    
+    if (storeVal === '' && custVal === '') continue;
+    
+    var storePct = parseFloat(storeVal);
+    var custPct = parseFloat(custVal);
+    
+    if (isNaN(storePct) && isNaN(custPct)) continue;
+    
+    if (isNaN(storePct)) storePct = 0;
+    if (isNaN(custPct)) custPct = 0;
+    
+    var totalPct = (storePct + custPct) / 2;
+    
+    list.push({
+      'DATE_OBJ': d,
+      'DATE': dateStr,
+      'OLF_STORE': storePct,
+      'OLF_CUSTOMER': custPct,
+      'OLF_TOTAL': totalPct,
+      'OLF': totalPct,
+      'OLF STORE': storePct,
+      'OLF CUSTOMER': custPct,
+      '% LD': totalPct,
+      '%LD': totalPct
+    });
+  }
+  return list;
+}
+
+function parseFulfillmentArmadaSheet(rawData) {
+  var trips = [];
+  if (!rawData || !Array.isArray(rawData)) return trips;
+  
+  for (var i = 0; i < rawData.length; i++) {
+    var row = rawData[i];
+    if (!row || row.length < 13) continue;
+    
+    var dateStr = String(row[3] || '').trim();
+    if (!dateStr || dateStr.toLowerCase().indexOf('date') !== -1 || dateStr.toLowerCase().indexOf('total') !== -1 || dateStr.toLowerCase().indexOf('lc') !== -1) {
+      continue;
+    }
+    
+    var d = parseWordDate(dateStr);
+    if (!d) continue;
+    
+    var formattedDate = (d.getMonth() + 1) + '/' + d.getDate() + '/' + d.getFullYear();
+    
+    var totalArmada = parseInt(row[4], 10) || 0;
+    var onTime = parseInt(row[5], 10) || 0;
+    var telatStuffing = parseInt(row[6], 10) || 0;
+    var telat1Hari = parseInt(row[9], 10) || 0;
+    var telat2HariUp = parseInt(row[10], 10) || 0;
+    var belumDatang = parseInt(row[11], 10) || 0;
+    
+    if (totalArmada === 0 && onTime === 0 && telatStuffing === 0 && telat1Hari === 0 && telat2HariUp === 0 && belumDatang === 0) {
+      continue;
+    }
+    
+    for (var j = 0; j < onTime; j++) {
+      trips.push({
+        'DATE': formattedDate,
+        'Keterangan': 'ON TIME',
+        'TYPE ARMADA': 'EXTERNAL',
+        'CITY': 'LUAR KOTA',
+        'CARRIER ID': 'EXTERNAL',
+        'STATUS': 'SELESAI',
+        '%LD': 100
+      });
+    }
+    
+    for (var j = 0; j < telatStuffing; j++) {
+      trips.push({
+        'DATE': formattedDate,
+        'Keterangan': 'JAM STUFFING',
+        'TYPE ARMADA': 'EXTERNAL',
+        'CITY': 'LUAR KOTA',
+        'CARRIER ID': 'EXTERNAL',
+        'STATUS': 'SELESAI',
+        '%LD': 0
+      });
+    }
+    
+    for (var j = 0; j < telat1Hari; j++) {
+      trips.push({
+        'DATE': formattedDate,
+        'Keterangan': '1 HARI',
+        'TYPE ARMADA': 'EXTERNAL',
+        'CITY': 'LUAR KOTA',
+        'CARRIER ID': 'EXTERNAL',
+        'STATUS': 'PROSES',
+        '%LD': 0
+      });
+    }
+    
+    for (var j = 0; j < telat2HariUp; j++) {
+      trips.push({
+        'DATE': formattedDate,
+        'Keterangan': '2 HARI',
+        'TYPE ARMADA': 'EXTERNAL',
+        'CITY': 'LUAR KOTA',
+        'CARRIER ID': 'EXTERNAL',
+        'STATUS': 'ANTRI',
+        '%LD': 0
+      });
+    }
+    
+    for (var j = 0; j < belumDatang; j++) {
+      trips.push({
+        'DATE': formattedDate,
+        'Keterangan': '2 HARI',
+        'TYPE ARMADA': 'EXTERNAL',
+        'CITY': 'LUAR KOTA',
+        'CARRIER ID': 'EXTERNAL',
+        'STATUS': 'ANTRI',
+        '%LD': 0
+      });
+    }
+    
+    var sumCategories = onTime + telatStuffing + telat1Hari + telat2HariUp + belumDatang;
+    if (sumCategories < totalArmada) {
+      for (var j = 0; j < (totalArmada - sumCategories); j++) {
+        trips.push({
+          'DATE': formattedDate,
+          'Keterangan': 'ON TIME',
+          'TYPE ARMADA': 'EXTERNAL',
+          'CITY': 'LUAR KOTA',
+          'CARRIER ID': 'EXTERNAL',
+          'STATUS': 'SELESAI',
+          '%LD': 100
+        });
+      }
+    }
+  }
+  
+  return trips;
+}
+
 // ── LOAD DATA ─────────────────────────────────────────────────────────
 function loadData() {
   var btn = document.getElementById('btnRefresh');
@@ -6301,7 +6567,7 @@ function loadData() {
   var csvAgingUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1ITpX4yc_VLL_qpbLZc1RHfwDzinUf2vnbQXewb_F4oM/gviz/tq?tqx=out:csv&sheet=OUTSTANDING%20GRW');
   var csvAgingCustUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1ITpX4yc_VLL_qpbLZc1RHfwDzinUf2vnbQXewb_F4oM/gviz/tq?tqx=out:csv&sheet=OUTSTANDING%20CUST');
   var csvContDateUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1ITpX4yc_VLL_qpbLZc1RHfwDzinUf2vnbQXewb_F4oM/gviz/tq?tqx=out:csv&sheet=CONT%20DATE');
-  var csvFulfillmentUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1bEBI18zlEeXDqg4G4sFljZETceLvsyP-fcuMB1nLtsM/gviz/tq?tqx=out:csv&sheet=DATA');
+  var csvFulfillmentUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1q-qxELBQZr3ABhVg-mw6Kvhl-e11RGQUmCTQjsXtz9g/gviz/tq?tqx=out:csv&gid=2066861608');
   var csvOlfUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1q-qxELBQZr3ABhVg-mw6Kvhl-e11RGQUmCTQjsXtz9g/gviz/tq?tqx=out:csv&sheet=OLF');
   
   // Reading separate sheets SLA GRW and SLA CUST from the spreadsheet
@@ -6310,11 +6576,15 @@ function loadData() {
   var csvSlaCustUrl2 = getProxyUrl('https://docs.google.com/spreadsheets/d/1q-qxELBQZr3ABhVg-mw6Kvhl-e11RGQUmCTQjsXtz9g/gviz/tq?tqx=out:csv&sheet=SLA%20CUSTOMER');
 
   var fetchFulfillment = new Promise(function(resolve) {
-    fetchAndParseCsv(csvFulfillmentUrl, { header: true, skipEmptyLines: true }, resolve);
+    fetchAndParseCsv(csvFulfillmentUrl, { header: false, skipEmptyLines: true }, function(data) {
+      resolve(parseFulfillmentArmadaSheet(data));
+    });
   });
 
   var fetchOlf = new Promise(function(resolve) {
-    fetchAndParseCsv(csvOlfUrl, { header: true, skipEmptyLines: true }, resolve);
+    fetchAndParseCsv(csvOlfUrl, { header: false, skipEmptyLines: true }, function(data) {
+      resolve(parseOlfSheet(data));
+    });
   });
 
   var fetchMonitoring = new Promise(function(resolve) {
@@ -7214,12 +7484,14 @@ function loadFulfillmentArmadaData() {
 function getRowDate(r) {
   var dateKeys = ['DATE', 'TANGGAL', 'STUFFING DATE', 'STUFFINGDATE', 'TGL', 'TANGGAL', 'DATE', 'STUFFING', 'TGL OLF', 'TANGGAL OLF', 'DATE OLF'];
   var dateStr = null;
+  var hasDateKey = false;
   
   // Case-insensitive search
   var rowKeys = Object.keys(r);
   for (var i = 0; i < dateKeys.length; i++) {
     for (var j = 0; j < rowKeys.length; j++) {
       if (rowKeys[j].toUpperCase().indexOf(dateKeys[i]) !== -1) {
+        hasDateKey = true;
         dateStr = r[rowKeys[j]];
         break;
       }
@@ -7227,9 +7499,12 @@ function getRowDate(r) {
     if (dateStr) break;
   }
 
-  if (dateStr) {
-    var d = parseDateSafe_(dateStr);
-    if (d) return d;
+  if (hasDateKey) {
+    if (dateStr) {
+      var d = parseDateSafe_(dateStr);
+      if (d) return d;
+    }
+    return null; // Return null if date key is found but empty or invalid
   }
   
   var transno = '';
@@ -7241,9 +7516,9 @@ function getRowDate(r) {
   }
 
   if (transno.length >= 6) {
-    var yy = parseInt(transno.substring(0, 2));
-    var mm = parseInt(transno.substring(2, 4));
-    var dd = parseInt(transno.substring(4, 6));
+    var yy = parseInt(transno.substring(0, 2), 10);
+    var mm = parseInt(transno.substring(2, 4), 10);
+    var dd = parseInt(transno.substring(4, 6), 10);
     if (!isNaN(yy) && !isNaN(mm) && !isNaN(dd) && mm >= 1 && mm <= 12 && dd >= 1 && dd <= 31) {
       return new Date(2000 + yy, mm - 1, dd);
     }
@@ -7286,6 +7561,60 @@ function getTransportType(r) {
   return 'LAND';
 }
 
+function classifyFulfillmentRow(r) {
+  var ket = String(r['Keterangan'] || r['keterangan'] || r['KETERANGAN'] || '').toUpperCase().trim();
+  
+  if (ket.indexOf('ON TIME') !== -1) {
+    return { onTime: true, telatStuffing: false, telat1Hari: false, telat2HariUp: false };
+  } else if (ket.indexOf('JAM STUFFING') !== -1) {
+    return { onTime: false, telatStuffing: true, telat1Hari: false, telat2HariUp: false };
+  } else if (ket.indexOf('1 HARI') !== -1) {
+    return { onTime: false, telatStuffing: false, telat1Hari: true, telat2HariUp: false };
+  } else if (ket.indexOf('2 HARI') !== -1) {
+    return { onTime: false, telatStuffing: false, telat1Hari: false, telat2HariUp: true };
+  } else {
+    var status = String(r['STATUS'] || r['status'] || r['Status'] || '').toUpperCase().trim();
+    var pctLd = parseInt(r['%LD'] || r['%ld'] || 0, 10) || 0;
+    
+    // We check if the scheduled date of the row is today or in the future
+    var rDate = getRowDate(r);
+    var isTodayOrFuture = false;
+    if (rDate) {
+      var today = new Date();
+      today.setHours(0, 0, 0, 0);
+      var rDateNoon = new Date(rDate.getTime());
+      rDateNoon.setHours(12, 0, 0, 0);
+      var todayNoon = new Date(today.getTime());
+      todayNoon.setHours(12, 0, 0, 0);
+      if (rDateNoon >= todayNoon) {
+        isTodayOrFuture = true;
+      }
+    }
+    
+    if (status === 'KELUAR DC' || status === 'SELESAI') {
+      if (pctLd >= 100) {
+        return { onTime: true, telatStuffing: false, telat1Hari: false, telat2HariUp: false };
+      } else {
+        return { onTime: false, telatStuffing: true, telat1Hari: false, telat2HariUp: false };
+      }
+    } else if (status === 'PROSES' || status === 'ANTRI') {
+      if (isTodayOrFuture) {
+        return { onTime: true, telatStuffing: false, telat1Hari: false, telat2HariUp: false };
+      } else {
+        return { onTime: false, telatStuffing: false, telat1Hari: true, telat2HariUp: false };
+      }
+    } else if (status) {
+      if (isTodayOrFuture) {
+        return { onTime: true, telatStuffing: false, telat1Hari: false, telat2HariUp: false };
+      } else {
+        return { onTime: false, telatStuffing: false, telat1Hari: false, telat2HariUp: true };
+      }
+    } else {
+      return { onTime: true, telatStuffing: false, telat1Hari: false, telat2HariUp: false };
+    }
+  }
+}
+
 function calculateFFDashboardData() {
   if (!allFulfillmentData || !Array.isArray(allFulfillmentData)) return { totalRowsFiltered: 0, missCount: 0, successCount: 0, avgScore: 0, misses: [] };
   var filteredRows = allFulfillmentData.filter(function(r) {
@@ -7320,29 +7649,11 @@ function calculateFFDashboardData() {
   var telat2HariUp = 0;
   
   filteredRows.forEach(function(r) {
-    var ket = String(r['Keterangan'] || '').toUpperCase().trim();
-    if (ket.indexOf('ON TIME') !== -1) {
-      onTime += 1;
-    } else if (ket.indexOf('JAM STUFFING') !== -1) {
-      telatStuffing += 1;
-    } else if (ket.indexOf('1 HARI') !== -1) {
-      telat1Hari += 1;
-    } else if (ket.indexOf('2 HARI') !== -1) {
-      telat2HariUp += 1;
-    } else {
-      var status = String(r['STATUS'] || '').toUpperCase().trim();
-      var pctLd = parseInt(r['%LD']) || 0;
-      if (status === 'KELUAR DC' || status === 'SELESAI') {
-        if (pctLd >= 100) onTime += 1;
-        else telatStuffing += 1;
-      } else if (status === 'PROSES' || status === 'ANTRI') {
-        telat1Hari += 1;
-      } else if (status) {
-        telat2HariUp += 1;
-      } else {
-        onTime += 1;
-      }
-    }
+    var cls = classifyFulfillmentRow(r);
+    if (cls.onTime) onTime += 1;
+    if (cls.telatStuffing) telatStuffing += 1;
+    if (cls.telat1Hari) telat1Hari += 1;
+    if (cls.telat2HariUp) telat2HariUp += 1;
   });
   
   var kpi = {
@@ -7376,29 +7687,11 @@ function calculateFFDashboardData() {
     var tOn = 0, tSf = 0, tT1 = 0, tT2 = 0;
     
     tripsOnDay.forEach(function(r) {
-      var ket = String(r['Keterangan'] || '').toUpperCase().trim();
-      if (ket.indexOf('ON TIME') !== -1) {
-        tOn += 1;
-      } else if (ket.indexOf('JAM STUFFING') !== -1) {
-        tSf += 1;
-      } else if (ket.indexOf('1 HARI') !== -1) {
-        tT1 += 1;
-      } else if (ket.indexOf('2 HARI') !== -1) {
-        tT2 += 1;
-      } else {
-        var status = String(r['STATUS'] || '').toUpperCase().trim();
-        var pctLd = parseInt(r['%LD']) || 0;
-        if (status === 'KELUAR DC' || status === 'SELESAI') {
-          if (pctLd >= 100) tOn += 1;
-          else tSf += 1;
-        } else if (status === 'PROSES' || status === 'ANTRI') {
-          tT1 += 1;
-        } else if (status) {
-          tT2 += 1;
-        } else {
-          tOn += 1;
-        }
-      }
+      var cls = classifyFulfillmentRow(r);
+      if (cls.onTime) tOn += 1;
+      if (cls.telatStuffing) tSf += 1;
+      if (cls.telat1Hari) tT1 += 1;
+      if (cls.telat2HariUp) tT2 += 1;
     });
     
     var tPct = tTot > 0 ? (tOn / tTot) * 100 : 0;
@@ -7449,29 +7742,11 @@ function calculateFFDashboardData() {
     var d = destMap[dest];
     d.totalArmada += 1;
     
-    var ket = String(r['Keterangan'] || r['keterangan'] || r['KETERANGAN'] || '').toUpperCase().trim();
-    if (ket.indexOf('ON TIME') !== -1) {
-      d.onTime += 1;
-    } else if (ket.indexOf('JAM STUFFING') !== -1) {
-      d.telatStuffing += 1;
-    } else if (ket.indexOf('1 HARI') !== -1) {
-      d.telat1Hari += 1;
-    } else if (ket.indexOf('2 HARI') !== -1) {
-      d.telat2HariUp += 1;
-    } else {
-      var status = String(r['STATUS'] || '').toUpperCase().trim();
-      var pctLd = parseInt(r['%LD']) || 0;
-      if (status === 'KELUAR DC' || status === 'SELESAI') {
-        if (pctLd >= 100) d.onTime += 1;
-        else d.telatStuffing += 1;
-      } else if (status === 'PROSES' || status === 'ANTRI') {
-        d.telat1Hari += 1;
-      } else if (status) {
-        d.telat2HariUp += 1;
-      } else {
-        d.onTime += 1;
-      }
-    }
+    var cls = classifyFulfillmentRow(r);
+    if (cls.onTime) d.onTime += 1;
+    if (cls.telatStuffing) d.telatStuffing += 1;
+    if (cls.telat1Hari) d.telat1Hari += 1;
+    if (cls.telat2HariUp) d.telat2HariUp += 1;
   });
   
   var byDestination = Object.values(destMap).sort(function(a, b) {
@@ -7503,29 +7778,11 @@ function calculateFFDashboardData() {
     var v = vendorMap[key];
     v.totalArmada += 1;
     
-    var ket = String(r['Keterangan'] || r['keterangan'] || r['KETERANGAN'] || '').toUpperCase().trim();
-    if (ket.indexOf('ON TIME') !== -1) {
-      v.onTime += 1;
-    } else if (ket.indexOf('JAM STUFFING') !== -1) {
-      v.telatStuffing += 1;
-    } else if (ket.indexOf('1 HARI') !== -1) {
-      v.telat1Hari += 1;
-    } else if (ket.indexOf('2 HARI') !== -1) {
-      v.telat2HariUp += 1;
-    } else {
-      var status = String(r['STATUS'] || '').toUpperCase().trim();
-      var pctLd = parseInt(r['%LD']) || 0;
-      if (status === 'KELUAR DC' || status === 'SELESAI') {
-        if (pctLd >= 100) v.onTime += 1;
-        else v.telatStuffing += 1;
-      } else if (status === 'PROSES' || status === 'ANTRI') {
-        v.telat1Hari += 1;
-      } else if (status) {
-        v.telat2HariUp += 1;
-      } else {
-        v.onTime += 1;
-      }
-    }
+    var cls = classifyFulfillmentRow(r);
+    if (cls.onTime) v.onTime += 1;
+    if (cls.telatStuffing) v.telatStuffing += 1;
+    if (cls.telat1Hari) v.telat1Hari += 1;
+    if (cls.telat2HariUp) v.telat2HariUp += 1;
   });
   
   var byVendor = Object.values(vendorMap).sort(function(a, b) {
@@ -8189,7 +8446,7 @@ function renderOlfPage() {
     var eDate = new Date(OLF_APP.ed);
     eDate.setHours(23,59,59,999);
     data = data.filter(function(r) {
-      var rd = getRowDate(r);
+      var rd = r.DATE_OBJ || getRowDate(r);
       if (!rd) return false;
       rd.setHours(12,0,0,0); // Midday for safe comparison
       return rd >= sDate && rd <= eDate;
@@ -8204,12 +8461,19 @@ function renderOlfPage() {
 
   if (total > 0) {
     var sumLd = data.reduce(function(s, r) { 
-      return s + getOlfValue(r); 
+      return s + (r.OLF_TOTAL !== undefined ? r.OLF_TOTAL : getOlfValue(r)); 
     }, 0);
     olfTotal = Math.min(100, Math.round(sumLd / total));
     
     misses = data.filter(function(r) {
-      return getOlfValue(r) < 100;
+      var val = r.OLF_TOTAL !== undefined ? r.OLF_TOTAL : getOlfValue(r);
+      return val < 85;
+    });
+    misses.sort(function(a, b) {
+      var ad = a.DATE_OBJ || getRowDate(a);
+      var bd = b.DATE_OBJ || getRowDate(b);
+      if (ad && bd) return ad - bd;
+      return 0;
     });
     missCount = misses.length;
     successCount = total - missCount;
@@ -8279,18 +8543,18 @@ function updateOlfDashboard(score, missCount, totalCount, successCount, misses) 
       var h = '';
       // Limit to 100 rows for performance
       misses.slice(0, 100).forEach(function(r) {
-        var trans = r['TRANS NO'] || r['TRANSNO'] || r['NO TRANS'] || r['No. Trans'] || '-';
-        var cust = r['CUSTOMER'] || r['NAMA CUSTOMER'] || r['Nama Pelanggan'] || '-';
-        var area = r['AREA'] || r['WILAYAH'] || r['Tujuan'] || '-';
-        var time = r['SLA TIME'] || r['STUFFING TIME'] || r['Jam'] || '-';
+        var dateObj = r.DATE_OBJ || getRowDate(r);
+        var formattedD = dateObj ? dateObj.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : (r.DATE || '-');
+        var storeVal = typeof r.OLF_STORE === 'number' ? r.OLF_STORE.toFixed(2) + '%' : (typeof r['OLF STORE'] === 'number' ? r['OLF STORE'].toFixed(2) + '%' : '-');
+        var custVal = typeof r.OLF_CUSTOMER === 'number' ? r.OLF_CUSTOMER.toFixed(2) + '%' : (typeof r['OLF CUSTOMER'] === 'number' ? r['OLF CUSTOMER'].toFixed(2) + '%' : '-');
+        var totalVal = typeof r.OLF_TOTAL === 'number' ? r.OLF_TOTAL.toFixed(2) + '%' : (typeof r.OLF === 'number' ? r.OLF.toFixed(2) + '%' : '-');
         
         h += '<tr>' +
-          '<td>' + esc(trans) + '</td>' +
-          '<td>' + esc(cust) + '</td>' +
-          '<td>' + esc(area) + '</td>' +
-          '<td>' + esc(time) + '</td>' +
-          '<td class="nc">' + getOlfValue(r) + '%</td>' +
-          '<td><span class="st" style="background:#fff5f5; color:#c53030; border:1px solid #feb2b2; padding: 2px 6px; border-radius: 4px; font-size: 10px;">CRITICAL</span></td>' +
+          '<td>' + esc(formattedD) + '</td>' +
+          '<td class="nc">' + esc(storeVal) + '</td>' +
+          '<td class="nc">' + esc(custVal) + '</td>' +
+          '<td class="nc" style="font-weight: 600;">' + esc(totalVal) + '</td>' +
+          '<td><span class="st" style="background:#fff5f5; color:#c53030; border:1px solid #feb2b2; padding: 2px 6px; border-radius: 4px; font-size: 10px;">BELUM TARGET</span></td>' +
           '</tr>';
       });
       tb.innerHTML = h;
