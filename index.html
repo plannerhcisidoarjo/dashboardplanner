@@ -1957,6 +1957,217 @@
 .plan-table tbody td { padding: 8px 10px; white-space: nowrap; }
 .plan-table tfoot td { padding: 10px; background: var(--text); color: #fff; font-weight: 800; font-family: var(--font-mono); }
 .plan-day-cell { transition: background .3s ease; border-radius: 4px; }
+
+  /* ── MOBILE RESPONSIVE OPTIMIZATIONS ── */
+  @media (max-width: 768px) {
+    /* Layout & Sidebar */
+    .dashboard-container {
+      position: relative;
+    }
+    .sidebar {
+      position: fixed;
+      top: 60px; /* Below the header */
+      left: 0;
+      bottom: 0;
+      width: 240px;
+      z-index: 200;
+      transform: translateX(-100%);
+      box-shadow: 10px 0 30px rgba(0, 0, 0, 0.25);
+    }
+    .sidebar.mobile-open {
+      transform: translateX(0);
+    }
+    .sidebar.col {
+      transform: translateX(-100%); /* Maintain closed state on mobile */
+    }
+    .main-content {
+      padding: 16px 12px;
+      gap: 16px;
+    }
+    
+    /* Header Adjustments */
+    .header {
+      padding: 0 12px;
+    }
+    .header-left img {
+      height: 36px !important;
+      margin-right: 8px !important;
+    }
+    .header-title {
+      font-size: 11px !important;
+      line-height: 1.2 !important;
+    }
+    .header-sub {
+      display: none !important;
+    }
+    .header-right .timestamp {
+      display: none !important;
+    }
+    .header-right .badge {
+      font-size: 10px !important;
+      padding: 2px 6px !important;
+    }
+    .btn-refresh {
+      padding: 4px 8px !important;
+      font-size: 11px !important;
+    }
+    
+    /* Grids & Cards */
+    .kpi-grid {
+      grid-template-columns: repeat(2, 1fr) !important;
+      gap: 8px !important;
+    }
+    .kpi-grid-4 {
+      grid-template-columns: repeat(2, 1fr) !important;
+      gap: 8px !important;
+    }
+    .overview-grid {
+      grid-template-columns: 1fr !important;
+      gap: 16px !important;
+    }
+    .mini-kpi-row {
+      grid-template-columns: repeat(2, 1fr) !important;
+      gap: 8px !important;
+    }
+    .mini-kpi {
+      padding: 10px 12px !important;
+      gap: 8px !important;
+    }
+    .mini-kpi-val {
+      font-size: 17px !important;
+    }
+    .mini-kpi-lbl {
+      font-size: 8.5px !important;
+    }
+    
+    /* Filters */
+    .filter-divider {
+      display: none !important;
+    }
+    .filter-bar {
+      padding: 10px 12px !important;
+      gap: 8px !important;
+    }
+    .filter-group {
+      flex: 1 1 auto;
+    }
+    .filter-select, .filter-input {
+      padding: 4px 8px !important;
+      font-size: 11px !important;
+      width: 100% !important;
+    }
+    .search-box {
+      width: 100% !important;
+      max-width: none !important;
+    }
+    
+    /* Tabs Horizontal Scrolling */
+    .tabs {
+      display: flex !important;
+      overflow-x: auto !important;
+      white-space: nowrap !important;
+      -webkit-overflow-scrolling: touch !important;
+      gap: 6px !important;
+      border-bottom: 1px solid var(--border) !important;
+      padding-bottom: 2px !important;
+    }
+    .tab {
+      flex: 0 0 auto !important;
+      padding: 6px 12px !important;
+      font-size: 11px !important;
+    }
+    
+    /* Overview Page Charts */
+    .overview-chart-row {
+      flex-direction: column !important;
+      align-items: center !important;
+      gap: 12px !important;
+    }
+    .ov-stats-list {
+      width: 100% !important;
+    }
+    
+    /* Armada Page */
+    #pg-fulfillment-armada .arm-row {
+      grid-template-columns: 1fr !important;
+      gap: 16px !important;
+    }
+    #pg-fulfillment-armada .arm-sp {
+      padding-right: 0 !important;
+      border-right: none !important;
+      border-bottom: 1px solid var(--border) !important;
+      padding-bottom: 16px !important;
+    }
+    #pg-fulfillment-armada .arm-div {
+      display: none !important;
+    }
+    #pg-fulfillment-armada .arm-tot {
+      padding: 0 !important;
+      border-bottom: 1px solid var(--border) !important;
+      padding-bottom: 16px !important;
+    }
+    #pg-fulfillment-armada .arm-kpi {
+      padding-left: 0 !important;
+      flex-direction: column !important;
+      gap: 16px !important;
+    }
+    #pg-fulfillment-armada .arm-ot {
+      flex: none !important;
+      padding-right: 0 !important;
+      border-right: none !important;
+      border-bottom: 1px dashed #cbd5e0 !important;
+      padding-bottom: 12px !important;
+    }
+    #pg-fulfillment-armada .arm-dl {
+      padding-left: 0 !important;
+    }
+    #pg-fulfillment-armada .kcr {
+      flex-direction: column !important;
+      gap: 10px !important;
+    }
+    #pg-fulfillment-armada .tabg {
+      display: flex !important;
+      overflow-x: auto !important;
+      white-space: nowrap !important;
+      border-radius: 12px !important;
+      width: 100% !important;
+    }
+    #pg-fulfillment-armada .tbb {
+      flex: 1 0 auto !important;
+      padding: 8px 12px !important;
+    }
+    #pg-fulfillment-armada .tp {
+      overflow-x: auto !important;
+    }
+    
+    /* OLF Section */
+    .olf-section {
+      padding: 10px !important;
+    }
+    
+    /* Modals */
+    .sla-modal-content {
+      padding: 16px !important;
+      width: 95% !important;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .kpi-grid {
+      grid-template-columns: 1fr !important;
+    }
+    .kpi-grid-4 {
+      grid-template-columns: 1fr !important;
+    }
+    .mini-kpi-row {
+      grid-template-columns: 1fr !important;
+    }
+  }
+  @media (max-width: 768px) {
+    .mobile-menu-btn {
+      display: inline-block !important;
+    }
+  }
 </style>
 </head>
 <body>
@@ -1964,6 +2175,7 @@
 <!-- ═══ HEADER ═══ -->
 <header class="header">
   <div class="header-left">
+    <button class="mobile-menu-btn" onclick="toggleSidebar()" style="display: none; background: none; border: none; color: #1e3a5f; font-size: 24px; cursor: pointer; padding: 4px; margin-right: 12px; align-self: center;">☰</button>
     <!-- Informa Logo -->
     <img src="https://lh3.googleusercontent.com/d/1T_T9ruGoVeGQjy4raxb7XdsEUM6tS2JU" alt="Informa" style="display: inline-block; vertical-align: middle; margin-right: 12px; height: 120px; width: auto; object-fit: contain;">
     <div>
@@ -1979,6 +2191,8 @@ PLANNING REPORT</div>
     <button class="btn-refresh" id="btnRefresh" onclick="loadData()">⟳ Refresh</button>
   </div>
 </header>
+
+<div id="sidebar-overlay" style="position:fixed; top:60px; left:0; right:0; bottom:0; background:rgba(15,23,42,0.4); z-index:190; display:none; opacity:0; transition:opacity 0.3s ease; backdrop-filter: blur(2px);" onclick="toggleSidebar()"></div>
 
 <div class="dashboard-container">
   <!-- Sidebar -->
@@ -2507,6 +2721,9 @@ PLANNING REPORT</div>
             <div>
               <div class="card-title">📋 Outstanding Order Pool</div>
               <div class="card-sub">Daftar order outstanding di pool yang belum ter-plan</div>
+            </div>
+            <div>
+              <input type="text" id="poolSearchInput" placeholder="Cari tujuan atau customer..." style="padding: 6px 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.2); color: #fff; font-size: 13px; width: 250px; outline: none;" oninput="filterOrderPool()">
             </div>
           </div>
           <div class="table-wrap" style="max-height: 350px; overflow-y: auto;">
@@ -3619,6 +3836,24 @@ function renderAgingKPIs(unplanned, totalRawCBM) {
   if (kpiLabel) kpiLabel.textContent = 'DESTINASI TERBANYAK';
 }
 
+function filterOrderPool() {
+  var searchInput = document.getElementById('poolSearchInput');
+  if (!searchInput) return;
+  var searchStr = searchInput.value.toLowerCase();
+  var rows = document.getElementById('agingTableBody').querySelectorAll('tr');
+  var foundAny = false;
+  rows.forEach(function(row) {
+    if (row.cells.length === 1) return; // Skip empty message row
+    var text = row.textContent.toLowerCase();
+    if (text.indexOf(searchStr) !== -1) {
+      row.style.display = '';
+      foundAny = true;
+    } else {
+      row.style.display = 'none';
+    }
+  });
+}
+
 function renderAgingTable(orders) {
   var tbody = document.getElementById('agingTableBody');
   if (orders.length === 0) {
@@ -3666,6 +3901,8 @@ function renderAgingTable(orders) {
       '<td><span class="badge" style="background:rgba(255,255,255,.05); color:var(--muted)">' + o.status + '</span></td>' +
       '</tr>';
   }).join('');
+  
+  filterOrderPool();
 }
 
 function renderFTLShortage(unplanned) {
@@ -3822,8 +4059,8 @@ function renderProyeksiPlanning(unplanned, sourceFilter) {
     if (subEl) subEl.textContent = 'Data proyeksi wilayah jadwal CONT DATE H+2, armada CONT-20 (≥90%), atau CDD LONG (≥95%) per store area tertentu';
 
     upcomingOrders = unplanned.filter(function(o) {
-      if (GRW_PLAN_AREAS.indexOf(o.area) !== -1) return true;
-      var areaName = String(o.area).toUpperCase();
+      var areaName = String(o.area).toUpperCase().trim();
+      if (GRW_PLAN_AREAS.indexOf(areaName) !== -1) return true;
       if (areaName.match(/SULAWESI|NTT|TARAKAN|TERNATE|AMBON|KENDARI|SUMATERA|PALU|JAYAPURA|SORONG|KALIMANTAN|MAKASSAR|BANJARMASIN|BALIKPAPAN|SAMARINDA|PONTIANAK|PALANGKARAYA|MANADO|GORONTALO|KUPANG|MEDAN|PADANG|PEKANBARU|PALEMBANG|JAMBI|BENGKULU|LAMPUNG|BATAM|PAPUA|MALUKU/)) {
         if (totalAreaMap[o.area] && totalAreaMap[o.area].cbm >= (25 * 0.9)) {
           return true; // Already 90% full for CONT-20
@@ -3838,12 +4075,25 @@ function renderProyeksiPlanning(unplanned, sourceFilter) {
     });
   }
 
-  if (upcomingOrders.length === 0) {
+  if (upcomingOrders.length === 0 && (sourceFilter !== 'GRW' || GRW_PLAN_AREAS.length === 0)) {
     proyeksiList.innerHTML = '<div style="text-align:center; padding:20px; color:var(--muted)">Tidak ada proyeksi planning H-2.</div>';
     return;
   }
 
   var areaMap = {};
+  if (sourceFilter === 'GRW') {
+    GRW_PLAN_AREAS.forEach(function(area) {
+      areaMap[area] = {
+        area: area,
+        originalArea: area,
+        isSpecialDest: false,
+        cbm: 0,
+        cases: 0,
+        count: 0
+      };
+    });
+  }
+
   upcomingOrders.forEach(function(o) {
     var key = o.area;
     var areaName = String(o.area).toUpperCase();
@@ -3895,7 +4145,8 @@ function renderProyeksiPlanning(unplanned, sourceFilter) {
 
     var badgeText = '';
     if (sourceFilter === 'GRW') {
-       if (GRW_PLAN_AREAS.indexOf(d.originalArea || d.area) !== -1) {
+       var badgeAreaName = String(d.originalArea || d.area).toUpperCase().trim();
+       if (GRW_PLAN_AREAS.indexOf(badgeAreaName) !== -1) {
          badgeText = '<span style="font-size:10px; background:var(--blue); color:#fff; padding:2px 6px; border-radius:4px; margin-left:8px; font-weight:600;">CONT DATE</span>';
        } else if (targetArmada === 'CONT-20' && d.cbm >= capacity * 0.9) {
          badgeText = '<span style="font-size:10px; background:var(--amber); color:#fff; padding:2px 6px; border-radius:4px; margin-left:8px; font-weight:600;">≥90% ' + targetArmada + '</span>';
@@ -4254,13 +4505,36 @@ function parseOutstandingSheetData(rows, targetRawArray) {
 function toggleSidebar() {
   var sb = document.getElementById('sb');
   var mn = document.getElementById('mn');
-  if (sb && mn) {
-    sb.classList.toggle('col');
-    mn.classList.toggle('col');
-    
-    // Invalidate map size so Leaflet resizes correctly
-    if (mapInstance) {
-      setTimeout(function() { mapInstance.invalidateSize(); }, 300);
+  var overlay = document.getElementById('sidebar-overlay');
+  
+  if (window.innerWidth <= 768) {
+    if (sb) {
+      var isOpen = sb.classList.toggle('mobile-open');
+      if (overlay) {
+        if (isOpen) {
+          overlay.style.display = 'block';
+          // Trigger layout reflow for CSS opacity transition
+          overlay.offsetHeight;
+          overlay.style.opacity = '1';
+        } else {
+          overlay.style.opacity = '0';
+          setTimeout(function() {
+            if (sb && !sb.classList.contains('mobile-open') && overlay) {
+              overlay.style.display = 'none';
+            }
+          }, 300);
+        }
+      }
+    }
+  } else {
+    if (sb && mn) {
+      sb.classList.toggle('col');
+      mn.classList.toggle('col');
+      
+      // Invalidate map size so Leaflet resizes correctly
+      if (mapInstance) {
+        setTimeout(function() { mapInstance.invalidateSize(); }, 300);
+      }
     }
   }
 }
@@ -4320,6 +4594,21 @@ function navTo(page) {
     renderFulfillmentArmadaPage();
   } else if (page === 'olf') {
     renderOlfPage();
+  }
+
+  // Close sidebar on mobile after navigating
+  var sb = document.getElementById('sb');
+  if (sb && sb.classList.contains('mobile-open')) {
+    sb.classList.remove('mobile-open');
+    var overlay = document.getElementById('sidebar-overlay');
+    if (overlay) {
+      overlay.style.opacity = '0';
+      setTimeout(function() {
+        if (overlay && sb && !sb.classList.contains('mobile-open')) {
+          overlay.style.display = 'none';
+        }
+      }, 300);
+    }
   }
 }
 
@@ -5708,7 +5997,7 @@ function initSlaTrendModalChart() {
           type: 'linear',
           display: true,
           position: 'right',
-          min: 0,
+          min: calcPctAxisMin(grwPoints, custPoints),
           max: 100,
           title: {
             display: true,
@@ -5721,8 +6010,8 @@ function initSlaTrendModalChart() {
             color: '#8e9fae',
             font: { family: 'Fira Code', size: 10 },
             callback: function(value) {
-              return value + '%';
-            }
+  return value.toFixed(1) + '%';
+}
           }
         },
         x: { stacked: true,
@@ -5924,7 +6213,7 @@ function initSlaTrendOnPageCharts() {
           type: 'linear',
           display: true,
           position: 'right',
-          min: 0,
+          min: calcPctAxisMin(grwPctPoints),
           max: 100,
           title: {
             display: true,
@@ -5937,8 +6226,8 @@ function initSlaTrendOnPageCharts() {
             color: '#8e9fae',
             font: { family: 'Fira Code', size: 10 },
             callback: function(value) {
-              return value + '%';
-            }
+  return value.toFixed(1) + '%';
+}
           }
         },
         x: { stacked: true,
@@ -6014,7 +6303,7 @@ function initSlaTrendOnPageCharts() {
           type: 'linear',
           display: true,
           position: 'right',
-          min: 0,
+          min: calcPctAxisMin(custPctPoints),
           max: 100,
           title: {
             display: true,
@@ -6027,8 +6316,8 @@ function initSlaTrendOnPageCharts() {
             color: '#8e9fae',
             font: { family: 'Fira Code', size: 10 },
             callback: function(value) {
-              return value + '%';
-            }
+  return value.toFixed(1) + '%';
+}
           }
         },
         x: { stacked: true,
@@ -6554,6 +6843,21 @@ function parseOlfSheet(rawData) {
   return list;
 }
 
+// ── PARSER BARU: baca data per-trip ASLI dari sheet "Data" ──
+// L  = CARRIER ID   -> dipakai tab "By Vendor"
+// AM = CITY         -> dipakai tab "By Destination"
+// AN = Keterangan, AR = MODA, S = TYPE ARMADA, O = TANGGAL MUAT
+// (nama-nama kolom ini sudah cocok persis dengan key yang dipakai
+//  getRowDate(), getTransportType(), classifyFulfillmentRow())
+function parseFulfillmentDetailSheet(rows) {
+  if (!Array.isArray(rows)) return [];
+  return rows.filter(function(r) {
+    if (!r) return false;
+    var trans = r['TRANS NO'] || r['TRANSNO'] || '';
+    return String(trans).trim() !== '';
+  });
+}
+
 function parseFulfillmentArmadaSheet(rawData) {
   var trips = [];
   if (!rawData || !Array.isArray(rawData)) return trips;
@@ -6676,7 +6980,8 @@ function loadData() {
   var csvAgingUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1ITpX4yc_VLL_qpbLZc1RHfwDzinUf2vnbQXewb_F4oM/gviz/tq?tqx=out:csv&sheet=OUTSTANDING%20GRW');
   var csvAgingCustUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1ITpX4yc_VLL_qpbLZc1RHfwDzinUf2vnbQXewb_F4oM/gviz/tq?tqx=out:csv&sheet=OUTSTANDING%20CUST');
   var csvContDateUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1ITpX4yc_VLL_qpbLZc1RHfwDzinUf2vnbQXewb_F4oM/gviz/tq?tqx=out:csv&sheet=CONT%20DATE');
-  var csvFulfillmentUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1q-qxELBQZr3ABhVg-mw6Kvhl-e11RGQUmCTQjsXtz9g/gviz/tq?tqx=out:csv&gid=2066861608');
+  var csvFulfillmentUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1bEBI18zlEeXDqg4G4sFljZETceLvsyP-fcuMB1nLtsM/gviz/tq?tqx=out:csv&sheet=Data');
+var csvFulfillmentFallbackUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1bEBI18zlEeXDqg4G4sFljZETceLvsyP-fcuMB1nLtsM/gviz/tq?tqx=out:csv&gid=0');
   var csvOlfUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1q-qxELBQZr3ABhVg-mw6Kvhl-e11RGQUmCTQjsXtz9g/gviz/tq?tqx=out:csv&sheet=OLF');
   
   // Reading separate sheets SLA GRW and SLA CUST from the spreadsheet
@@ -6685,10 +6990,15 @@ function loadData() {
   var csvSlaCustUrl2 = getProxyUrl('https://docs.google.com/spreadsheets/d/1q-qxELBQZr3ABhVg-mw6Kvhl-e11RGQUmCTQjsXtz9g/gviz/tq?tqx=out:csv&sheet=SLA%20CUSTOMER');
 
   var fetchFulfillment = new Promise(function(resolve) {
-    fetchAndParseCsv(csvFulfillmentUrl, { header: false, skipEmptyLines: true }, function(data) {
-      resolve(parseFulfillmentArmadaSheet(data));
+  fetchAndParseCsv(csvFulfillmentUrl, { header: true, skipEmptyLines: true }, function(data) {
+    var rows = parseFulfillmentDetailSheet(data);
+    if (rows.length > 0) { resolve(rows); return; }
+    // fallback kalau nama sheet "Data" berbeda -> coba tab pertama (gid=0)
+    fetchAndParseCsv(csvFulfillmentFallbackUrl, { header: true, skipEmptyLines: true }, function(data2) {
+      resolve(parseFulfillmentDetailSheet(data2));
     });
   });
+});
 
   var fetchOlf = new Promise(function(resolve) {
     fetchAndParseCsv(csvOlfUrl, { header: false, skipEmptyLines: true }, function(data) {
@@ -6914,12 +7224,28 @@ function processResults(results) {
       var dayNames = ['MINGGU', 'SENIN', 'SELASA', 'RABU', 'KAMIS', 'JUMAT', 'SABTU'];
       var todayIdx = new Date().getDay();
       var targetIdx = (todayIdx + 2) % 7;
-      var targetDayName = dayNames[targetIdx];
+      var targetDayName = dayNames[targetIdx]; console.log("Target Day Name:", targetDayName); console.log("dataContDate:", dataContDate);
       
       dataContDate.forEach(function(row) {
-        var area = row['WILAYAH/DAY'] || row['WILAYAH'];
-        if (area && row[targetDayName] && row[targetDayName].toString().toUpperCase().trim() === 'PLAN') {
-          GRW_PLAN_AREAS.push(area.toUpperCase().trim());
+        var area = null;
+        var targetVal = null;
+        for (var key in row) {
+          if (row.hasOwnProperty(key)) {
+            var cleanKey = key.toString().toUpperCase().trim();
+            if (cleanKey === 'WILAYAH/DAY' || cleanKey === 'WILAYAH' || cleanKey === 'AREA') {
+              area = row[key];
+            }
+            if (cleanKey === targetDayName) {
+              targetVal = row[key];
+            }
+          }
+        }
+        if (area && targetVal) {
+          var valStr = targetVal.toString().toUpperCase().trim();
+          if (valStr !== '' && valStr !== 'FALSE' && valStr !== '0' && valStr !== '-') {
+             // Accept any non-empty, non-negative value as a planned area for that day
+             GRW_PLAN_AREAS.push(area.toString().toUpperCase().trim()); console.log("Added to GRW_PLAN_AREAS:", area.toString().toUpperCase().trim());
+          }
         }
       });
     }
@@ -7555,6 +7881,25 @@ function formatSlaPct(val) {
     fixed = fixed.substring(0, fixed.length - 1);
   }
   return fixed.replace('.', ',') + '%';
+}
+
+// Hitung batas bawah sumbu % secara dinamis, supaya penurunan kecil (mis. 100% -> 99,95%) tetap kelihatan
+function calcPctAxisMin() {
+  var all = [];
+  for (var i = 0; i < arguments.length; i++) {
+    (arguments[i] || []).forEach(function(v) {
+      if (v !== null && v !== undefined && !isNaN(v)) all.push(parseFloat(v));
+    });
+  }
+  if (!all.length) return 0;
+  var minVal = Math.min.apply(null, all);
+  var maxVal = Math.max.apply(null, all);
+  if (minVal >= 100) return 99; // datanya rata 100%, tetap zoom ke 1% terakhir
+  var range = maxVal - minVal;
+  var padding = Math.max(range * 0.25, 0.3);
+  var dynMin = minVal - padding;
+  if (dynMin < 0) dynMin = 0;
+  return Math.floor(dynMin * 10) / 10; // presisi 1 desimal
 }
 
 function escHtml(str) {
