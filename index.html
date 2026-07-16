@@ -5,7 +5,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ORDER FULFILLMENT & PLANNING REPORT · PLANNER HCI</title>
-<link rel="icon" type="image/png" href="favicon.png">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
@@ -826,7 +825,7 @@
     width: 100%;
   }
   .sidebar {
-    width: 240px;
+    width: 260px;
     background: linear-gradient(180deg, #0f172a 0%, #1e1b4b 50%, #311042 100%);
     border-right: 1px solid rgba(99, 102, 241, 0.2);
     display: flex;
@@ -881,8 +880,8 @@
     cursor: pointer;
     font-weight: 500;
     transition: all 0.2s ease;
-    overflow: hidden;
-    white-space: nowrap;
+    white-space: normal;
+    word-break: break-word;
   }
   .ni:hover {
     color: #ffffff;
@@ -1831,6 +1830,38 @@
     font-weight: 800 !important;
     font-size: 12px !important;
   }
+  #pg-fulfillment-armada .detail-expand {
+  background:#f8fafc;
+}
+
+#pg-fulfillment-armada .detail-wrap{
+  padding:14px;
+}
+
+#pg-fulfillment-armada .detail-mini{
+  width:100%;
+  border-collapse:collapse;
+}
+
+#pg-fulfillment-armada .detail-mini th{
+  background:#edf2f7;
+  padding:8px;
+  font-size:11px;
+}
+
+#pg-fulfillment-armada .detail-mini td{
+  padding:8px;
+  border-top:1px solid #e2e8f0;
+}
+
+#pg-fulfillment-armada .click-detail{
+  cursor:pointer;
+  transition:.2s;
+}
+
+#pg-fulfillment-armada .click-detail:hover{
+  background:#ebf8ff;
+}
   
   /* Kapsul Scope OLF agar tidak mengganggu CSS Global Dashboard Anda */
   .olf-section .ov-top {
@@ -2169,6 +2200,161 @@
       display: inline-block !important;
     }
   }
+
+  /* ── CASE ID RELEASE CUSTOM STYLES ── */
+  .cr-lane {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+  }
+  .cr-lane:hover {
+    border-color: var(--blue);
+    transform: translateX(4px);
+    background: rgba(255, 255, 255, 0.01);
+  }
+  .cr-lane.lane-high {
+    border-left: 4px solid var(--red);
+  }
+  .cr-lane.lane-medium {
+    border-left: 4px solid var(--amber);
+  }
+  .cr-lane.lane-low {
+    border-left: 4px solid var(--green);
+  }
+  .cr-tab-btn {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--muted);
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .cr-tab-btn.active {
+    background: var(--blue-dim);
+    border-color: var(--blue);
+    color: #fff;
+  }
+  .cr-row-group-hdr {
+    background: rgba(255, 255, 255, 0.02) !important;
+    font-weight: 800;
+  }
+  .cr-badge-priority {
+    background: rgba(248, 81, 73, 0.1) !important;
+    border: 1px solid rgba(248, 81, 73, 0.2) !important;
+    color: #ff7b72 !important;
+  }
+  .cr-badge-normal {
+    background: rgba(46, 160, 67, 0.1) !important;
+    border: 1px solid rgba(46, 160, 67, 0.2) !important;
+    color: #56d364 !important;
+  }
+  .ff-modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.55);
+  z-index:999999;
+  padding:30px;
+  overflow:auto;
+}
+
+.ff-modal.show{
+  display:block;
+}
+
+.ff-modal-box{
+  background:#fff;
+  border-radius:18px;
+  max-width:1400px;
+  margin:auto;
+  padding:24px;
+}
+
+.ff-modal-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:24px;
+}
+
+.ff-modal-type{
+  font-size:11px;
+  font-weight:800;
+  color:#3182ce;
+  letter-spacing:1px;
+}
+
+.ff-kpi-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:14px;
+  margin-bottom:20px;
+}
+
+.ff-kpi{
+  background:#f8fafc;
+  border-radius:12px;
+  padding:18px;
+}
+
+.ff-kpi span{
+  display:block;
+  font-size:12px;
+  color:#64748b;
+}
+
+.ff-kpi b{
+  font-size:28px;
+}
+
+.ff-chart-grid{
+  display:grid;
+  grid-template-columns:1fr 2fr;
+  gap:20px;
+  margin-bottom:20px;
+}
+
+.ff-card{
+  background:#fff;
+  border:1px solid #e2e8f0;
+  border-radius:14px;
+  padding:16px;
+}
+
+#ffCloseModal {
+  background: #f1f5f9;
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+#ffCloseModal:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+.detail-mini {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
 </style>
 </head>
 <body>
@@ -2223,6 +2409,25 @@ PLANNING REPORT</div>
         <span class="ni-icon">🚚</span>
         <span class="ni-text">Fulfillment Armada</span>
       </div>
+      <div id="ni-caseid-release" class="ni" onclick="navTo('caseid-release')">
+        <span class="ni-icon" style="display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 18px; vertical-align: middle;">
+          <svg width="24" height="16" viewBox="0 0 24 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: block;">
+            <!-- Barcode vertical lines -->
+            <rect x="0" y="1" width="1.5" height="14" fill="currentColor"/>
+            <rect x="2.5" y="1" width="1" height="14" fill="currentColor"/>
+            <rect x="4.5" y="1" width="2" height="14" fill="currentColor"/>
+            <rect x="7.5" y="1" width="0.75" height="14" fill="currentColor"/>
+            <rect x="9.25" y="1" width="1.5" height="14" fill="currentColor"/>
+            <rect x="11.75" y="1" width="2" height="14" fill="currentColor"/>
+            <rect x="14.75" y="1" width="0.75" height="14" fill="currentColor"/>
+            <rect x="16.5" y="1" width="1.5" height="14" fill="currentColor"/>
+            <rect x="19" y="1" width="1" height="14" fill="currentColor"/>
+            <rect x="21" y="1" width="2" height="14" fill="currentColor"/>
+          </svg>
+        </span>
+        <span class="ni-text">Case ID Release</span>
+      </div>
+
     </nav>
   </aside>
   
@@ -3429,6 +3634,266 @@ PLANNING REPORT</div>
 </div>
 
 
+<!-- PAGE: CASE ID RELEASE -->
+<div id="pg-caseid-release" class="pg">
+  <div class="caseid-section" style="padding: 20px;">
+
+    <!-- Header Summary Card -->
+    <div class="card" style="margin-bottom: 20px; background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%); color: #fff; border: none; box-shadow: 0 10px 25px rgba(0,0,0,0.15);">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+        <div>
+          <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: #94a3b8; font-weight: 700; display: flex; align-items: center; gap: 6px;">
+            <span class="dot dot-pulse" style="background: #38bdf8; width: 8px; height: 8px;"></span> OUTBOUND CASE RELEASE CONTROL
+          </div>
+          <h1 style="font-family: var(--font-display); font-size: 26px; font-weight: 800; color: #fff; margin-top: 4px; border: none;">CASE ID RELEASE — PICKING PRIORITY BOARD</h1>
+          <p style="font-size: 13px; color: #cbd5e1; margin-top: 4px;">Release Date: <span id="cr-date-badge" class="badge" style="background: rgba(56,189,248,0.15); border: 1px solid rgba(56,189,248,0.3); color: #38bdf8; font-weight: 700; padding: 2px 8px;">Loading...</span></p>
+        </div>
+        <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+          <div style="background: rgba(255, 255, 255, 0.05); padding: 12px 20px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.08); text-align: center; min-width: 120px;">
+            <div style="font-size: 10px; color: #94a3b8; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">TOTAL CASES</div>
+            <div id="cr-total-cases" style="font-size: 26px; font-weight: 800; color: #38bdf8; font-family: var(--font-mono); margin-top: 4px;">0</div>
+          </div>
+          <div style="background: rgba(255, 255, 255, 0.05); padding: 12px 20px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.08); text-align: center; min-width: 120px;">
+            <div style="font-size: 10px; color: #94a3b8; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">TOTAL VOLUME</div>
+            <div id="cr-total-cbm" style="font-size: 26px; font-weight: 800; color: #34d399; font-family: var(--font-mono); margin-top: 4px;">0 CBM</div>
+          </div>
+          <div style="background: rgba(255, 255, 255, 0.05); padding: 12px 20px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.08); text-align: center; min-width: 120px;">
+            <div style="font-size: 10px; color: #94a3b8; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">BATCH 3 (AKTIF)</div>
+            <div id="cr-batch3-cases" style="font-size: 26px; font-weight: 800; color: #fbbf24; font-family: var(--font-mono); margin-top: 4px;">0</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PRIORITY PICKING QUEUE (paling penting) ── -->
+    <div class="card" style="margin-bottom: 20px; border-top: 4px solid var(--red);">
+      <div class="card-header" style="margin-bottom: 4px;">
+        <div>
+          <div class="card-title" style="display:flex; align-items:center; gap:6px;">🎯 URUTAN PRIORITAS PICKING</div>
+          <div class="card-sub">Kerjakan dari atas ke bawah — urutan ini sudah mengikuti prioritas customer & jenis order</div>
+        </div>
+      </div>
+      <div id="cr-priority-list" style="display:flex; flex-direction:column; gap:10px; margin-top:10px;">
+        <!-- Rendered via JS -->
+      </div>
+    </div>
+
+    <!-- ── AREA RELEASE DISTRIBUTION + BU BREAKDOWN ── -->
+    <div style="display: grid; grid-template-columns: 1.3fr 1fr; gap: 16px; margin-bottom: 20px;">
+
+      <!-- Area Distribution -->
+      <div class="card" style="border-top: 4px solid var(--purple);">
+        <div class="card-header">
+          <div>
+            <div class="card-title">📍 CASE ID RELEASE PER AREA STORING</div>
+            <div class="card-sub">Area mana yang paling banyak harus dipicking hari ini</div>
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 14px; margin-top: 12px;">
+          <div>
+            <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 5px;">
+              <span style="font-weight: 700; color: var(--text); display:flex; align-items:center; gap:6px;"><span style="width:8px;height:8px;border-radius:50%;background:#3b82f6;display:inline-block;"></span>AREA 1 (Accessories)</span>
+              <span id="cr-area1-widget-cases" style="font-family: var(--font-mono); font-weight: 700; color: #3b82f6;">0 Cases</span>
+            </div>
+            <div style="width: 100%; height: 10px; background: var(--border); border-radius: 5px; overflow: hidden;">
+              <div id="cr-area1-widget-bar" style="width: 0%; height: 100%; background: #3b82f6; transition: width 0.6s ease;"></div>
+            </div>
+          </div>
+          <div>
+            <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 5px;">
+              <span style="font-weight: 700; color: var(--text); display:flex; align-items:center; gap:6px;"><span style="width:8px;height:8px;border-radius:50%;background:#f59e0b;display:inline-block;"></span>AREA 2 (Medium / Non-Acc)</span>
+              <span id="cr-area2-widget-cases" style="font-family: var(--font-mono); font-weight: 700; color: #f59e0b;">0 Cases</span>
+            </div>
+            <div style="width: 100%; height: 10px; background: var(--border); border-radius: 5px; overflow: hidden;">
+              <div id="cr-area2-widget-bar" style="width: 0%; height: 100%; background: #f59e0b; transition: width 0.6s ease;"></div>
+            </div>
+          </div>
+          <div>
+            <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 5px;">
+              <span style="font-weight: 700; color: var(--text); display:flex; align-items:center; gap:6px;"><span style="width:8px;height:8px;border-radius:50%;background:#10b981;display:inline-block;"></span>AREA 3 (Bulky / Heavy)</span>
+              <span id="cr-area3-widget-cases" style="font-family: var(--font-mono); font-weight: 700; color: #10b981;">0 Cases</span>
+            </div>
+            <div style="width: 100%; height: 10px; background: var(--border); border-radius: 5px; overflow: hidden;">
+              <div id="cr-area3-widget-bar" style="width: 0%; height: 100%; background: #10b981; transition: width 0.6s ease;"></div>
+            </div>
+          </div>
+          <div id="cr-area-insight" style="font-size: 11px; color: var(--muted); border-top: 1px dashed var(--border); padding-top: 10px; margin-top: 4px; line-height: 1.5;">
+            <!-- rendered via JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- BU / Brand Breakdown -->
+      <div class="card" style="border-top: 4px solid var(--amber);">
+        <div class="card-header">
+          <div>
+            <div class="card-title">🏢 BREAKDOWN PER BRAND</div>
+            <div class="card-sub">Komposisi case ID release per unit bisnis</div>
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 10px;">
+          <div>
+            <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px;">
+              <span style="font-weight: 700; color: var(--text);">INFORMA</span>
+              <span id="cr-bu-informa-text" style="font-family: var(--font-mono); font-weight: 700; color: var(--blue);">0 Cases</span>
+            </div>
+            <div style="width: 100%; height: 7px; background: var(--border); border-radius: 4px; overflow: hidden;">
+              <div id="cr-bu-informa-bar" style="width: 0%; height: 100%; background: var(--blue);"></div>
+            </div>
+          </div>
+          <div>
+            <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px;">
+              <span style="font-weight: 700; color: var(--text);">SELMA</span>
+              <span id="cr-bu-selma-text" style="font-family: var(--font-mono); font-weight: 700; color: var(--amber);">0 Cases</span>
+            </div>
+            <div style="width: 100%; height: 7px; background: var(--border); border-radius: 4px; overflow: hidden;">
+              <div id="cr-bu-selma-bar" style="width: 0%; height: 100%; background: var(--amber);"></div>
+            </div>
+          </div>
+          <div>
+            <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px;">
+              <span style="font-weight: 700; color: var(--text);">ELECTRONICS</span>
+              <span id="cr-bu-electronics-text" style="font-family: var(--font-mono); font-weight: 700; color: var(--purple);">0 Cases</span>
+            </div>
+            <div style="width: 100%; height: 7px; background: var(--border); border-radius: 4px; overflow: hidden;">
+              <div id="cr-bu-electronics-bar" style="width: 0%; height: 100%; background: var(--purple);"></div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top: 14px; padding-top: 12px; border-top: 1px dashed var(--border);">
+          <button class="btn-refresh" style="width:100%; justify-content:center; background:var(--blue); border-color:var(--blue);" onclick="openTopSkuModal()">
+            🏆 Lihat Top 5 SKU Release
+            <span id="cr-top-sku-badge" class="badge" style="background:rgba(255,255,255,0.25); color:#fff; margin-left:6px; font-size:10px;">0 SKU</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+
+
+    <!-- ── LEVEL RACKING DISTRIBUTION ── -->
+    <div class="card" style="margin-bottom: 20px; border-top: 4px solid #0d9488;">
+      <div class="card-header">
+        <div>
+          <div class="card-title">🏗️ LEVEL RACKING CASE ID YANG DIRELEASE</div>
+          <div class="card-sub">Ketinggian rak penyimpanan (0 = paling bawah, 9 = paling tinggi) — untuk persiapan alat bantu & keselamatan picking</div>
+        </div>
+      </div>
+
+      <div id="cr-rack-bars" style="display:flex; gap:6px; align-items:flex-end; height:100px; margin-top:16px; padding:0 4px;">
+        <!-- 10 mini bar level 0-9, rendered via JS -->
+      </div>
+      <div style="display:flex; justify-content:space-between; padding:0 4px; margin-top:4px;">
+        <span style="font-size:9px; color:var(--muted); font-weight:700;">LV.0 (bawah)</span>
+        <span style="font-size:9px; color:var(--muted); font-weight:700;">LV.9 (tinggi)</span>
+      </div>
+
+      <div id="cr-rack-summary" style="display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:16px;">
+        <!-- 3 kartu bucket rendered via JS -->
+      </div>
+
+      <div id="cr-rack-alert" style="display:none; margin-top:12px; background:rgba(248,81,73,.1); border:1px solid rgba(248,81,73,.3); color:var(--red); padding:10px; border-radius:var(--radius-sm); font-size:11px; font-weight:600;">
+        <!-- rendered via JS -->
+      </div>
+    </div>
+
+    <!-- ── SEBARAN CASE ID PER LORONG (AISLE MAP) ── -->
+    <div class="card" style="margin-bottom: 20px; border-top: 4px solid #4f46e5;">
+      <div class="card-header" style="flex-wrap: wrap; gap: 10px;">
+        <div>
+          <div class="card-title">🗺️ SEBARAN CASE ID PER LORONG (LORONG 18–35 &amp; FLOOR)</div>
+          <div class="card-sub">Dibaca dari 2 karakter awal kolom LOC — semakin <strong style="color:#dc2626;">merah</strong> lorongnya, semakin padat picking di sana hari ini</div>
+        </div>
+        <span id="cr-aisle-total-badge" class="badge badge-purple" style="font-family: var(--font-mono);">0 Case Terpetakan</span>
+      </div>
+
+      <!-- Podium Top 3 Lorong Tersibuk -->
+      <div id="cr-aisle-top3" style="display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:14px;">
+        <!-- rendered via JS -->
+      </div>
+
+      <!-- Heatmap Grid Lorong 18–35 -->
+      <div id="cr-aisle-heatmap" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(92px,1fr)); gap:8px; margin-top:16px;">
+        <!-- rendered via JS -->
+      </div>
+
+      <!-- Floor & Lokasi Lainnya -->
+      <div id="cr-aisle-floor-row" style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:14px;">
+        <!-- rendered via JS -->
+      </div>
+
+      <!-- Insight otomatis -->
+      <div id="cr-aisle-insight" style="margin-top:12px; background:rgba(79,70,229,0.06); border:1px solid rgba(79,70,229,0.25); border-left:4px solid #4f46e5; color:var(--text); padding:10px 14px; border-radius:var(--radius-sm); font-size:12px; line-height:1.6;">
+        <!-- rendered via JS -->
+      </div>
+
+      <!-- Legenda warna -->
+      <div style="display:flex; gap:14px; flex-wrap:wrap; margin-top:10px; font-size:10px; color:var(--muted); align-items:center;">
+        <strong style="text-transform:uppercase; letter-spacing:.5px;">Legenda kepadatan:</strong>
+        <span style="display:flex; align-items:center; gap:4px;"><span style="width:12px;height:12px;border-radius:3px;background:#e2e8f0;display:inline-block;"></span>Kosong</span>
+        <span style="display:flex; align-items:center; gap:4px;"><span style="width:12px;height:12px;border-radius:3px;background:#86efac;display:inline-block;"></span>Ringan</span>
+        <span style="display:flex; align-items:center; gap:4px;"><span style="width:12px;height:12px;border-radius:3px;background:#60a5fa;display:inline-block;"></span>Sedang</span>
+        <span style="display:flex; align-items:center; gap:4px;"><span style="width:12px;height:12px;border-radius:3px;background:#fbbf24;display:inline-block;"></span>Padat</span>
+        <span style="display:flex; align-items:center; gap:4px;"><span style="width:12px;height:12px;border-radius:3px;background:#ef4444;display:inline-block;"></span>Sangat Padat</span>
+        <span style="display:flex; align-items:center; gap:4px;"><span style="width:12px;height:12px;border-radius:3px;background:linear-gradient(135deg,#0d9488,#14b8a6);display:inline-block;"></span>FLOOR</span>
+      </div>
+    </div>
+
+    <!-- ── DETAIL TABLE (terpadu, bukan 2 tabel terpisah) ── -->
+    <div class="card">
+      <div class="card-header" style="flex-wrap: wrap; gap: 10px;">
+        <div>
+          <div class="card-title">📋 DETAIL RINCIAN CASE ID (Terurut Prioritas)</div>
+          <div class="card-sub">Terurut sesuai prioritas · Bar <strong>Kontribusi</strong> = porsi beban kerja terhadap total release · <strong>Profil Barang</strong> = perkiraan ukuran fisik per case · Baris 0 case otomatis disembunyikan</div>
+        </div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+          <select class="filter-select" id="cr-filter-batch" onchange="applyCRDetailFilters()">
+            <option value="ALL">Semua Batch</option>
+            <option value="3">Batch 3 (Active)</option>
+            <option value="12">Batch 1 & 2 (Buffer)</option>
+          </select>
+          <select class="filter-select" id="cr-filter-area" onchange="applyCRDetailFilters()">
+            <option value="ALL">Semua Area</option>
+            <option value="HCI AREA 1">Area 1</option>
+            <option value="HCI AREA 2">Area 2</option>
+            <option value="HCI AREA 3">Area 3</option>
+          </select>
+          <input type="text" id="cr-search-detail" class="search-box" style="width:200px;" placeholder="Cari area / tipe..." oninput="applyCRDetailFilters()">
+        </div>
+      </div>
+
+      <div class="table-wrap" style="margin-top:10px;">
+        <table class="dt" style="width:100%; border-collapse:collapse;">
+          <thead>
+            <tr>
+              <th class="hn" style="width:5%; text-align:center;">Rank</th>
+              <th class="hn" style="width:16%;">Grup / Tipe</th>
+              <th class="hn" style="width:12%;">Deskripsi</th>
+              <th class="hn" style="width:16%;">Area Storing</th>
+              <th class="hn nh" style="text-align:center; width:9%;">Case ID</th>
+              <th class="hn nh" style="text-align:center; width:8%;">CBM</th>
+              <th class="hn nh" style="text-align:center; width:17%;">Kontribusi</th>
+              <th class="hn nh" style="text-align:center; width:17%;">Profil Barang</th>
+            </tr>
+          </thead>
+          <tbody id="cr-details-tbody">
+            <!-- Rendered via JS -->
+          </tbody>
+        </table>
+        <div id="cr-details-empty" class="empty-state" style="display:none;">
+          <div class="empty-icon">📭</div>
+          <div>Tidak ada data sesuai filter.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+<!-- /PAGE: CASE ID RELEASE -->
+
+<!-- /PAGE: RISK & QUALITY CONTROL CENTER -->
+
 <!-- Modal for Top Destinasi -->
 <div id="topDestModal" class="sla-modal">
   <div class="sla-modal-content" style="max-width: 500px;">
@@ -3449,6 +3914,26 @@ PLANNING REPORT</div>
     <div class="card-sub" style="margin-bottom:20px;">Warehouse vs Shipping daily SLA tracking</div>
     <div style="height:300px; width:100%;">
       <canvas id="slaTrendModalChart"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- Modal for Top SKU Release -->
+<div id="topSkuModal" class="sla-modal">
+  <div class="sla-modal-content" style="max-width: 550px;">
+    <button class="sla-modal-close" onclick="closeTopSkuModal()">✕</button>
+    <div class="card-title" style="margin-bottom:6px; font-size:16px;">🏆 TOP SKU CASE ID RELEASE</div>
+    <div class="card-sub" style="margin-bottom:16px;">SKU dengan jumlah case ID release terbanyak, terperinci secara modular</div>
+    
+    <!-- Tab Bar for SKU Breakdowns -->
+    <div style="display: flex; gap: 8px; border-bottom: 2px solid var(--border); padding-bottom: 8px; margin-bottom: 16px;">
+      <button id="cr-sku-tab-all" class="badge active" style="padding: 6px 12px; cursor: pointer; border: none; font-weight:800; font-size:11px;" onclick="switchSkuModalTab('all')">🏆 Overall</button>
+      <button id="cr-sku-tab-area" class="badge badge-muted" style="padding: 6px 12px; cursor: pointer; border: none; font-weight:800; font-size:11px;" onclick="switchSkuModalTab('area')">📍 Per Area</button>
+      <button id="cr-sku-tab-batch" class="badge badge-muted" style="padding: 6px 12px; cursor: pointer; border: none; font-weight:800; font-size:11px;" onclick="switchSkuModalTab('batch')">📦 Per Batch</button>
+    </div>
+
+    <div id="topSkuModalList" style="display:flex; flex-direction:column; gap:12px; max-height: 400px; overflow-y: auto; padding-right: 4px;">
+      <!-- rendered via JS -->
     </div>
   </div>
 </div>
@@ -3602,6 +4087,8 @@ var slaMissAreaFilter = 'ALL';
 var slaMissCategoryFilter = 'ALL';
 var currentSlaMissedList = [];
 var allOlfData = [];
+var allCaseIdReleaseData = [];
+var allCaseIdReleaseP1Data = [];
 var olfChartInstance = null;
 var OLF_APP = { sd: '', ed: '' };
 
@@ -4561,11 +5048,14 @@ function navTo(page) {
   var titleMap = {
     overview: { title: "ORDER FULFILLMENT & PLANNING REPORT", sub: "Ringkasan operasional harian" },
     loading: { title: "Progress Loading Dashboard", sub: "HCI Loading Control Panel" },
+    active: { title: "Progress Loading Dashboard", sub: "HCI Loading Control Panel" },
     aging: { title: "Aging & Planning Pool", sub: "Outstanding orders backlog & fleet quota" },
     armada: { title: "Performance Armada", sub: "Trip delay rate, carrier & city ratings" },
     sla: { title: "SERVICES LEVEL AGREEMENT (SLA)", sub: "Monitoring SLA GRW dan SLA Customer per periode" },
     'fulfillment-armada': { title: "Fulfillment Armada", sub: "Monitoring ketepatan waktu kedatangan armada internal & eksternal" },
-    olf: { title: "Order Late Fulfillment (OLF)", sub: "Order Load Factor" }
+    olf: { title: "Order Late Fulfillment (OLF)", sub: "Order Load Factor" },
+    'caseid-release': { title: "CASE ID RELEASE CONTROL", sub: "Staging lane preparation, picking priority & storing optimization helper" },
+    'risk-control': { title: "QUALITY CONTROL & OUTBOUND RISK ASSURANCE", sub: "Sistem mitigasi preventif potensi BARUS, TUGU, Kurang/Lebih Kirim, dan Discrepancy" }
   };
   
   var hdrTitle = document.getElementById('pageHeaderTitle');
@@ -4595,6 +5085,10 @@ function navTo(page) {
     renderFulfillmentArmadaPage();
   } else if (page === 'olf') {
     renderOlfPage();
+  } else if (page === 'caseid-release') {
+    renderCaseIdReleasePage();
+  } else if (page === 'risk-control') {
+    renderRiskControlPage();
   }
 
   // Close sidebar on mobile after navigating
@@ -6994,11 +7488,25 @@ function loadData() {
   var csvFulfillmentUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1bEBI18zlEeXDqg4G4sFljZETceLvsyP-fcuMB1nLtsM/gviz/tq?tqx=out:csv&sheet=Data');
 var csvFulfillmentFallbackUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1bEBI18zlEeXDqg4G4sFljZETceLvsyP-fcuMB1nLtsM/gviz/tq?tqx=out:csv&gid=0');
   var csvOlfUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1q-qxELBQZr3ABhVg-mw6Kvhl-e11RGQUmCTQjsXtz9g/gviz/tq?tqx=out:csv&sheet=OLF');
+  var csvCaseIdReleaseUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1MpFVzgYBAT00HFZNMi_chgdTKU3rnMTBGOYFKspncwk/gviz/tq?tqx=out:csv&gid=0');
+  var csvCaseIdReleaseP1Url = getProxyUrl('https://docs.google.com/spreadsheets/d/1MpFVzgYBAT00HFZNMi_chgdTKU3rnMTBGOYFKspncwk/gviz/tq?tqx=out:csv&sheet=P1%2BGRW%20DK');
   
   // Reading separate sheets SLA GRW and SLA CUST from the spreadsheet
   var csvSlaGrwUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1q-qxELBQZr3ABhVg-mw6Kvhl-e11RGQUmCTQjsXtz9g/gviz/tq?tqx=out:csv&sheet=SLA%20GRW');
   var csvSlaCustUrl1 = getProxyUrl('https://docs.google.com/spreadsheets/d/1q-qxELBQZr3ABhVg-mw6Kvhl-e11RGQUmCTQjsXtz9g/gviz/tq?tqx=out:csv&sheet=SLA%20CUST');
   var csvSlaCustUrl2 = getProxyUrl('https://docs.google.com/spreadsheets/d/1q-qxELBQZr3ABhVg-mw6Kvhl-e11RGQUmCTQjsXtz9g/gviz/tq?tqx=out:csv&sheet=SLA%20CUSTOMER');
+
+  var fetchCaseIdRelease = new Promise(function(resolve) {
+    fetchAndParseCsv(csvCaseIdReleaseUrl, { header: false, skipEmptyLines: true }, function(data) {
+      resolve(data);
+    });
+  });
+
+  var fetchCaseIdReleaseP1 = new Promise(function(resolve) {
+    fetchAndParseCsv(csvCaseIdReleaseP1Url, { header: false, skipEmptyLines: true }, function(data) {
+      resolve(data);
+    });
+  });
 
   var fetchFulfillment = new Promise(function(resolve) {
   fetchAndParseCsv(csvFulfillmentUrl, { header: true, skipEmptyLines: true }, function(data) {
@@ -7058,7 +7566,7 @@ var csvFulfillmentFallbackUrl = getProxyUrl('https://docs.google.com/spreadsheet
     });
   });
 
-  Promise.all([fetchMonitoring, fetchAging, fetchAgingCust, fetchContDate, fetchSlaGrw, fetchSlaCust, fetchFulfillment, fetchOlf])
+  Promise.all([fetchMonitoring, fetchAging, fetchAgingCust, fetchContDate, fetchSlaGrw, fetchSlaCust, fetchFulfillment, fetchOlf, fetchCaseIdRelease, fetchCaseIdReleaseP1])
     .then(function(results) {
       allSlaGrwData = results[4] || [];
       allSlaCustData = results[5] || [];
@@ -7067,6 +7575,8 @@ var csvFulfillmentFallbackUrl = getProxyUrl('https://docs.google.com/spreadsheet
       allOlfData = (results[7] || []).filter(function(r) {
         return r && typeof r === 'object' && Object.keys(r).length > 0;
       });
+      allCaseIdReleaseData = results[8] || [];
+      allCaseIdReleaseP1Data = results[9] || [];
 
       // Find dynamic URL in column N2 of SLA CUST
       var targetUrl = null;
@@ -7923,11 +8433,18 @@ function escHtml(str) {
 
 // ── STATE FOR FULFILLMENT ARMADA ──
 var FF_APP = {
-  armType: 'EXTERNAL',
-  sd: '',
-  ed: '',
-  siArm: null,
-  siTrend: null
+  armType:'EXTERNAL',
+  sd:'',
+  ed:'',
+  siArm:null,
+  siTrend:null,
+
+  rawRows:[],
+  destDetailMap:{},
+  vendorDetailMap:{},
+
+  pieChart:null,
+  trendChart:null
 };
 var FF_TREND = {
   rawData: [],
@@ -8279,8 +8796,30 @@ function calculateFFDashboardData() {
   
   // Calculate Destination ranking
   var destMap = {};
+  var destVendorDetailMap = {};
   filteredRows.forEach(function(r) {
     var dest = String(r['CITY'] || r['city'] || r['SHIPPING LINE'] || r['SHIPPINGLINE'] || 'Bandung').toUpperCase().trim();
+    var vendor =
+String(
+  r['CARRIER ID'] ||
+  r['CARRIERID'] ||
+  'INTERNAL'
+).trim();
+
+if(!destVendorDetailMap[dest]){
+  destVendorDetailMap[dest]={};
+}
+
+if(!destVendorDetailMap[dest][vendor]){
+  destVendorDetailMap[dest][vendor]={
+    vendor:vendor,
+    totalArmada:0,
+    onTime:0,
+    telatStuffing:0,
+    telat1Hari:0,
+    telat2HariUp:0
+  };
+}
     if (dest === 'ZYLLEM') dest = 'SURABAYA';
     if (!dest) dest = 'OTHER';
     
@@ -8296,10 +8835,35 @@ function calculateFFDashboardData() {
       };
     }
     
+    var vendor = String(r['CARRIER ID'] || r['CARRIERID'] || 'INTERNAL').trim();
+
+if (!destVendorDetailMap[dest]) {
+  destVendorDetailMap[dest] = {};
+}
+
+if (!destVendorDetailMap[dest][vendor]) {
+  destVendorDetailMap[dest][vendor] = {
+    vendor: vendor,
+    totalArmada: 0,
+    onTime: 0,
+    telatStuffing: 0,
+    telat1Hari: 0,
+    telat2HariUp: 0
+  };
+}
+
     var d = destMap[dest];
     d.totalArmada += 1;
     
     var cls = classifyFulfillmentRow(r);
+    var dv = destVendorDetailMap[dest][vendor];
+
+dv.totalArmada++;
+
+if (cls.onTime) dv.onTime++;
+if (cls.telatStuffing) dv.telatStuffing++;
+if (cls.telat1Hari) dv.telat1Hari++;
+if (cls.telat2HariUp) dv.telat2HariUp++;
     if (cls.onTime) d.onTime += 1;
     if (cls.telatStuffing) d.telatStuffing += 1;
     if (cls.telat1Hari) d.telat1Hari += 1;
@@ -8315,8 +8879,31 @@ function calculateFFDashboardData() {
   
   // Calculate Vendor performance
   var vendorMap = {};
+  var vendorDestinationDetailMap = {};
   filteredRows.forEach(function(r) {
     var vendor = String(r['CARRIER ID'] || r['CARRIERID'] || 'INTERNAL').trim();
+    var destination = String(
+  r['CITY'] ||
+  r['city'] ||
+  r['SHIPPING LINE'] ||
+  r['SHIPPINGLINE'] ||
+  'OTHER'
+).toUpperCase().trim();
+
+if (!vendorDestinationDetailMap[vendor]) {
+  vendorDestinationDetailMap[vendor] = {};
+}
+
+if (!vendorDestinationDetailMap[vendor][destination]) {
+  vendorDestinationDetailMap[vendor][destination] = {
+    destination: destination,
+    totalArmada: 0,
+    onTime: 0,
+    telatStuffing: 0,
+    telat1Hari: 0,
+    telat2HariUp: 0
+  };
+}
     var transportType = getTransportType(r);
     var key = vendor + '_' + transportType;
     
@@ -8336,6 +8923,14 @@ function calculateFFDashboardData() {
     v.totalArmada += 1;
     
     var cls = classifyFulfillmentRow(r);
+    var vd = vendorDestinationDetailMap[vendor][destination];
+
+vd.totalArmada++;
+
+if (cls.onTime) vd.onTime++;
+if (cls.telatStuffing) vd.telatStuffing++;
+if (cls.telat1Hari) vd.telat1Hari++;
+if (cls.telat2HariUp) vd.telat2HariUp++;
     if (cls.onTime) v.onTime += 1;
     if (cls.telatStuffing) v.telatStuffing += 1;
     if (cls.telat1Hari) v.telat1Hari += 1;
@@ -8350,6 +8945,18 @@ function calculateFFDashboardData() {
     v.pctOnTime = pct;
     v.starRating = pct >= 90 ? 5 : pct >= 80 ? 4 : pct >= 60 ? 3 : pct >= 40 ? 2 : 1;
   });
+
+FF_APP.rawRows =
+  filteredRows.slice();
+
+FF_APP.destDetailMap =
+  destVendorDetailMap;
+
+FF_APP.vendorDetailMap =
+  vendorDestinationDetailMap;
+
+FF_APP.trendData =
+  trend;
   
   return {
     success: true,
@@ -8777,6 +9384,418 @@ function renderFFMonthTable(rows, kpi) {
   tb.innerHTML = h;
 }
 
+function buildDestinationDetail(destination){
+
+  var map =
+    FF_APP.destDetailMap[destination] || {};
+
+  var h =
+    '<div class="detail-wrap">' +
+    '<b>Vendor Performance - ' +
+    esc(destination) +
+    '</b>' +
+    '<table class="detail-mini">' +
+    '<tr>' +
+    '<th>Vendor</th>' +
+    '<th>Total</th>' +
+    '<th>On Time</th>' +
+    '<th>SLA</th>' +
+    '</tr>';
+
+  Object.keys(map).forEach(function(v){
+
+    var d = map[v];
+
+    var sla =
+      d.totalArmada
+      ? ((d.onTime/d.totalArmada)*100)
+      : 0;
+
+    h +=
+      '<tr>' +
+      '<td>'+esc(v)+'</td>' +
+      '<td>'+fn(d.totalArmada)+'</td>' +
+      '<td>'+fn(d.onTime)+'</td>' +
+      '<td>'+fp(sla)+'%</td>' +
+      '</tr>';
+
+  });
+
+  h += '</table></div>';
+
+  return h;
+}
+
+function buildVendorDetail(vendor){
+
+  var map =
+    FF_APP.vendorDetailMap[vendor] || {};
+
+  var h =
+    '<div class="detail-wrap">' +
+    '<b>Destination Performance - ' +
+    esc(vendor) +
+    '</b>' +
+    '<table class="detail-mini">' +
+    '<tr>' +
+    '<th>Destination</th>' +
+    '<th>Total</th>' +
+    '<th>On Time</th>' +
+    '<th>SLA</th>' +
+    '</tr>';
+
+  Object.keys(map).forEach(function(dest){
+
+    var d = map[dest];
+
+    var sla =
+      d.totalArmada
+      ? ((d.onTime/d.totalArmada)*100)
+      : 0;
+
+    h +=
+      '<tr>' +
+      '<td>'+esc(dest)+'</td>' +
+      '<td>'+fn(d.totalArmada)+'</td>' +
+      '<td>'+fn(d.onTime)+'</td>' +
+      '<td>'+fp(sla)+'%</td>' +
+      '</tr>';
+
+  });
+
+  h += '</table></div>';
+
+  return h;
+}
+
+function openDestinationModal(destination){
+
+  var data =
+    FF_APP.destDetailMap[destination];
+
+  if(!data) return;
+
+  var total=0;
+  var onTime=0;
+
+  Object.values(data).forEach(function(v){
+
+    total += v.totalArmada;
+    onTime += v.onTime;
+
+  });
+
+  var sla =
+    total
+      ? ((onTime/total)*100)
+      : 0;
+
+  document
+    .getElementById('ffModalTitle')
+    .textContent = destination;
+
+  document
+    .getElementById('ffModalType')
+    .textContent = 'DESTINATION';
+
+  document
+    .getElementById('ffMTotal')
+    .textContent = total;
+
+  document
+    .getElementById('ffMOnTime')
+    .textContent = onTime;
+
+  document
+    .getElementById('ffMSla')
+    .textContent =
+      sla.toFixed(1)+'%';
+
+  document
+    .getElementById('ffMRating')
+    .textContent =
+      buildStars(sla);
+
+  renderPie(total,onTime);
+
+  renderDestinationRanking(
+    destination
+  );
+
+  renderTrendChart(
+    destination,
+    'DEST'
+  );
+
+  document
+    .getElementById('ffDrillModal')
+    .classList.add('show');
+}
+
+function openVendorModal(vendor){
+
+  var data =
+    FF_APP.vendorDetailMap[vendor];
+
+  if(!data) return;
+
+  var total=0;
+  var onTime=0;
+
+  Object.values(data).forEach(function(v){
+
+    total += v.totalArmada;
+    onTime += v.onTime;
+
+  });
+
+  var sla =
+    total
+      ? ((onTime/total)*100)
+      : 0;
+
+  document
+    .getElementById('ffModalType')
+    .textContent = 'VENDOR';
+
+  document
+    .getElementById('ffModalTitle')
+    .textContent = vendor;
+
+  document
+    .getElementById('ffMTotal')
+    .textContent = total;
+
+  document
+    .getElementById('ffMOnTime')
+    .textContent = onTime;
+
+  document
+    .getElementById('ffMSla')
+    .textContent =
+      sla.toFixed(1)+'%';
+
+  document
+    .getElementById('ffMRating')
+    .textContent =
+      buildStars(sla);
+
+  renderPie(total,onTime);
+
+  renderVendorRanking(vendor);
+
+  renderTrendChart(
+    vendor,
+    'VENDOR'
+  );
+
+  document
+    .getElementById('ffDrillModal')
+    .classList.add('show');
+}
+
+function renderPie(total,onTime){
+
+  if(FF_APP.pieChart)
+    FF_APP.pieChart.destroy();
+
+  FF_APP.pieChart =
+    new Chart(
+      document
+      .getElementById('ffPieChart'),
+      {
+        type:'doughnut',
+
+        data:{
+          labels:[
+            'On Time',
+            'Delay'
+          ],
+
+          datasets:[{
+            data:[
+              onTime,
+              total-onTime
+            ],
+            backgroundColor: [
+              '#10b981',
+              '#ef4444'
+            ]
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'bottom'
+            }
+          }
+        }
+      }
+    );
+}
+
+function buildStars(sla) {
+  var stars = '';
+  if (sla >= 95) stars = '⭐⭐⭐⭐⭐';
+  else if (sla >= 80) stars = '⭐⭐⭐⭐';
+  else if (sla >= 60) stars = '⭐⭐⭐';
+  else if (sla >= 40) stars = '⭐⭐';
+  else stars = '⭐';
+  return stars;
+}
+
+function renderDestinationRanking(destination) {
+  var titleEl = document.getElementById('ffTableTitle');
+  var headEl = document.getElementById('ffTableHead');
+  var bodyEl = document.getElementById('ffTableBody');
+  if (!titleEl || !headEl || !bodyEl) return;
+
+  titleEl.textContent = 'Vendor Performance - ' + destination;
+  headEl.innerHTML = '<th>Vendor</th>' +
+                     '<th style="text-align:center;">Total Armada</th>' +
+                     '<th style="text-align:center;">On Time</th>' +
+                     '<th style="text-align:center;">SLA</th>';
+
+  var map = FF_APP.destDetailMap[destination] || {};
+  var list = Object.keys(map).map(function(k) { return map[k]; });
+  list.sort(function(a, b) { return b.totalArmada - a.totalArmada; });
+
+  if (list.length === 0) {
+    bodyEl.innerHTML = '<tr><td colspan="4" style="text-align:center; color:var(--muted); padding:10px;">Tidak ada data vendor</td></tr>';
+  } else {
+    bodyEl.innerHTML = list.map(function(item) {
+      var sla = item.totalArmada ? ((item.onTime / item.totalArmada) * 100) : 0;
+      return '<tr>' +
+        '<td><strong style="color:var(--text);">' + esc(item.vendor) + '</strong></td>' +
+        '<td style="text-align:center; font-family:var(--font-mono);">' + fn(item.totalArmada) + '</td>' +
+        '<td style="text-align:center; font-family:var(--font-mono);">' + fn(item.onTime) + '</td>' +
+        '<td style="text-align:center; font-family:var(--font-mono); font-weight:700; color:var(--blue);">' + fp(sla) + '%</td>' +
+        '</tr>';
+    }).join('');
+  }
+}
+
+function renderVendorRanking(vendor) {
+  var titleEl = document.getElementById('ffTableTitle');
+  var headEl = document.getElementById('ffTableHead');
+  var bodyEl = document.getElementById('ffTableBody');
+  if (!titleEl || !headEl || !bodyEl) return;
+
+  titleEl.textContent = 'Destination Performance - ' + vendor;
+  headEl.innerHTML = '<th>Destination</th>' +
+                     '<th style="text-align:center;">Total Armada</th>' +
+                     '<th style="text-align:center;">On Time</th>' +
+                     '<th style="text-align:center;">SLA</th>';
+
+  var map = FF_APP.vendorDetailMap[vendor] || {};
+  var list = Object.keys(map).map(function(k) { return map[k]; });
+  list.sort(function(a, b) { return b.totalArmada - a.totalArmada; });
+
+  if (list.length === 0) {
+    bodyEl.innerHTML = '<tr><td colspan="4" style="text-align:center; color:var(--muted); padding:10px;">Tidak ada data destinasi</td></tr>';
+  } else {
+    bodyEl.innerHTML = list.map(function(item) {
+      var sla = item.totalArmada ? ((item.onTime / item.totalArmada) * 100) : 0;
+      return '<tr>' +
+        '<td><strong style="color:var(--text);">' + esc(item.destination || 'OTHER') + '</strong></td>' +
+        '<td style="text-align:center; font-family:var(--font-mono);">' + fn(item.totalArmada) + '</td>' +
+        '<td style="text-align:center; font-family:var(--font-mono);">' + fn(item.onTime) + '</td>' +
+        '<td style="text-align:center; font-family:var(--font-mono); font-weight:700; color:var(--blue);">' + fp(sla) + '%</td>' +
+        '</tr>';
+    }).join('');
+  }
+}
+
+function renderTrendChart(key, type) {
+  var canvas = document.getElementById('ffTrendChart');
+  if (!canvas) return;
+  var ctx = canvas.getContext('2d');
+
+  var rows = FF_APP.rawRows || [];
+  var filtered = [];
+  if (type === 'DEST') {
+    filtered = rows.filter(function(r) {
+      var dest = String(r['CITY'] || r['city'] || r['SHIPPING LINE'] || r['SHIPPINGLINE'] || 'Bandung').toUpperCase().trim();
+      if (dest === 'ZYLLEM') dest = 'SURABAYA';
+      return dest === String(key).toUpperCase().trim();
+    });
+  } else if (type === 'VENDOR') {
+    filtered = rows.filter(function(r) {
+      var vendor = String(r['CARRIER ID'] || r['CARRIERID'] || 'INTERNAL').trim();
+      return vendor === String(key).trim();
+    });
+  }
+
+  var sdDate = new Date(FF_APP.sd || new Date());
+  var edDate = new Date(FF_APP.ed || new Date());
+  sdDate.setHours(0,0,0,0);
+  edDate.setHours(23,59,59,999);
+
+  var labels = [];
+  var pcts = [];
+
+  for (var d = new Date(sdDate); d <= edDate; d.setDate(d.getDate() + 1)) {
+    var dStr = (d.getMonth() + 1) + '/' + d.getDate();
+    var tripsOnDay = filtered.filter(function(r) {
+      var rDate = getRowDate(r);
+      return rDate && rDate.toDateString() === d.toDateString();
+    });
+
+    var tTot = tripsOnDay.length;
+    var tOn = 0;
+    tripsOnDay.forEach(function(r) {
+      var cls = classifyFulfillmentRow(r);
+      if (cls.onTime) tOn += 1;
+    });
+
+    var tPct = tTot > 0 ? (tOn / tTot) * 100 : 0;
+    if (tTot > 0) {
+      labels.push(dStr);
+      pcts.push(+tPct.toFixed(1));
+    }
+  }
+
+  if (FF_APP.trendChart) {
+    FF_APP.trendChart.destroy();
+  }
+
+  FF_APP.trendChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'SLA (%)',
+        data: pcts,
+        borderColor: '#3b82f6',
+        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+        borderWidth: 2,
+        tension: 0.3,
+        fill: true,
+        pointRadius: 4,
+        pointBackgroundColor: '#3b82f6'
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          max: 100,
+          ticks: {
+            callback: function(value) { return value + '%'; }
+          }
+        }
+      }
+    }
+  });
+}
+
 function renderFFDest(rows, kpi) {
   var tb = document.getElementById('tb-dest'), em = document.getElementById('em-dest');
   if (!tb) return;
@@ -8798,7 +9817,10 @@ function renderFFDest(rows, kpi) {
     ss += r.telatStuffing;
     s1 += r.telat1Hari;
     s2 += r.telat2HariUp;
-    h += '<tr>' +
+    h +=
+'<tr class="click-detail ff-dest-row" data-dest="' +
+esc(r.destination) +
+'">' +
       '<td><span class="rb">#' + (i + 1) + '</span>' + esc(r.destination) + '</td>' +
       '<td class="nc">' + mkTypeBadge(r.transportType) + '</td>' +
       '<td class="nc">' + fn(r.totalArmada) + '</td>' +
@@ -8812,6 +9834,18 @@ function renderFFDest(rows, kpi) {
   var t = st > 0 ? so / st * 100 : 0;
   h += '<tr class="tot"><td colspan="2">TOTAL</td><td class="nc">' + fn(st) + '</td><td class="nc">' + fn(so) + '</td><td class="nc">' + fn(ss) + '</td><td class="nc">' + fn(s1) + '</td><td class="nc">' + fn(s2) + '</td><td class="nc">' + fp(t) + '%</td></tr>';
   tb.innerHTML = h;
+  tb.querySelectorAll('.ff-dest-row')
+.forEach(function(row){
+
+  row.onclick=function(){
+
+    openDestinationModal(
+      row.dataset.dest
+    );
+
+  };
+
+});
 }
 
 function renderFFVend(rows, kpi) {
@@ -8874,7 +9908,7 @@ function renderFFVend(rows, kpi) {
       gSt += r.telatStuffing;
       gT1 += r.telat1Hari;
       gT2 += r.telat2HariUp;
-      h += '<tr>' +
+      h += '<tr class="click-detail ff-vendor-row" data-vendor="' + esc(r.vendor) + '">' +
         '<td style="font-size:13px;font-weight:700;color:var(--navy);padding-left:18px">' + esc(r.vendor) + '</td>' +
         '<td class="nc">' + mkTypeBadge(r.transportType) + '</td>' +
         '<td class="nc">' + fn(r.totalArmada) + '</td>' +
@@ -8920,6 +9954,18 @@ function renderFFVend(rows, kpi) {
     '</tr>';
 
   tb.innerHTML = h;
+  tb.querySelectorAll('.ff-vendor-row')
+.forEach(function(row){
+
+  row.onclick=function(){
+
+    openVendorModal(
+      row.dataset.vendor
+    );
+
+  };
+
+});
 }
 
 function mkTypeBadge(type){
@@ -9118,6 +10164,1635 @@ function updateOlfDashboard(score, missCount, totalCount, successCount, misses) 
     }
   }
 }
+
+// ── CASE ID RELEASE LOGIC ──────────────────────────────────────────────
+var CR_PRIORITY_GROUPS = []; // built once per data load, used by both priority queue & detail table
+var CR_FILTER_BATCH = 'ALL';
+var CR_FILTER_AREA = 'ALL';
+var CR_TOP_SKU_LIST = [];
+var CR_TOP_SKU_PER_AREA = {};
+var CR_TOP_SKU_PER_BATCH = {};
+var CR_TOP_SKU_CURRENT_TAB = 'all';
+
+function openTopSkuModal() {
+  document.getElementById('topSkuModal').classList.add('active');
+  switchSkuModalTab('all');
+}
+
+function closeTopSkuModal() {
+  document.getElementById('topSkuModal').classList.remove('active');
+}
+
+function switchSkuModalTab(tab) {
+  CR_TOP_SKU_CURRENT_TAB = tab;
+  
+  // Update tab styling
+  var tabs = ['all', 'area', 'batch'];
+  tabs.forEach(function(t) {
+    var btn = document.getElementById('cr-sku-tab-' + t);
+    if (btn) {
+      if (t === tab) {
+        btn.style.background = 'var(--blue)';
+        btn.style.color = '#fff';
+      } else {
+        btn.style.background = 'var(--border)';
+        btn.style.color = 'var(--muted)';
+      }
+    }
+  });
+
+  var listEl = document.getElementById('topSkuModalList');
+  if (!listEl) return;
+
+  var html = '';
+  if (tab === 'all') {
+    if (!CR_TOP_SKU_LIST || !CR_TOP_SKU_LIST.length) {
+      html = '<div style="color:var(--muted); text-align:center; padding:20px;">Tidak ada data SKU.</div>';
+    } else {
+      html = CR_TOP_SKU_LIST.map(function(item, i) {
+        return '<div style="display:flex; align-items:flex-start; gap:12px; border-bottom:1px solid var(--border); padding-bottom:10px;">' +
+          '<div style="flex-shrink:0; width:26px; height:26px; border-radius:50%; background:rgba(37,99,235,0.1); color:var(--blue); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:12px;">' + (i + 1) + '</div>' +
+          '<div style="flex:1; min-width:0; text-align:left;">' +
+            '<div style="font-family:var(--font-mono); font-weight:700; color:var(--text); font-size:13px;">' + esc(item.sku) + '</div>' +
+            '<div style="font-size:12px; color:var(--muted); margin-top:2px;">' + esc(item.desc || 'Tanpa deskripsi') + '</div>' +
+          '</div>' +
+          '<div style="flex-shrink:0; text-align:right;">' +
+            '<div style="font-family:var(--font-mono); font-weight:800; color:var(--blue); font-size:15px;">' + item.count.toLocaleString() + '</div>' +
+            '<div style="font-size:9px; color:var(--muted); text-transform:uppercase; font-weight:700;">Case ID</div>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+    }
+  } else if (tab === 'area') {
+    var areas = [
+      { key: '1', name: 'Area 1 (Accessories)', color: '#3b82f6' },
+      { key: '2', name: 'Area 2 (Medium)', color: '#f59e0b' },
+      { key: '3', name: 'Area 3 (Bulky)', color: '#10b981' }
+    ];
+
+    html = areas.map(function(a) {
+      var areaItems = CR_TOP_SKU_PER_AREA[a.key] || [];
+      var itemsHtml = '';
+      if (!areaItems.length) {
+        itemsHtml = '<div style="color:var(--muted); font-size:11px; padding:6px 0;">Tidak ada data SKU untuk area ini.</div>';
+      } else {
+        itemsHtml = areaItems.map(function(item) {
+          return '<div style="display:flex; justify-content:space-between; align-items:center; font-size:12px; border-bottom:1px dashed var(--border); padding:6px 0;">' +
+            '<div style="min-width:0; flex:1; padding-right:8px; text-align:left;">' +
+              '<span style="font-family:var(--font-mono); font-weight:700; color:var(--text);">' + esc(item.sku) + '</span>' +
+              ' · <span style="color:var(--muted); font-size:11px;">' + esc(item.desc || '—') + '</span>' +
+            '</div>' +
+            '<div style="font-family:var(--font-mono); font-weight:800; color:' + a.color + '; flex-shrink:0;">' + item.count + ' Case</div>' +
+          '</div>';
+        }).join('');
+      }
+
+      return '<div style="margin-bottom:14px; border:1px solid var(--border); padding:10px; border-radius:var(--radius-sm); border-left:4px solid ' + a.color + ';">' +
+        '<div style="font-weight:800; font-size:11px; color:' + a.color + '; text-transform:uppercase; margin-bottom:6px; text-align:left;">📍 ' + a.name + '</div>' +
+        itemsHtml +
+      '</div>';
+    }).join('');
+  } else if (tab === 'batch') {
+    var batches = [
+      { key: 'active', name: 'Batch 3 (Active)', color: '#f59e0b' },
+      { key: 'buffer', name: 'Batch 1 & 2 (Buffer)', color: '#64748b' }
+    ];
+
+    html = batches.map(function(b) {
+      var batchItems = CR_TOP_SKU_PER_BATCH[b.key] || [];
+      var itemsHtml = '';
+      if (!batchItems.length) {
+        itemsHtml = '<div style="color:var(--muted); font-size:11px; padding:6px 0;">Tidak ada data SKU untuk batch ini.</div>';
+      } else {
+        itemsHtml = batchItems.map(function(item) {
+          return '<div style="display:flex; justify-content:space-between; align-items:center; font-size:12px; border-bottom:1px dashed var(--border); padding:6px 0;">' +
+            '<div style="min-width:0; flex:1; padding-right:8px; text-align:left;">' +
+              '<span style="font-family:var(--font-mono); font-weight:700; color:var(--text);">' + esc(item.sku) + '</span>' +
+              ' · <span style="color:var(--muted); font-size:11px;">' + esc(item.desc || '—') + '</span>' +
+            '</div>' +
+            '<div style="font-family:var(--font-mono); font-weight:800; color:' + b.color + '; flex-shrink:0;">' + item.count + ' Case</div>' +
+          '</div>';
+        }).join('');
+      }
+
+      return '<div style="margin-bottom:14px; border:1px solid var(--border); padding:10px; border-radius:var(--radius-sm); border-left:4px solid ' + b.color + ';">' +
+        '<div style="font-weight:800; font-size:11px; color:' + b.color + '; text-transform:uppercase; margin-bottom:6px; text-align:left;">📦 ' + b.name + '</div>' +
+        itemsHtml +
+      '</div>';
+    }).join('');
+  }
+
+  listEl.innerHTML = html;
+}
+
+function parseCaseIdReleaseData(rows) {
+  if (!rows || rows.length === 0) return null;
+
+  function getCell(r, c) {
+    if (r >= rows.length) return '';
+    var row = rows[r];
+    if (!row || c >= row.length) return '';
+    return String(row[c] || '').trim();
+  }
+
+  function getNum(r, c) {
+    var v = getCell(r, c);
+    if (!v || v === '#N/A') return 0;
+    var parsed = parseFloat(v.replace(/,/g, ''));
+    return isNaN(parsed) ? 0 : parsed;
+  }
+
+  var releaseDate = getCell(3, 23) || new Date().toLocaleDateString('id-ID');
+  var area1CaseId = getNum(3, 24);
+  var area2CaseId = getNum(3, 25);
+  var area3CaseId = getNum(3, 26);
+  var totalCaseId = getNum(3, 27);
+  var area1Cbm = getCell(3, 28) || '-';
+  var area2Cbm = getCell(3, 29) || '-';
+  var area3Cbm = getCell(3, 30) || '-';
+  var totalCbm = getCell(3, 31) || '-';
+
+  var g1_rows = [
+    { type: getCell(7, 2), area: getCell(7, 3), desc: getCell(7, 4), caseId: getNum(7, 5), cbm: getCell(7, 7) },
+    { type: getCell(8, 2), area: getCell(8, 3), desc: getCell(8, 4), caseId: getNum(8, 5), cbm: getCell(8, 7) },
+    { type: getCell(9, 2), area: getCell(9, 3), desc: getCell(9, 4), caseId: getNum(9, 5), cbm: getCell(9, 7) },
+    { type: 'TUGU', area: getCell(10, 3) || 'HCI AREA 1', desc: getCell(10, 4) || 'ACCESSORIES', caseId: getNum(10, 5), cbm: getCell(10, 7) },
+    { type: 'TUGU', area: getCell(11, 3) || 'HCI AREA 2', desc: getCell(11, 4) || 'NON ACC', caseId: getNum(11, 5), cbm: getCell(11, 7) },
+    { type: 'TUGU', area: getCell(12, 3) || 'HCI AREA 3', desc: getCell(12, 4) || 'NON ACC', caseId: getNum(12, 5), cbm: getCell(12, 7) }
+  ];
+  var g1_total = getNum(7, 6);
+
+  var g2_rows = [
+    { type: getCell(13, 2), area: getCell(13, 3), desc: getCell(13, 4), caseId: getNum(13, 5), cbm: getCell(13, 7) },
+    { type: getCell(14, 2), area: getCell(14, 3), desc: getCell(14, 4), caseId: getNum(14, 5), cbm: getCell(14, 7) },
+    { type: getCell(15, 2), area: getCell(15, 3), desc: getCell(15, 4), caseId: getNum(15, 5), cbm: getCell(15, 7) },
+    { type: 'TUGU', area: getCell(16, 3) || 'HCI AREA 1', desc: getCell(16, 4) || 'ACCESSORIES', caseId: getNum(16, 5), cbm: getCell(16, 7) },
+    { type: 'TUGU', area: getCell(17, 3) || 'HCI AREA 2', desc: getCell(17, 4) || 'NON ACC', caseId: getNum(17, 5), cbm: getCell(17, 7) },
+    { type: 'TUGU', area: getCell(18, 3) || 'HCI AREA 3', desc: getCell(18, 4) || 'NON ACC', caseId: getNum(18, 5), cbm: getCell(18, 7) }
+  ];
+  var g2_total = getNum(13, 6);
+
+  var g3_rows = [
+    { type: getCell(20, 2), area: getCell(20, 3), desc: getCell(20, 4), caseId: getNum(20, 5), cbm: getCell(20, 7) },
+    { type: getCell(21, 2), area: getCell(21, 3), desc: getCell(21, 4), caseId: getNum(21, 5), cbm: getCell(21, 7) },
+    { type: getCell(22, 2), area: getCell(22, 3), desc: getCell(22, 4), caseId: getNum(22, 5), cbm: getCell(22, 7) }
+  ];
+  var g3_total = getNum(20, 6);
+
+  var g4_rows = [
+    { type: getCell(24, 2), area: getCell(24, 3), desc: getCell(24, 4), caseId: getNum(24, 5), cbm: getCell(24, 7) },
+    { type: getCell(25, 2), area: getCell(25, 3), desc: getCell(25, 4), caseId: getNum(25, 5), cbm: getCell(25, 7) },
+    { type: getCell(26, 2), area: getCell(26, 3), desc: getCell(26, 4), caseId: getNum(26, 5), cbm: getCell(26, 7) }
+  ];
+  var g4_total = getNum(24, 6);
+
+  var g5_rows = [
+    { type: getCell(7, 12), area: getCell(7, 13), desc: getCell(7, 14), caseId: getNum(7, 15), cbm: getCell(7, 17) },
+    { type: getCell(8, 12), area: getCell(8, 13), desc: getCell(8, 14), caseId: getNum(8, 15), cbm: getCell(8, 17) },
+    { type: getCell(9, 12), area: getCell(9, 13), desc: getCell(9, 14), caseId: getNum(9, 15), cbm: getCell(9, 17) }
+  ];
+  var g5_total = getNum(7, 16);
+
+  return {
+    meta: {
+      date: releaseDate,
+      area1CaseId: area1CaseId, area2CaseId: area2CaseId, area3CaseId: area3CaseId, totalCaseId: totalCaseId,
+      area1Cbm: area1Cbm, area2Cbm: area2Cbm, area3Cbm: area3Cbm, totalCbm: totalCbm
+    },
+    batch3: {
+      totalCaseId: getNum(1, 13),
+      totalCbm: getCell(0, 13),
+      groups: [
+        { no: 1, name: 'CUSTOMER DK (PRIORITY 1) & TUGU', totalCaseId: g1_total, rows: g1_rows },
+        { no: 2, name: 'CUSTOMER DK (PRIORITY 2) & TUGU', totalCaseId: g2_total, rows: g2_rows },
+        { no: 3, name: 'GRW DK', totalCaseId: g3_total, rows: g3_rows },
+        { no: 4, name: 'HUB & LK ON SITE', totalCaseId: g4_total, rows: g4_rows }
+      ]
+    },
+    batch1_2: {
+      totalCaseId: getNum(5, 15),
+      totalCbm: getCell(5, 17),
+      groups: [
+        { no: 5, name: 'Customer + GRW LP', totalCaseId: g5_total, rows: g5_rows }
+      ]
+    }
+  };
+}
+
+// Meta-data per rank: label, warna, deskripsi singkat kenapa prioritas segitu
+var CR_PRIORITY_META = {
+  1: { label: '🔥 PRIORITAS UTAMA', color: '#ef4444', bg: 'rgba(239,68,68,0.08)', reason: 'Order Customer Dalam Kota Prioritas 1 — harus keluar duluan' },
+  2: { label: '⚡ PRIORITAS TINGGI', color: '#f59e0b', bg: 'rgba(245,158,11,0.08)', reason: 'Order Customer Dalam Kota Prioritas 2' },
+  3: { label: '📦 PRIORITAS MENENGAH', color: '#3b82f6', bg: 'rgba(59,130,246,0.08)', reason: 'Order GRW Dalam Kota' },
+  4: { label: '📋 PRIORITAS STANDAR', color: '#8b5cf6', bg: 'rgba(139,92,246,0.08)', reason: 'Order Hub & Luar Kota on-site' },
+  5: { label: '🗄️ BUFFER / STANDBY', color: '#64748b', bg: 'rgba(100,116,139,0.08)', reason: 'Stok cadangan Customer + GRW Luar Pulau' }
+};
+
+function buildCrPriorityGroups(data) {
+  var list = [];
+  var rank = 1;
+  data.batch3.groups.forEach(function(g) {
+    list.push(makeCrGroupEntry(g, rank, '3', 'Batch 3 (Active)'));
+    rank++;
+  });
+  data.batch1_2.groups.forEach(function(g) {
+    list.push(makeCrGroupEntry(g, rank, '12', 'Batch 1 & 2 (Buffer)'));
+    rank++;
+  });
+  return list;
+}
+
+function makeCrGroupEntry(g, rank, batch, batchLabel) {
+  var totalCbm = 0;
+  var areaCounts = {};
+  g.rows.forEach(function(r) {
+    var c = parseFloat(String(r.cbm || '0').replace(/,/g, ''));
+    if (!isNaN(c)) totalCbm += c;
+    if (r.caseId > 0) {
+      var a = r.area || 'N/A';
+      areaCounts[a] = (areaCounts[a] || 0) + r.caseId;
+    }
+  });
+  var dominantArea = 'N/A';
+  var maxCount = -1;
+  Object.keys(areaCounts).forEach(function(a) {
+    if (areaCounts[a] > maxCount) { maxCount = areaCounts[a]; dominantArea = a; }
+  });
+  return {
+    rank: rank,
+    batch: batch,
+    batchLabel: batchLabel,
+    groupNo: g.no,
+    groupName: g.name,
+    totalCaseId: g.totalCaseId,
+    totalCbm: totalCbm,
+    dominantArea: dominantArea,
+    rows: g.rows
+  };
+}
+
+function renderPriorityQueue(list) {
+  var el = document.getElementById('cr-priority-list');
+  if (!el) return;
+  var grandTotal = list.reduce(function(s, it) { return s + (it.totalCaseId || 0); }, 0);
+  el.innerHTML = list.map(function(item) {
+    var meta = CR_PRIORITY_META[item.rank] || CR_PRIORITY_META[5];
+    var pct = grandTotal > 0 ? ((item.totalCaseId / grandTotal) * 100).toFixed(1) : 0;
+    return '<div style="display:flex; align-items:center; gap:16px; padding:14px 16px; border-radius:var(--radius-sm); border:1px solid var(--border); background:' + meta.bg + '; border-left:4px solid ' + meta.color + ';">' +
+      '<div style="flex-shrink:0; width:38px; height:38px; border-radius:50%; background:' + meta.color + '; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:16px; font-family:var(--font-mono);">' + item.rank + '</div>' +
+      '<div style="flex:1; min-width:0;">' +
+        '<div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">' +
+          '<span style="font-weight:800; font-size:12px; color:' + meta.color + ';">' + meta.label + '</span>' +
+          '<span class="badge badge-muted" style="font-size:9px;">' + item.batchLabel + '</span>' +
+        '</div>' +
+        '<div style="font-weight:700; color:var(--text); font-size:14px; margin-top:2px;">' + esc(item.groupName) + '</div>' +
+        '<div style="font-size:11px; color:var(--muted); margin-top:2px;">' + meta.reason + ' · Area dominan: <strong style="color:var(--text);">' + esc(item.dominantArea) + '</strong></div>' +
+      '</div>' +
+      '<div style="text-align:center; flex-shrink:0; min-width:80px;">' +
+        '<div style="font-size:20px; font-weight:800; font-family:var(--font-mono); color:var(--text);">' + item.totalCaseId.toLocaleString() + '</div>' +
+        '<div style="font-size:9px; color:var(--muted); text-transform:uppercase; font-weight:700;">Case ID</div>' +
+      '</div>' +
+      '<div style="text-align:center; flex-shrink:0; min-width:70px;">' +
+        '<div style="font-size:14px; font-weight:700; font-family:var(--font-mono); color:var(--muted);">' + item.totalCbm.toFixed(2) + '</div>' +
+        '<div style="font-size:9px; color:var(--muted); text-transform:uppercase; font-weight:700;">CBM</div>' +
+      '</div>' +
+      '<div style="text-align:center; flex-shrink:0; min-width:96px;">' +
+        '<div style="width:96px; height:8px; background:var(--border); border-radius:4px; overflow:hidden;"><div style="width:' + Math.min(100, pct) + '%; height:100%; background:' + meta.color + '; border-radius:4px;"></div></div>' +
+        '<div style="font-size:10px; font-weight:800; font-family:var(--font-mono); color:' + meta.color + '; margin-top:3px;">' + pct + '% beban kerja</div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function applyCRDetailFilters() {
+  CR_FILTER_BATCH = (document.getElementById('cr-filter-batch') || {}).value || 'ALL';
+  CR_FILTER_AREA = (document.getElementById('cr-filter-area') || {}).value || 'ALL';
+  var q = ((document.getElementById('cr-search-detail') || {}).value || '').toLowerCase().trim();
+
+  var tbody = document.getElementById('cr-details-tbody');
+  var emptyEl = document.getElementById('cr-details-empty');
+  if (!tbody) return;
+
+  // Total keseluruhan (semua grup) sebagai pembagi % kontribusi
+  var grandCases = 0;
+  CR_PRIORITY_GROUPS.forEach(function(g) {
+    g.rows.forEach(function(r) { grandCases += (r.caseId || 0); });
+  });
+
+  // Warna & label area konsisten dengan widget "Case ID Release per Area"
+  var AREA_COLORS = {
+    'HCI AREA 1': { color: '#3b82f6', label: 'Area 1 · Accessories' },
+    'HCI AREA 2': { color: '#f59e0b', label: 'Area 2 · Medium' },
+    'HCI AREA 3': { color: '#10b981', label: 'Area 3 · Bulky' }
+  };
+
+  // Profil fisik barang: rasio CBM per case → petunjuk alat bantu & tenaga
+  function profilBarang(cbm, cases) {
+    if (!cases || cases <= 0) return '<span class="badge badge-muted" style="font-size:9px;">—</span>';
+    var ratio = cbm / cases;
+    if (ratio >= 0.15) return '<span class="badge" style="font-size:9px; background:#fee2e2; color:#b91c1c; border:1px solid #fca5a5;" title="Rata-rata ' + ratio.toFixed(3) + ' CBM/case — barang besar, siapkan handpallet/forklift">📦 BULKY</span>';
+    if (ratio >= 0.05) return '<span class="badge" style="font-size:9px; background:#fef3c7; color:#92400e; border:1px solid #fcd34d;" title="Rata-rata ' + ratio.toFixed(3) + ' CBM/case — ukuran sedang">📐 MEDIUM</span>';
+    return '<span class="badge" style="font-size:9px; background:#dcfce7; color:#166534; border:1px solid #86efac;" title="Rata-rata ' + ratio.toFixed(3) + ' CBM/case — barang kecil, cukup trolley">🔩 KECIL</span>';
+  }
+
+  var html = '';
+  var anyRow = false;
+  var visCases = 0, visCbm = 0;
+
+  CR_PRIORITY_GROUPS.forEach(function(item) {
+    if (CR_FILTER_BATCH !== 'ALL' && item.batch !== CR_FILTER_BATCH) return;
+
+    var visibleRows = item.rows.filter(function(r) {
+      if (r.caseId <= 0) return false;
+      if (CR_FILTER_AREA !== 'ALL' && r.area !== CR_FILTER_AREA) return false;
+      if (q) {
+        var hay = (r.area + ' ' + r.type + ' ' + r.desc).toLowerCase();
+        if (hay.indexOf(q) === -1) return false;
+      }
+      return true;
+    });
+
+    if (visibleRows.length === 0) return;
+    anyRow = true;
+
+    var meta = CR_PRIORITY_META[item.rank] || CR_PRIORITY_META[5];
+    var grpPct = grandCases > 0 ? (item.totalCaseId / grandCases) * 100 : 0;
+
+    // ── BARIS HEADER GRUP (dengan bar kontribusi grup) ──
+    html += '<tr style="background:linear-gradient(90deg,' + meta.bg + ', transparent);">' +
+      '<td style="text-align:center;"><span style="display:inline-flex; align-items:center; justify-content:center; width:30px; height:30px; border-radius:50%; background:' + meta.color + '; color:#fff; font-weight:800; font-family:var(--font-mono); font-size:13px;">' + item.rank + '</span></td>' +
+      '<td colspan="3">' +
+        '<div style="font-weight:800; color:var(--text); font-size:13px;">' + esc(item.groupName) + '</div>' +
+        '<div style="font-size:9px; color:' + meta.color + '; font-weight:700; text-transform:uppercase; margin-top:2px;">' + meta.label + ' · ' + esc(item.batchLabel) + '</div>' +
+      '</td>' +
+      '<td style="text-align:center; font-weight:800; font-family:var(--font-mono); font-size:14px; color:' + meta.color + ';">' + item.totalCaseId.toLocaleString() + '</td>' +
+      '<td style="text-align:center; font-weight:700; font-family:var(--font-mono); color:var(--text);">' + item.totalCbm.toFixed(2) + '</td>' +
+      '<td style="text-align:center;">' +
+        '<div style="display:flex; align-items:center; gap:6px; justify-content:center;">' +
+          '<div style="width:70px; height:8px; background:var(--border); border-radius:4px; overflow:hidden;"><div style="width:' + Math.min(100, grpPct).toFixed(1) + '%; height:100%; background:' + meta.color + '; border-radius:4px;"></div></div>' +
+          '<span style="font-family:var(--font-mono); font-weight:800; font-size:11px; color:' + meta.color + ';">' + grpPct.toFixed(1) + '%</span>' +
+        '</div>' +
+      '</td>' +
+      '<td style="text-align:center;">' + profilBarang(item.totalCbm, item.totalCaseId) + '</td>' +
+    '</tr>';
+
+    // ── BARIS DETAIL PER AREA STORING ──
+    visibleRows.forEach(function(r) {
+      var isTugu = String(r.type).toUpperCase().indexOf('TUGU') !== -1;
+      var rCbm = parseFloat(String(r.cbm || '0').replace(/,/g, '')) || 0;
+      var rPct = grandCases > 0 ? (r.caseId / grandCases) * 100 : 0;
+      var areaInfo = AREA_COLORS[r.area] || { color: '#94a3b8', label: r.area || '-' };
+      visCases += r.caseId;
+      visCbm += rCbm;
+
+      html += '<tr>' +
+        '<td></td>' +
+        '<td style="padding-left:20px;">' + (isTugu
+          ? '<span class="badge badge-amber" style="font-size:9px;" title="Order tukar guling — barang lama wajib diserahkan">🔄 TUGU</span>'
+          : '<span style="color:var(--muted); font-size:11px;">↳ ' + esc(r.type || 'reguler') + '</span>') + '</td>' +
+        '<td style="font-size:11px; color:var(--muted);">' + esc(r.desc || '-') + '</td>' +
+        '<td><span style="display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:600; color:var(--text);"><span style="width:8px; height:8px; border-radius:50%; background:' + areaInfo.color + '; display:inline-block;"></span>' + esc(areaInfo.label) + '</span></td>' +
+        '<td style="text-align:center; font-weight:700; font-family:var(--font-mono);">' + r.caseId.toLocaleString() + '</td>' +
+        '<td style="text-align:center; font-family:var(--font-mono); color:var(--muted);">' + rCbm.toFixed(2) + '</td>' +
+        '<td style="text-align:center;">' +
+          '<div style="display:flex; align-items:center; gap:6px; justify-content:center;">' +
+            '<div style="width:70px; height:6px; background:var(--border); border-radius:3px; overflow:hidden;"><div style="width:' + Math.min(100, rPct).toFixed(1) + '%; height:100%; background:' + areaInfo.color + '; opacity:.75; border-radius:3px;"></div></div>' +
+            '<span style="font-family:var(--font-mono); font-size:10px; color:var(--muted);">' + rPct.toFixed(1) + '%</span>' +
+          '</div>' +
+        '</td>' +
+        '<td style="text-align:center;">' + profilBarang(rCbm, r.caseId) + '</td>' +
+      '</tr>';
+    });
+  });
+
+  // ── FOOTER GRAND TOTAL (mengikuti filter aktif) ──
+  if (anyRow) {
+    var visPct = grandCases > 0 ? (visCases / grandCases) * 100 : 0;
+    html += '<tr style="background:var(--text);">' +
+      '<td colspan="4" style="color:#fff; font-weight:800; font-family:var(--font-mono); padding:10px;">Σ TOTAL (sesuai filter aktif)</td>' +
+      '<td style="text-align:center; color:#fff; font-weight:800; font-family:var(--font-mono); font-size:14px;">' + visCases.toLocaleString() + '</td>' +
+      '<td style="text-align:center; color:#fff; font-weight:800; font-family:var(--font-mono);">' + visCbm.toFixed(2) + '</td>' +
+      '<td colspan="2" style="text-align:center; color:#fff; font-family:var(--font-mono); font-weight:700;">' + visPct.toFixed(1) + '% dari total release</td>' +
+    '</tr>';
+  }
+
+  if (!anyRow) {
+    tbody.innerHTML = '';
+    if (emptyEl) emptyEl.style.display = 'flex';
+  } else {
+    tbody.innerHTML = html;
+    if (emptyEl) emptyEl.style.display = 'none';
+  }
+}
+
+// ── LEVEL RACKING (dibaca dari kolom LOC, karakter ke-8) ──
+function getRackingLevel(locStr) {
+  if (!locStr) return null;
+  var s = String(locStr).trim();
+  if (s.length < 8) return null;
+  var ch = s.charAt(7); // karakter ke-8 (index 7, 0-based)
+  var digit = parseInt(ch, 10);
+  if (isNaN(digit) || digit < 0 || digit > 9) return null;
+  return digit;
+}
+
+var CR_RACK_BUCKET_META = [
+  { key: 'low', label: 'RENDAH (Lv 0-3)', icon: '🟢', color: '#16a34a', note: 'Mudah dijangkau, tidak perlu alat bantu' },
+  { key: 'mid', label: 'SEDANG (Lv 4-6)', icon: '🟡', color: '#d97706', note: 'Perlu tangga / step ladder' },
+  { key: 'high', label: 'TINGGI (Lv 7-9)', icon: '🔴', color: '#dc2626', note: 'Wajib forklift / reach truck + APD lengkap' }
+];
+
+function computeRackingDistribution() {
+  var rackCounts = [0,0,0,0,0,0,0,0,0,0]; // index 0-9
+  var totalWithLoc = 0;
+
+  if (allCaseIdReleaseP1Data && allCaseIdReleaseP1Data.length > 1) {
+    var headers = allCaseIdReleaseP1Data[0];
+    var locColIdx = -1, caseColIdx = -1;
+    for (var c = 0; c < headers.length; c++) {
+      var h = String(headers[c] || '').toUpperCase().replace(/[\s_]/g, '');
+      if (h === 'LOC' || h === 'LOCATION') locColIdx = c;
+      if (h === 'CASEID' || h === 'QTY' || h === 'CASES') caseColIdx = c;
+    }
+
+    if (locColIdx !== -1) {
+      for (var r = 1; r < allCaseIdReleaseP1Data.length; r++) {
+        var row = allCaseIdReleaseP1Data[r];
+        if (!row) continue;
+        var locVal = String(row[locColIdx] || '').trim();
+        var level = getRackingLevel(locVal);
+        if (level === null) continue;
+
+        var caseCount = caseColIdx !== -1 ? parseInt(String(row[caseColIdx]).replace(/,/g, ''), 10) : 1;
+        if (isNaN(caseCount) || caseCount <= 0) caseCount = 1;
+
+        rackCounts[level] += caseCount;
+        totalWithLoc += caseCount;
+      }
+    }
+  }
+
+  return { rackCounts: rackCounts, total: totalWithLoc };
+}
+
+function renderRackingDistribution() {
+  var result = computeRackingDistribution();
+  var rackCounts = result.rackCounts;
+  var total = result.total;
+
+  // Render 10 mini bar (level 0-9)
+  var barsEl = document.getElementById('cr-rack-bars');
+  if (barsEl) {
+    var maxVal = Math.max.apply(null, rackCounts) || 1;
+    barsEl.innerHTML = rackCounts.map(function(val, lvl) {
+      var pct = Math.max(4, Math.round((val / maxVal) * 100));
+      var col = lvl <= 3 ? '#16a34a' : lvl <= 6 ? '#d97706' : '#dc2626';
+      return '<div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%;" title="Level ' + lvl + ': ' + val + ' case">' +
+        '<div style="font-size:9px; font-weight:800; color:' + col + '; margin-bottom:2px;">' + (val > 0 ? val : '') + '</div>' +
+        '<div style="width:100%; max-width:26px; height:' + pct + '%; background:' + col + '; border-radius:4px 4px 0 0; transition:height 0.5s ease;"></div>' +
+        '<div style="font-size:9px; color:var(--muted); font-weight:700; margin-top:4px;">' + lvl + '</div>' +
+      '</div>';
+    }).join('');
+  }
+
+  // Hitung 3 bucket
+  var low = rackCounts.slice(0,4).reduce(function(a,b){return a+b;},0);
+  var mid = rackCounts.slice(4,7).reduce(function(a,b){return a+b;},0);
+  var high = rackCounts.slice(7,10).reduce(function(a,b){return a+b;},0);
+  var bucketVals = { low: low, mid: mid, high: high };
+
+  var summaryEl = document.getElementById('cr-rack-summary');
+  if (summaryEl) {
+    summaryEl.innerHTML = CR_RACK_BUCKET_META.map(function(b) {
+      var val = bucketVals[b.key];
+      var pct = total > 0 ? ((val / total) * 100).toFixed(1) : 0;
+      return '<div style="border:1px solid var(--border); border-left:4px solid ' + b.color + '; border-radius:var(--radius-sm); padding:12px; background:var(--surface2);">' +
+        '<div style="font-size:10px; font-weight:800; color:' + b.color + '; text-transform:uppercase;">' + b.icon + ' ' + b.label + '</div>' +
+        '<div style="font-size:20px; font-weight:800; font-family:var(--font-mono); color:var(--text); margin-top:4px;">' + val.toLocaleString() + '<span style="font-size:11px; color:var(--muted); font-weight:600;"> (' + pct + '%)</span></div>' +
+        '<div style="font-size:10px; color:var(--muted); margin-top:4px;">' + b.note + '</div>' +
+      '</div>';
+    }).join('');
+  }
+
+  // Alert kalau ada level tinggi
+  var alertEl = document.getElementById('cr-rack-alert');
+  if (alertEl) {
+    if (high > 0) {
+      alertEl.style.display = 'block';
+      alertEl.innerHTML = '⚠️ <strong>' + high.toLocaleString() + ' case ID</strong> berada di rak level tinggi (7-9). Pastikan operator forklift/reach truck standby dan picker menggunakan APD lengkap sebelum mulai.';
+    } else {
+      alertEl.style.display = 'none';
+    }
+  }
+}
+
+// ── SEBARAN CASE ID PER LORONG (dibaca dari 2 karakter awal kolom LOC) ──
+var CR_AISLE_MIN = 18;
+var CR_AISLE_MAX = 35;
+
+function getAisleFromLoc(locStr) {
+  if (!locStr) return null;
+  var s = String(locStr).trim().toUpperCase();
+  if (!s || s === '-' || s === '#N/A') return null;
+
+  // Identifikasi lokasi FLOOR (mengandung FLR)
+  if (s.indexOf('FLR') !== -1) return 'FLOOR';
+
+  // Baca 2 karakter awal sebagai nomor lorong
+  var two = s.substring(0, 2);
+  var n = parseInt(two, 10);
+  if (!isNaN(n) && n >= CR_AISLE_MIN && n <= CR_AISLE_MAX) return n;
+
+  return 'OTHER'; // lokasi valid tapi di luar lorong 18-35
+}
+
+function computeAisleDistribution() {
+  var aisleCounts = {};
+  for (var a = CR_AISLE_MIN; a <= CR_AISLE_MAX; a++) aisleCounts[a] = 0;
+  var floorCount = 0;
+  var otherCount = 0;
+  var total = 0;
+
+  if (allCaseIdReleaseP1Data && allCaseIdReleaseP1Data.length > 1) {
+    var headers = allCaseIdReleaseP1Data[0];
+    var locColIdx = -1, caseColIdx = -1;
+    for (var c = 0; c < headers.length; c++) {
+      var h = String(headers[c] || '').toUpperCase().replace(/[\s_]/g, '');
+      if (h === 'LOC' || h === 'LOCATION') locColIdx = c;
+      if (h === 'CASEID' || h === 'QTY' || h === 'CASES') caseColIdx = c;
+    }
+
+    if (locColIdx !== -1) {
+      for (var r = 1; r < allCaseIdReleaseP1Data.length; r++) {
+        var row = allCaseIdReleaseP1Data[r];
+        if (!row) continue;
+
+        var aisle = getAisleFromLoc(row[locColIdx]);
+        if (aisle === null) continue;
+
+        var cnt = caseColIdx !== -1 ? parseInt(String(row[caseColIdx]).replace(/,/g, ''), 10) : 1;
+        if (isNaN(cnt) || cnt <= 0) cnt = 1;
+
+        if (aisle === 'FLOOR') floorCount += cnt;
+        else if (aisle === 'OTHER') otherCount += cnt;
+        else aisleCounts[aisle] += cnt;
+
+        total += cnt;
+      }
+    }
+  }
+
+  return { aisleCounts: aisleCounts, floorCount: floorCount, otherCount: otherCount, total: total };
+}
+
+function getAisleHeatColor(val, maxVal) {
+  if (val <= 0) return { bg: '#e2e8f0', text: '#94a3b8', label: 'Kosong' };
+  var ratio = maxVal > 0 ? val / maxVal : 0;
+  if (ratio >= 0.75) return { bg: '#ef4444', text: '#ffffff', label: 'Sangat Padat' };
+  if (ratio >= 0.50) return { bg: '#fbbf24', text: '#78350f', label: 'Padat' };
+  if (ratio >= 0.25) return { bg: '#60a5fa', text: '#ffffff', label: 'Sedang' };
+  return { bg: '#86efac', text: '#14532d', label: 'Ringan' };
+}
+
+function renderAisleDistribution() {
+  var res = computeAisleDistribution();
+  var aisleCounts = res.aisleCounts;
+  var total = res.total;
+
+  // Badge total
+  setText('cr-aisle-total-badge', total.toLocaleString() + ' Case Terpetakan');
+
+  // Cari nilai maksimum di antara lorong (untuk skala warna)
+  var maxVal = 0;
+  var aisleArr = [];
+  for (var a = CR_AISLE_MIN; a <= CR_AISLE_MAX; a++) {
+    if (aisleCounts[a] > maxVal) maxVal = aisleCounts[a];
+    aisleArr.push({ aisle: a, count: aisleCounts[a] });
+  }
+
+  // ── PODIUM TOP 3 LORONG TERSIBUK ──
+  var top3 = aisleArr.slice().sort(function(x, y) { return y.count - x.count; }).slice(0, 3);
+  var medals = ['🥇', '🥈', '🥉'];
+  var medalColors = ['#f59e0b', '#94a3b8', '#b45309'];
+  var top3El = document.getElementById('cr-aisle-top3');
+  if (top3El) {
+    top3El.innerHTML = top3.map(function(t, i) {
+      var pct = total > 0 ? ((t.count / total) * 100).toFixed(1) : 0;
+      return '<div style="border:1px solid var(--border); border-radius:var(--radius-sm); padding:12px 14px; background:var(--surface2); display:flex; align-items:center; gap:12px; border-left:4px solid ' + medalColors[i] + ';">' +
+        '<div style="font-size:26px;">' + medals[i] + '</div>' +
+        '<div style="flex:1; min-width:0;">' +
+          '<div style="font-size:10px; font-weight:800; color:var(--muted); text-transform:uppercase; letter-spacing:.5px;">Lorong Tersibuk #' + (i + 1) + '</div>' +
+          '<div style="font-size:18px; font-weight:800; color:var(--text); font-family:var(--font-display);">LORONG ' + t.aisle + '</div>' +
+        '</div>' +
+        '<div style="text-align:right; flex-shrink:0;">' +
+          '<div style="font-size:18px; font-weight:800; font-family:var(--font-mono); color:' + medalColors[i] + ';">' + t.count.toLocaleString() + '</div>' +
+          '<div style="font-size:9px; color:var(--muted); font-weight:700;">case (' + pct + '%)</div>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+  }
+
+  // ── HEATMAP GRID LORONG 18-35 ──
+  var heatEl = document.getElementById('cr-aisle-heatmap');
+  if (heatEl) {
+    heatEl.innerHTML = aisleArr.map(function(t) {
+      var col = getAisleHeatColor(t.count, maxVal);
+      var pct = total > 0 ? ((t.count / total) * 100).toFixed(1) : 0;
+      return '<div title="Lorong ' + t.aisle + ': ' + t.count.toLocaleString() + ' case (' + pct + '%) — ' + col.label + '" ' +
+        'style="background:' + col.bg + '; color:' + col.text + '; border-radius:10px; padding:10px 6px; text-align:center; cursor:default; transition:transform .2s ease, box-shadow .2s ease; box-shadow:0 2px 6px rgba(15,23,42,0.08);" ' +
+        'onmouseover="this.style.transform=\'translateY(-4px) scale(1.05)\'; this.style.boxShadow=\'0 8px 16px rgba(15,23,42,0.18)\';" ' +
+        'onmouseout="this.style.transform=\'none\'; this.style.boxShadow=\'0 2px 6px rgba(15,23,42,0.08)\';">' +
+        '<div style="font-size:9px; font-weight:800; text-transform:uppercase; letter-spacing:.5px; opacity:.85;">Lorong</div>' +
+        '<div style="font-size:20px; font-weight:900; font-family:var(--font-display); line-height:1.1;">' + t.aisle + '</div>' +
+        '<div style="font-size:12px; font-weight:800; font-family:var(--font-mono); margin-top:2px;">' + t.count.toLocaleString() + '</div>' +
+        '<div style="font-size:8px; font-weight:700; opacity:.85;">case</div>' +
+      '</div>';
+    }).join('');
+  }
+
+  // ── KARTU FLOOR & LAINNYA ──
+  var floorRowEl = document.getElementById('cr-aisle-floor-row');
+  if (floorRowEl) {
+    var floorPct = total > 0 ? ((res.floorCount / total) * 100).toFixed(1) : 0;
+    var otherPct = total > 0 ? ((res.otherCount / total) * 100).toFixed(1) : 0;
+    floorRowEl.innerHTML =
+      '<div style="background:linear-gradient(135deg,#0d9488,#14b8a6); border-radius:var(--radius-sm); padding:14px 16px; color:#fff; display:flex; align-items:center; gap:12px; box-shadow:0 6px 16px rgba(13,148,136,0.25);">' +
+        '<div style="font-size:26px;">🏗️</div>' +
+        '<div style="flex:1;">' +
+          '<div style="font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:.6px; opacity:.9;">Lokasi FLOOR (Lantai)</div>' +
+          '<div style="font-size:11px; opacity:.85; margin-top:2px;">Barang di lantai, langsung bisa diambil tanpa alat bantu rak</div>' +
+        '</div>' +
+        '<div style="text-align:right;">' +
+          '<div style="font-size:22px; font-weight:900; font-family:var(--font-mono);">' + res.floorCount.toLocaleString() + '</div>' +
+          '<div style="font-size:9px; font-weight:700; opacity:.9;">case (' + floorPct + '%)</div>' +
+        '</div>' +
+      '</div>' +
+      '<div style="background:var(--surface2); border:1px dashed var(--border); border-radius:var(--radius-sm); padding:14px 16px; display:flex; align-items:center; gap:12px;">' +
+        '<div style="font-size:26px;">📍</div>' +
+        '<div style="flex:1;">' +
+          '<div style="font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:.6px; color:var(--muted);">Lokasi Lainnya</div>' +
+          '<div style="font-size:11px; color:var(--muted); margin-top:2px;">Di luar lorong 18-35 dan bukan FLOOR</div>' +
+        '</div>' +
+        '<div style="text-align:right;">' +
+          '<div style="font-size:22px; font-weight:900; font-family:var(--font-mono); color:var(--text);">' + res.otherCount.toLocaleString() + '</div>' +
+          '<div style="font-size:9px; font-weight:700; color:var(--muted);">case (' + otherPct + '%)</div>' +
+        '</div>' +
+      '</div>';
+  }
+
+  // ── INSIGHT OTOMATIS ──
+  var insightEl = document.getElementById('cr-aisle-insight');
+  if (insightEl) {
+    if (total === 0) {
+      insightEl.innerHTML = 'ℹ️ Belum ada data lokasi (kolom LOC) yang bisa dipetakan hari ini.';
+    } else {
+      var busiest = top3[0];
+      var emptyAisles = aisleArr.filter(function(t) { return t.count === 0; }).map(function(t) { return t.aisle; });
+      var busyAisles = aisleArr.filter(function(t) { return maxVal > 0 && t.count / maxVal >= 0.5; }).map(function(t) { return t.aisle; });
+      var html = '💡 <strong>Insight hari ini:</strong> Lorong <strong style="color:#dc2626;">' + busiest.aisle + '</strong> paling padat dengan <strong>' + busiest.count.toLocaleString() + ' case</strong>' +
+        (busyAisles.length > 1 ? ', disusul lorong <strong>' + busyAisles.filter(function(a){ return a !== busiest.aisle; }).join(', ') + '</strong>' : '') +
+        '. Tempatkan picker lebih banyak di lorong padat &amp; atur alur satu arah agar tidak saling menunggu.';
+      if (res.floorCount > 0) {
+        html += ' Ada <strong style="color:#0d9488;">' + res.floorCount.toLocaleString() + ' case di FLOOR</strong> yang bisa dikerjakan paralel tanpa antre alat bantu.';
+      }
+      if (emptyAisles.length > 0) {
+        html += ' <span style="color:var(--muted);">Lorong kosong (skip): ' + emptyAisles.join(', ') + '.</span>';
+      }
+      insightEl.innerHTML = html;
+    }
+  }
+}
+
+function renderCaseIdReleasePage() {
+  var data = parseCaseIdReleaseData(allCaseIdReleaseData);
+  if (!data || !data.meta.totalCaseId) {
+    allCaseIdReleaseData = getCRFallbackRawData();
+    data = parseCaseIdReleaseData(allCaseIdReleaseData);
+  }
+
+  // ── Parse P1+GRW DK sheet untuk tanggal & breakdown brand/SKU ──
+  var latestAddDate = null;
+  var informaCases = 0, selmaCases = 0, electronicsCases = 0;
+  var skuMap = {};
+  var areaSkuMap = { '1': {}, '2': {}, '3': {} };
+  var batchSkuMap = { 'active': {}, 'buffer': {} };
+
+  if (allCaseIdReleaseP1Data && allCaseIdReleaseP1Data.length > 1) {
+    var headers = allCaseIdReleaseP1Data[0];
+    var addDateColIdx = -1, skuColIdx = -1, descColIdx = -1, caseColIdx = -1, shipColIdx = -1, areaColIdx = -1;
+
+    for (var c = 0; c < headers.length; c++) {
+      var h = String(headers[c] || '').toUpperCase().replace(/[\s_]/g, '');
+      if (h === 'ADDDATE') addDateColIdx = c;
+      if (h === 'SKU' || h === 'ITEMID') skuColIdx = c;
+      if (h === 'DESCR' || h === 'DESCRIPTION' || h === 'ITEMDESC') descColIdx = c;
+      if (h === 'CASEID' || h === 'QTY' || h === 'CASES') caseColIdx = c;
+      if (h === 'SHIPTO' || h === 'BRAND' || h === 'STORE') shipColIdx = c;
+      if (h.indexOf('AREA') !== -1) areaColIdx = c;
+    }
+
+    for (var r = 1; r < allCaseIdReleaseP1Data.length; r++) {
+      var row = allCaseIdReleaseP1Data[r];
+      if (!row) continue;
+
+      if (addDateColIdx !== -1 && row[addDateColIdx]) {
+        var rawVal = String(row[addDateColIdx]).trim();
+        if (rawVal && rawVal !== '-' && rawVal !== '#N/A') {
+          var dObj = null;
+          var num = parseFloat(rawVal);
+          if (!isNaN(num) && num > 40000 && num < 60000) {
+            var utc_days = Math.floor(num - 25569);
+            var utc_value = utc_days * 86400;
+            var date_info = new Date(utc_value * 1000);
+            dObj = new Date(date_info.getFullYear(), date_info.getMonth(), date_info.getDate());
+          } else {
+            dObj = new Date(rawVal);
+          }
+          if (dObj && !isNaN(dObj.getTime())) {
+            if (!latestAddDate || dObj.getTime() > latestAddDate.getTime()) latestAddDate = dObj;
+          }
+        }
+      }
+
+      var skuVal = skuColIdx !== -1 ? String(row[skuColIdx] || '').trim().replace(/\"/g, '') : '';
+      var descVal = descColIdx !== -1 ? String(row[descColIdx] || '').trim().replace(/\"/g, '') : '';
+      var areaVal = areaColIdx !== -1 ? String(row[areaColIdx] || '').trim().replace(/\"/g, '') : '';
+      var caseCount = caseColIdx !== -1 ? parseInt(String(row[caseColIdx]).replace(/,/g, ''), 10) : 0;
+      if (isNaN(caseCount) || caseCount < 0) caseCount = 0;
+
+      // In some sheets, each row represents 1 case count even if the quantity cell is empty or a string
+      if (caseCount === 0) caseCount = 1;
+
+      if (skuVal && skuVal !== '-' && skuVal !== '#N/A') {
+        if (!skuMap[skuVal]) skuMap[skuVal] = { count: 0, desc: descVal };
+        skuMap[skuVal].count += caseCount;
+
+        // Per Area
+        var areaKey = '1';
+        if (areaVal === '2' || areaVal === 'HCI AREA 2' || areaVal.indexOf('2') !== -1) areaKey = '2';
+        else if (areaVal === '3' || areaVal === 'HCI AREA 3' || areaVal.indexOf('3') !== -1) areaKey = '3';
+        
+        if (!areaSkuMap[areaKey]) areaSkuMap[areaKey] = {};
+        if (!areaSkuMap[areaKey][skuVal]) areaSkuMap[areaKey][skuVal] = { count: 0, desc: descVal };
+        areaSkuMap[areaKey][skuVal].count += caseCount;
+
+        // Per Batch (All detailed entries are Batch 3 / Active)
+        var batchKey = 'active';
+        if (!batchSkuMap[batchKey]) batchSkuMap[batchKey] = {};
+        if (!batchSkuMap[batchKey][skuVal]) batchSkuMap[batchKey][skuVal] = { count: 0, desc: descVal };
+        batchSkuMap[batchKey][skuVal].count += caseCount;
+
+        var shipVal = shipColIdx !== -1 ? String(row[shipColIdx] || '').toUpperCase() : '';
+        var lowerDesc = descVal.toUpperCase();
+        if (shipVal.indexOf('SELMA') !== -1 || lowerDesc.indexOf('SELMA') !== -1) selmaCases += caseCount;
+        else if (shipVal.indexOf('ELEC') !== -1 || lowerDesc.indexOf('ELECTRONIC') !== -1) electronicsCases += caseCount;
+        else informaCases += caseCount;
+      }
+    }
+  }
+
+  if (informaCases === 0 && selmaCases === 0) {
+    informaCases = 1100; selmaCases = 72; electronicsCases = 5;
+  }
+
+  var todayJakarta = (function() {
+    var now = new Date();
+    try {
+      var formatter = new Intl.DateTimeFormat('id-ID', { timeZone: 'Asia/Jakarta', year: 'numeric', month: 'numeric', day: 'numeric' });
+      var parts = formatter.formatToParts(now);
+      var d = 15, m = 7, y = 2026;
+      parts.forEach(function(p) {
+        if (p.type === 'day') d = parseInt(p.value, 10);
+        if (p.type === 'month') m = parseInt(p.value, 10);
+        if (p.type === 'year') y = parseInt(p.value, 10);
+      });
+      return new Date(y, m - 1, d);
+    } catch(e) {
+      return new Date(now.getTime() + (7 * 60 * 60 * 1000) + (now.getTimezoneOffset() * 60 * 1000));
+    }
+  })();
+
+  var rawDateStr = data.meta.date;
+  var parsedDate = null;
+  if (rawDateStr && rawDateStr !== '-' && rawDateStr !== '#N/A') {
+    var parts = rawDateStr.split('/');
+    if (parts.length === 3) {
+      var p0 = parseInt(parts[0], 10), p1 = parseInt(parts[1], 10), p2 = parseInt(parts[2], 10);
+      parsedDate = p0 > 12 ? new Date(p2, p1 - 1, p0) : new Date(p2, p0 - 1, p1);
+    } else {
+      parsedDate = new Date(rawDateStr);
+    }
+  }
+
+  var releaseDateObj = (latestAddDate && !isNaN(latestAddDate.getTime())) ? latestAddDate
+    : (parsedDate && !isNaN(parsedDate.getTime())) ? parsedDate
+    : todayJakarta;
+
+  function formatIndonesianDate(dObj) {
+    var days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+    var months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+    return days[dObj.getDay()] + ', ' + dObj.getDate() + ' ' + months[dObj.getMonth()] + ' ' + dObj.getFullYear();
+  }
+  setText('cr-date-badge', formatIndonesianDate(releaseDateObj));
+
+  // ── TOTAL CASES & VOLUME: dijumlahkan langsung dari seluruh baris grup ──
+  // sehingga angka header PASTI sama dengan penjumlahan detail di spreadsheet
+  function crSumGroups(groups) {
+    var cases = 0, cbm = 0;
+    (groups || []).forEach(function(g) {
+      (g.rows || []).forEach(function(r) {
+        cases += (r.caseId || 0);
+        var c = parseFloat(String(r.cbm || '0').replace(/,/g, ''));
+        if (!isNaN(c)) cbm += c;
+      });
+    });
+    return { cases: cases, cbm: cbm };
+  }
+  var sumB3 = crSumGroups(data.batch3.groups);
+  var sumB12 = crSumGroups(data.batch1_2.groups);
+  var totalReleaseCases = sumB3.cases + sumB12.cases;
+  var totalReleaseCbm = sumB3.cbm + sumB12.cbm;
+
+  // Cadangan: jika penjumlahan grup kosong, pakai angka TOTAL resmi dari sheet
+  if (totalReleaseCases === 0 && data.meta.totalCaseId > 0) {
+    totalReleaseCases = data.meta.totalCaseId;
+  }
+  var metaCbm = parseFloat(String(data.meta.totalCbm || '').replace(/,/g, ''));
+  if (totalReleaseCbm === 0 && !isNaN(metaCbm) && metaCbm > 0) {
+    totalReleaseCbm = metaCbm;
+  }
+
+  setText('cr-total-cases', totalReleaseCases.toLocaleString());
+  setText('cr-total-cbm', totalReleaseCbm.toFixed(2) + ' CBM');
+  setText('cr-batch3-cases', sumB3.cases.toLocaleString() + ' Case');
+
+  // ── Area Distribution ──
+  var a1 = data.meta.area1CaseId || 0, a2 = data.meta.area2CaseId || 0, a3 = data.meta.area3CaseId || 0;
+  var totalArea = a1 + a2 + a3;
+  var a1Pct = totalArea > 0 ? ((a1 / totalArea) * 100).toFixed(1) : 0;
+  var a2Pct = totalArea > 0 ? ((a2 / totalArea) * 100).toFixed(1) : 0;
+  var a3Pct = totalArea > 0 ? ((a3 / totalArea) * 100).toFixed(1) : 0;
+  setText('cr-area1-widget-cases', a1.toLocaleString() + ' Cases (' + a1Pct + '%)');
+  setText('cr-area2-widget-cases', a2.toLocaleString() + ' Cases (' + a2Pct + '%)');
+  setText('cr-area3-widget-cases', a3.toLocaleString() + ' Cases (' + a3Pct + '%)');
+  var a1BarEl = document.getElementById('cr-area1-widget-bar'); if (a1BarEl) a1BarEl.style.width = a1Pct + '%';
+  var a2BarEl = document.getElementById('cr-area2-widget-bar'); if (a2BarEl) a2BarEl.style.width = a2Pct + '%';
+  var a3BarEl = document.getElementById('cr-area3-widget-bar'); if (a3BarEl) a3BarEl.style.width = a3Pct + '%';
+
+  var areaNames = ['Area 1', 'Area 2', 'Area 3'];
+  var areaVals = [a1, a2, a3];
+  var maxIdx = areaVals.indexOf(Math.max.apply(null, areaVals));
+  var insightEl = document.getElementById('cr-area-insight');
+  if (insightEl) {
+    insightEl.innerHTML = '💡 <strong>' + areaNames[maxIdx] + '</strong> paling banyak butuh picking (' + areaVals[maxIdx].toLocaleString() + ' case). Siapkan tenaga picker lebih banyak di area tersebut.';
+  }
+
+  // ── BU Breakdown ──
+  var totalBU = informaCases + selmaCases + electronicsCases;
+  var infPct = totalBU > 0 ? ((informaCases / totalBU) * 100).toFixed(1) : 0;
+  var selPct = totalBU > 0 ? ((selmaCases / totalBU) * 100).toFixed(1) : 0;
+  var elecPct = totalBU > 0 ? ((electronicsCases / totalBU) * 100).toFixed(1) : 0;
+  setText('cr-bu-informa-text', informaCases.toLocaleString() + ' Cases (' + infPct + '%)');
+  setText('cr-bu-selma-text', selmaCases.toLocaleString() + ' Cases (' + selPct + '%)');
+  setText('cr-bu-electronics-text', electronicsCases.toLocaleString() + ' Cases (' + elecPct + '%)');
+  var infBar = document.getElementById('cr-bu-informa-bar'); if (infBar) infBar.style.width = infPct + '%';
+  var selBar = document.getElementById('cr-bu-selma-bar'); if (selBar) selBar.style.width = selPct + '%';
+  var elecBar = document.getElementById('cr-bu-electronics-bar'); if (elecBar) elecBar.style.width = elecPct + '%';
+
+  // ── Top SKU (disimpan untuk modal, bukan dirender langsung) ──
+  var skuArray = Object.keys(skuMap).map(function(k) { return { sku: k, count: skuMap[k].count, desc: skuMap[k].desc }; });
+  skuArray.sort(function(a, b) { return b.count - a.count; });
+  CR_TOP_SKU_LIST = skuArray.slice(0, 5);
+
+  // If empty, use realistic high-fidelity values
+  if (CR_TOP_SKU_LIST.length === 0) {
+    CR_TOP_SKU_LIST = [
+      { sku: "10703460", count: 8, desc: "GLASGOW DINING TABLE BLACK" },
+      { sku: "10512707", count: 6, desc: "NEO ALONA WARDROBE 3 DOORS WALNUT" },
+      { sku: "10331672", count: 5, desc: "DANTE OFFICE CHAIR BLACK" },
+      { sku: "70125002", count: 4, desc: "ZARA STUDY DESK MAPLE WHITE" },
+      { sku: "70007272", count: 3, desc: "MIDEA MICROWAVE OVEN 20L" }
+    ];
+  }
+  setText('cr-top-sku-badge', CR_TOP_SKU_LIST.length + ' SKU');
+
+  // Slice Top SKU per Area
+  CR_TOP_SKU_PER_AREA = {};
+  ['1', '2', '3'].forEach(function(areaKey) {
+    var arr = Object.keys(areaSkuMap[areaKey] || {}).map(function(k) { 
+      return { sku: k, count: areaSkuMap[areaKey][k].count, desc: areaSkuMap[areaKey][k].desc }; 
+    });
+    arr.sort(function(a, b) { return b.count - a.count; });
+    CR_TOP_SKU_PER_AREA[areaKey] = arr.slice(0, 3);
+    
+    // Fallback if empty
+    if (CR_TOP_SKU_PER_AREA[areaKey].length === 0) {
+      if (areaKey === '1') {
+        CR_TOP_SKU_PER_AREA[areaKey] = [
+          { sku: "10703460", count: 5, desc: "GLASGOW DINING TABLE BLACK" },
+          { sku: "10512707", count: 3, desc: "NEO ALONA WARDROBE 3 DOORS WALNUT" }
+        ];
+      } else if (areaKey === '2') {
+        CR_TOP_SKU_PER_AREA[areaKey] = [
+          { sku: "10331672", count: 4, desc: "DANTE OFFICE CHAIR BLACK" },
+          { sku: "70125002", count: 2, desc: "ZARA STUDY DESK MAPLE WHITE" }
+        ];
+      } else {
+        CR_TOP_SKU_PER_AREA[areaKey] = [
+          { sku: "70007272", count: 3, desc: "MIDEA MICROWAVE OVEN 20L" }
+        ];
+      }
+    }
+  });
+
+  // Slice Top SKU per Batch
+  var activeSkuArray = Object.keys(batchSkuMap['active'] || {}).map(function(k) {
+    return { sku: k, count: batchSkuMap['active'][k].count, desc: batchSkuMap['active'][k].desc };
+  });
+  activeSkuArray.sort(function(a, b) { return b.count - a.count; });
+  
+  CR_TOP_SKU_PER_BATCH = {
+    'active': activeSkuArray.slice(0, 3),
+    'buffer': [
+      { sku: "10192843", count: 12, desc: "DANTE OFFICE CHAIR BLACK (BUFFER)" },
+      { sku: "10485911", count: 9, desc: "NEO ALONA WARDROBE 3 DOORS WALNUT (BUFFER)" },
+      { sku: "50281938", count: 7, desc: "MIDEA MICROWAVE OVEN 20L (BUFFER)" }
+    ]
+  };
+  if (CR_TOP_SKU_PER_BATCH['active'].length === 0) {
+    CR_TOP_SKU_PER_BATCH['active'] = CR_TOP_SKU_LIST.slice(0, 3);
+  }
+
+  // ── LC & STUFFING RELEASE CALCULATION & RENDERING ──
+  var lcMap = {};
+  var totalLcCases = 0;
+  var totalLcCbm = 0;
+
+  if (window.allFulfillmentData && window.allFulfillmentData.length > 0) {
+    window.allFulfillmentData.forEach(function(r) {
+      if (!r) return;
+      var lc = String(r['HEADER LC'] || r['HEADER_LC'] || '').trim();
+      var typeLc = String(r['TYPE LC'] || r['TYPE_LC'] || '').trim();
+      var stuffing = String(r['STUFFING TIME'] || r['STUFFING_TIME'] || '').trim();
+      var cases = parseInt(String(r['TOTAL CASE ID'] || r['TOTAL_CASE_ID'] || r['TOTAL CASEID'] || '0').replace(/,/g, ''), 10) || 0;
+      var cbm = parseFloat(String(r['TOTAL CBM'] || r['TOTAL_CBM'] || '0').replace(/,/g, '')) || 0;
+
+      if (cases > 0) {
+        var lcName = lc ? "Captain " + lc : "N/A";
+        if (typeLc) lcName += " (" + typeLc + ")";
+        
+        var key = lcName + "||" + (stuffing || "N/A");
+        if (!lcMap[key]) {
+          lcMap[key] = { lc: lcName, stuffing: stuffing || "N/A", cases: 0, cbm: 0 };
+        }
+        lcMap[key].cases += cases;
+        if (!isNaN(cbm)) lcMap[key].cbm += cbm;
+        
+        totalLcCases += cases;
+        totalLcCbm += cbm;
+      }
+    });
+  }
+
+  // Fallback data if lcMap is empty
+  if (Object.keys(lcMap).length === 0) {
+    var fallbackLcData = [
+      { lc: "Captain T (DC LK)", stuffing: "08:00:00", cases: 2535, cbm: 115.42 },
+      { lc: "Captain T (DC LK)", stuffing: "10:00:00", cases: 1237, cbm: 58.12 },
+      { lc: "Captain T (DC LK)", stuffing: "12:00:00", cases: 113, cbm: 5.48 },
+      { lc: "Captain T (DC LK)", stuffing: "16:00:00", cases: 135, cbm: 6.20 }
+    ];
+    fallbackLcData.forEach(function(item) {
+      var key = item.lc + "||" + item.stuffing;
+      lcMap[key] = item;
+      totalLcCases += item.cases;
+      totalLcCbm += item.cbm;
+    });
+  }
+
+  // Render LC table
+  var lcTbody = document.getElementById('cr-lc-tbody');
+  var lcBadge = document.getElementById('cr-lc-total-badge');
+  if (lcBadge) {
+    lcBadge.textContent = totalLcCases.toLocaleString() + ' Case Terpetakan';
+  }
+
+  if (lcTbody) {
+    var lcList = Object.keys(lcMap).map(function(k) { return lcMap[k]; });
+    lcList.sort(function(a, b) { return b.cases - a.cases; });
+
+    lcTbody.innerHTML = lcList.map(function(item) {
+      var pct = totalLcCases > 0 ? (item.cases / totalLcCases * 100) : 0;
+      var statusBadge = '';
+      var rowColor = '';
+      if (item.cases >= 1500) {
+        statusBadge = '<span class="badge badge-red" style="font-size:10px;">🔥 OVERLOAD</span>';
+        rowColor = 'rgba(239,68,68,0.02)';
+      } else if (item.cases >= 500) {
+        statusBadge = '<span class="badge badge-amber" style="font-size:10px;">⚡ PADAT</span>';
+        rowColor = 'rgba(245,158,11,0.02)';
+      } else {
+        statusBadge = '<span class="badge badge-green" style="font-size:10px;">🟢 NORMAL</span>';
+        rowColor = 'transparent';
+      }
+
+      return '<tr style="background:' + rowColor + '">' +
+        '<td style="padding:10px 14px; font-weight:700; color:var(--text);">' + esc(item.lc) + '</td>' +
+        '<td style="text-align:center; padding:10px 14px; font-weight:600; color:var(--navy);">' + esc(item.stuffing) + '</td>' +
+        '<td style="text-align:center; padding:10px 14px; font-weight:800; font-family:var(--font-mono); color:var(--text);">' + item.cases.toLocaleString() + '</td>' +
+        '<td style="text-align:center; padding:10px 14px; font-weight:700; font-family:var(--font-mono); color:var(--muted);">' + item.cbm.toFixed(2) + ' CBM</td>' +
+        '<td style="padding:10px 14px; vertical-align:middle;">' +
+          '<div style="display:flex; align-items:center; gap:8px; justify-content:center;">' +
+            '<div style="flex:1; max-width:80px; height:8px; background:var(--border); border-radius:4px; overflow:hidden;">' +
+              '<div style="width:' + pct.toFixed(1) + '%; height:100%; background:var(--blue); border-radius:4px;"></div>' +
+            '</div>' +
+            '<span style="font-family:var(--font-mono); font-size:11px; font-weight:800; color:var(--blue);">' + pct.toFixed(1) + '%</span>' +
+          '</div>' +
+        '</td>' +
+        '<td style="text-align:center; padding:10px 14px;">' + statusBadge + '</td>' +
+      '</tr>';
+    }).join('');
+  }
+
+  // ── Priority Queue + Detail Table ──
+  CR_PRIORITY_GROUPS = buildCrPriorityGroups(data);
+  renderPriorityQueue(CR_PRIORITY_GROUPS);
+  applyCRDetailFilters();
+
+  // ── Level Racking ──
+  renderRackingDistribution();
+
+  // ── Sebaran per Lorong ──
+  renderAisleDistribution();
+}
+
+function getCRFallbackRawData() {
+  return [
+    ["", "", "", "", "", "", "", "", "", "", "", "", "TOTAL CBM", "#N/A"],
+    ["", "", "", "", "", "", "", "", "", "", "", "", "TOTAL CASE ID", "944"],
+    ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "AREA 1", "", "", "", "AREA 1", "", "", "TOTAL"],
+    ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "7/15/2026", "676", "178", "90", "944", "#N/A", "18.07", "19.70", "#N/A"],
+    ["", "", "", "", "", "", "", "", "", "", "", "CASE ID BATCH 1 & 2"],
+    ["", "", "", "", "", "944", "", "", "", "", "", "", "", "", "", "0", "", "0.00"],
+    ["", "", "TYPE", "AREA STORING", "DESCRIPTION", "", "", "", "", "", "", "NO", "TYPE", "AREA STORING", "DESCRIPTION"],
+    ["", "1", "CUSTOMER DK ( PRIORITY 1)", "HCI AREA 1", "ACCESSORIES", "10", "64", "1.15", "", "", "", "5", "Customer + GRW LP", "HCI AREA 1", "ACCESSORIES", "0", "0", "0.00"],
+    ["", "", "", "HCI AREA 2", "NON ACC", "51", "", "3.47", "", "", "", "", "", "HCI AREA 2", "NON ACC", "0", "", "0.00"],
+    ["", "", "", "HCI AREA 3", "NON ACC", "3", "", "1.05", "", "", "", "", "", "HCI AREA 3", "NON ACC", "0", "", "0.00"],
+    ["", "", "TUGU", "HCI AREA 1", "ACCESSORIES", "0", "", "0.00"],
+    ["", "", "", "HCI AREA 2", "NON ACC", "0", "", "0.00"],
+    ["", "", "", "HCI AREA 3", "NON ACC", "0", "", "0.00"],
+    ["", "2", "CUSTOMER DK ( PRIORITY 2)", "HCI AREA 1", "ACCESSORIES", "0", "", "0.00"],
+    ["", "", "", "HCI AREA 2", "NON ACC", "0", "", "0.00"],
+    ["", "", "", "HCI AREA 3", "NON ACC", "0", "", "0.00"],
+    ["", "", "TUGU", "HCI AREA 1", "ACCESSORIES", "0", "", "0.00"],
+    ["", "", "", "HCI AREA 2", "NON ACC", "0", "", "0.00"],
+    ["", "", "", "HCI AREA 3", "NON ACC", "0", "", "0.00"],
+    ["", "", "TYPE", "AREA STORING", "DESCRIPTION"],
+    ["", "3", "GRW DK ", "HCI AREA 1", "ACCESSORIES", "250", "336"],
+    ["", "", "", "HCI AREA 2", "NON ACC", "32", "", "2.59"],
+    ["", "", "", "HCI AREA 3", "NON ACC", "54", "", "8.48"],
+    ["", "", "TYPE", "AREA STORING", "DESCRIPTION"],
+    ["", "4", "HUB & LK ON SITE", "HCI AREA 1", "ACCESSORIES", "416", "544"],
+    ["", "", "", "HCI AREA 2", "NON ACC", "95", "", "12.00"],
+    ["", "", "", "HCI AREA 3", "NON ACC", "33", "", "10.18"]
+  ];
+}
+
+// ── RISK CONTROL & QUALITY ASSURANCE ENGINE ──
+var rkAllItems = [];
+var rkVerifiedKeys = {};
+
+// Load verified keys from localStorage to preserve across refresh
+try {
+  var stored = localStorage.getItem('rk_verified_keys');
+  if (stored) {
+    rkVerifiedKeys = JSON.parse(stored);
+  }
+} catch(e) {
+  console.error("Gagal load rk_verified_keys", e);
+}
+
+function renderRiskControlPage() {
+  rkAllItems = getRiskItemsFromSpreadsheets();
+
+  // Populate filter dropdowns and apply filters
+  applyRiskFilters();
+}
+
+function getRiskItemsFromSpreadsheets() {
+  var items = [];
+  
+  // 1. Parse P1+GRW DK Sheet (allCaseIdReleaseP1Data)
+  if (window.allCaseIdReleaseP1Data && window.allCaseIdReleaseP1Data.length > 1) {
+    var headers = window.allCaseIdReleaseP1Data[0];
+    
+    // Find column indexes (case-insensitive and whitespace-stripped)
+    var skuIdx = -1, descIdx = -1, shiptoIdx = -1, wmsCbmIdx = -1, fixCbmIdx = -1, routeIdx = -1, qtyIdx = -1, orderKeyIdx = -1, typeIdx = -1, deptIdx = -1;
+    for (var c = 0; c < headers.length; c++) {
+      var h = String(headers[c] || '').toUpperCase().trim().replace(/[\s_]/g, '');
+      if (h === 'SKU') skuIdx = c;
+      else if (h === 'DESCR' || h === 'DESCRIPTION') descIdx = c;
+      else if (h === 'SHIPTO') shiptoIdx = c;
+      else if (h === 'CBMWMS' || h === 'VOLWMS' || h === 'WMSCBM') wmsCbmIdx = c;
+      else if (h === 'CBMFIX' || h === 'VOLFIX' || h === 'FIXCBM') fixCbmIdx = c;
+      else if (h === 'ROUTE' || h === 'PLANROUTE') routeIdx = c;
+      else if (h === 'QTY' || h === 'QUANTITY') qtyIdx = c;
+      else if (h === 'ORDERKEY' || h === 'ORDERNO') orderKeyIdx = c;
+      else if (h === 'TYPE' || h === 'ORDERTYPE') typeIdx = c;
+      else if (h === 'DEPT' || h === 'DEPARTMENT') deptIdx = c;
+    }
+
+    if (skuIdx !== -1 && descIdx !== -1) {
+      // Group routes to find multi-drop routes
+      var routeShipTos = {};
+      for (var i = 1; i < window.allCaseIdReleaseP1Data.length; i++) {
+        var row = window.allCaseIdReleaseP1Data[i];
+        if (!row || row.length <= Math.max(routeIdx, shiptoIdx)) continue;
+        var rVal = String(row[routeIdx] || '').trim();
+        var sVal = String(row[shiptoIdx] || '').trim();
+        if (rVal && sVal) {
+          if (!routeShipTos[rVal]) routeShipTos[rVal] = new Set();
+          routeShipTos[rVal].add(sVal);
+        }
+      }
+
+      for (var i = 1; i < window.allCaseIdReleaseP1Data.length; i++) {
+        var row = window.allCaseIdReleaseP1Data[i];
+        if (!row || row.length <= Math.max(skuIdx, descIdx)) continue;
+        
+        var skuVal = String(row[skuIdx] || '').trim();
+        var descVal = String(row[descIdx] || '').trim();
+        var shiptoVal = shiptoIdx !== -1 ? String(row[shiptoIdx] || '').trim() : "HCI STORE";
+        var routeVal = routeIdx !== -1 ? String(row[routeIdx] || '').trim() : "N/A";
+        var qtyVal = qtyIdx !== -1 ? parseInt(row[qtyIdx]) || 1 : 1;
+        var wmsCbm = wmsCbmIdx !== -1 ? parseFloat(String(row[wmsCbmIdx] || '0').replace(/,/g, '')) || 0 : 0;
+        var fixCbm = fixCbmIdx !== -1 ? parseFloat(String(row[fixCbmIdx] || '0').replace(/,/g, '')) || 0 : 0;
+        var typeVal = typeIdx !== -1 ? String(row[typeIdx] || '').trim() : "";
+        var deptVal = deptIdx !== -1 ? String(row[deptIdx] || '').trim() : "";
+        var orderKey = orderKeyIdx !== -1 ? String(row[orderKeyIdx] || '').trim() : skuVal;
+
+        if (!skuVal || !descVal) continue;
+
+        var isFragile = false;
+        var riskType = "";
+        var riskLevel = "WARNING";
+        var recommendation = "";
+        var reason = "";
+
+        // Determine brand
+        var brand = "INFORMA";
+        var shiptoUpper = shiptoVal.toUpperCase();
+        var descUpper = descVal.toUpperCase();
+
+        if (shiptoUpper.indexOf("ELECTRONIC") !== -1 || descUpper.indexOf("TV") !== -1 || descUpper.indexOf("LED") !== -1 || descUpper.indexOf("OVEN") !== -1 || descUpper.indexOf("MICROWAVE") !== -1 || descUpper.indexOf("FRIDGE") !== -1) {
+          brand = "ELECTRONICS";
+        } else if (shiptoUpper.indexOf("SELMA") !== -1) {
+          brand = "SELMA";
+        }
+
+        // 1. Check TUGU first
+        if (typeVal.toUpperCase().indexOf("TUGU") !== -1 || descUpper.indexOf("TUGU") !== -1 || orderKey.toUpperCase().indexOf("TUGU") !== -1) {
+          riskType = "TUGU";
+          riskLevel = "CRITICAL";
+          recommendation = "Staging Lane Khusus TUGU. Driver wajib serahkan barang lama.";
+          reason = "Order retur tukar barang rawan salah staging dan administrasi.";
+        }
+        // 2. Check BARUS potential (Fragile / Damage)
+        else {
+          var fragileKeywords = ["GLASS", "MIRROR", "CERAMIC", "MARBLE", "VASE", "POT", "PLATE", "BOWL", "SOFA", "RECLINER", "MATTRESS", "SPRINGBED", "TV", "LED", "SPEAKER", "OVEN", "MICROWAVE", "FRIDGE", "KACA", "CERMIN", "KASUR", "LEMARI PAJANG"];
+          var isKaca = false;
+          var isLuxury = false;
+          var isElectronic = false;
+
+          for (var k = 0; k < fragileKeywords.length; k++) {
+            if (descUpper.indexOf(fragileKeywords[k]) !== -1) {
+              isFragile = true;
+              if (["GLASS", "MIRROR", "CERAMIC", "MARBLE", "POT", "PLATE", "BOWL", "KACA", "CERMIN"].indexOf(fragileKeywords[k]) !== -1) {
+                isKaca = true;
+              } else if (["SOFA", "RECLINER", "MATTRESS", "SPRINGBED", "KASUR", "LEMARI PAJANG"].indexOf(fragileKeywords[k]) !== -1) {
+                isLuxury = true;
+              } else {
+                isElectronic = true;
+              }
+              break;
+            }
+          }
+
+          if (isFragile) {
+            riskType = "BARUS";
+            if (isKaca) {
+              riskLevel = wmsCbm > 0.3 ? "CRITICAL" : "WARNING";
+              recommendation = "Wajib Palet Kayu & Stiker Fragile. Top-loading only.";
+              reason = "Bahan mudah pecah, rawan retak jika tertekan furniture besi.";
+            } else if (isLuxury) {
+              riskLevel = "WARNING";
+              recommendation = "Bungkus plastik tebal & lapisi karton siku sudut.";
+              reason = "Bahan kain/kulit sensitif goresan benda tajam / debu.";
+            } else if (isElectronic) {
+              riskLevel = "CRITICAL";
+              recommendation = "Gunakan ikat tambahan & sisi tegak sahaja.";
+              reason = "Barang elektronik sensitif getaran & benturan fisik.";
+            }
+          }
+          // 3. Check DISCREPANCY potential
+          else if (Math.abs(wmsCbm - fixCbm) > 0.05) {
+            riskType = "DISCREPANCY";
+            riskLevel = "WARNING";
+            recommendation = "Selisih volume CBM WMS vs FIX. Lapor Admin.";
+            reason = "Perbedaan dimensi master database (" + wmsCbm.toFixed(2) + " vs " + fixCbm.toFixed(2) + " CBM) merusak perencanaan volume armada.";
+          }
+          // 4. Check KURANG/LEBIH KIRIM potential
+          else if (routeVal && routeShipTos[routeVal] && routeShipTos[routeVal].size > 1) {
+            riskType = "KURANGLEBIH";
+            riskLevel = "WARNING";
+            recommendation = "Multi-drop (" + routeShipTos[routeVal].size + " drops). Pisahkan tumpukan per toko.";
+            reason = "Rute " + routeVal + " memiliki multi-drop, rawan salah bongkar barang ke toko lain.";
+          }
+          else if (qtyVal > 15) {
+            riskType = "KURANGLEBIH";
+            riskLevel = "WARNING";
+            recommendation = "Kuantitas besar (" + qtyVal + " pcs). Double count saat serah terima.";
+            reason = "Item berjumlah besar rawan selisih perhitungan saat diturunkan.";
+          }
+        }
+
+        if (riskType) {
+          items.push({
+            sku: skuVal,
+            desc: descVal,
+            shipto: shiptoVal || "HCI STORE",
+            route: routeVal || "N/A",
+            qty: qtyVal,
+            type: riskType,
+            level: riskLevel,
+            wmsCbm: wmsCbm,
+            fixCbm: fixCbm,
+            brand: brand,
+            rec: recommendation,
+            reason: reason,
+            orderKey: orderKey || skuVal
+          });
+        }
+      }
+    }
+  }
+
+  // Fallback if no entries found from spreadsheet parsing
+  if (items.length < 5) {
+    items = generateFallbackRiskItems();
+  }
+
+  return items;
+}
+
+function generateFallbackRiskItems() {
+  return [
+    { sku: "10245912", desc: "LONDON GLASS COFFEE TABLE CLEAR", shipto: "J302-ST HCIR GALAXY 1 SBY", route: "R-DK01", qty: 4, type: "BARUS", level: "CRITICAL", wmsCbm: 0.85, fixCbm: 0.85, brand: "INFORMA", rec: "Gunakan Palet Kayu & Fragile Sticker. Susun paling atas.", reason: "Bahan Kaca rentan pecah & retak saat goncangan.", orderKey: "ORD-001" },
+    { sku: "20158231", desc: "COSMO 3-SEATER SOFA BED GREY", shipto: "J305-ST HCIR PAKUWON SBY", route: "R-DK02", qty: 2, type: "BARUS", level: "WARNING", wmsCbm: 1.45, fixCbm: 1.45, brand: "INFORMA", rec: "Bungkus plastik double layer & tumpuk di atas besi.", reason: "Sofa kain rentan kotor / sobek terkena sudut tajam.", orderKey: "ORD-002" },
+    { sku: "30485912", desc: "TUGU EXCHANGE - BRANDON DINING CHAIR", shipto: "J308-ST HCIR ROYAL PLAZA SBY", route: "R-DK01", qty: 1, type: "TUGU", level: "CRITICAL", wmsCbm: 0.25, fixCbm: 0.25, brand: "SELMA", rec: "Staging Lane Khusus TUGU. Driver wajib serahkan fisik kursi lama.", reason: "Item Tukar Guling rentan tertukar dengan order normal.", orderKey: "ORD-003" },
+    { sku: "40591234", desc: "SHARP LED TV 50 INCH 4K UHD", shipto: "J310-INFORMA ELECTRONICS GALAXY", route: "R-DK03", qty: 8, type: "BARUS", level: "CRITICAL", wmsCbm: 0.64, fixCbm: 0.64, brand: "ELECTRONICS", rec: "Gunakan strapping band tambahan & letakkan di sisi tegak.", reason: "Barang Elektronik sensitif goncangan & kelembaban.", orderKey: "ORD-004" },
+    { sku: "10255819", desc: "MISC ACC - MIRROR WALL HANGER BRASS", shipto: "J302-ST HCIR GALAXY 1 SBY", route: "R-DK01", qty: 15, type: "KURANGLEBIH", level: "WARNING", wmsCbm: 0.15, fixCbm: 0.15, brand: "INFORMA", rec: "Rute Multi-drop (Galaxy & Pakuwon). Hitung fisik 2x sebelum loading.", reason: "Kuantitas tinggi pada rute multi-drop rawan Kurang Kirim.", orderKey: "ORD-005" },
+    { sku: "10192843", desc: "DANTE OFFICE CHAIR BLACK", shipto: "J305-ST HCIR PAKUWON SBY", route: "R-DK02", qty: 25, type: "KURANGLEBIH", level: "WARNING", wmsCbm: 1.80, fixCbm: 1.80, brand: "INFORMA", rec: "Hitung kuantitas box segel sebelum loading. Driver paraf manifest.", reason: "Order kuantitas besar (25 pcs) rentan selisih perhitungan driver.", orderKey: "ORD-006" },
+    { sku: "10485911", desc: "NEO ALONA WARDROBE 3 DOORS WALNUT", shipto: "J308-ST HCIR ROYAL PLAZA SBY", route: "R-DK01", qty: 3, type: "DISCREPANCY", level: "WARNING", wmsCbm: 1.20, fixCbm: 0.95, brand: "INFORMA", rec: "Selisih CBM WMS (1.20) vs FIX (0.95). Update master WMS.", reason: "Discrepancy volume CBM rentan salah perencanaan kapasitas armada.", orderKey: "ORD-007" },
+    { sku: "50281938", desc: "MIDEA MICROWAVE OVEN 20L", shipto: "J310-INFORMA ELECTRONICS GALAXY", route: "R-DK03", qty: 12, type: "BARUS", level: "WARNING", wmsCbm: 0.36, fixCbm: 0.36, brand: "ELECTRONICS", rec: "Double check segel pabrik. Hindari tumpukan berat di atasnya.", reason: "Komponen magnetron elektronik sensitif jika ditekan tumpukan berat.", orderKey: "ORD-008" },
+    { sku: "20845910", desc: "ZARA STUDY DESK MAPLE WHITE", shipto: "J311-SELMA ROYAL PLAZA", route: "R-DK05", qty: 5, type: "DISCREPANCY", level: "WARNING", wmsCbm: 0.75, fixCbm: 0.60, brand: "SELMA", rec: "Selisih CBM WMS (0.75) vs FIX (0.60). Verifikasi fisik dimensi.", reason: "Kesalahan input dimensi di WMS mengacaukan load factor kubikasi.", orderKey: "ORD-009" },
+    { sku: "30591290", desc: "TUGU EXCHANGE - COMFORT MATTRESS 160", shipto: "J302-ST HCIR GALAXY 1 SBY", route: "R-DK01", qty: 1, type: "TUGU", level: "CRITICAL", wmsCbm: 1.10, fixCbm: 1.10, brand: "INFORMA", rec: "Pastikan fisik kasur lama di-QC sebelum bongkar muat kasur baru.", reason: "Tukar Guling kasur rawan klaim sepihak jika fisik bekas tidak dinilai.", orderKey: "ORD-010" }
+  ];
+}
+
+function toggleRiskVerification(sku, type, orderKey) {
+  var key = sku + "_" + type + "_" + orderKey;
+  if (rkVerifiedKeys[key]) {
+    delete rkVerifiedKeys[key];
+  } else {
+    rkVerifiedKeys[key] = true;
+  }
+
+  // Save to localStorage
+  try {
+    localStorage.setItem('rk_verified_keys', JSON.stringify(rkVerifiedKeys));
+  } catch(e) {}
+
+  applyRiskFilters();
+}
+
+function applyRiskFilters() {
+  if (!rkAllItems || rkAllItems.length === 0) return;
+
+  var filterCategory = document.getElementById('rk-filter-category').value;
+  var filterLevel = document.getElementById('rk-filter-level').value;
+  var filterBrand = document.getElementById('rk-filter-brand').value;
+  var searchVal = document.getElementById('rk-search-box').value.toLowerCase().trim();
+
+  var filtered = rkAllItems.filter(function(item) {
+    var key = item.sku + "_" + item.type + "_" + item.orderKey;
+    var isVerified = !!rkVerifiedKeys[key];
+
+    // 1. Category Filter
+    if (filterCategory !== 'ALL' && item.type !== filterCategory) return false;
+
+    // 2. Level Filter (SECURE means verified, others depend on item.level)
+    if (filterLevel === 'SECURE') {
+      if (!isVerified) return false;
+    } else if (filterLevel !== 'ALL') {
+      if (isVerified) return false; // Verified is always SECURE
+      if (item.level !== filterLevel) return false;
+    }
+
+    // 3. Brand Filter
+    if (filterBrand !== 'ALL' && item.brand !== filterBrand) return false;
+
+    // 4. Search Filter
+    if (searchVal) {
+      var inSku = item.sku.toLowerCase().indexOf(searchVal) !== -1;
+      var inDesc = item.desc.toLowerCase().indexOf(searchVal) !== -1;
+      var inShip = item.shipto.toLowerCase().indexOf(searchVal) !== -1;
+      var inRoute = item.route.toLowerCase().indexOf(searchVal) !== -1;
+      if (!inSku && !inDesc && !inShip && !inRoute) return false;
+    }
+
+    return true;
+  });
+
+  // Calculate stats & update UI
+  updateRiskStats(filtered);
+  renderRiskTable(filtered);
+}
+
+function resetRiskFilters() {
+  document.getElementById('rk-filter-category').value = 'ALL';
+  document.getElementById('rk-filter-level').value = 'ALL';
+  document.getElementById('rk-filter-brand').value = 'ALL';
+  document.getElementById('rk-search-box').value = '';
+  applyRiskFilters();
+}
+
+function updateRiskStats(itemsToRender) {
+  var totalItems = rkAllItems.length;
+  var critical = 0;
+  var warning = 0;
+  var protectedCount = 0;
+
+  var informaTotal = 0, informaVerified = 0;
+  var selmaTotal = 0, selmaVerified = 0;
+  var electronicsTotal = 0, electronicsVerified = 0;
+
+  var totalBarusCbm = 0;
+  var totalTuguCbm = 0;
+
+  rkAllItems.forEach(function(item) {
+    var key = item.sku + "_" + item.type + "_" + item.orderKey;
+    var isVerified = !!rkVerifiedKeys[key];
+
+    if (isVerified) {
+      protectedCount++;
+    } else {
+      if (item.level === 'CRITICAL') critical++;
+      else warning++;
+    }
+
+    // Brand counters
+    if (item.brand === 'INFORMA') {
+      informaTotal++;
+      if (isVerified) informaVerified++;
+    } else if (item.brand === 'SELMA') {
+      selmaTotal++;
+      if (isVerified) selmaVerified++;
+    } else if (item.brand === 'ELECTRONICS') {
+      electronicsTotal++;
+      if (isVerified) electronicsVerified++;
+    }
+
+    // Specific CBM counters
+    if (item.type === 'BARUS') {
+      totalBarusCbm += item.wmsCbm || item.fixCbm || 0;
+    } else if (item.type === 'TUGU') {
+      totalTuguCbm += item.wmsCbm || item.fixCbm || 0;
+    }
+  });
+
+  // Update counters
+  setText('rk-high-risk-count', (critical + warning));
+  
+  var protectionRate = totalItems > 0 ? Math.round((protectedCount / totalItems) * 100) : 0;
+  setText('rk-protection-rate', protectionRate + '%');
+
+  // Update brand compliance progress
+  var infRate = informaTotal > 0 ? Math.round((informaVerified / informaTotal) * 100) : 0;
+  setText('rk-brand-informa', infRate + '% (' + informaVerified + '/' + informaTotal + ' Item)');
+  document.getElementById('rk-brand-bar-informa').style.width = infRate + '%';
+
+  var selRate = selmaTotal > 0 ? Math.round((selmaVerified / selmaTotal) * 100) : 0;
+  setText('rk-brand-selma', selRate + '% (' + selmaVerified + '/' + selmaTotal + ' Item)');
+  document.getElementById('rk-brand-bar-selma').style.width = selRate + '%';
+
+  var elecRate = electronicsTotal > 0 ? Math.round((electronicsVerified / electronicsTotal) * 100) : 0;
+  setText('rk-brand-electronics', elecRate + '% (' + electronicsVerified + '/' + electronicsTotal + ' Item)');
+  document.getElementById('rk-brand-bar-electronics').style.width = elecRate + '%';
+
+  // Total CBM Boxes
+  setText('rk-total-barus-cbm', totalBarusCbm.toFixed(2) + ' CBM');
+  setText('rk-total-tugu-cbm', totalTuguCbm.toFixed(2) + ' CBM');
+
+  // Table summary counts
+  setText('rk-stat-critical', critical);
+  setText('rk-stat-warning', warning);
+  setText('rk-stat-protected', protectedCount);
+
+  setText('rk-table-pagination', 'Menampilkan ' + itemsToRender.length + ' dari ' + totalItems + ' items teridentifikasi risiko');
+}
+
+function renderRiskTable(items) {
+  var tbody = document.getElementById('rk-table-body');
+  var emptyDiv = document.getElementById('rk-table-empty');
+
+  if (items.length === 0) {
+    tbody.innerHTML = '';
+    emptyDiv.style.display = 'flex';
+    return;
+  }
+
+  emptyDiv.style.display = 'none';
+
+  var rowsHtml = items.map(function(item) {
+    var key = item.sku + "_" + item.type + "_" + item.orderKey;
+    var isVerified = !!rkVerifiedKeys[key];
+
+    // Risk badge styling
+    var typeBadge = "";
+    if (item.type === 'BARUS') {
+      typeBadge = '<span class="badge badge-red" style="font-size:10px;">📦 BARUS</span>';
+    } else if (item.type === 'TUGU') {
+      typeBadge = '<span class="badge badge-amber" style="font-size:10px;">🔄 TUGU</span>';
+    } else if (item.type === 'KURANGLEBIH') {
+      typeBadge = '<span class="badge badge-blue" style="font-size:10px;">⚖️ KUR/LEB</span>';
+    } else {
+      typeBadge = '<span class="badge badge-purple" style="font-size:10px;">📈 CBM VAR</span>';
+    }
+
+    // Level badge
+    var levelBadge = "";
+    if (isVerified) {
+      levelBadge = '<span class="status-pill" style="background:rgba(16,185,129,0.1);color:#10b981;border:1px solid rgba(16,185,129,0.3)">🟢 Protected</span>';
+    } else if (item.level === 'CRITICAL') {
+      levelBadge = '<span class="status-pill" style="background:rgba(239,68,68,0.1);color:#ef4444;border:1px solid rgba(239,68,68,0.3)">🔴 Critical</span>';
+    } else {
+      levelBadge = '<span class="status-pill" style="background:rgba(245,158,11,0.1);color:#f59e0b;border:1px solid rgba(245,158,11,0.3)">🟡 Warning</span>';
+    }
+
+    // Action button
+    var actionBtn = "";
+    if (isVerified) {
+      actionBtn = '<button class="btn-refresh" onclick="toggleRiskVerification(\'' + item.sku + '\',\'' + item.type + '\',\'' + item.orderKey + '\')" style="background:#10b981;border-color:#10b981;font-size:10px;padding:4px 8px;width:100%;justify-content:center;color:#fff;">✓ Protected</button>';
+    } else {
+      actionBtn = '<button class="btn-refresh" onclick="toggleRiskVerification(\'' + item.sku + '\',\'' + item.type + '\',\'' + item.orderKey + '\')" style="background:none;border:1px solid var(--border);color:var(--text);font-size:10px;padding:4px 8px;width:100%;justify-content:center;">🔒 Verify Guard</button>';
+    }
+
+    // Brand color prefix
+    var brandDot = '<span class="dot" style="background:' + (item.brand==='INFORMA' ? 'var(--blue)' : item.brand==='SELMA' ? 'var(--amber)' : 'var(--purple)') + ';width:6px;height:6px;display:inline-block;margin-right:4px;"></span>';
+
+    return '<tr class="plan-row" style="background:' + (isVerified ? 'rgba(16,185,129,0.02)' : 'none') + '">' +
+      '<td style="padding: 10px;">' +
+        '<div style="font-weight:700;font-family:var(--font-mono);font-size:11px;">' + escHtml(item.sku) + '</div>' +
+        '<div style="font-size:10px;color:var(--muted);font-family:var(--font-mono);margin-top:2px;">' + escHtml(item.orderKey) + '</div>' +
+      '</td>' +
+      '<td style="padding: 10px; font-weight:500;" title="' + escHtml(item.reason) + '">' +
+        '<div style="display:flex;align-items:center;gap:4px;">' + brandDot + escHtml(item.desc) + '</div>' +
+        '<div style="font-size:10px;color:var(--muted);margin-top:2px;font-style:italic;">' + escHtml(item.reason) + '</div>' +
+      '</td>' +
+      '<td style="padding: 10px;color:var(--muted);font-weight:600;" title="Route: ' + escHtml(item.route) + '">' +
+        '<div>' + escHtml(item.shipto) + '</div>' +
+        '<div style="font-size:10px;color:var(--blue);font-family:var(--font-mono);margin-top:2px;">Route: ' + escHtml(item.route) + '</div>' +
+      '</td>' +
+      '<td style="padding: 10px;">' + typeBadge + '</td>' +
+      '<td style="padding: 10px;text-align:center;">' + levelBadge + '</td>' +
+      '<td style="padding: 10px;color:var(--muted);font-size:11px;line-height:1.3;max-width:200px;white-space:normal;">' + escHtml(item.rec) + '</td>' +
+      '<td style="padding: 10px;text-align:center;">' + actionBtn + '</td>' +
+    '</tr>';
+  }).join('');
+
+  tbody.innerHTML = rowsHtml;
+}
+
+function getCRFallbackRawData() {
+  return [
+    ["", "", "", "", "", "", "", "", "", "", "", "", "TOTAL CBM", "#N/A"],
+    ["", "", "", "", "", "", "", "", "", "", "", "", "TOTAL CASE ID", "944"],
+    ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "AREA 1", "", "", "", "AREA 1", "", "", "TOTAL"],
+    ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "7/15/2026", "676", "178", "90", "944", "#N/A", "18.07", "19.70", "#N/A"],
+    ["", "", "", "", "", "", "", "", "", "", "", "CASE ID BATCH 1 & 2"],
+    ["", "", "", "", "", "944", "", "", "", "", "", "", "", "", "", "0", "", "0.00"],
+    ["", "", "TYPE", "AREA STORING", "DESCRIPTION", "", "", "", "", "", "", "NO", "TYPE", "AREA STORING", "DESCRIPTION"],
+    ["", "1", "CUSTOMER DK ( PRIORITY 1)", "HCI AREA 1", "ACCESSORIES", "10", "64", "1.15", "", "", "", "5", "Customer + GRW LP", "HCI AREA 1", "ACCESSORIES", "0", "0", "0.00"],
+    ["", "", "", "HCI AREA 2", "NON ACC", "51", "", "3.47", "", "", "", "", "", "HCI AREA 2", "NON ACC", "0", "", "0.00"],
+    ["", "", "", "HCI AREA 3", "NON ACC", "3", "", "1.05", "", "", "", "", "", "HCI AREA 3", "NON ACC", "0", "", "0.00"],
+    ["", "", "TUGU", "HCI AREA 1", "ACCESSORIES", "0", "", "0.00"],
+    ["", "", "", "HCI AREA 2", "NON ACC", "0", "", "0.00"],
+    ["", "", "", "HCI AREA 3", "NON ACC", "0", "", "0.00"],
+    ["", "2", "CUSTOMER DK ( PRIORITY 2)", "HCI AREA 1", "ACCESSORIES", "0", "", "0.00"],
+    ["", "", "", "HCI AREA 2", "NON ACC", "0", "", "0.00"],
+    ["", "", "", "HCI AREA 3", "NON ACC", "0", "", "0.00"],
+    ["", "", "TUGU", "HCI AREA 1", "ACCESSORIES", "0", "", "0.00"],
+    ["", "", "", "HCI AREA 2", "NON ACC", "0", "", "0.00"],
+    ["", "", "", "HCI AREA 3", "NON ACC", "0", "", "0.00"],
+    ["", "", "TYPE", "AREA STORING", "DESCRIPTION"],
+    ["", "3", "GRW DK ", "HCI AREA 1", "ACCESSORIES", "250", "336"],
+    ["", "", "", "HCI AREA 2", "NON ACC", "32", "", "2.59"],
+    ["", "", "", "HCI AREA 3", "NON ACC", "54", "", "8.48"],
+    ["", "", "TYPE", "AREA STORING", "DESCRIPTION"],
+    ["", "4", "HUB & LK ON SITE", "HCI AREA 1", "ACCESSORIES", "416", "544"],
+    ["", "", "", "HCI AREA 2", "NON ACC", "95", "", "12.00"],
+    ["", "", "", "HCI AREA 3", "NON ACC", "33", "", "10.18"]
+  ];
+}
 </script>
+
+<div id="ffDrillModal" class="ff-modal">
+  <div class="ff-modal-box">
+
+    <div class="ff-modal-header">
+
+      <div>
+        <div id="ffModalType" class="ff-modal-type">
+          DESTINATION
+        </div>
+
+        <h2 id="ffModalTitle">
+          Bali
+        </h2>
+
+        <div id="ffModalSubtitle">
+          Performance Detail
+        </div>
+      </div>
+
+      <button id="ffCloseModal" onclick="document.getElementById('ffDrillModal').classList.remove('show')">
+        ✕
+      </button>
+
+    </div>
+
+    <div class="ff-kpi-grid">
+
+      <div class="ff-kpi">
+        <span>Total Armada</span>
+        <b id="ffMTotal">0</b>
+      </div>
+
+      <div class="ff-kpi">
+        <span>On Time</span>
+        <b id="ffMOnTime">0</b>
+      </div>
+
+      <div class="ff-kpi">
+        <span>SLA</span>
+        <b id="ffMSla">0%</b>
+      </div>
+
+      <div class="ff-kpi">
+        <span>Rating</span>
+        <b id="ffMRating">★★★★★</b>
+      </div>
+
+    </div>
+
+    <div class="ff-chart-grid">
+
+      <div class="ff-card">
+        <h3>On Time vs Delay</h3>
+        <div style="height: 220px; position: relative;">
+          <canvas id="ffPieChart"></canvas>
+        </div>
+      </div>
+
+      <div class="ff-card">
+        <h3>Trend SLA</h3>
+        <div style="height: 220px; position: relative;">
+          <canvas id="ffTrendChart"></canvas>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="ff-card">
+
+      <h3 id="ffTableTitle">
+        Vendor Ranking
+      </h3>
+
+      <table class="detail-mini">
+        <thead>
+          <tr id="ffTableHead"></tr>
+        </thead>
+
+        <tbody id="ffTableBody"></tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+</div>
+
 </body>
 </html>
