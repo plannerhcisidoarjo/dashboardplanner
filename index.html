@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ORDER FULFILLMENT & PLANNING REPORT · PLANNER HCI</title>
-<link rel="icon" type="image/png" href="favicon.png">  
+<link rel="icon" type="image/png" href="favicon.png">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
@@ -3658,9 +3658,40 @@ PLANNING REPORT</div>
             <div style="font-size: 10px; color: #94a3b8; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">TOTAL VOLUME</div>
             <div id="cr-total-cbm" style="font-size: 26px; font-weight: 800; color: #34d399; font-family: var(--font-mono); margin-top: 4px;">0 CBM</div>
           </div>
-          <div style="background: rgba(255, 255, 255, 0.05); padding: 12px 20px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.08); text-align: center; min-width: 120px;">
-            <div style="font-size: 10px; color: #94a3b8; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">BATCH 3 (AKTIF)</div>
+          <div id="cr-active-card" style="background: rgba(255, 255, 255, 0.05); padding: 12px 20px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.08); text-align: center; min-width: 120px; transition: all 0.3s ease;">
+            <div id="cr-active-batch-title" style="font-size: 10px; color: #94a3b8; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">BATCH 3 (AKTIF)</div>
             <div id="cr-batch3-cases" style="font-size: 26px; font-weight: 800; color: #fbbf24; font-family: var(--font-mono); margin-top: 4px;">0</div>
+          </div>
+        </div>
+      </div>
+
+      <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 18px 0 14px 0;">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px;">
+        <!-- Batch 3 (Shift 1) -->
+        <div id="cr-b3-card" style="background: rgba(251, 191, 36, 0.06); border: 1px solid rgba(251, 191, 36, 0.2); border-radius: 12px; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; transition: all 0.3s ease;">
+          <div>
+            <div style="font-size: 12px; font-weight: 800; color: #fbbf24; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px;">
+              📦 BATCH 3 <span id="cr-b3-status-badge" style="background: rgba(251, 191, 36, 0.15); color: #fbbf24; font-size: 10px; padding: 1px 6px; border-radius: 4px; font-weight: 700;">Picking Shift 1</span>
+            </div>
+            <div style="font-size: 11px; color: #94a3b8; margin-top: 2px;">Jadwal picking gelombang aktif terdepan</div>
+          </div>
+          <div style="text-align: right;">
+            <div id="cr-b3-cases-breakdown" style="font-size: 20px; font-weight: 800; color: #fff; font-family: var(--font-mono);">0 Case</div>
+            <div id="cr-b3-cbm-breakdown" style="font-size: 12px; color: #fbbf24; font-family: var(--font-mono); font-weight: 700; margin-top: 2px;">0.00 CBM</div>
+          </div>
+        </div>
+
+        <!-- Batch 1 & 2 (Shift 2) -->
+        <div id="cr-b12-card" style="background: rgba(56, 189, 248, 0.06); border: 1px solid rgba(56, 189, 248, 0.2); border-radius: 12px; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; transition: all 0.3s ease;">
+          <div>
+            <div style="font-size: 12px; font-weight: 800; color: #38bdf8; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px;">
+              📦 BATCH 1 &amp; 2 <span id="cr-b12-status-badge" style="background: rgba(56, 189, 248, 0.15); color: #38bdf8; font-size: 10px; padding: 1px 6px; border-radius: 4px; font-weight: 700;">Picking Shift 2</span>
+            </div>
+            <div style="font-size: 11px; color: #94a3b8; margin-top: 2px;">Jadwal picking buffer dan sisa wave sebelumnya</div>
+          </div>
+          <div style="text-align: right;">
+            <div id="cr-b12-cases-breakdown" style="font-size: 20px; font-weight: 800; color: #fff; font-family: var(--font-mono);">0 Case</div>
+            <div id="cr-b12-cbm-breakdown" style="font-size: 12px; color: #38bdf8; font-family: var(--font-mono); font-weight: 700; margin-top: 2px;">0.00 CBM</div>
           </div>
         </div>
       </div>
@@ -11025,7 +11056,130 @@ function renderCaseIdReleasePage() {
 
   setText('cr-total-cases', totalReleaseCases.toLocaleString());
   setText('cr-total-cbm', totalReleaseCbm.toFixed(2) + ' CBM');
-  setText('cr-batch3-cases', sumB3.cases.toLocaleString() + ' Case');
+
+  // Update dynamic shift breakdown values
+  setText('cr-b3-cases-breakdown', sumB3.cases.toLocaleString() + ' Case');
+  setText('cr-b3-cbm-breakdown', sumB3.cbm.toFixed(2) + ' CBM');
+  setText('cr-b12-cases-breakdown', sumB12.cases.toLocaleString() + ' Case');
+  setText('cr-b12-cbm-breakdown', sumB12.cbm.toFixed(2) + ' CBM');
+
+  // ── Dynamic Picking Shift Logic based on Current Local Time ──
+  // logic: batch 3 picking: 8 pagi sampai 3 sore (08:00 to 15:59)
+  //        batch 1&2 picking: 4 sore sampai 11 malam (16:00 to 23:59)
+  var currentHour = new Date().getHours();
+  var isBatch3Active = (currentHour >= 8 && currentHour < 16);
+  var isBatch12Active = (currentHour >= 16 && currentHour < 24);
+
+  var activeCardEl = document.getElementById('cr-active-card');
+  var activeTitleEl = document.getElementById('cr-active-batch-title');
+  var activeCasesEl = document.getElementById('cr-batch3-cases');
+
+  var b3CardEl = document.getElementById('cr-b3-card');
+  var b12CardEl = document.getElementById('cr-b12-card');
+  var b3BadgeEl = document.getElementById('cr-b3-status-badge');
+  var b12BadgeEl = document.getElementById('cr-b12-status-badge');
+
+  if (isBatch3Active) {
+    if (activeTitleEl) activeTitleEl.textContent = 'BATCH 3 (AKTIF)';
+    if (activeCasesEl) {
+      activeCasesEl.textContent = sumB3.cases.toLocaleString() + ' Case';
+      activeCasesEl.style.color = '#fbbf24'; // Amber yellow
+    }
+    if (activeCardEl) {
+      activeCardEl.style.borderColor = 'rgba(251, 191, 36, 0.4)';
+      activeCardEl.style.background = 'rgba(251, 191, 36, 0.1)';
+    }
+
+    // Breakdown Cards State
+    if (b3CardEl) {
+      b3CardEl.style.background = 'rgba(251, 191, 36, 0.1)';
+      b3CardEl.style.borderColor = 'rgba(251, 191, 36, 0.5)';
+      b3CardEl.style.opacity = '1';
+    }
+    if (b3BadgeEl) {
+      b3BadgeEl.textContent = 'Active Picking';
+      b3BadgeEl.style.background = '#10b981'; // Green active pill
+      b3BadgeEl.style.color = '#fff';
+    }
+
+    if (b12CardEl) {
+      b12CardEl.style.background = 'rgba(56, 189, 248, 0.02)';
+      b12CardEl.style.borderColor = 'rgba(56, 189, 248, 0.08)';
+      b12CardEl.style.opacity = '0.5';
+    }
+    if (b12BadgeEl) {
+      b12BadgeEl.textContent = 'Shift 2 (16:00 - 23:00)';
+      b12BadgeEl.style.background = 'rgba(255, 255, 255, 0.08)';
+      b12BadgeEl.style.color = '#94a3b8';
+    }
+  } else if (isBatch12Active) {
+    if (activeTitleEl) activeTitleEl.textContent = 'BATCH 1 & 2 (AKTIF)';
+    if (activeCasesEl) {
+      activeCasesEl.textContent = sumB12.cases.toLocaleString() + ' Case';
+      activeCasesEl.style.color = '#38bdf8'; // Sky blue
+    }
+    if (activeCardEl) {
+      activeCardEl.style.borderColor = 'rgba(56, 189, 248, 0.4)';
+      activeCardEl.style.background = 'rgba(56, 189, 248, 0.1)';
+    }
+
+    // Breakdown Cards State
+    if (b3CardEl) {
+      b3CardEl.style.background = 'rgba(251, 191, 36, 0.02)';
+      b3CardEl.style.borderColor = 'rgba(251, 191, 36, 0.08)';
+      b3CardEl.style.opacity = '0.5';
+    }
+    if (b3BadgeEl) {
+      b3BadgeEl.textContent = 'Shift 1 (08:00 - 15:00)';
+      b3BadgeEl.style.background = 'rgba(255, 255, 255, 0.08)';
+      b3BadgeEl.style.color = '#94a3b8';
+    }
+
+    if (b12CardEl) {
+      b12CardEl.style.background = 'rgba(56, 189, 248, 0.1)';
+      b12CardEl.style.borderColor = 'rgba(56, 189, 248, 0.5)';
+      b12CardEl.style.opacity = '1';
+    }
+    if (b12BadgeEl) {
+      b12BadgeEl.textContent = 'Active Picking';
+      b12BadgeEl.style.background = '#10b981'; // Green active pill
+      b12BadgeEl.style.color = '#fff';
+    }
+  } else {
+    // Standby Mode (Night hours: 00:00 - 07:59)
+    if (activeTitleEl) activeTitleEl.textContent = 'PICKING STANDBY';
+    if (activeCasesEl) {
+      activeCasesEl.textContent = '0 Case';
+      activeCasesEl.style.color = '#64748b'; // Muted
+    }
+    if (activeCardEl) {
+      activeCardEl.style.borderColor = 'rgba(255, 255, 255, 0.08)';
+      activeCardEl.style.background = 'rgba(255, 255, 255, 0.02)';
+    }
+
+    // Breakdown Cards State
+    if (b3CardEl) {
+      b3CardEl.style.background = 'rgba(251, 191, 36, 0.04)';
+      b3CardEl.style.borderColor = 'rgba(251, 191, 36, 0.1)';
+      b3CardEl.style.opacity = '0.7';
+    }
+    if (b3BadgeEl) {
+      b3BadgeEl.textContent = 'Shift 1 (08:00 - 15:00)';
+      b3BadgeEl.style.background = 'rgba(255, 255, 255, 0.05)';
+      b3BadgeEl.style.color = '#94a3b8';
+    }
+
+    if (b12CardEl) {
+      b12CardEl.style.background = 'rgba(56, 189, 248, 0.04)';
+      b12CardEl.style.borderColor = 'rgba(56, 189, 248, 0.1)';
+      b12CardEl.style.opacity = '0.7';
+    }
+    if (b12BadgeEl) {
+      b12BadgeEl.textContent = 'Shift 2 (16:00 - 23:00)';
+      b12BadgeEl.style.background = 'rgba(255, 255, 255, 0.05)';
+      b12BadgeEl.style.color = '#94a3b8';
+    }
+  }
 
   // ── Area Distribution ──
   var a1 = data.meta.area1CaseId || 0, a2 = data.meta.area2CaseId || 0, a3 = data.meta.area3CaseId || 0;
