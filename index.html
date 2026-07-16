@@ -10420,13 +10420,48 @@ var CR_PRIORITY_META = {
   5: { label: '🗄️ BUFFER / STANDBY', color: '#64748b', bg: 'rgba(100,116,139,0.08)', reason: 'Stok cadangan Customer + GRW Luar Pulau' }
 };
 
+var CR_GROUP_REASONS = {
+  1: 'Order Customer Dalam Kota Prioritas 1 — harus keluar duluan',
+  2: 'Order Customer Dalam Kota Prioritas 2',
+  3: 'Order GRW Dalam Kota',
+  4: 'Order Hub & Luar Kota on-site',
+  5: 'Stok cadangan Customer + GRW Luar Pulau'
+};
+
 function buildCrPriorityGroups(data) {
   var list = [];
   var rank = 1;
-  data.batch3.groups.forEach(function(g) {
+  
+  // Dynamic order logic:
+  // Find group 1, 2, 3, 4
+  var g1 = data.batch3.groups.find(function(g) { return g.no === 1; });
+  var g2 = data.batch3.groups.find(function(g) { return g.no === 2; });
+  var g3 = data.batch3.groups.find(function(g) { return g.no === 3; });
+  var g4 = data.batch3.groups.find(function(g) { return g.no === 4; });
+
+  var ordered = [];
+  if (g1) ordered.push(g1);
+
+  // Check if CUSTOMER DK (PRIORITY 2) has 0 caseid or is empty
+  var g2Empty = (!g2 || g2.totalCaseId === 0);
+
+  if (!g2Empty && g2) {
+    ordered.push(g2); // Normally Priority 2 is second
+  }
+
+  // HUB & LK ON SITE (g4) is prioritized ABOVE GRW DK (g3)
+  if (g4) ordered.push(g4);
+  if (g3) ordered.push(g3);
+
+  if (g2Empty && g2) {
+    ordered.push(g2); // Shifted to standard priority / bottom of batch 3
+  }
+
+  ordered.forEach(function(g) {
     list.push(makeCrGroupEntry(g, rank, '3', 'Batch 3 (Active)'));
     rank++;
   });
+
   data.batch1_2.groups.forEach(function(g) {
     list.push(makeCrGroupEntry(g, rank, '12', 'Batch 1 & 2 (Buffer)'));
     rank++;
@@ -10469,6 +10504,7 @@ function renderPriorityQueue(list) {
   var grandTotal = list.reduce(function(s, it) { return s + (it.totalCaseId || 0); }, 0);
   el.innerHTML = list.map(function(item) {
     var meta = CR_PRIORITY_META[item.rank] || CR_PRIORITY_META[5];
+    var reason = CR_GROUP_REASONS[item.groupNo] || meta.reason;
     var pct = grandTotal > 0 ? ((item.totalCaseId / grandTotal) * 100).toFixed(1) : 0;
     return '<div style="display:flex; align-items:center; gap:16px; padding:14px 16px; border-radius:var(--radius-sm); border:1px solid var(--border); background:' + meta.bg + '; border-left:4px solid ' + meta.color + ';">' +
       '<div style="flex-shrink:0; width:38px; height:38px; border-radius:50%; background:' + meta.color + '; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:16px; font-family:var(--font-mono);">' + item.rank + '</div>' +
@@ -10478,7 +10514,7 @@ function renderPriorityQueue(list) {
           '<span class="badge badge-muted" style="font-size:9px;">' + item.batchLabel + '</span>' +
         '</div>' +
         '<div style="font-weight:700; color:var(--text); font-size:14px; margin-top:2px;">' + esc(item.groupName) + '</div>' +
-        '<div style="font-size:11px; color:var(--muted); margin-top:2px;">' + meta.reason + ' · Area dominan: <strong style="color:var(--text);">' + esc(item.dominantArea) + '</strong></div>' +
+        '<div style="font-size:11px; color:var(--muted); margin-top:2px;">' + reason + ' · Area dominan: <strong style="color:var(--text);">' + esc(item.dominantArea) + '</strong></div>' +
       '</div>' +
       '<div style="text-align:center; flex-shrink:0; min-width:80px;">' +
         '<div style="font-size:20px; font-weight:800; font-family:var(--font-mono); color:var(--text);">' + item.totalCaseId.toLocaleString() + '</div>' +
