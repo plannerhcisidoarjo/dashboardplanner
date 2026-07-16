@@ -11130,11 +11130,11 @@ function renderCaseIdReleasePage() {
   setText('cr-b12-cbm-breakdown', sumB12.cbm.toFixed(2) + ' CBM');
 
   // ── Dynamic Picking Shift Logic based on Current Local Time ──
-  // logic: batch 3 picking: 8 pagi sampai 3 sore (08:00 to 15:59)
-  //        batch 1&2 picking: 4 sore sampai 11 malam (16:00 to 23:59)
+  // logic: batch 3 picking: 8 pagi sampai 3 sore (08:00 to 15:59) serta pukul 23:00 ke atas (23:00 to 07:59)
+  //        batch 1&2 picking: 4 sore sampai 11 malam (16:00 to 22:59)
   var currentHour = new Date().getHours();
-  var isBatch3Active = (currentHour >= 8 && currentHour < 16);
-  var isBatch12Active = (currentHour >= 16 && currentHour < 24);
+  var isBatch3Active = (currentHour >= 8 && currentHour < 16) || (currentHour >= 23 || currentHour < 8);
+  var isBatch12Active = (currentHour >= 16 && currentHour < 23);
 
   var activeCardEl = document.getElementById('cr-active-card');
   var activeTitleEl = document.getElementById('cr-active-batch-title');
