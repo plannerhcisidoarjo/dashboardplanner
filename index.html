@@ -4121,6 +4121,7 @@ var currentSlaMissedList = [];
 var allOlfData = [];
 var allCaseIdReleaseData = [];
 var allCaseIdReleaseP1Data = [];
+var isCaseIdReleaseFetchedFromSheets = false;
 var olfChartInstance = null;
 var OLF_APP = { sd: '', ed: '' };
 
@@ -7609,6 +7610,7 @@ var csvFulfillmentFallbackUrl = getProxyUrl('https://docs.google.com/spreadsheet
       });
       allCaseIdReleaseData = results[8] || [];
       allCaseIdReleaseP1Data = results[9] || [];
+      isCaseIdReleaseFetchedFromSheets = true;
 
       // Find dynamic URL in column N2 of SLA CUST
       var targetUrl = null;
@@ -10318,7 +10320,32 @@ function switchSkuModalTab(tab) {
 }
 
 function parseCaseIdReleaseData(rows) {
-  if (!rows || rows.length === 0) return null;
+  if (!rows || rows.length === 0) {
+    return {
+      meta: {
+        date: new Date().toLocaleDateString('id-ID'),
+        area1CaseId: 0, area2CaseId: 0, area3CaseId: 0, totalCaseId: 0,
+        area1Cbm: '0', area2Cbm: '0', area3Cbm: '0', totalCbm: '0'
+      },
+      batch3: {
+        totalCaseId: 0,
+        totalCbm: '0',
+        groups: [
+          { no: 1, name: 'CUSTOMER DK (PRIORITY 1) & TUGU', totalCaseId: 0, rows: [] },
+          { no: 2, name: 'CUSTOMER DK (PRIORITY 2) & TUGU', totalCaseId: 0, rows: [] },
+          { no: 3, name: 'GRW DK', totalCaseId: 0, rows: [] },
+          { no: 4, name: 'HUB & LK ON SITE', totalCaseId: 0, rows: [] }
+        ]
+      },
+      batch1_2: {
+        totalCaseId: 0,
+        totalCbm: '0',
+        groups: [
+          { no: 5, name: 'Customer + GRW LP', totalCaseId: 0, rows: [] }
+        ]
+      }
+    };
+  }
 
   function getCell(r, c) {
     if (r >= rows.length) return '';
@@ -10932,11 +10959,12 @@ function renderAisleDistribution() {
 }
 
 function renderCaseIdReleasePage() {
-  var data = parseCaseIdReleaseData(allCaseIdReleaseData);
-  if (!data || !data.meta.totalCaseId) {
-    allCaseIdReleaseData = getCRFallbackRawData();
-    data = parseCaseIdReleaseData(allCaseIdReleaseData);
+  if (!allCaseIdReleaseData || allCaseIdReleaseData.length === 0) {
+    if (!isCaseIdReleaseFetchedFromSheets) {
+      allCaseIdReleaseData = getCRFallbackRawData();
+    }
   }
+  var data = parseCaseIdReleaseData(allCaseIdReleaseData);
 
   // ── Parse P1+GRW DK sheet untuk tanggal & breakdown brand/SKU ──
   var latestAddDate = null;
@@ -11020,7 +11048,9 @@ function renderCaseIdReleasePage() {
   }
 
   if (informaCases === 0 && selmaCases === 0) {
-    informaCases = 1100; selmaCases = 72; electronicsCases = 5;
+    if (!isCaseIdReleaseFetchedFromSheets) {
+      informaCases = 1100; selmaCases = 72; electronicsCases = 5;
+    }
   }
 
   var todayJakarta = (function() {
@@ -11257,13 +11287,15 @@ function renderCaseIdReleasePage() {
 
   // If empty, use realistic high-fidelity values
   if (CR_TOP_SKU_LIST.length === 0) {
-    CR_TOP_SKU_LIST = [
-      { sku: "10703460", count: 8, desc: "GLASGOW DINING TABLE BLACK" },
-      { sku: "10512707", count: 6, desc: "NEO ALONA WARDROBE 3 DOORS WALNUT" },
-      { sku: "10331672", count: 5, desc: "DANTE OFFICE CHAIR BLACK" },
-      { sku: "70125002", count: 4, desc: "ZARA STUDY DESK MAPLE WHITE" },
-      { sku: "70007272", count: 3, desc: "MIDEA MICROWAVE OVEN 20L" }
-    ];
+    if (!isCaseIdReleaseFetchedFromSheets) {
+      CR_TOP_SKU_LIST = [
+        { sku: "10703460", count: 8, desc: "GLASGOW DINING TABLE BLACK" },
+        { sku: "10512707", count: 6, desc: "NEO ALONA WARDROBE 3 DOORS WALNUT" },
+        { sku: "10331672", count: 5, desc: "DANTE OFFICE CHAIR BLACK" },
+        { sku: "70125002", count: 4, desc: "ZARA STUDY DESK MAPLE WHITE" },
+        { sku: "70007272", count: 3, desc: "MIDEA MICROWAVE OVEN 20L" }
+      ];
+    }
   }
   setText('cr-top-sku-badge', CR_TOP_SKU_LIST.length + ' SKU');
 
@@ -11278,20 +11310,22 @@ function renderCaseIdReleasePage() {
     
     // Fallback if empty
     if (CR_TOP_SKU_PER_AREA[areaKey].length === 0) {
-      if (areaKey === '1') {
-        CR_TOP_SKU_PER_AREA[areaKey] = [
-          { sku: "10703460", count: 5, desc: "GLASGOW DINING TABLE BLACK" },
-          { sku: "10512707", count: 3, desc: "NEO ALONA WARDROBE 3 DOORS WALNUT" }
-        ];
-      } else if (areaKey === '2') {
-        CR_TOP_SKU_PER_AREA[areaKey] = [
-          { sku: "10331672", count: 4, desc: "DANTE OFFICE CHAIR BLACK" },
-          { sku: "70125002", count: 2, desc: "ZARA STUDY DESK MAPLE WHITE" }
-        ];
-      } else {
-        CR_TOP_SKU_PER_AREA[areaKey] = [
-          { sku: "70007272", count: 3, desc: "MIDEA MICROWAVE OVEN 20L" }
-        ];
+      if (!isCaseIdReleaseFetchedFromSheets) {
+        if (areaKey === '1') {
+          CR_TOP_SKU_PER_AREA[areaKey] = [
+            { sku: "10703460", count: 5, desc: "GLASGOW DINING TABLE BLACK" },
+            { sku: "10512707", count: 3, desc: "NEO ALONA WARDROBE 3 DOORS WALNUT" }
+          ];
+        } else if (areaKey === '2') {
+          CR_TOP_SKU_PER_AREA[areaKey] = [
+            { sku: "10331672", count: 4, desc: "DANTE OFFICE CHAIR BLACK" },
+            { sku: "70125002", count: 2, desc: "ZARA STUDY DESK MAPLE WHITE" }
+          ];
+        } else {
+          CR_TOP_SKU_PER_AREA[areaKey] = [
+            { sku: "70007272", count: 3, desc: "MIDEA MICROWAVE OVEN 20L" }
+          ];
+        }
       }
     }
   });
@@ -11630,7 +11664,9 @@ function getRiskItemsFromSpreadsheets() {
 
   // Fallback if no entries found from spreadsheet parsing
   if (items.length < 5) {
-    items = generateFallbackRiskItems();
+    if (!isCaseIdReleaseFetchedFromSheets) {
+      items = generateFallbackRiskItems();
+    }
   }
 
   return items;
