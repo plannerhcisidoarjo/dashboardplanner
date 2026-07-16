@@ -4121,6 +4121,9 @@ var currentSlaMissedList = [];
 var allOlfData = [];
 var allCaseIdReleaseData = [];
 var allCaseIdReleaseP1Data = [];
+var allCaseIdReleaseP2Data = [];
+var allCaseIdReleaseHubData = [];
+var allCaseIdReleaseLpData = [];
 var isCaseIdReleaseFetchedFromSheets = false;
 var olfChartInstance = null;
 var OLF_APP = { sd: '', ed: '' };
@@ -7523,6 +7526,9 @@ var csvFulfillmentFallbackUrl = getProxyUrl('https://docs.google.com/spreadsheet
   var csvOlfUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1q-qxELBQZr3ABhVg-mw6Kvhl-e11RGQUmCTQjsXtz9g/gviz/tq?tqx=out:csv&sheet=OLF');
   var csvCaseIdReleaseUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1MpFVzgYBAT00HFZNMi_chgdTKU3rnMTBGOYFKspncwk/gviz/tq?tqx=out:csv&gid=0');
   var csvCaseIdReleaseP1Url = getProxyUrl('https://docs.google.com/spreadsheets/d/1MpFVzgYBAT00HFZNMi_chgdTKU3rnMTBGOYFKspncwk/gviz/tq?tqx=out:csv&sheet=P1%2BGRW%20DK');
+  var csvCaseIdReleaseP2Url = getProxyUrl('https://docs.google.com/spreadsheets/d/1MpFVzgYBAT00HFZNMi_chgdTKU3rnMTBGOYFKspncwk/gviz/tq?tqx=out:csv&sheet=P2');
+  var csvCaseIdReleaseHubUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1MpFVzgYBAT00HFZNMi_chgdTKU3rnMTBGOYFKspncwk/gviz/tq?tqx=out:csv&sheet=HUB%20DAB%20LK%20ONSITE');
+  var csvCaseIdReleaseLpUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1MpFVzgYBAT00HFZNMi_chgdTKU3rnMTBGOYFKspncwk/gviz/tq?tqx=out:csv&sheet=LP');
   
   // Reading separate sheets SLA GRW and SLA CUST from the spreadsheet
   var csvSlaGrwUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1q-qxELBQZr3ABhVg-mw6Kvhl-e11RGQUmCTQjsXtz9g/gviz/tq?tqx=out:csv&sheet=SLA%20GRW');
@@ -7537,6 +7543,24 @@ var csvFulfillmentFallbackUrl = getProxyUrl('https://docs.google.com/spreadsheet
 
   var fetchCaseIdReleaseP1 = new Promise(function(resolve) {
     fetchAndParseCsv(csvCaseIdReleaseP1Url, { header: false, skipEmptyLines: true }, function(data) {
+      resolve(data);
+    });
+  });
+
+  var fetchCaseIdReleaseP2 = new Promise(function(resolve) {
+    fetchAndParseCsv(csvCaseIdReleaseP2Url, { header: false, skipEmptyLines: true }, function(data) {
+      resolve(data);
+    });
+  });
+
+  var fetchCaseIdReleaseHub = new Promise(function(resolve) {
+    fetchAndParseCsv(csvCaseIdReleaseHubUrl, { header: false, skipEmptyLines: true }, function(data) {
+      resolve(data);
+    });
+  });
+
+  var fetchCaseIdReleaseLp = new Promise(function(resolve) {
+    fetchAndParseCsv(csvCaseIdReleaseLpUrl, { header: false, skipEmptyLines: true }, function(data) {
       resolve(data);
     });
   });
@@ -7599,7 +7623,7 @@ var csvFulfillmentFallbackUrl = getProxyUrl('https://docs.google.com/spreadsheet
     });
   });
 
-  Promise.all([fetchMonitoring, fetchAging, fetchAgingCust, fetchContDate, fetchSlaGrw, fetchSlaCust, fetchFulfillment, fetchOlf, fetchCaseIdRelease, fetchCaseIdReleaseP1])
+  Promise.all([fetchMonitoring, fetchAging, fetchAgingCust, fetchContDate, fetchSlaGrw, fetchSlaCust, fetchFulfillment, fetchOlf, fetchCaseIdRelease, fetchCaseIdReleaseP1, fetchCaseIdReleaseP2, fetchCaseIdReleaseHub, fetchCaseIdReleaseLp])
     .then(function(results) {
       allSlaGrwData = results[4] || [];
       allSlaCustData = results[5] || [];
@@ -7610,6 +7634,9 @@ var csvFulfillmentFallbackUrl = getProxyUrl('https://docs.google.com/spreadsheet
       });
       allCaseIdReleaseData = results[8] || [];
       allCaseIdReleaseP1Data = results[9] || [];
+      allCaseIdReleaseP2Data = results[10] || [];
+      allCaseIdReleaseHubData = results[11] || [];
+      allCaseIdReleaseLpData = results[12] || [];
       isCaseIdReleaseFetchedFromSheets = true;
 
       // Find dynamic URL in column N2 of SLA CUST
@@ -10697,34 +10724,107 @@ var CR_RACK_BUCKET_META = [
   { key: 'high', label: 'TINGGI (Lv 7-9)', icon: '🔴', color: '#dc2626', note: 'Wajib forklift / reach truck + APD lengkap' }
 ];
 
+function getCombinedCaseIdReleaseRows() {
+  var combined = [];
+  var sheets = [
+    { data: allCaseIdReleaseP1Data, source: 'P1' },
+    { data: allCaseIdReleaseP2Data, source: 'P2' },
+    { data: allCaseIdReleaseHubData, source: 'HUB' },
+    { data: allCaseIdReleaseLpData, source: 'LP' }
+  ];
+
+  sheets.forEach(function(sheetObj) {
+    var rawData = sheetObj.data;
+    if (!rawData || rawData.length <= 1) return;
+
+    var headers = rawData[0];
+    var skuIdx = -1, descIdx = -1, shiptoIdx = -1, wmsCbmIdx = -1, fixCbmIdx = -1, routeIdx = -1, qtyIdx = -1, orderKeyIdx = -1, typeIdx = -1, deptIdx = -1, locIdx = -1, areaIdx = -1, addDateIdx = -1;
+
+    for (var c = 0; c < headers.length; c++) {
+      var h = String(headers[c] || '').toUpperCase().trim().replace(/[\s_]/g, '');
+      if (h === 'SKU' || h === 'ITEM' || h === 'ITEMID') skuIdx = c;
+      else if (h === 'DESCR' || h === 'DESCRIPTION' || h === 'ITEMDESC') descIdx = c;
+      else if (h === 'SHIPTO' || h === 'STORE' || h === 'CUSTOMER') shiptoIdx = c;
+      else if (h === 'CBMWMS' || h === 'VOLWMS' || h === 'WMSCBM') wmsCbmIdx = c;
+      else if (h === 'CBMFIX' || h === 'VOLFIX' || h === 'FIXCBM') fixCbmIdx = c;
+      else if (h === 'ROUTE' || h === 'PLANROUTE') routeIdx = c;
+      else if (h === 'QTY' || h === 'QUANTITY' || h === 'CASEID' || h === 'CASES') qtyIdx = c;
+      else if (h === 'ORDERKEY' || h === 'ORDERNO') orderKeyIdx = c;
+      else if (h === 'TYPE' || h === 'ORDERTYPE') typeIdx = c;
+      else if (h === 'DEP' || h === 'DEPT' || h === 'DEPARTMENT' || h === 'BRAND') deptIdx = c;
+      else if (h === 'LOC' || h === 'LOCATION') locIdx = c;
+      else if (h.indexOf('AREA') !== -1) areaIdx = c;
+      else if (h === 'ADDDATE' || h === 'TANGGAL' || h === 'DATE') addDateIdx = c;
+    }
+
+    for (var r = 1; r < rawData.length; r++) {
+      var row = rawData[r];
+      if (!row || row.length === 0) continue;
+
+      // Check if row is entirely blank
+      var isBlank = true;
+      for (var col = 0; col < row.length; col++) {
+        if (row[col] !== null && String(row[col]).trim() !== '') {
+          isBlank = false;
+          break;
+        }
+      }
+      if (isBlank) continue;
+
+      var skuVal = skuIdx !== -1 ? String(row[skuIdx] || '').trim() : '';
+      var descVal = descIdx !== -1 ? String(row[descIdx] || '').trim() : '';
+      if (!skuVal && !descVal) continue; // skip headers/blank lines that got parsed
+
+      var locVal = locIdx !== -1 ? String(row[locIdx] || '').trim() : '';
+      var areaVal = areaIdx !== -1 ? String(row[areaIdx] || '').trim() : '';
+      var shiptoVal = shiptoIdx !== -1 ? String(row[shiptoIdx] || '').trim() : '';
+      var routeVal = routeIdx !== -1 ? String(row[routeIdx] || '').trim() : '';
+      var deptVal = deptIdx !== -1 ? String(row[deptIdx] || '').trim() : '';
+      var typeVal = typeIdx !== -1 ? String(row[typeIdx] || '').trim() : '';
+      var addDateVal = addDateIdx !== -1 ? String(row[addDateIdx] || '').trim() : '';
+      var qtyVal = qtyIdx !== -1 ? parseInt(String(row[qtyIdx]).replace(/,/g, ''), 10) || 1 : 1;
+      var wmsCbm = wmsCbmIdx !== -1 ? parseFloat(String(row[wmsCbmIdx] || '0').replace(/,/g, '')) || 0 : 0;
+      var fixCbm = fixCbmIdx !== -1 ? parseFloat(String(row[fixCbmIdx] || '0').replace(/,/g, '')) || 0 : 0;
+      var orderKey = orderKeyIdx !== -1 ? String(row[orderKeyIdx] || '').trim() : skuVal;
+
+      combined.push({
+        sku: skuVal,
+        desc: descVal,
+        loc: locVal,
+        area: areaVal,
+        shipto: shiptoVal,
+        route: routeVal,
+        qty: qtyVal,
+        wmsCbm: wmsCbm,
+        fixCbm: fixCbm,
+        orderKey: orderKey,
+        type: typeVal,
+        dep: deptVal,
+        addDate: addDateVal,
+        source: sheetObj.source
+      });
+    }
+  });
+
+  return combined;
+}
+
 function computeRackingDistribution() {
   var rackCounts = [0,0,0,0,0,0,0,0,0,0]; // index 0-9
   var totalWithLoc = 0;
 
-  if (allCaseIdReleaseP1Data && allCaseIdReleaseP1Data.length > 1) {
-    var headers = allCaseIdReleaseP1Data[0];
-    var locColIdx = -1, caseColIdx = -1;
-    for (var c = 0; c < headers.length; c++) {
-      var h = String(headers[c] || '').toUpperCase().replace(/[\s_]/g, '');
-      if (h === 'LOC' || h === 'LOCATION') locColIdx = c;
-      if (h === 'CASEID' || h === 'QTY' || h === 'CASES') caseColIdx = c;
-    }
+  var combinedRows = getCombinedCaseIdReleaseRows();
+  if (combinedRows.length > 0) {
+    combinedRows.forEach(function(row) {
+      var level = getRackingLevel(row.loc);
+      if (level === null) return;
 
-    if (locColIdx !== -1) {
-      for (var r = 1; r < allCaseIdReleaseP1Data.length; r++) {
-        var row = allCaseIdReleaseP1Data[r];
-        if (!row) continue;
-        var locVal = String(row[locColIdx] || '').trim();
-        var level = getRackingLevel(locVal);
-        if (level === null) continue;
+      // "pada level racking case id juga jangan membaca totalnya dari QTY tapi dari berapa jumlah data yang terpanggil"
+      var cnt = 1;
 
-        var caseCount = caseColIdx !== -1 ? parseInt(String(row[caseColIdx]).replace(/,/g, ''), 10) : 1;
-        if (isNaN(caseCount) || caseCount <= 0) caseCount = 1;
-
-        rackCounts[level] += caseCount;
-        totalWithLoc += caseCount;
-      }
-    }
+      rackCounts[level] += cnt;
+      totalWithLoc += cnt;
+    });
   }
 
   return { rackCounts: rackCounts, total: totalWithLoc };
@@ -10808,33 +10908,21 @@ function computeAisleDistribution() {
   var otherCount = 0;
   var total = 0;
 
-  if (allCaseIdReleaseP1Data && allCaseIdReleaseP1Data.length > 1) {
-    var headers = allCaseIdReleaseP1Data[0];
-    var locColIdx = -1, caseColIdx = -1;
-    for (var c = 0; c < headers.length; c++) {
-      var h = String(headers[c] || '').toUpperCase().replace(/[\s_]/g, '');
-      if (h === 'LOC' || h === 'LOCATION') locColIdx = c;
-      if (h === 'CASEID' || h === 'QTY' || h === 'CASES') caseColIdx = c;
-    }
+  var combinedRows = getCombinedCaseIdReleaseRows();
+  if (combinedRows.length > 0) {
+    combinedRows.forEach(function(row) {
+      var aisle = getAisleFromLoc(row.loc);
+      if (aisle === null) return;
 
-    if (locColIdx !== -1) {
-      for (var r = 1; r < allCaseIdReleaseP1Data.length; r++) {
-        var row = allCaseIdReleaseP1Data[r];
-        if (!row) continue;
+      // "begitupun dengan sebaran case id per lorong jangan membaca QTY"
+      var cnt = 1;
 
-        var aisle = getAisleFromLoc(row[locColIdx]);
-        if (aisle === null) continue;
+      if (aisle === 'FLOOR') floorCount += cnt;
+      else if (aisle === 'OTHER') otherCount += cnt;
+      else aisleCounts[aisle] += cnt;
 
-        var cnt = caseColIdx !== -1 ? parseInt(String(row[caseColIdx]).replace(/,/g, ''), 10) : 1;
-        if (isNaN(cnt) || cnt <= 0) cnt = 1;
-
-        if (aisle === 'FLOOR') floorCount += cnt;
-        else if (aisle === 'OTHER') otherCount += cnt;
-        else aisleCounts[aisle] += cnt;
-
-        total += cnt;
-      }
-    }
+      total += cnt;
+    });
   }
 
   return { aisleCounts: aisleCounts, floorCount: floorCount, otherCount: otherCount, total: total };
@@ -10966,33 +11054,19 @@ function renderCaseIdReleasePage() {
   }
   var data = parseCaseIdReleaseData(allCaseIdReleaseData);
 
-  // ── Parse P1+GRW DK sheet untuk tanggal & breakdown brand/SKU ──
+  // ── Parse combined sheets untuk tanggal, breakdown brand, dan SKU ──
   var latestAddDate = null;
   var informaCases = 0, selmaCases = 0, electronicsCases = 0;
   var skuMap = {};
   var areaSkuMap = { '1': {}, '2': {}, '3': {} };
   var batchSkuMap = { 'active': {}, 'buffer': {} };
 
-  if (allCaseIdReleaseP1Data && allCaseIdReleaseP1Data.length > 1) {
-    var headers = allCaseIdReleaseP1Data[0];
-    var addDateColIdx = -1, skuColIdx = -1, descColIdx = -1, caseColIdx = -1, shipColIdx = -1, areaColIdx = -1;
-
-    for (var c = 0; c < headers.length; c++) {
-      var h = String(headers[c] || '').toUpperCase().replace(/[\s_]/g, '');
-      if (h === 'ADDDATE') addDateColIdx = c;
-      if (h === 'SKU' || h === 'ITEMID') skuColIdx = c;
-      if (h === 'DESCR' || h === 'DESCRIPTION' || h === 'ITEMDESC') descColIdx = c;
-      if (h === 'CASEID' || h === 'QTY' || h === 'CASES') caseColIdx = c;
-      if (h === 'SHIPTO' || h === 'BRAND' || h === 'STORE') shipColIdx = c;
-      if (h.indexOf('AREA') !== -1) areaColIdx = c;
-    }
-
-    for (var r = 1; r < allCaseIdReleaseP1Data.length; r++) {
-      var row = allCaseIdReleaseP1Data[r];
-      if (!row) continue;
-
-      if (addDateColIdx !== -1 && row[addDateColIdx]) {
-        var rawVal = String(row[addDateColIdx]).trim();
+  var combinedRows = getCombinedCaseIdReleaseRows();
+  if (combinedRows.length > 0) {
+    combinedRows.forEach(function(row) {
+      // Parse latest add date
+      if (row.addDate) {
+        var rawVal = String(row.addDate).trim();
         if (rawVal && rawVal !== '-' && rawVal !== '#N/A') {
           var dObj = null;
           var num = parseFloat(rawVal);
@@ -11010,14 +11084,15 @@ function renderCaseIdReleasePage() {
         }
       }
 
-      var skuVal = skuColIdx !== -1 ? String(row[skuColIdx] || '').trim().replace(/\"/g, '') : '';
-      var descVal = descColIdx !== -1 ? String(row[descColIdx] || '').trim().replace(/\"/g, '') : '';
-      var areaVal = areaColIdx !== -1 ? String(row[areaColIdx] || '').trim().replace(/\"/g, '') : '';
-      var caseCount = caseColIdx !== -1 ? parseInt(String(row[caseColIdx]).replace(/,/g, ''), 10) : 0;
-      if (isNaN(caseCount) || caseCount < 0) caseCount = 0;
+      var skuVal = String(row.sku || '').trim().replace(/\"/g, '');
+      var descVal = String(row.desc || '').trim().replace(/\"/g, '');
+      var areaVal = String(row.area || '').trim().toUpperCase();
+      var deptVal = String(row.dep || '').trim().toUpperCase();
+      var shiptoVal = String(row.shipto || '').trim().toUpperCase();
+      var sourceVal = row.source;
 
-      // In some sheets, each row represents 1 case count even if the quantity cell is empty or a string
-      if (caseCount === 0) caseCount = 1;
+      // "jangan membaca QTY" -> count each row as 1 case
+      var caseCount = 1;
 
       if (skuVal && skuVal !== '-' && skuVal !== '#N/A') {
         if (!skuMap[skuVal]) skuMap[skuVal] = { count: 0, desc: descVal };
@@ -11025,26 +11100,29 @@ function renderCaseIdReleasePage() {
 
         // Per Area
         var areaKey = '1';
-        if (areaVal === '2' || areaVal === 'HCI AREA 2' || areaVal.indexOf('2') !== -1) areaKey = '2';
-        else if (areaVal === '3' || areaVal === 'HCI AREA 3' || areaVal.indexOf('3') !== -1) areaKey = '3';
+        if (areaVal.indexOf('AREA 2') !== -1 || areaVal.indexOf('AREA2') !== -1 || areaVal === '2') areaKey = '2';
+        else if (areaVal.indexOf('AREA 3') !== -1 || areaVal.indexOf('AREA3') !== -1 || areaVal === '3') areaKey = '3';
         
         if (!areaSkuMap[areaKey]) areaSkuMap[areaKey] = {};
         if (!areaSkuMap[areaKey][skuVal]) areaSkuMap[areaKey][skuVal] = { count: 0, desc: descVal };
         areaSkuMap[areaKey][skuVal].count += caseCount;
 
-        // Per Batch (All detailed entries are Batch 3 / Active)
-        var batchKey = 'active';
+        // Per Batch
+        var batchKey = (sourceVal === 'LP') ? 'buffer' : 'active';
         if (!batchSkuMap[batchKey]) batchSkuMap[batchKey] = {};
         if (!batchSkuMap[batchKey][skuVal]) batchSkuMap[batchKey][skuVal] = { count: 0, desc: descVal };
         batchSkuMap[batchKey][skuVal].count += caseCount;
 
-        var shipVal = shipColIdx !== -1 ? String(row[shipColIdx] || '').toUpperCase() : '';
-        var lowerDesc = descVal.toUpperCase();
-        if (shipVal.indexOf('SELMA') !== -1 || lowerDesc.indexOf('SELMA') !== -1) selmaCases += caseCount;
-        else if (shipVal.indexOf('ELEC') !== -1 || lowerDesc.indexOf('ELECTRONIC') !== -1) electronicsCases += caseCount;
-        else informaCases += caseCount;
+        // Brand breakdown: "breakdown per brand buat agar membaca data pada kolom DEP"
+        if (deptVal.indexOf('SELMA') !== -1 || shiptoVal.indexOf('SELMA') !== -1) {
+          selmaCases += caseCount;
+        } else if (deptVal.indexOf('ELEC') !== -1 || deptVal.indexOf('ELC') !== -1 || shiptoVal.indexOf('ELECTRONIC') !== -1 || descVal.toUpperCase().indexOf('TV') !== -1 || descVal.toUpperCase().indexOf('LED') !== -1) {
+          electronicsCases += caseCount;
+        } else {
+          informaCases += caseCount;
+        }
       }
-    }
+    });
   }
 
   if (informaCases === 0 && selmaCases === 0) {
@@ -11093,8 +11171,61 @@ function renderCaseIdReleasePage() {
   }
   setText('cr-date-badge', formatIndonesianDate(releaseDateObj));
 
-  // ── TOTAL CASES & VOLUME: dijumlahkan langsung dari seluruh baris grup ──
-  // sehingga angka header PASTI sama dengan penjumlahan detail di spreadsheet
+  // ── Reconstruct priority groups dynamically from combinedRows if needed ──
+  if (isCaseIdReleaseFetchedFromSheets && (!data.batch3.groups || data.batch3.groups.length === 0)) {
+    var combinedRowsForGroups = getCombinedCaseIdReleaseRows();
+    var g1_rows = [];
+    var g2_rows = [];
+    var g3_rows = [];
+    var g4_rows = [];
+    var g5_rows = [];
+
+    combinedRowsForGroups.forEach(function(row) {
+      var typeUpper = String(row.type || '').toUpperCase();
+      var shiptoUpper = String(row.shipto || '').toUpperCase();
+      var groupNo = 1;
+
+      if (row.source === 'LP') {
+        groupNo = 5;
+      } else if (row.source === 'HUB') {
+        groupNo = 4;
+      } else if (row.source === 'P2') {
+        groupNo = 2;
+      } else if (row.source === 'P1') {
+        if (typeUpper.indexOf('GRW') !== -1 || shiptoUpper.indexOf('GRW') !== -1) {
+          groupNo = 3;
+        } else {
+          groupNo = 1;
+        }
+      }
+
+      var parsedRow = {
+        type: row.type || (groupNo === 3 ? 'GRW DK' : groupNo === 4 ? 'HUB & LK ON SITE' : groupNo === 5 ? 'Customer + GRW LP' : 'CUSTOMER DK'),
+        area: row.area || 'HCI AREA 1',
+        desc: row.desc,
+        caseId: 1, // "jangan membaca QTY" -> count each row as 1 case
+        cbm: row.fixCbm || row.wmsCbm || 0
+      };
+
+      if (groupNo === 1) g1_rows.push(parsedRow);
+      else if (groupNo === 2) g2_rows.push(parsedRow);
+      else if (groupNo === 3) g3_rows.push(parsedRow);
+      else if (groupNo === 4) g4_rows.push(parsedRow);
+      else if (groupNo === 5) g5_rows.push(parsedRow);
+    });
+
+    data.batch3.groups = [
+      { no: 1, name: 'CUSTOMER DK ( PRIORITY 1)', totalCaseId: g1_rows.length, rows: g1_rows },
+      { no: 2, name: 'CUSTOMER DK ( PRIORITY 2)', totalCaseId: g2_rows.length, rows: g2_rows },
+      { no: 3, name: 'GRW DK ', totalCaseId: g3_rows.length, rows: g3_rows },
+      { no: 4, name: 'HUB & LK ON SITE', totalCaseId: g4_rows.length, rows: g4_rows }
+    ];
+    data.batch1_2.groups = [
+      { no: 5, name: 'Customer + GRW LP', totalCaseId: g5_rows.length, rows: g5_rows }
+    ];
+  }
+
+  // ── TOTAL CASES & VOLUME ──
   function crSumGroups(groups) {
     var cases = 0, cbm = 0;
     (groups || []).forEach(function(g) {
@@ -11106,12 +11237,30 @@ function renderCaseIdReleasePage() {
     });
     return { cases: cases, cbm: cbm };
   }
-  var sumB3 = crSumGroups(data.batch3.groups);
-  var sumB12 = crSumGroups(data.batch1_2.groups);
+
+  var sumB3 = { cases: 0, cbm: 0 };
+  var sumB12 = { cases: 0, cbm: 0 };
+
+  if (isCaseIdReleaseFetchedFromSheets) {
+    var combinedRowsForSums = getCombinedCaseIdReleaseRows();
+    combinedRowsForSums.forEach(function(row) {
+      var isB12 = (row.source === 'LP');
+      if (isB12) {
+        sumB12.cases += 1; // "jangan membaca QTY" -> count each row as 1 case
+        sumB12.cbm += row.fixCbm || row.wmsCbm || 0;
+      } else {
+        sumB3.cases += 1; // "jangan membaca QTY" -> count each row as 1 case
+        sumB3.cbm += row.fixCbm || row.wmsCbm || 0;
+      }
+    });
+  } else {
+    sumB3 = crSumGroups(data.batch3.groups);
+    sumB12 = crSumGroups(data.batch1_2.groups);
+  }
+
   var totalReleaseCases = sumB3.cases + sumB12.cases;
   var totalReleaseCbm = sumB3.cbm + sumB12.cbm;
 
-  // Cadangan: jika penjumlahan grup kosong, pakai angka TOTAL resmi dari sheet
   if (totalReleaseCases === 0 && data.meta.totalCaseId > 0) {
     totalReleaseCases = data.meta.totalCaseId;
   }
@@ -11248,7 +11397,16 @@ function renderCaseIdReleasePage() {
   }
 
   // ── Area Distribution ──
-  var a1 = data.meta.area1CaseId || 0, a2 = data.meta.area2CaseId || 0, a3 = data.meta.area3CaseId || 0;
+  var a1 = 0, a2 = 0, a3 = 0;
+  if (isCaseIdReleaseFetchedFromSheets) {
+    Object.keys(areaSkuMap['1'] || {}).forEach(function(k) { a1 += areaSkuMap['1'][k].count; });
+    Object.keys(areaSkuMap['2'] || {}).forEach(function(k) { a2 += areaSkuMap['2'][k].count; });
+    Object.keys(areaSkuMap['3'] || {}).forEach(function(k) { a3 += areaSkuMap['3'][k].count; });
+  } else {
+    a1 = data.meta.area1CaseId || 0;
+    a2 = data.meta.area2CaseId || 0;
+    a3 = data.meta.area3CaseId || 0;
+  }
   var totalArea = a1 + a2 + a3;
   var a1Pct = totalArea > 0 ? ((a1 / totalArea) * 100).toFixed(1) : 0;
   var a2Pct = totalArea > 0 ? ((a2 / totalArea) * 100).toFixed(1) : 0;
@@ -11507,159 +11665,135 @@ function renderRiskControlPage() {
 function getRiskItemsFromSpreadsheets() {
   var items = [];
   
-  // 1. Parse P1+GRW DK Sheet (allCaseIdReleaseP1Data)
-  if (window.allCaseIdReleaseP1Data && window.allCaseIdReleaseP1Data.length > 1) {
-    var headers = window.allCaseIdReleaseP1Data[0];
-    
-    // Find column indexes (case-insensitive and whitespace-stripped)
-    var skuIdx = -1, descIdx = -1, shiptoIdx = -1, wmsCbmIdx = -1, fixCbmIdx = -1, routeIdx = -1, qtyIdx = -1, orderKeyIdx = -1, typeIdx = -1, deptIdx = -1;
-    for (var c = 0; c < headers.length; c++) {
-      var h = String(headers[c] || '').toUpperCase().trim().replace(/[\s_]/g, '');
-      if (h === 'SKU') skuIdx = c;
-      else if (h === 'DESCR' || h === 'DESCRIPTION') descIdx = c;
-      else if (h === 'SHIPTO') shiptoIdx = c;
-      else if (h === 'CBMWMS' || h === 'VOLWMS' || h === 'WMSCBM') wmsCbmIdx = c;
-      else if (h === 'CBMFIX' || h === 'VOLFIX' || h === 'FIXCBM') fixCbmIdx = c;
-      else if (h === 'ROUTE' || h === 'PLANROUTE') routeIdx = c;
-      else if (h === 'QTY' || h === 'QUANTITY') qtyIdx = c;
-      else if (h === 'ORDERKEY' || h === 'ORDERNO') orderKeyIdx = c;
-      else if (h === 'TYPE' || h === 'ORDERTYPE') typeIdx = c;
-      else if (h === 'DEPT' || h === 'DEPARTMENT') deptIdx = c;
-    }
+  var combinedRows = getCombinedCaseIdReleaseRows();
+  if (combinedRows.length > 0) {
+    // Group routes to find multi-drop routes
+    var routeShipTos = {};
+    combinedRows.forEach(function(row) {
+      var rVal = row.route;
+      var sVal = row.shipto;
+      if (rVal && sVal) {
+        if (!routeShipTos[rVal]) routeShipTos[rVal] = new Set();
+        routeShipTos[rVal].add(sVal);
+      }
+    });
 
-    if (skuIdx !== -1 && descIdx !== -1) {
-      // Group routes to find multi-drop routes
-      var routeShipTos = {};
-      for (var i = 1; i < window.allCaseIdReleaseP1Data.length; i++) {
-        var row = window.allCaseIdReleaseP1Data[i];
-        if (!row || row.length <= Math.max(routeIdx, shiptoIdx)) continue;
-        var rVal = String(row[routeIdx] || '').trim();
-        var sVal = String(row[shiptoIdx] || '').trim();
-        if (rVal && sVal) {
-          if (!routeShipTos[rVal]) routeShipTos[rVal] = new Set();
-          routeShipTos[rVal].add(sVal);
+    combinedRows.forEach(function(row) {
+      var skuVal = row.sku;
+      var descVal = row.desc;
+      var shiptoVal = row.shipto || "HCI STORE";
+      var routeVal = row.route || "N/A";
+      var qtyVal = row.qty;
+      var wmsCbm = row.wmsCbm;
+      var fixCbm = row.fixCbm;
+      var typeVal = row.type;
+      var deptVal = row.dep;
+      var orderKey = row.orderKey;
+
+      if (!skuVal || !descVal) return;
+
+      var isFragile = false;
+      var riskType = "";
+      var riskLevel = "WARNING";
+      var recommendation = "";
+      var reason = "";
+
+      // Determine brand based on DEP/department column
+      var brand = "INFORMA";
+      var deptUpper = deptVal.toUpperCase();
+      var shiptoUpper = shiptoVal.toUpperCase();
+      var descUpper = descVal.toUpperCase();
+
+      if (deptUpper.indexOf("SELMA") !== -1 || shiptoUpper.indexOf("SELMA") !== -1) {
+        brand = "SELMA";
+      } else if (deptUpper.indexOf("ELEC") !== -1 || deptUpper.indexOf("ELC") !== -1 || shiptoUpper.indexOf("ELECTRONIC") !== -1 || descUpper.indexOf("TV") !== -1 || descUpper.indexOf("LED") !== -1 || descUpper.indexOf("OVEN") !== -1 || descUpper.indexOf("MICROWAVE") !== -1 || descUpper.indexOf("FRIDGE") !== -1) {
+        brand = "ELECTRONICS";
+      }
+
+      // 1. Check TUGU first
+      if (typeVal.toUpperCase().indexOf("TUGU") !== -1 || descUpper.indexOf("TUGU") !== -1 || orderKey.toUpperCase().indexOf("TUGU") !== -1) {
+        riskType = "TUGU";
+        riskLevel = "CRITICAL";
+        recommendation = "Staging Lane Khusus TUGU. Driver wajib serahkan barang lama.";
+        reason = "Order retur tukar barang rawan salah staging dan administrasi.";
+      }
+      // 2. Check BARUS potential (Fragile / Damage)
+      else {
+        var fragileKeywords = ["GLASS", "MIRROR", "CERAMIC", "MARBLE", "VASE", "POT", "PLATE", "BOWL", "SOFA", "RECLINER", "MATTRESS", "SPRINGBED", "TV", "LED", "SPEAKER", "OVEN", "MICROWAVE", "FRIDGE", "KACA", "CERMIN", "KASUR", "LEMARI PAJANG"];
+        var isKaca = false;
+        var isLuxury = false;
+        var isElectronic = false;
+
+        for (var k = 0; k < fragileKeywords.length; k++) {
+          if (descUpper.indexOf(fragileKeywords[k]) !== -1) {
+            isFragile = true;
+            if (["GLASS", "MIRROR", "CERAMIC", "MARBLE", "POT", "PLATE", "BOWL", "KACA", "CERMIN"].indexOf(fragileKeywords[k]) !== -1) {
+              isKaca = true;
+            } else if (["SOFA", "RECLINER", "MATTRESS", "SPRINGBED", "KASUR", "LEMARI PAJANG"].indexOf(fragileKeywords[k]) !== -1) {
+              isLuxury = true;
+            } else {
+              isElectronic = true;
+            }
+            break;
+          }
+        }
+
+        if (isFragile) {
+          riskType = "BARUS";
+          if (isKaca) {
+            riskLevel = wmsCbm > 0.3 ? "CRITICAL" : "WARNING";
+            recommendation = "Wajib Palet Kayu & Stiker Fragile. Top-loading only.";
+            reason = "Bahan mudah pecah, rawan retak jika tertekan furniture besi.";
+          } else if (isLuxury) {
+            riskLevel = "WARNING";
+            recommendation = "Bungkus plastik tebal & lapisi karton siku sudut.";
+            reason = "Bahan kain/kulit sensitif goresan benda tajam / debu.";
+          } else if (isElectronic) {
+            riskLevel = "CRITICAL";
+            recommendation = "Gunakan ikat tambahan & sisi tegak sahaja.";
+            reason = "Barang elektronik sensitif getaran & benturan fisik.";
+          }
+        }
+        // 3. Check DISCREPANCY potential
+        else if (Math.abs(wmsCbm - fixCbm) > 0.05) {
+          riskType = "DISCREPANCY";
+          riskLevel = "WARNING";
+          recommendation = "Selisih volume CBM WMS vs FIX. Lapor Admin.";
+          reason = "Perbedaan dimensi master database (" + wmsCbm.toFixed(2) + " vs " + fixCbm.toFixed(2) + " CBM) merusak perencanaan volume armada.";
+        }
+        // 4. Check KURANG/LEBIH KIRIM potential
+        else if (routeVal && routeShipTos[routeVal] && routeShipTos[routeVal].size > 1) {
+          riskType = "KURANGLEBIH";
+          riskLevel = "WARNING";
+          recommendation = "Multi-drop (" + routeShipTos[routeVal].size + " drops). Pisahkan tumpukan per toko.";
+          reason = "Rute " + routeVal + " memiliki multi-drop, rawan salah bongkar barang ke toko lain.";
+        }
+        else if (qtyVal > 15) {
+          riskType = "KURANGLEBIH";
+          riskLevel = "WARNING";
+          recommendation = "Kuantitas besar (" + qtyVal + " pcs). Double count saat serah terima.";
+          reason = "Item berjumlah besar rawan selisih perhitungan saat diturunkan.";
         }
       }
 
-      for (var i = 1; i < window.allCaseIdReleaseP1Data.length; i++) {
-        var row = window.allCaseIdReleaseP1Data[i];
-        if (!row || row.length <= Math.max(skuIdx, descIdx)) continue;
-        
-        var skuVal = String(row[skuIdx] || '').trim();
-        var descVal = String(row[descIdx] || '').trim();
-        var shiptoVal = shiptoIdx !== -1 ? String(row[shiptoIdx] || '').trim() : "HCI STORE";
-        var routeVal = routeIdx !== -1 ? String(row[routeIdx] || '').trim() : "N/A";
-        var qtyVal = qtyIdx !== -1 ? parseInt(row[qtyIdx]) || 1 : 1;
-        var wmsCbm = wmsCbmIdx !== -1 ? parseFloat(String(row[wmsCbmIdx] || '0').replace(/,/g, '')) || 0 : 0;
-        var fixCbm = fixCbmIdx !== -1 ? parseFloat(String(row[fixCbmIdx] || '0').replace(/,/g, '')) || 0 : 0;
-        var typeVal = typeIdx !== -1 ? String(row[typeIdx] || '').trim() : "";
-        var deptVal = deptIdx !== -1 ? String(row[deptIdx] || '').trim() : "";
-        var orderKey = orderKeyIdx !== -1 ? String(row[orderKeyIdx] || '').trim() : skuVal;
-
-        if (!skuVal || !descVal) continue;
-
-        var isFragile = false;
-        var riskType = "";
-        var riskLevel = "WARNING";
-        var recommendation = "";
-        var reason = "";
-
-        // Determine brand
-        var brand = "INFORMA";
-        var shiptoUpper = shiptoVal.toUpperCase();
-        var descUpper = descVal.toUpperCase();
-
-        if (shiptoUpper.indexOf("ELECTRONIC") !== -1 || descUpper.indexOf("TV") !== -1 || descUpper.indexOf("LED") !== -1 || descUpper.indexOf("OVEN") !== -1 || descUpper.indexOf("MICROWAVE") !== -1 || descUpper.indexOf("FRIDGE") !== -1) {
-          brand = "ELECTRONICS";
-        } else if (shiptoUpper.indexOf("SELMA") !== -1) {
-          brand = "SELMA";
-        }
-
-        // 1. Check TUGU first
-        if (typeVal.toUpperCase().indexOf("TUGU") !== -1 || descUpper.indexOf("TUGU") !== -1 || orderKey.toUpperCase().indexOf("TUGU") !== -1) {
-          riskType = "TUGU";
-          riskLevel = "CRITICAL";
-          recommendation = "Staging Lane Khusus TUGU. Driver wajib serahkan barang lama.";
-          reason = "Order retur tukar barang rawan salah staging dan administrasi.";
-        }
-        // 2. Check BARUS potential (Fragile / Damage)
-        else {
-          var fragileKeywords = ["GLASS", "MIRROR", "CERAMIC", "MARBLE", "VASE", "POT", "PLATE", "BOWL", "SOFA", "RECLINER", "MATTRESS", "SPRINGBED", "TV", "LED", "SPEAKER", "OVEN", "MICROWAVE", "FRIDGE", "KACA", "CERMIN", "KASUR", "LEMARI PAJANG"];
-          var isKaca = false;
-          var isLuxury = false;
-          var isElectronic = false;
-
-          for (var k = 0; k < fragileKeywords.length; k++) {
-            if (descUpper.indexOf(fragileKeywords[k]) !== -1) {
-              isFragile = true;
-              if (["GLASS", "MIRROR", "CERAMIC", "MARBLE", "POT", "PLATE", "BOWL", "KACA", "CERMIN"].indexOf(fragileKeywords[k]) !== -1) {
-                isKaca = true;
-              } else if (["SOFA", "RECLINER", "MATTRESS", "SPRINGBED", "KASUR", "LEMARI PAJANG"].indexOf(fragileKeywords[k]) !== -1) {
-                isLuxury = true;
-              } else {
-                isElectronic = true;
-              }
-              break;
-            }
-          }
-
-          if (isFragile) {
-            riskType = "BARUS";
-            if (isKaca) {
-              riskLevel = wmsCbm > 0.3 ? "CRITICAL" : "WARNING";
-              recommendation = "Wajib Palet Kayu & Stiker Fragile. Top-loading only.";
-              reason = "Bahan mudah pecah, rawan retak jika tertekan furniture besi.";
-            } else if (isLuxury) {
-              riskLevel = "WARNING";
-              recommendation = "Bungkus plastik tebal & lapisi karton siku sudut.";
-              reason = "Bahan kain/kulit sensitif goresan benda tajam / debu.";
-            } else if (isElectronic) {
-              riskLevel = "CRITICAL";
-              recommendation = "Gunakan ikat tambahan & sisi tegak sahaja.";
-              reason = "Barang elektronik sensitif getaran & benturan fisik.";
-            }
-          }
-          // 3. Check DISCREPANCY potential
-          else if (Math.abs(wmsCbm - fixCbm) > 0.05) {
-            riskType = "DISCREPANCY";
-            riskLevel = "WARNING";
-            recommendation = "Selisih volume CBM WMS vs FIX. Lapor Admin.";
-            reason = "Perbedaan dimensi master database (" + wmsCbm.toFixed(2) + " vs " + fixCbm.toFixed(2) + " CBM) merusak perencanaan volume armada.";
-          }
-          // 4. Check KURANG/LEBIH KIRIM potential
-          else if (routeVal && routeShipTos[routeVal] && routeShipTos[routeVal].size > 1) {
-            riskType = "KURANGLEBIH";
-            riskLevel = "WARNING";
-            recommendation = "Multi-drop (" + routeShipTos[routeVal].size + " drops). Pisahkan tumpukan per toko.";
-            reason = "Rute " + routeVal + " memiliki multi-drop, rawan salah bongkar barang ke toko lain.";
-          }
-          else if (qtyVal > 15) {
-            riskType = "KURANGLEBIH";
-            riskLevel = "WARNING";
-            recommendation = "Kuantitas besar (" + qtyVal + " pcs). Double count saat serah terima.";
-            reason = "Item berjumlah besar rawan selisih perhitungan saat diturunkan.";
-          }
-        }
-
-        if (riskType) {
-          items.push({
-            sku: skuVal,
-            desc: descVal,
-            shipto: shiptoVal || "HCI STORE",
-            route: routeVal || "N/A",
-            qty: qtyVal,
-            type: riskType,
-            level: riskLevel,
-            wmsCbm: wmsCbm,
-            fixCbm: fixCbm,
-            brand: brand,
-            rec: recommendation,
-            reason: reason,
-            orderKey: orderKey || skuVal
-          });
-        }
+      if (riskType) {
+        items.push({
+          sku: skuVal,
+          desc: descVal,
+          shipto: shiptoVal || "HCI STORE",
+          route: routeVal || "N/A",
+          qty: qtyVal,
+          type: riskType,
+          level: riskLevel,
+          wmsCbm: wmsCbm,
+          fixCbm: fixCbm,
+          brand: brand,
+          rec: recommendation,
+          reason: reason,
+          orderKey: orderKey || skuVal
+        });
       }
-    }
+    });
   }
 
   // Fallback if no entries found from spreadsheet parsing
