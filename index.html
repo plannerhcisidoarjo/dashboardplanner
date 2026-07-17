@@ -3818,15 +3818,15 @@ PLANNING REPORT</div>
       <div class="card-header">
         <div>
           <div class="card-title">🏗️ LEVEL RACKING CASE ID YANG DIRELEASE</div>
-          <div class="card-sub">Ketinggian rak penyimpanan (0 = paling bawah, 9 = paling tinggi) — untuk persiapan alat bantu & keselamatan picking</div>
+          <div class="card-sub">Ketinggian rak penyimpanan (1 = paling bawah, 9 = paling tinggi) — untuk persiapan alat bantu & keselamatan picking</div>
         </div>
       </div>
 
       <div id="cr-rack-bars" style="display:flex; gap:6px; align-items:flex-end; height:100px; margin-top:16px; padding:0 4px;">
-        <!-- 10 mini bar level 0-9, rendered via JS -->
+        <!-- 10 mini bar level 1-9, rendered via JS -->
       </div>
       <div style="display:flex; justify-content:space-between; padding:0 4px; margin-top:4px;">
-        <span style="font-size:9px; color:var(--muted); font-weight:700;">LV.0 (bawah)</span>
+        <span style="font-size:9px; color:var(--muted); font-weight:700;">LV.1 (bawah)</span>
         <span style="font-size:9px; color:var(--muted); font-weight:700;">LV.9 (tinggi)</span>
       </div>
 
@@ -3852,6 +3852,14 @@ PLANNING REPORT</div>
       <!-- Podium Top 3 Lorong Tersibuk -->
       <div id="cr-aisle-top3" style="display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:14px;">
         <!-- rendered via JS -->
+      </div>
+
+      <!-- Detail per Area Storing -->
+      <div style="margin-top:16px;">
+        <div style="font-size:11px; font-weight:800; color:var(--muted); text-transform:uppercase; letter-spacing:.5px; margin-bottom:8px;">📦 Detail per Area Storing</div>
+        <div id="cr-aisle-area-breakdown" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:10px;">
+          <!-- rendered via JS -->
+        </div>
       </div>
 
       <!-- Heatmap Grid Lorong 18–35 -->
@@ -4000,6 +4008,7 @@ function fetchAndParseCsv(url, options, resolveCallback) {
       return res.text();
     })
     .then(function(text) {
+      console.log('[CR DEBUG-FETCH] URL:', url.substring(0, 100), '| Response length:', text.length, '| Preview:', text.substring(0, 200));
       Papa.parse(text, Object.assign({}, options, {
         download: false,
         complete: function(results) {
@@ -10749,14 +10758,34 @@ function getRackingLevel(locStr) {
   if (!locStr) return null;
   var s = String(locStr).trim();
   if (s.length < 8) return null;
+
   var ch = s.charAt(7); // karakter ke-8 (index 7, 0-based)
   var digit = parseInt(ch, 10);
   if (isNaN(digit) || digit < 0 || digit > 9) return null;
+
+  // Level 0 tidak pernah ada secara fisik di gudang.
+  // Kalau karakter ke-8 terbaca 0, cek karakter pertama:
+  // kalau diawali "3", level sebenarnya ada di KARAKTER KE-9 (index 8),
+  // bukan karakter ke-8.
+  if (digit === 0) {
+    var firstChar = s.charAt(0);
+    if (firstChar === '3' && s.length >= 9) {
+      var char9 = s.charAt(8); // karakter ke-9 (index 8, 0-based)
+      var digit9 = parseInt(char9, 10);
+      if (!isNaN(digit9) && digit9 >= 0 && digit9 <= 9) {
+        return digit9;
+      }
+    }
+    // Kalau tidak cocok pola khusus ini (bukan diawali "3", atau string terlalu pendek),
+    // anggap data tidak valid → lewati baris ini dari perhitungan.
+    return null;
+  }
+
   return digit;
 }
 
 var CR_RACK_BUCKET_META = [
-  { key: 'low', label: 'RENDAH (Lv 0-3)', icon: '🟢', color: '#16a34a', note: 'Mudah dijangkau, tidak perlu alat bantu' },
+  { key: 'low', label: 'RENDAH (Lv 1-3)', icon: '🟢', color: '#16a34a', note: 'Mudah dijangkau, tidak perlu alat bantu' },
   { key: 'mid', label: 'SEDANG (Lv 4-6)', icon: '🟡', color: '#d97706', note: 'Perlu tangga / step ladder' },
   { key: 'high', label: 'TINGGI (Lv 7-9)', icon: '🔴', color: '#dc2626', note: 'Wajib forklift / reach truck + APD lengkap' }
 ];
@@ -10780,11 +10809,13 @@ function renderRackingDistribution() {
   var rackCounts = result.rackCounts;
   var total = result.total;
 
-  // Render 10 mini bar (level 0-9)
+  // Render 9 mini bar (level 1-9) — level 0 tidak ditampilkan karena tidak ada secara fisik
   var barsEl = document.getElementById('cr-rack-bars');
   if (barsEl) {
-    var maxVal = Math.max.apply(null, rackCounts) || 1;
-    barsEl.innerHTML = rackCounts.map(function(val, lvl) {
+    var rackCountsWithoutZero = rackCounts.slice(1); // buang index 0, sisakan level 1-9
+    var maxVal = Math.max.apply(null, rackCountsWithoutZero) || 1;
+    barsEl.innerHTML = rackCountsWithoutZero.map(function(val, i) {
+      var lvl = i + 1; // level asli (1-9)
       var pct = Math.max(4, Math.round((val / maxVal) * 100));
       var col = lvl <= 3 ? '#16a34a' : lvl <= 6 ? '#d97706' : '#dc2626';
       return '<div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%;" title="Level ' + lvl + ': ' + val + ' case">' +
@@ -10828,22 +10859,47 @@ function renderRackingDistribution() {
 
 // ── SEBARAN CASE ID PER LORONG (dibaca dari 2 karakter awal kolom LOC) ──
 var CR_AISLE_MIN = 18;
-var CR_AISLE_MAX = 35;
+var CR_AISLE_MAX = 33;
 
 function getAisleFromLoc(locStr) {
   if (!locStr) return null;
   var s = String(locStr).trim().toUpperCase();
   if (!s || s === '-' || s === '#N/A') return null;
 
-  // Identifikasi lokasi FLOOR (mengandung FLR)
   if (s.indexOf('FLR') !== -1) return 'FLOOR';
 
-  // Baca 2 karakter awal sebagai nomor lorong
   var two = s.substring(0, 2);
   var n = parseInt(two, 10);
   if (!isNaN(n) && n >= CR_AISLE_MIN && n <= CR_AISLE_MAX) return n;
 
-  return 'OTHER'; // lokasi valid tapi di luar lorong 18-35
+  return 'OTHER';
+}
+
+// Pemetaan lorong ke Area Storing:
+// Area 1 → Lorong 18-24, Area 2 → Lorong 25-29, Area 3 → Lorong 30-33
+function getAisleArea(aisleNum) {
+  if (aisleNum >= 18 && aisleNum <= 24) return '1';
+  if (aisleNum >= 25 && aisleNum <= 29) return '2';
+  if (aisleNum >= 30 && aisleNum <= 33) return '3';
+  return null; // seharusnya tidak pernah terjadi karena CR_AISLE_MAX sudah dibatasi 33
+}
+
+function computeAisleAreaBreakdown(aisleCounts) {
+  var areaTotals = { '1': 0, '2': 0, '3': 0, 'OTHER': 0 };
+  var areaTopAisle = { '1': null, '2': null, '3': null, 'OTHER': null };
+  var areaTopVal = { '1': -1, '2': -1, '3': -1, 'OTHER': -1 };
+
+  for (var a = CR_AISLE_MIN; a <= CR_AISLE_MAX; a++) {
+    var val = aisleCounts[a] || 0;
+    var areaKey = getAisleArea(a);
+    areaTotals[areaKey] += val;
+    if (val > areaTopVal[areaKey]) {
+      areaTopVal[areaKey] = val;
+      areaTopAisle[areaKey] = a;
+    }
+  }
+
+  return { totals: areaTotals, topAisle: areaTopAisle };
 }
 
 function computeAisleDistribution() {
@@ -10883,6 +10939,40 @@ function renderAisleDistribution() {
 
   // Badge total
   setText('cr-aisle-total-badge', total.toLocaleString() + ' Case Terpetakan');
+
+  // ── Detail per Area Storing (Area 1: Lorong 18-24, Area 2: Lorong 25-29, Area 3: Lorong 30-33) ──
+  var areaBreakdown = computeAisleAreaBreakdown(aisleCounts);
+  var areaEl = document.getElementById('cr-aisle-area-breakdown');
+  if (areaEl) {
+    var areaDefs = [
+      { key: '1', label: 'AREA 1', range: 'Lorong 18–24', color: '#3b82f6' },
+      { key: '2', label: 'AREA 2', range: 'Lorong 25–29', color: '#f59e0b' },
+      { key: '3', label: 'AREA 3', range: 'Lorong 30–33', color: '#10b981' }
+    ];
+
+    var grandAreaTotal = total; // total keseluruhan lorong + floor + other, dipakai sebagai basis %
+
+    areaEl.innerHTML = areaDefs.map(function(def) {
+      var val = areaBreakdown.totals[def.key] || 0;
+      var pct = grandAreaTotal > 0 ? ((val / grandAreaTotal) * 100).toFixed(1) : 0;
+      var topAisle = areaBreakdown.topAisle[def.key];
+      var topAisleText = topAisle ? ('Terpadat: Lorong ' + topAisle + ' (' + (aisleCounts[topAisle] || 0) + ' case)') : 'Tidak ada data';
+
+      return '<div style="border:1px solid var(--border); border-left:4px solid ' + def.color + '; border-radius:var(--radius-sm); padding:12px 14px; background:var(--surface2);">' +
+        '<div style="display:flex; justify-content:space-between; align-items:center;">' +
+          '<div>' +
+            '<div style="font-size:11px; font-weight:800; color:' + def.color + '; text-transform:uppercase; letter-spacing:.5px;">' + def.label + '</div>' +
+            '<div style="font-size:10px; color:var(--muted); margin-top:1px;">' + def.range + '</div>' +
+          '</div>' +
+          '<div style="text-align:right;">' +
+            '<div style="font-size:20px; font-weight:800; font-family:var(--font-mono); color:var(--text);">' + val.toLocaleString() + '</div>' +
+            '<div style="font-size:9px; color:var(--muted); font-weight:700;">case (' + pct + '%)</div>' +
+          '</div>' +
+        '</div>' +
+        '<div style="font-size:10px; color:var(--muted); margin-top:6px; border-top:1px dashed var(--border); padding-top:6px;">' + topAisleText + '</div>' +
+      '</div>';
+    }).join('');
+  }
 
   // Cari nilai maksimum di antara lorong (untuk skala warna)
   var maxVal = 0;
