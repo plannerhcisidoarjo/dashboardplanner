@@ -3791,6 +3791,15 @@ PLANNING REPORT</div>
               <div id="cr-bu-electronics-bar" style="width: 0%; height: 100%; background: var(--purple);"></div>
             </div>
           </div>
+          <div>
+            <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px;">
+              <span style="font-weight: 700; color: var(--text);">KELS</span>
+              <span id="cr-bu-kels-text" style="font-family: var(--font-mono); font-weight: 700; color: var(--teal);">0 Cases</span>
+            </div>
+            <div style="width: 100%; height: 7px; background: var(--border); border-radius: 4px; overflow: hidden;">
+              <div id="cr-bu-kels-bar" style="width: 0%; height: 100%; background: var(--teal);"></div>
+            </div>
+          </div>
         </div>
 
         <div style="margin-top: 14px; padding-top: 12px; border-top: 1px dashed var(--border);">
@@ -4121,7 +4130,11 @@ var currentSlaMissedList = [];
 var allOlfData = [];
 var allCaseIdReleaseData = [];
 var allCaseIdReleaseP1Data = [];
+var allCaseIdReleaseP2Data = [];
+var allCaseIdReleaseHubLkData = [];
+var allCaseIdReleaseLpData = [];
 var isCaseIdReleaseFetchedFromSheets = false;
+var CR_UNIFIED_ROWS = []; // gabungan semua baris case ID dari P1, P2, HUB&LK, LP
 var olfChartInstance = null;
 var OLF_APP = { sd: '', ed: '' };
 
@@ -7522,8 +7535,11 @@ function loadData() {
 var csvFulfillmentFallbackUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1bEBI18zlEeXDqg4G4sFljZETceLvsyP-fcuMB1nLtsM/gviz/tq?tqx=out:csv&gid=0');
   var csvOlfUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1q-qxELBQZr3ABhVg-mw6Kvhl-e11RGQUmCTQjsXtz9g/gviz/tq?tqx=out:csv&sheet=OLF');
   var csvCaseIdReleaseUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1MpFVzgYBAT00HFZNMi_chgdTKU3rnMTBGOYFKspncwk/gviz/tq?tqx=out:csv&gid=0');
-  var csvCaseIdReleaseP1Url = getProxyUrl('https://docs.google.com/spreadsheets/d/1MpFVzgYBAT00HFZNMi_chgdTKU3rnMTBGOYFKspncwk/gviz/tq?tqx=out:csv&sheet=P1%2BGRW%20DK');
-  
+  var csvCaseIdReleaseP1Url = getProxyUrl('https://docs.google.com/spreadsheets/d/1MpFVzgYBAT00HFZNMi_chgdTKU3rnMTBGOYFKspncwk/gviz/tq?tqx=out:csv&gid=2036255569');
+var csvCaseIdReleaseP2Url = getProxyUrl('https://docs.google.com/spreadsheets/d/1MpFVzgYBAT00HFZNMi_chgdTKU3rnMTBGOYFKspncwk/gviz/tq?tqx=out:csv&gid=552992544');
+var csvCaseIdReleaseHubLkUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1MpFVzgYBAT00HFZNMi_chgdTKU3rnMTBGOYFKspncwk/gviz/tq?tqx=out:csv&gid=362212909');
+var csvCaseIdReleaseLpUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1MpFVzgYBAT00HFZNMi_chgdTKU3rnMTBGOYFKspncwk/gviz/tq?tqx=out:csv&gid=1480106733');
+
   // Reading separate sheets SLA GRW and SLA CUST from the spreadsheet
   var csvSlaGrwUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1q-qxELBQZr3ABhVg-mw6Kvhl-e11RGQUmCTQjsXtz9g/gviz/tq?tqx=out:csv&sheet=SLA%20GRW');
   var csvSlaCustUrl1 = getProxyUrl('https://docs.google.com/spreadsheets/d/1q-qxELBQZr3ABhVg-mw6Kvhl-e11RGQUmCTQjsXtz9g/gviz/tq?tqx=out:csv&sheet=SLA%20CUST');
@@ -7540,6 +7556,23 @@ var csvFulfillmentFallbackUrl = getProxyUrl('https://docs.google.com/spreadsheet
       resolve(data);
     });
   });
+  var fetchCaseIdReleaseP2 = new Promise(function(resolve) {
+  fetchAndParseCsv(csvCaseIdReleaseP2Url, { header: false, skipEmptyLines: true }, function(data) {
+    resolve(data);
+  });
+});
+
+var fetchCaseIdReleaseHubLk = new Promise(function(resolve) {
+  fetchAndParseCsv(csvCaseIdReleaseHubLkUrl, { header: false, skipEmptyLines: true }, function(data) {
+    resolve(data);
+  });
+});
+
+var fetchCaseIdReleaseLp = new Promise(function(resolve) {
+  fetchAndParseCsv(csvCaseIdReleaseLpUrl, { header: false, skipEmptyLines: true }, function(data) {
+    resolve(data);
+  });
+});
 
   var fetchFulfillment = new Promise(function(resolve) {
   fetchAndParseCsv(csvFulfillmentUrl, { header: true, skipEmptyLines: true }, function(data) {
@@ -7599,7 +7632,7 @@ var csvFulfillmentFallbackUrl = getProxyUrl('https://docs.google.com/spreadsheet
     });
   });
 
-  Promise.all([fetchMonitoring, fetchAging, fetchAgingCust, fetchContDate, fetchSlaGrw, fetchSlaCust, fetchFulfillment, fetchOlf, fetchCaseIdRelease, fetchCaseIdReleaseP1])
+  Promise.all([fetchMonitoring, fetchAging, fetchAgingCust, fetchContDate, fetchSlaGrw, fetchSlaCust, fetchFulfillment, fetchOlf, fetchCaseIdRelease, fetchCaseIdReleaseP1, fetchCaseIdReleaseP2, fetchCaseIdReleaseHubLk, fetchCaseIdReleaseLp])
     .then(function(results) {
       allSlaGrwData = results[4] || [];
       allSlaCustData = results[5] || [];
@@ -7610,6 +7643,9 @@ var csvFulfillmentFallbackUrl = getProxyUrl('https://docs.google.com/spreadsheet
       });
       allCaseIdReleaseData = results[8] || [];
       allCaseIdReleaseP1Data = results[9] || [];
+      allCaseIdReleaseP2Data = results[10] || [];
+      allCaseIdReleaseHubLkData = results[11] || [];
+      allCaseIdReleaseLpData = results[12] || [];
       isCaseIdReleaseFetchedFromSheets = true;
 
       // Find dynamic URL in column N2 of SLA CUST
@@ -10319,122 +10355,150 @@ function switchSkuModalTab(tab) {
   listEl.innerHTML = html;
 }
 
+function crFindAnchorRow(rows, keywords, startFrom) {
+  startFrom = startFrom || 0;
+  for (var r = startFrom; r < rows.length; r++) {
+    var row = rows[r];
+    if (!row) continue;
+    for (var c = 0; c < row.length; c++) {
+      var cell = String(row[c] || '').toUpperCase().replace(/\s+/g, ' ').trim();
+      for (var k = 0; k < keywords.length; k++) {
+        if (cell.indexOf(keywords[k]) !== -1) return { row: r, col: c };
+      }
+    }
+  }
+  return null;
+}
+
+function crReadAreaRows(rows, anchorRow, cols, countRows) {
+  var out = [];
+  for (var i = 0; i < countRows; i++) {
+    var r = anchorRow + i;
+    if (r >= rows.length) break;
+    var row = rows[r];
+    if (!row) continue;
+    out.push({
+      type: String(row[cols.type] || '').trim(),
+      area: String(row[cols.area] || '').trim(),
+      desc: String(row[cols.desc] || '').trim(),
+      caseId: parseFloat(String(row[cols.caseId] || '0').replace(/,/g, '')) || 0,
+      cbm: String(row[cols.cbm] || '0').trim()
+    });
+  }
+  return out;
+}
+
+function crHasTuguBlock(rows, r, typeCol) {
+  var row = rows[r];
+  if (!row) return false;
+  return String(row[typeCol] || '').toUpperCase().indexOf('TUGU') !== -1;
+}
+
 function parseCaseIdReleaseData(rows) {
   if (!rows || rows.length === 0) {
     return {
-      meta: {
-        date: new Date().toLocaleDateString('id-ID'),
-        area1CaseId: 0, area2CaseId: 0, area3CaseId: 0, totalCaseId: 0,
-        area1Cbm: '0', area2Cbm: '0', area3Cbm: '0', totalCbm: '0'
-      },
-      batch3: {
-        totalCaseId: 0,
-        totalCbm: '0',
-        groups: [
-          { no: 1, name: 'CUSTOMER DK (PRIORITY 1) & TUGU', totalCaseId: 0, rows: [] },
-          { no: 2, name: 'CUSTOMER DK (PRIORITY 2) & TUGU', totalCaseId: 0, rows: [] },
-          { no: 3, name: 'GRW DK', totalCaseId: 0, rows: [] },
-          { no: 4, name: 'HUB & LK ON SITE', totalCaseId: 0, rows: [] }
-        ]
-      },
-      batch1_2: {
-        totalCaseId: 0,
-        totalCbm: '0',
-        groups: [
-          { no: 5, name: 'Customer + GRW LP', totalCaseId: 0, rows: [] }
-        ]
-      }
+      meta: { date: new Date().toLocaleDateString('id-ID'), area1CaseId: 0, area2CaseId: 0, area3CaseId: 0, totalCaseId: 0, area1Cbm: '0', area2Cbm: '0', area3Cbm: '0', totalCbm: '0' },
+      batch3: { totalCaseId: 0, totalCbm: '0', groups: [
+        { no: 1, name: 'CUSTOMER DK (PRIORITY 1) & TUGU', totalCaseId: 0, rows: [] },
+        { no: 2, name: 'CUSTOMER DK (PRIORITY 2) & TUGU', totalCaseId: 0, rows: [] },
+        { no: 3, name: 'GRW DK', totalCaseId: 0, rows: [] },
+        { no: 4, name: 'HUB & LK ON SITE', totalCaseId: 0, rows: [] }
+      ]},
+      batch1_2: { totalCaseId: 0, totalCbm: '0', groups: [
+        { no: 5, name: 'Customer + GRW LP', totalCaseId: 0, rows: [] }
+      ]}
     };
   }
 
-  function getCell(r, c) {
-    if (r >= rows.length) return '';
-    var row = rows[r];
-    if (!row || c >= row.length) return '';
-    return String(row[c] || '').trim();
+  // Kolom tetap (posisi kolom stabil, cuma posisi BARIS yang sering bergeser):
+  //   Batch 3 (kiri)   → type=col2, area=col3, desc=col4, caseId=col5, cbm=col7
+  //   Batch 1&2 (kanan)→ type=col12, area=col13, desc=col14, caseId=col15, cbm=col17
+  var COL_B3  = { type: 2, area: 3, desc: 4, caseId: 5, cbm: 7 };
+  var COL_B12 = { type: 12, area: 13, desc: 14, caseId: 15, cbm: 17 };
+
+  function readGroup(keywords, cols, searchFrom) {
+    var anchor = crFindAnchorRow(rows, keywords, searchFrom);
+    if (!anchor) {
+      console.warn('[CR DEBUG] Grup dengan keyword', keywords, 'TIDAK ditemukan di sheet ringkasan.');
+      return { rowsOut: [], total: 0, nextSearchFrom: searchFrom };
+    }
+    var startRow = anchor.row;
+    var groupRows = crReadAreaRows(rows, startRow, cols, 3); // 3 baris: AREA 1, AREA 2, AREA 3
+    if (crHasTuguBlock(rows, startRow + 3, cols.type)) {
+      groupRows = groupRows.concat(crReadAreaRows(rows, startRow + 3, cols, 3)); // + 3 baris TUGU
+    }
+    var total = groupRows.reduce(function(s, r) { return s + (r.caseId || 0); }, 0);
+    return { rowsOut: groupRows, total: total, nextSearchFrom: startRow + 1 };
   }
 
-  function getNum(r, c) {
-    var v = getCell(r, c);
-    if (!v || v === '#N/A') return 0;
-    var parsed = parseFloat(v.replace(/,/g, ''));
-    return isNaN(parsed) ? 0 : parsed;
+  var cursor = 0;
+  var g1 = readGroup(['CUSTOMER DK ( PRIORITY 1)', 'CUSTOMER DK (PRIORITY 1)'], COL_B3, cursor);
+  cursor = g1.nextSearchFrom;
+  var g2 = readGroup(['CUSTOMER DK ( PRIORITY 2)', 'CUSTOMER DK (PRIORITY 2)'], COL_B3, cursor);
+  cursor = g2.nextSearchFrom;
+  var g3 = readGroup(['GRW DK'], COL_B3, cursor);
+  cursor = g3.nextSearchFrom;
+  var g4 = readGroup(['HUB & LK ON SITE', 'HUB DAN LK ON SITE', 'HUB & LK ONSITE'], COL_B3, cursor);
+  var g5 = readGroup(['CUSTOMER + GRW LP', 'CUSTOMER+GRW LP'], COL_B12, 0);
+
+  var batch3Groups = [
+    { no: 1, name: 'CUSTOMER DK (PRIORITY 1) & TUGU', totalCaseId: g1.total, rows: g1.rowsOut },
+    { no: 2, name: 'CUSTOMER DK (PRIORITY 2) & TUGU', totalCaseId: g2.total, rows: g2.rowsOut },
+    { no: 3, name: 'GRW DK', totalCaseId: g3.total, rows: g3.rowsOut },
+    { no: 4, name: 'HUB & LK ON SITE', totalCaseId: g4.total, rows: g4.rowsOut }
+  ];
+  var batch12Groups = [
+    { no: 5, name: 'Customer + GRW LP', totalCaseId: g5.total, rows: g5.rowsOut }
+  ];
+
+  function sumCbm(groupRows) {
+    return groupRows.reduce(function(s, r) {
+      var c = parseFloat(String(r.cbm || '0').replace(/,/g, ''));
+      return s + (isNaN(c) ? 0 : c);
+    }, 0);
   }
 
-  var releaseDate = getCell(3, 23) || new Date().toLocaleDateString('id-ID');
-  var area1CaseId = getNum(3, 24);
-  var area2CaseId = getNum(3, 25);
-  var area3CaseId = getNum(3, 26);
-  var totalCaseId = getNum(3, 27);
-  var area1Cbm = getCell(3, 28) || '-';
-  var area2Cbm = getCell(3, 29) || '-';
-  var area3Cbm = getCell(3, 30) || '-';
-  var totalCbm = getCell(3, 31) || '-';
+  var batch3AllRows  = [].concat(g1.rowsOut, g2.rowsOut, g3.rowsOut, g4.rowsOut);
+  var batch12AllRows = g5.rowsOut;
+  var batch3Total  = batch3AllRows.reduce(function(s, r) { return s + (r.caseId || 0); }, 0);
+  var batch12Total = batch12AllRows.reduce(function(s, r) { return s + (r.caseId || 0); }, 0);
 
-  var g1_rows = [
-    { type: getCell(7, 2), area: getCell(7, 3), desc: getCell(7, 4), caseId: getNum(7, 5), cbm: getCell(7, 7) },
-    { type: getCell(8, 2), area: getCell(8, 3), desc: getCell(8, 4), caseId: getNum(8, 5), cbm: getCell(8, 7) },
-    { type: getCell(9, 2), area: getCell(9, 3), desc: getCell(9, 4), caseId: getNum(9, 5), cbm: getCell(9, 7) },
-    { type: 'TUGU', area: getCell(10, 3) || 'HCI AREA 1', desc: getCell(10, 4) || 'ACCESSORIES', caseId: getNum(10, 5), cbm: getCell(10, 7) },
-    { type: 'TUGU', area: getCell(11, 3) || 'HCI AREA 2', desc: getCell(11, 4) || 'NON ACC', caseId: getNum(11, 5), cbm: getCell(11, 7) },
-    { type: 'TUGU', area: getCell(12, 3) || 'HCI AREA 3', desc: getCell(12, 4) || 'NON ACC', caseId: getNum(12, 5), cbm: getCell(12, 7) }
-  ];
-  var g1_total = getNum(7, 6);
+  // Total per Area (1/2/3) dihitung dengan MENJUMLAHKAN baris yang sama —
+  // sehingga otomatis selalu sinkron dengan total keseluruhan (tidak bisa beda lagi).
+  var areaTotals = { '1': 0, '2': 0, '3': 0 };
+  var allGroupRows = batch3AllRows.concat(batch12AllRows);
+  allGroupRows.forEach(function(r) {
+    var a = String(r.area || '').toUpperCase().replace(/\s+/g, '');
+    if (a.indexOf('AREA1') !== -1) areaTotals['1'] += r.caseId;
+    else if (a.indexOf('AREA2') !== -1) areaTotals['2'] += r.caseId;
+    else if (a.indexOf('AREA3') !== -1) areaTotals['3'] += r.caseId;
+  });
+  var grandTotalCaseId = areaTotals['1'] + areaTotals['2'] + areaTotals['3'];
 
-  var g2_rows = [
-    { type: getCell(13, 2), area: getCell(13, 3), desc: getCell(13, 4), caseId: getNum(13, 5), cbm: getCell(13, 7) },
-    { type: getCell(14, 2), area: getCell(14, 3), desc: getCell(14, 4), caseId: getNum(14, 5), cbm: getCell(14, 7) },
-    { type: getCell(15, 2), area: getCell(15, 3), desc: getCell(15, 4), caseId: getNum(15, 5), cbm: getCell(15, 7) },
-    { type: 'TUGU', area: getCell(16, 3) || 'HCI AREA 1', desc: getCell(16, 4) || 'ACCESSORIES', caseId: getNum(16, 5), cbm: getCell(16, 7) },
-    { type: 'TUGU', area: getCell(17, 3) || 'HCI AREA 2', desc: getCell(17, 4) || 'NON ACC', caseId: getNum(17, 5), cbm: getCell(17, 7) },
-    { type: 'TUGU', area: getCell(18, 3) || 'HCI AREA 3', desc: getCell(18, 4) || 'NON ACC', caseId: getNum(18, 5), cbm: getCell(18, 7) }
-  ];
-  var g2_total = getNum(13, 6);
-
-  var g3_rows = [
-    { type: getCell(20, 2), area: getCell(20, 3), desc: getCell(20, 4), caseId: getNum(20, 5), cbm: getCell(20, 7) },
-    { type: getCell(21, 2), area: getCell(21, 3), desc: getCell(21, 4), caseId: getNum(21, 5), cbm: getCell(21, 7) },
-    { type: getCell(22, 2), area: getCell(22, 3), desc: getCell(22, 4), caseId: getNum(22, 5), cbm: getCell(22, 7) }
-  ];
-  var g3_total = getNum(20, 6);
-
-  var g4_rows = [
-    { type: getCell(24, 2), area: getCell(24, 3), desc: getCell(24, 4), caseId: getNum(24, 5), cbm: getCell(24, 7) },
-    { type: getCell(25, 2), area: getCell(25, 3), desc: getCell(25, 4), caseId: getNum(25, 5), cbm: getCell(25, 7) },
-    { type: getCell(26, 2), area: getCell(26, 3), desc: getCell(26, 4), caseId: getNum(26, 5), cbm: getCell(26, 7) }
-  ];
-  var g4_total = getNum(24, 6);
-
-  var g5_rows = [
-    { type: getCell(7, 12), area: getCell(7, 13), desc: getCell(7, 14), caseId: getNum(7, 15), cbm: getCell(7, 17) },
-    { type: getCell(8, 12), area: getCell(8, 13), desc: getCell(8, 14), caseId: getNum(8, 15), cbm: getCell(8, 17) },
-    { type: getCell(9, 12), area: getCell(9, 13), desc: getCell(9, 14), caseId: getNum(9, 15), cbm: getCell(9, 17) }
-  ];
-  var g5_total = getNum(7, 16);
+  // Cari tanggal release (biasanya di baris yang sama dengan header "AREA 1")
+  var releaseDateStr = new Date().toLocaleDateString('id-ID');
+  var dateAnchor = crFindAnchorRow(rows, ['AREA 1']);
+  if (dateAnchor) {
+    for (var rr = dateAnchor.row; rr < Math.min(rows.length, dateAnchor.row + 3); rr++) {
+      var rowD = rows[rr];
+      if (!rowD) continue;
+      for (var cc = 0; cc < rowD.length; cc++) {
+        var v = String(rowD[cc] || '').trim();
+        if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(v)) { releaseDateStr = v; break; }
+      }
+    }
+  }
 
   return {
     meta: {
-      date: releaseDate,
-      area1CaseId: area1CaseId, area2CaseId: area2CaseId, area3CaseId: area3CaseId, totalCaseId: totalCaseId,
-      area1Cbm: area1Cbm, area2Cbm: area2Cbm, area3Cbm: area3Cbm, totalCbm: totalCbm
+      date: releaseDateStr,
+      area1CaseId: areaTotals['1'], area2CaseId: areaTotals['2'], area3CaseId: areaTotals['3'],
+      totalCaseId: grandTotalCaseId,
+      area1Cbm: '-', area2Cbm: '-', area3Cbm: '-',
+      totalCbm: (sumCbm(batch3AllRows) + sumCbm(batch12AllRows)).toFixed(2)
     },
-    batch3: {
-      totalCaseId: getNum(1, 13),
-      totalCbm: getCell(0, 13),
-      groups: [
-        { no: 1, name: 'CUSTOMER DK (PRIORITY 1) & TUGU', totalCaseId: g1_total, rows: g1_rows },
-        { no: 2, name: 'CUSTOMER DK (PRIORITY 2) & TUGU', totalCaseId: g2_total, rows: g2_rows },
-        { no: 3, name: 'GRW DK', totalCaseId: g3_total, rows: g3_rows },
-        { no: 4, name: 'HUB & LK ON SITE', totalCaseId: g4_total, rows: g4_rows }
-      ]
-    },
-    batch1_2: {
-      totalCaseId: getNum(5, 15),
-      totalCbm: getCell(5, 17),
-      groups: [
-        { no: 5, name: 'Customer + GRW LP', totalCaseId: g5_total, rows: g5_rows }
-      ]
-    }
+    batch3: { totalCaseId: batch3Total, totalCbm: sumCbm(batch3AllRows).toFixed(2), groups: batch3Groups },
+    batch1_2: { totalCaseId: batch12Total, totalCbm: sumCbm(batch12AllRows).toFixed(2), groups: batch12Groups }
   };
 }
 
@@ -10698,34 +10762,15 @@ var CR_RACK_BUCKET_META = [
 ];
 
 function computeRackingDistribution() {
-  var rackCounts = [0,0,0,0,0,0,0,0,0,0]; // index 0-9
+  var rackCounts = [0,0,0,0,0,0,0,0,0,0];
   var totalWithLoc = 0;
 
-  if (allCaseIdReleaseP1Data && allCaseIdReleaseP1Data.length > 1) {
-    var headers = allCaseIdReleaseP1Data[0];
-    var locColIdx = -1, caseColIdx = -1;
-    for (var c = 0; c < headers.length; c++) {
-      var h = String(headers[c] || '').toUpperCase().replace(/[\s_]/g, '');
-      if (h === 'LOC' || h === 'LOCATION') locColIdx = c;
-      if (h === 'CASEID' || h === 'QTY' || h === 'CASES') caseColIdx = c;
-    }
-
-    if (locColIdx !== -1) {
-      for (var r = 1; r < allCaseIdReleaseP1Data.length; r++) {
-        var row = allCaseIdReleaseP1Data[r];
-        if (!row) continue;
-        var locVal = String(row[locColIdx] || '').trim();
-        var level = getRackingLevel(locVal);
-        if (level === null) continue;
-
-        var caseCount = caseColIdx !== -1 ? parseInt(String(row[caseColIdx]).replace(/,/g, ''), 10) : 1;
-        if (isNaN(caseCount) || caseCount <= 0) caseCount = 1;
-
-        rackCounts[level] += caseCount;
-        totalWithLoc += caseCount;
-      }
-    }
-  }
+  CR_UNIFIED_ROWS.forEach(function(item) {
+    var level = getRackingLevel(item.loc);
+    if (level === null) return;
+    rackCounts[level] += 1; // 1 baris = 1 case, bukan pakai QTY
+    totalWithLoc += 1;
+  });
 
   return { rackCounts: rackCounts, total: totalWithLoc };
 }
@@ -10808,34 +10853,16 @@ function computeAisleDistribution() {
   var otherCount = 0;
   var total = 0;
 
-  if (allCaseIdReleaseP1Data && allCaseIdReleaseP1Data.length > 1) {
-    var headers = allCaseIdReleaseP1Data[0];
-    var locColIdx = -1, caseColIdx = -1;
-    for (var c = 0; c < headers.length; c++) {
-      var h = String(headers[c] || '').toUpperCase().replace(/[\s_]/g, '');
-      if (h === 'LOC' || h === 'LOCATION') locColIdx = c;
-      if (h === 'CASEID' || h === 'QTY' || h === 'CASES') caseColIdx = c;
-    }
+  CR_UNIFIED_ROWS.forEach(function(item) {
+    var aisle = getAisleFromLoc(item.loc);
+    if (aisle === null) return;
 
-    if (locColIdx !== -1) {
-      for (var r = 1; r < allCaseIdReleaseP1Data.length; r++) {
-        var row = allCaseIdReleaseP1Data[r];
-        if (!row) continue;
+    if (aisle === 'FLOOR') floorCount += 1;
+    else if (aisle === 'OTHER') otherCount += 1;
+    else aisleCounts[aisle] += 1;
 
-        var aisle = getAisleFromLoc(row[locColIdx]);
-        if (aisle === null) continue;
-
-        var cnt = caseColIdx !== -1 ? parseInt(String(row[caseColIdx]).replace(/,/g, ''), 10) : 1;
-        if (isNaN(cnt) || cnt <= 0) cnt = 1;
-
-        if (aisle === 'FLOOR') floorCount += cnt;
-        else if (aisle === 'OTHER') otherCount += cnt;
-        else aisleCounts[aisle] += cnt;
-
-        total += cnt;
-      }
-    }
-  }
+    total += 1; // 1 baris = 1 case, bukan pakai QTY
+  });
 
   return { aisleCounts: aisleCounts, floorCount: floorCount, otherCount: otherCount, total: total };
 }
@@ -10958,6 +10985,100 @@ function renderAisleDistribution() {
   }
 }
 
+// Menyeragamkan struktur baris dari sheet P1/P2/HUB&LK/LP menjadi 1 format.
+// 1 baris = 1 Case ID fisik. Tidak boleh dikalikan dengan kolom QTY apa pun.
+function normalizeCaseDetailSheet(rawRows, sourceTag, batchTag) {
+  var out = [];
+  if (!rawRows || rawRows.length < 2) return out;
+
+  var headers = rawRows[0];
+  var caseIdIdx = -1, skuIdx = -1, descIdx = -1, shiptoIdx = -1, areaIdx = -1, locIdx = -1, addDateIdx = -1, depIdx = -1;
+
+  for (var c = 0; c < headers.length; c++) {
+    var h = String(headers[c] || '').toUpperCase().trim().replace(/[\s_.\-]/g, '');
+    if (h === 'CASEID') caseIdIdx = c;
+    else if (h === 'SKU') skuIdx = c;
+    else if (h === 'DESCR' || h === 'DESCRIPTION') descIdx = c;
+    else if (h === 'SHIPTO') shiptoIdx = c;
+    else if (h === 'LOC' || h === 'LOCATION') locIdx = c;
+    else if (h.indexOf('ADDDATE') !== -1) addDateIdx = c;
+    else if (h === 'DEP') depIdx = c;
+    else if (areaIdx === -1 && h.indexOf('AREA') !== -1) areaIdx = c;
+  }
+
+  if (caseIdIdx === -1) {
+    console.warn('[CR DEBUG] Sheet "' + sourceTag + '" tidak ada kolom CASEID. Header:', headers);
+    return out;
+  }
+
+  // Kelompokkan baris berdasarkan CASEID unik.
+  // Satu Case ID bisa punya beberapa baris (beberapa SKU dalam 1 case),
+  // jadi kita gabung jadi 1 entri per CASEID, ambil nilai pertama yang terisi.
+  var caseMap = {}; // caseId -> merged record
+  var caseOrder = [];
+
+  for (var r = 1; r < rawRows.length; r++) {
+    var row = rawRows[r];
+    if (!row) continue;
+
+    var isRowEmpty = row.every(function(cell) { return String(cell || '').trim() === ''; });
+    if (isRowEmpty) continue;
+
+    var caseIdRaw = String(row[caseIdIdx] || '').trim();
+    if (!caseIdRaw || caseIdRaw === '-' || caseIdRaw === '#N/A') continue;
+
+    // ── DIAGNOSTIC SEMENTARA ──
+    if (caseIdRaw === '21897517') {
+      console.log('[CR TRACE] Sheet ' + sourceTag + ' baris ' + r + ' → CASEID=' + caseIdRaw +
+        ' | raw SKU cell="' + row[skuIdx] + '" (length=' + String(row[skuIdx] || '').length + ')' +
+        ' | raw DESCR cell="' + row[descIdx] + '"');
+    }
+
+    if (!caseMap[caseIdRaw]) {
+      caseMap[caseIdRaw] = {
+        caseId: caseIdRaw,
+        sku: '', desc: '', shipto: '', dep: '', area: '', loc: '', addDateRaw: null
+      };
+      caseOrder.push(caseIdRaw);
+    }
+
+    var rec = caseMap[caseIdRaw];
+    // Isi field yang masih kosong dengan nilai dari baris ini (kalau ada)
+    if (!rec.sku && skuIdx !== -1) rec.sku = String(row[skuIdx] || '').trim().replace(/"/g, '');
+    if (!rec.desc && descIdx !== -1) rec.desc = String(row[descIdx] || '').trim().replace(/"/g, '');
+    if (!rec.shipto && shiptoIdx !== -1) rec.shipto = String(row[shiptoIdx] || '').trim();
+    if (!rec.dep && depIdx !== -1) rec.dep = String(row[depIdx] || '').trim();
+    if (!rec.area && areaIdx !== -1) rec.area = String(row[areaIdx] || '').trim();
+    if (!rec.loc && locIdx !== -1) rec.loc = String(row[locIdx] || '').trim();
+    if (!rec.addDateRaw && addDateIdx !== -1 && row[addDateIdx]) rec.addDateRaw = row[addDateIdx];
+  }
+
+  if (caseMap['21897517']) {
+    console.log('[CR TRACE] Hasil akhir grouping CASEID 21897517 di sheet ' + sourceTag + ':', JSON.stringify(caseMap['21897517']));
+  }
+
+  caseOrder.forEach(function(cid) {
+    var rec = caseMap[cid];
+    out.push({
+      sku: rec.sku, desc: rec.desc, shipto: rec.shipto, dep: rec.dep, area: rec.area, loc: rec.loc,
+      addDateRaw: rec.addDateRaw,
+      source: sourceTag, batch: batchTag
+    });
+  });
+
+  return out;
+}
+
+// Gabungkan P1 + P2 + HUB&LK (semuanya Batch 3 / active)
+// dan LP (Batch 1&2 / buffer) menjadi satu array terpadu.
+function buildUnifiedCaseDetailRows() {
+  CR_UNIFIED_ROWS = []
+    .concat(normalizeCaseDetailSheet(allCaseIdReleaseP1Data, 'P1', 'active'))
+    .concat(normalizeCaseDetailSheet(allCaseIdReleaseP2Data, 'P2', 'active'))
+    .concat(normalizeCaseDetailSheet(allCaseIdReleaseHubLkData, 'HUBLK', 'active'))
+    .concat(normalizeCaseDetailSheet(allCaseIdReleaseLpData, 'LP', 'buffer'));
+}
+
 function renderCaseIdReleasePage() {
   if (!allCaseIdReleaseData || allCaseIdReleaseData.length === 0) {
     if (!isCaseIdReleaseFetchedFromSheets) {
@@ -10966,86 +11087,86 @@ function renderCaseIdReleasePage() {
   }
   var data = parseCaseIdReleaseData(allCaseIdReleaseData);
 
-  // ── Parse P1+GRW DK sheet untuk tanggal & breakdown brand/SKU ──
+ // ── Gabungkan P1 + P2 + HUB&LK + LP untuk tanggal & breakdown brand/SKU ──
   var latestAddDate = null;
-  var informaCases = 0, selmaCases = 0, electronicsCases = 0;
+  var informaCases = 0, selmaCases = 0, electronicsCases = 0, kelsCases = 0;
   var skuMap = {};
   var areaSkuMap = { '1': {}, '2': {}, '3': {} };
   var batchSkuMap = { 'active': {}, 'buffer': {} };
 
-  if (allCaseIdReleaseP1Data && allCaseIdReleaseP1Data.length > 1) {
-    var headers = allCaseIdReleaseP1Data[0];
-    var addDateColIdx = -1, skuColIdx = -1, descColIdx = -1, caseColIdx = -1, shipColIdx = -1, areaColIdx = -1;
+  buildUnifiedCaseDetailRows();
 
-    for (var c = 0; c < headers.length; c++) {
-      var h = String(headers[c] || '').toUpperCase().replace(/[\s_]/g, '');
-      if (h === 'ADDDATE') addDateColIdx = c;
-      if (h === 'SKU' || h === 'ITEMID') skuColIdx = c;
-      if (h === 'DESCR' || h === 'DESCRIPTION' || h === 'ITEMDESC') descColIdx = c;
-      if (h === 'CASEID' || h === 'QTY' || h === 'CASES') caseColIdx = c;
-      if (h === 'SHIPTO' || h === 'BRAND' || h === 'STORE') shipColIdx = c;
-      if (h.indexOf('AREA') !== -1) areaColIdx = c;
-    }
-
-    for (var r = 1; r < allCaseIdReleaseP1Data.length; r++) {
-      var row = allCaseIdReleaseP1Data[r];
-      if (!row) continue;
-
-      if (addDateColIdx !== -1 && row[addDateColIdx]) {
-        var rawVal = String(row[addDateColIdx]).trim();
-        if (rawVal && rawVal !== '-' && rawVal !== '#N/A') {
-          var dObj = null;
-          var num = parseFloat(rawVal);
-          if (!isNaN(num) && num > 40000 && num < 60000) {
-            var utc_days = Math.floor(num - 25569);
-            var utc_value = utc_days * 86400;
-            var date_info = new Date(utc_value * 1000);
-            dObj = new Date(date_info.getFullYear(), date_info.getMonth(), date_info.getDate());
-          } else {
-            dObj = new Date(rawVal);
-          }
-          if (dObj && !isNaN(dObj.getTime())) {
-            if (!latestAddDate || dObj.getTime() > latestAddDate.getTime()) latestAddDate = dObj;
-          }
+  CR_UNIFIED_ROWS.forEach(function(item) {
+    // ── Tanggal terbaru (ADD DATE) dari semua sheet ──
+    if (item.addDateRaw) {
+      var rawVal = String(item.addDateRaw).trim();
+      if (rawVal && rawVal !== '-' && rawVal !== '#N/A') {
+        var dObj = null;
+        var num = parseFloat(rawVal);
+        if (!isNaN(num) && num > 40000 && num < 60000) {
+          var utc_days = Math.floor(num - 25569);
+          var utc_value = utc_days * 86400;
+          var date_info = new Date(utc_value * 1000);
+          dObj = new Date(date_info.getFullYear(), date_info.getMonth(), date_info.getDate());
+        } else {
+          dObj = new Date(rawVal);
+        }
+        if (dObj && !isNaN(dObj.getTime())) {
+          if (!latestAddDate || dObj.getTime() > latestAddDate.getTime()) latestAddDate = dObj;
         }
       }
-
-      var skuVal = skuColIdx !== -1 ? String(row[skuColIdx] || '').trim().replace(/\"/g, '') : '';
-      var descVal = descColIdx !== -1 ? String(row[descColIdx] || '').trim().replace(/\"/g, '') : '';
-      var areaVal = areaColIdx !== -1 ? String(row[areaColIdx] || '').trim().replace(/\"/g, '') : '';
-      var caseCount = caseColIdx !== -1 ? parseInt(String(row[caseColIdx]).replace(/,/g, ''), 10) : 0;
-      if (isNaN(caseCount) || caseCount < 0) caseCount = 0;
-
-      // In some sheets, each row represents 1 case count even if the quantity cell is empty or a string
-      if (caseCount === 0) caseCount = 1;
-
-      if (skuVal && skuVal !== '-' && skuVal !== '#N/A') {
-        if (!skuMap[skuVal]) skuMap[skuVal] = { count: 0, desc: descVal };
-        skuMap[skuVal].count += caseCount;
-
-        // Per Area
-        var areaKey = '1';
-        if (areaVal === '2' || areaVal === 'HCI AREA 2' || areaVal.indexOf('2') !== -1) areaKey = '2';
-        else if (areaVal === '3' || areaVal === 'HCI AREA 3' || areaVal.indexOf('3') !== -1) areaKey = '3';
-        
-        if (!areaSkuMap[areaKey]) areaSkuMap[areaKey] = {};
-        if (!areaSkuMap[areaKey][skuVal]) areaSkuMap[areaKey][skuVal] = { count: 0, desc: descVal };
-        areaSkuMap[areaKey][skuVal].count += caseCount;
-
-        // Per Batch (All detailed entries are Batch 3 / Active)
-        var batchKey = 'active';
-        if (!batchSkuMap[batchKey]) batchSkuMap[batchKey] = {};
-        if (!batchSkuMap[batchKey][skuVal]) batchSkuMap[batchKey][skuVal] = { count: 0, desc: descVal };
-        batchSkuMap[batchKey][skuVal].count += caseCount;
-
-        var shipVal = shipColIdx !== -1 ? String(row[shipColIdx] || '').toUpperCase() : '';
-        var lowerDesc = descVal.toUpperCase();
-        if (shipVal.indexOf('SELMA') !== -1 || lowerDesc.indexOf('SELMA') !== -1) selmaCases += caseCount;
-        else if (shipVal.indexOf('ELEC') !== -1 || lowerDesc.indexOf('ELECTRONIC') !== -1) electronicsCases += caseCount;
-        else informaCases += caseCount;
-      }
     }
+
+    var skuVal = item.sku || ('(TANPA SKU)');
+    var descVal = item.desc || '';
+
+    // 1 baris = 1 Case ID fisik. JANGAN dikalikan kolom QTY.
+    var caseCount = 1;
+
+    // ── Total per SKU (untuk Top 5 SKU keseluruhan) ──
+    // Case ID tanpa SKU tetap dihitung, tapi dikelompokkan terpisah
+    // supaya tidak mengotori daftar Top 5 SKU asli.
+    if (item.sku) {
+      if (!skuMap[skuVal]) skuMap[skuVal] = { count: 0, desc: descVal };
+      skuMap[skuVal].count += caseCount;
+    }
+
+    // ── Per Area Storing ──
+    var areaVal = String(item.area || '').toUpperCase();
+    var areaKey = '1';
+    if (areaVal.indexOf('2') !== -1) areaKey = '2';
+    else if (areaVal.indexOf('3') !== -1) areaKey = '3';
+
+    if (!areaSkuMap[areaKey]) areaSkuMap[areaKey] = {};
+    if (!areaSkuMap[areaKey][skuVal]) areaSkuMap[areaKey][skuVal] = { count: 0, desc: descVal };
+    areaSkuMap[areaKey][skuVal].count += caseCount;
+
+    // ── Per Batch (P1/P2/HUB&LK = Batch 3 aktif, LP = Batch 1&2 buffer) ──
+    var batchKey = item.batch || 'active';
+    if (!batchSkuMap[batchKey]) batchSkuMap[batchKey] = {};
+    if (!batchSkuMap[batchKey][skuVal]) batchSkuMap[batchKey][skuVal] = { count: 0, desc: descVal };
+    batchSkuMap[batchKey][skuVal].count += caseCount;
+
+    // ── Per Brand (dibaca dari kolom DEP, bukan SHIPTO) ──
+    var depVal = String(item.dep || '').toUpperCase().trim();
+    if (depVal === 'SELMA') {
+      selmaCases += caseCount;
+    } else if (depVal === 'ELECTRONICS') {
+      electronicsCases += caseCount;
+    } else if (depVal === 'KELS') {
+      kelsCases += caseCount;
+    } else {
+      // default: INFORMA, atau DEP kosong/tidak dikenal tetap masuk Informa
+      informaCases += caseCount;
+    }
+  });
+
+  if (skuMap['X077545']) {
+    console.log('[CR TRACE] skuMap["X077545"] =', JSON.stringify(skuMap['X077545']));
   }
+  var noSkuEntries = Object.keys(skuMap).filter(function(k){ return skuMap[k].isNoSku; });
+  console.log('[CR TRACE] Jumlah entri (NO-SKU):', noSkuEntries.length, '- Total case di dalamnya:',
+    noSkuEntries.reduce(function(s,k){ return s + skuMap[k].count; }, 0));
 
   if (informaCases === 0 && selmaCases === 0) {
     if (!isCaseIdReleaseFetchedFromSheets) {
@@ -11269,16 +11390,19 @@ function renderCaseIdReleasePage() {
   }
 
   // ── BU Breakdown ──
-  var totalBU = informaCases + selmaCases + electronicsCases;
+  var totalBU = informaCases + selmaCases + electronicsCases + kelsCases;
   var infPct = totalBU > 0 ? ((informaCases / totalBU) * 100).toFixed(1) : 0;
   var selPct = totalBU > 0 ? ((selmaCases / totalBU) * 100).toFixed(1) : 0;
   var elecPct = totalBU > 0 ? ((electronicsCases / totalBU) * 100).toFixed(1) : 0;
+  var kelsPct = totalBU > 0 ? ((kelsCases / totalBU) * 100).toFixed(1) : 0;
   setText('cr-bu-informa-text', informaCases.toLocaleString() + ' Cases (' + infPct + '%)');
   setText('cr-bu-selma-text', selmaCases.toLocaleString() + ' Cases (' + selPct + '%)');
   setText('cr-bu-electronics-text', electronicsCases.toLocaleString() + ' Cases (' + elecPct + '%)');
+  setText('cr-bu-kels-text', kelsCases.toLocaleString() + ' Cases (' + kelsPct + '%)');
   var infBar = document.getElementById('cr-bu-informa-bar'); if (infBar) infBar.style.width = infPct + '%';
   var selBar = document.getElementById('cr-bu-selma-bar'); if (selBar) selBar.style.width = selPct + '%';
   var elecBar = document.getElementById('cr-bu-electronics-bar'); if (elecBar) elecBar.style.width = elecPct + '%';
+  var kelsBar = document.getElementById('cr-bu-kels-bar'); if (kelsBar) kelsBar.style.width = kelsPct + '%';
 
   // ── Top SKU (disimpan untuk modal, bukan dirender langsung) ──
   var skuArray = Object.keys(skuMap).map(function(k) { return { sku: k, count: skuMap[k].count, desc: skuMap[k].desc }; });
