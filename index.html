@@ -3160,7 +3160,7 @@ PLANNING REPORT</div>
     <div class="card">
       <div class="card-header">
         <div>
-          <div class="card-title">SLA GRW - GUDANG KE TOKO</div>
+          <div class="card-title">SLA GRW</div>
           <div class="card-sub">% ACHIEVEMENT GRW</div>
         </div>
       </div>
@@ -3190,7 +3190,7 @@ PLANNING REPORT</div>
     <div class="card">
       <div class="card-header">
         <div>
-          <div class="card-title">SLA CUSTOMER - TOKO KE CUSTOMER</div>
+          <div class="card-title">SLA CUSTOMER</div>
           <div class="card-sub">% ACHIEVEMENT CUSTOMER</div>
         </div>
       </div>
@@ -6538,6 +6538,14 @@ function initSlaTrendModalChart() {
           type: 'linear',
           display: true,
           position: 'left',
+          max: (function() {
+            var maxVol = 0;
+            for (var idx = 0; idx < hitPoints.length; idx++) {
+              var tot = (hitPoints[idx] || 0) + (misPoints[idx] || 0);
+              if (tot > maxVol) maxVol = tot;
+            }
+            return calcNiceVolumeMax(maxVol);
+          })(),
           title: {
             display: true,
             text: 'Volume (Orders)',
@@ -6551,8 +6559,14 @@ function initSlaTrendModalChart() {
           type: 'linear',
           display: true,
           position: 'right',
-          min: calcPctAxisMin(grwPoints, custPoints),
-          max: 100,
+          min: (function() {
+            var bounds = calcSlaAxisBounds(grwPoints, custPoints);
+            return bounds.min;
+          })(),
+          max: (function() {
+            var bounds = calcSlaAxisBounds(grwPoints, custPoints);
+            return bounds.max;
+          })(),
           title: {
             display: true,
             text: 'Achievement Rate (%)',
@@ -6564,8 +6578,9 @@ function initSlaTrendModalChart() {
             color: '#8e9fae',
             font: { family: 'Fira Code', size: 10 },
             callback: function(value) {
-  return value.toFixed(1) + '%';
-}
+              if (value > 100) return '';
+              return value.toFixed(1) + '%';
+            }
           }
         },
         x: { stacked: true,
@@ -6757,6 +6772,14 @@ function initSlaTrendOnPageCharts() {
           type: 'linear',
           display: true,
           position: 'left',
+          max: (function() {
+            var maxVol = 0;
+            for (var idx = 0; idx < grwHitPoints.length; idx++) {
+              var tot = (grwHitPoints[idx] || 0) + (grwMisPoints[idx] || 0);
+              if (tot > maxVol) maxVol = tot;
+            }
+            return calcNiceVolumeMax(maxVol);
+          })(),
           title: {
             display: true,
             text: 'Volume (Orders)',
@@ -6770,8 +6793,14 @@ function initSlaTrendOnPageCharts() {
           type: 'linear',
           display: true,
           position: 'right',
-          min: calcPctAxisMin(grwPctPoints),
-          max: 100,
+          min: (function() {
+            var bounds = calcSlaAxisBounds(grwPctPoints);
+            return bounds.min;
+          })(),
+          max: (function() {
+            var bounds = calcSlaAxisBounds(grwPctPoints);
+            return bounds.max;
+          })(),
           title: {
             display: true,
             text: 'Achievement Rate (%)',
@@ -6783,8 +6812,9 @@ function initSlaTrendOnPageCharts() {
             color: '#8e9fae',
             font: { family: 'Fira Code', size: 10 },
             callback: function(value) {
-  return value.toFixed(1) + '%';
-}
+              if (value > 100) return '';
+              return value.toFixed(1) + '%';
+            }
           }
         },
         x: { stacked: true,
@@ -6850,6 +6880,14 @@ function initSlaTrendOnPageCharts() {
           type: 'linear',
           display: true,
           position: 'left',
+          max: (function() {
+            var maxVol = 0;
+            for (var idx = 0; idx < custHitPoints.length; idx++) {
+              var tot = (custHitPoints[idx] || 0) + (custMisPoints[idx] || 0);
+              if (tot > maxVol) maxVol = tot;
+            }
+            return calcNiceVolumeMax(maxVol);
+          })(),
           title: {
             display: true,
             text: 'Volume (Orders)',
@@ -6863,8 +6901,14 @@ function initSlaTrendOnPageCharts() {
           type: 'linear',
           display: true,
           position: 'right',
-          min: calcPctAxisMin(custPctPoints),
-          max: 100,
+          min: (function() {
+            var bounds = calcSlaAxisBounds(custPctPoints);
+            return bounds.min;
+          })(),
+          max: (function() {
+            var bounds = calcSlaAxisBounds(custPctPoints);
+            return bounds.max;
+          })(),
           title: {
             display: true,
             text: 'Achievement Rate (%)',
@@ -6876,8 +6920,9 @@ function initSlaTrendOnPageCharts() {
             color: '#8e9fae',
             font: { family: 'Fira Code', size: 10 },
             callback: function(value) {
-  return value.toFixed(1) + '%';
-}
+              if (value > 100) return '';
+              return value.toFixed(1) + '%';
+            }
           }
         },
         x: { stacked: true,
@@ -8502,6 +8547,54 @@ function calcPctAxisMin() {
   return Math.floor(dynMin * 10) / 10; // presisi 1 desimal
 }
 
+function calcSlaAxisBounds() {
+  var all = [];
+  for (var i = 0; i < arguments.length; i++) {
+    (arguments[i] || []).forEach(function(v) {
+      if (v !== null && v !== undefined && !isNaN(v)) all.push(parseFloat(v));
+    });
+  }
+  if (!all.length) return { min: 0, max: 100 };
+  var minVal = Math.min.apply(null, all);
+  
+  var sMax = 103; // Agar garis 100% tidak mentok ke atas
+  if (minVal >= 100) {
+    return { min: 95, max: 103 };
+  }
+  
+  // R = 0.70 (70% tinggi grafik) menjamin garis persentase selalu di atas volume bar (max ~67% tinggi)
+  var R = 0.70; 
+  var sMin = (minVal - R * sMax) / (1 - R);
+  if (sMin < 0) sMin = 0;
+  
+  sMin = Math.floor(sMin * 10) / 10;
+  sMax = Math.ceil(sMax * 10) / 10;
+  
+  return { min: sMin, max: sMax };
+}
+
+function calcNiceVolumeMax(maxVol) {
+  if (!maxVol || maxVol <= 0) return undefined;
+  var target = maxVol * 1.35;
+  var order = Math.pow(10, Math.floor(Math.log10(target)));
+  if (order < 1) order = 1;
+  var normalized = target / order;
+  var niceNormalized;
+  if (normalized <= 1.0) niceNormalized = 1.0;
+  else if (normalized <= 1.2) niceNormalized = 1.2;
+  else if (normalized <= 1.5) niceNormalized = 1.5;
+  else if (normalized <= 1.8) niceNormalized = 1.8;
+  else if (normalized <= 2.0) niceNormalized = 2.0;
+  else if (normalized <= 2.5) niceNormalized = 2.5;
+  else if (normalized <= 3.0) niceNormalized = 3.0;
+  else if (normalized <= 4.0) niceNormalized = 4.0;
+  else if (normalized <= 5.0) niceNormalized = 5.0;
+  else if (normalized <= 6.0) niceNormalized = 6.0;
+  else if (normalized <= 8.0) niceNormalized = 8.0;
+  else niceNormalized = 10.0;
+  return niceNormalized * order;
+}
+
 function escHtml(str) {
   return String(str)
     .replace(/&/g,'&amp;')
@@ -9478,7 +9571,10 @@ function buildDestinationDetail(destination){
     '<th>Vendor</th>' +
     '<th>Total</th>' +
     '<th>On Time</th>' +
-    '<th>SLA</th>' +
+    '<th style="color:#d97706;">Tlat Stuffing</th>' +
+    '<th style="color:#dc2626;">Tlat 1 Hari</th>' +
+    '<th style="color:#991b1b;">Tlat >2 Hari</th>' +
+    '<th>Performance</th>' +
     '</tr>';
 
   Object.keys(map).forEach(function(v){
@@ -9495,6 +9591,9 @@ function buildDestinationDetail(destination){
       '<td>'+esc(v)+'</td>' +
       '<td>'+fn(d.totalArmada)+'</td>' +
       '<td>'+fn(d.onTime)+'</td>' +
+      '<td style="color:#d97706;">'+fn(d.telatStuffing || 0)+'</td>' +
+      '<td style="color:#dc2626;">'+fn(d.telat1Hari || 0)+'</td>' +
+      '<td style="color:#991b1b;">'+fn(d.telat2HariUp || 0)+'</td>' +
       '<td>'+fp(sla)+'%</td>' +
       '</tr>';
 
@@ -9520,7 +9619,10 @@ function buildVendorDetail(vendor){
     '<th>Destination</th>' +
     '<th>Total</th>' +
     '<th>On Time</th>' +
-    '<th>SLA</th>' +
+    '<th style="color:#d97706;">Tlat Stuffing</th>' +
+    '<th style="color:#dc2626;">Tlat 1 Hari</th>' +
+    '<th style="color:#991b1b;">Tlat >2 Hari</th>' +
+    '<th>Performance</th>' +
     '</tr>';
 
   Object.keys(map).forEach(function(dest){
@@ -9537,6 +9639,9 @@ function buildVendorDetail(vendor){
       '<td>'+esc(dest)+'</td>' +
       '<td>'+fn(d.totalArmada)+'</td>' +
       '<td>'+fn(d.onTime)+'</td>' +
+      '<td style="color:#d97706;">'+fn(d.telatStuffing || 0)+'</td>' +
+      '<td style="color:#dc2626;">'+fn(d.telat1Hari || 0)+'</td>' +
+      '<td style="color:#991b1b;">'+fn(d.telat2HariUp || 0)+'</td>' +
       '<td>'+fp(sla)+'%</td>' +
       '</tr>';
 
@@ -9735,14 +9840,17 @@ function renderDestinationRanking(destination) {
   headEl.innerHTML = '<th>Vendor</th>' +
                      '<th style="text-align:center;">Total Armada</th>' +
                      '<th style="text-align:center;">On Time</th>' +
-                     '<th style="text-align:center;">SLA</th>';
+                     '<th style="text-align:center; color:#d97706;">Tlat Stuffing</th>' +
+                     '<th style="text-align:center; color:#dc2626;">Tlat 1 Hari</th>' +
+                     '<th style="text-align:center; color:#991b1b;">Tlat >2 Hari</th>' +
+                     '<th style="text-align:center;">Performance</th>';
 
   var map = FF_APP.destDetailMap[destination] || {};
   var list = Object.keys(map).map(function(k) { return map[k]; });
   list.sort(function(a, b) { return b.totalArmada - a.totalArmada; });
 
   if (list.length === 0) {
-    bodyEl.innerHTML = '<tr><td colspan="4" style="text-align:center; color:var(--muted); padding:10px;">Tidak ada data vendor</td></tr>';
+    bodyEl.innerHTML = '<tr><td colspan="7" style="text-align:center; color:var(--muted); padding:10px;">Tidak ada data vendor</td></tr>';
   } else {
     bodyEl.innerHTML = list.map(function(item) {
       var sla = item.totalArmada ? ((item.onTime / item.totalArmada) * 100) : 0;
@@ -9750,6 +9858,9 @@ function renderDestinationRanking(destination) {
         '<td><strong style="color:var(--text);">' + esc(item.vendor) + '</strong></td>' +
         '<td style="text-align:center; font-family:var(--font-mono);">' + fn(item.totalArmada) + '</td>' +
         '<td style="text-align:center; font-family:var(--font-mono);">' + fn(item.onTime) + '</td>' +
+        '<td style="text-align:center; font-family:var(--font-mono); color:#d97706;">' + fn(item.telatStuffing || 0) + '</td>' +
+        '<td style="text-align:center; font-family:var(--font-mono); color:#dc2626;">' + fn(item.telat1Hari || 0) + '</td>' +
+        '<td style="text-align:center; font-family:var(--font-mono); color:#991b1b;">' + fn(item.telat2HariUp || 0) + '</td>' +
         '<td style="text-align:center; font-family:var(--font-mono); font-weight:700; color:var(--blue);">' + fp(sla) + '%</td>' +
         '</tr>';
     }).join('');
@@ -9766,14 +9877,17 @@ function renderVendorRanking(vendor) {
   headEl.innerHTML = '<th>Destination</th>' +
                      '<th style="text-align:center;">Total Armada</th>' +
                      '<th style="text-align:center;">On Time</th>' +
-                     '<th style="text-align:center;">SLA</th>';
+                     '<th style="text-align:center; color:#d97706;">Tlat Stuffing</th>' +
+                     '<th style="text-align:center; color:#dc2626;">Tlat 1 Hari</th>' +
+                     '<th style="text-align:center; color:#991b1b;">Tlat >2 Hari</th>' +
+                     '<th style="text-align:center;">Performance</th>';
 
   var map = FF_APP.vendorDetailMap[vendor] || {};
   var list = Object.keys(map).map(function(k) { return map[k]; });
   list.sort(function(a, b) { return b.totalArmada - a.totalArmada; });
 
   if (list.length === 0) {
-    bodyEl.innerHTML = '<tr><td colspan="4" style="text-align:center; color:var(--muted); padding:10px;">Tidak ada data destinasi</td></tr>';
+    bodyEl.innerHTML = '<tr><td colspan="7" style="text-align:center; color:var(--muted); padding:10px;">Tidak ada data destinasi</td></tr>';
   } else {
     bodyEl.innerHTML = list.map(function(item) {
       var sla = item.totalArmada ? ((item.onTime / item.totalArmada) * 100) : 0;
@@ -9781,6 +9895,9 @@ function renderVendorRanking(vendor) {
         '<td><strong style="color:var(--text);">' + esc(item.destination || 'OTHER') + '</strong></td>' +
         '<td style="text-align:center; font-family:var(--font-mono);">' + fn(item.totalArmada) + '</td>' +
         '<td style="text-align:center; font-family:var(--font-mono);">' + fn(item.onTime) + '</td>' +
+        '<td style="text-align:center; font-family:var(--font-mono); color:#d97706;">' + fn(item.telatStuffing || 0) + '</td>' +
+        '<td style="text-align:center; font-family:var(--font-mono); color:#dc2626;">' + fn(item.telat1Hari || 0) + '</td>' +
+        '<td style="text-align:center; font-family:var(--font-mono); color:#991b1b;">' + fn(item.telat2HariUp || 0) + '</td>' +
         '<td style="text-align:center; font-family:var(--font-mono); font-weight:700; color:var(--blue);">' + fp(sla) + '%</td>' +
         '</tr>';
     }).join('');
@@ -9807,71 +9924,253 @@ function renderTrendChart(key, type) {
     });
   }
 
+  // Update chart card title to reflect percentage volume per armada type
+  var titleEl = document.getElementById('ffTrendTitle');
+  if (titleEl) {
+    if (type === 'VENDOR') {
+      titleEl.textContent = 'Persentase Volume per Type Armada (per Tujuan)';
+    } else {
+      titleEl.textContent = 'Persentase Volume per Type Armada (per Vendor)';
+    }
+  }
+
   var sdDate = new Date(FF_APP.sd || new Date());
   var edDate = new Date(FF_APP.ed || new Date());
   sdDate.setHours(0,0,0,0);
   edDate.setHours(23,59,59,999);
 
-  var labels = [];
-  var pcts = [];
+  // Filter rows by date range
+  var filteredByDate = filtered.filter(function(r) {
+    var rDate = getRowDate(r);
+    if (!rDate) return true; // fallback
+    var compDate = new Date(rDate);
+    compDate.setHours(0,0,0,0);
+    return compDate >= sdDate && compDate <= edDate;
+  });
 
-  for (var d = new Date(sdDate); d <= edDate; d.setDate(d.getDate() + 1)) {
-    var dStr = (d.getMonth() + 1) + '/' + d.getDate();
-    var tripsOnDay = filtered.filter(function(r) {
-      var rDate = getRowDate(r);
-      return rDate && rDate.toDateString() === d.toDateString();
-    });
-
-    var tTot = tripsOnDay.length;
-    var tOn = 0;
-    tripsOnDay.forEach(function(r) {
-      var cls = classifyFulfillmentRow(r);
-      if (cls.onTime) tOn += 1;
-    });
-
-    var tPct = tTot > 0 ? (tOn / tTot) * 100 : 0;
-    if (tTot > 0) {
-      labels.push(dStr);
-      pcts.push(+tPct.toFixed(1));
+  // Aggregate and find unique X-axis entities:
+  // If type is VENDOR, show Destinations on X-axis.
+  // If type is DEST, show Vendors on X-axis.
+  var xEntitiesMap = {};
+  filteredByDate.forEach(function(r) {
+    if (type === 'VENDOR') {
+      var dest = String(r['CITY'] || r['city'] || r['SHIPPING LINE'] || r['SHIPPINGLINE'] || 'Bandung').toUpperCase().trim();
+      if (dest === 'ZYLLEM') dest = 'SURABAYA';
+      xEntitiesMap[dest] = (xEntitiesMap[dest] || 0) + 1;
+    } else {
+      var vendor = String(r['CARRIER ID'] || r['CARRIERID'] || 'INTERNAL').trim().toUpperCase();
+      xEntitiesMap[vendor] = (xEntitiesMap[vendor] || 0) + 1;
     }
+  });
+
+  // Sort unique entities by total volume descending
+  var xEntities = Object.keys(xEntitiesMap).sort(function(a, b) {
+    return xEntitiesMap[b] - xEntitiesMap[a];
+  });
+
+  if (xEntities.length === 0) {
+    xEntities = ['N/A'];
   }
+
+  // Get unique list of JENISARMADA in the filtered dataset
+  var armadaTypesSet = {};
+  filteredByDate.forEach(function(r) {
+    var arm = String(r['JENISARMADA'] || r['JENIS ARMADA'] || 'OTHER').trim().toUpperCase();
+    if (!arm || arm === '-' || arm === 'N/A') arm = 'OTHER';
+    armadaTypesSet[arm] = true;
+  });
+  var uniqueArmadaTypes = Object.keys(armadaTypesSet).sort();
+
+  var labels = xEntities;
+
+  var armadaPalette = {
+    'WINGBOX': { bg: '#3b82f6', border: '#2563eb' },
+    'FUSO': { bg: '#10b981', border: '#059669' },
+    'CDD LONG CHASSIS': { bg: '#f59e0b', border: '#d97706' },
+    'CDD': { bg: '#8b5cf6', border: '#7c3aed' },
+    'CDE': { bg: '#ec4899', border: '#db2777' },
+    'OTHER': { bg: '#64748b', border: '#475569' }
+  };
+
+  var fallbackColors = [
+    { bg: '#3b82f6', border: '#2563eb' },
+    { bg: '#10b981', border: '#059669' },
+    { bg: '#f59e0b', border: '#d97706' },
+    { bg: '#8b5cf6', border: '#7c3aed' },
+    { bg: '#ec4899', border: '#db2777' },
+    { bg: '#06b6d4', border: '#0891b2' },
+    { bg: '#64748b', border: '#475569' }
+  ];
+
+  var datasets = uniqueArmadaTypes.map(function(arm, idx) {
+    var color = armadaPalette[arm] || fallbackColors[idx % fallbackColors.length];
+    
+    var dataPoints = xEntities.map(function(entity) {
+      // Find rows belonging to this entity
+      var entityRows = filteredByDate.filter(function(r) {
+        if (type === 'VENDOR') {
+          var dest = String(r['CITY'] || r['city'] || r['SHIPPING LINE'] || r['SHIPPINGLINE'] || 'Bandung').toUpperCase().trim();
+          if (dest === 'ZYLLEM') dest = 'SURABAYA';
+          return dest === entity;
+        } else {
+          var vendor = String(r['CARRIER ID'] || r['CARRIERID'] || 'INTERNAL').trim().toUpperCase();
+          return vendor === entity;
+        }
+      });
+      
+      var totalForEntity = entityRows.length;
+      if (totalForEntity === 0) return 0;
+      
+      var armRows = entityRows.filter(function(r) {
+        var rArm = String(r['JENISARMADA'] || r['JENIS ARMADA'] || 'OTHER').trim().toUpperCase();
+        if (!rArm || rArm === '-' || rArm === 'N/A') rArm = 'OTHER';
+        return rArm === arm;
+      });
+      
+      var pct = (armRows.length / totalForEntity) * 100;
+      return +pct.toFixed(1);
+    });
+
+    return {
+      type: 'bar',
+      label: arm,
+      data: dataPoints,
+      backgroundColor: color.bg,
+      borderColor: color.border,
+      borderWidth: 1,
+      stack: 'armada',
+      maxBarThickness: 65
+    };
+  });
+
+  var pl_trend_armada = {
+    id: 'pl_trend_armada',
+    afterDatasetsDraw: function(chart) {
+      var c = chart.ctx;
+      chart.data.datasets.forEach(function(d, di) {
+        var meta = chart.getDatasetMeta(di);
+        if (!meta || meta.hidden) return;
+        c.save();
+        meta.data.forEach(function(bar, i) {
+          var v = d.data[i];
+          if (v == null || v < 0.5) return; // ignore absolute zeros or near zeros to prevent clutter
+          var txt = v.toFixed(1) + '%';
+          
+          var segmentHeight = Math.abs(bar.base - bar.y);
+          var fontSize = 10;
+          if (segmentHeight < 15) {
+            fontSize = 8;
+          }
+          
+          c.font = 'bold ' + fontSize + 'px Inter,sans-serif';
+          c.fillStyle = '#ffffff';
+          c.textAlign = 'center';
+          c.textBaseline = 'middle';
+          
+          var x = bar.x;
+          var y = (bar.y + bar.base) / 2;
+          
+          c.shadowColor = 'rgba(0,0,0,0.7)';
+          c.shadowBlur = 3;
+          c.fillText(txt, x, y);
+        });
+        c.restore();
+      });
+    }
+  };
 
   if (FF_APP.trendChart) {
     FF_APP.trendChart.destroy();
   }
 
   FF_APP.trendChart = new Chart(ctx, {
-    type: 'line',
     data: {
       labels: labels,
-      datasets: [{
-        label: 'SLA (%)',
-        data: pcts,
-        borderColor: '#3b82f6',
-        backgroundColor: 'rgba(59, 130, 246, 0.1)',
-        borderWidth: 2,
-        tension: 0.3,
-        fill: true,
-        pointRadius: 4,
-        pointBackgroundColor: '#3b82f6'
-      }]
+      datasets: datasets
     },
     options: {
       responsive: true,
       maintainAspectRatio: false,
+      layout: { padding: { top: 16 } },
       plugins: {
-        legend: { display: false }
+        legend: {
+          display: true,
+          position: 'top',
+          labels: {
+            boxWidth: 11,
+            padding: 10,
+            font: { family: 'Inter, sans-serif', size: 10, weight: '600' },
+            color: '#64748b'
+          }
+        },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              var entity = xEntities[context.dataIndex];
+              var arm = context.dataset.label;
+              
+              var entityRows = filteredByDate.filter(function(r) {
+                if (type === 'VENDOR') {
+                  var dest = String(r['CITY'] || r['city'] || r['SHIPPING LINE'] || r['SHIPPINGLINE'] || 'Bandung').toUpperCase().trim();
+                  if (dest === 'ZYLLEM') dest = 'SURABAYA';
+                  return dest === entity;
+                } else {
+                  var vendor = String(r['CARRIER ID'] || r['CARRIERID'] || 'INTERNAL').trim().toUpperCase();
+                  return vendor === entity;
+                }
+              });
+              
+              var totalForEntity = entityRows.length;
+              var armRows = entityRows.filter(function(r) {
+                var rArm = String(r['JENISARMADA'] || r['JENIS ARMADA'] || 'OTHER').trim().toUpperCase();
+                if (!rArm || rArm === '-' || rArm === 'N/A') rArm = 'OTHER';
+                return rArm === arm;
+              });
+              
+              var val = context.parsed.y;
+              if (val === null || val === undefined) return '';
+              return ' ' + arm + ': ' + val.toFixed(1) + '% (' + armRows.length + ' / ' + totalForEntity + ' Trip)';
+            }
+          }
+        }
       },
       scales: {
         y: {
+          stacked: true,
+          type: 'linear',
+          display: true,
+          position: 'left',
           beginAtZero: true,
+          min: 0,
           max: 100,
+          title: {
+            display: true,
+            text: 'Persentase Volume (%)',
+            font: { family: 'Inter, sans-serif', size: 10, weight: '600' },
+            color: '#64748b'
+          },
+          grid: {
+            color: '#f1f5f9'
+          },
           ticks: {
+            font: { size: 10, family: 'Inter, sans-serif' },
+            color: '#64748b',
             callback: function(value) { return value + '%'; }
+          }
+        },
+        x: {
+          stacked: true,
+          grid: {
+            display: false
+          },
+          ticks: {
+            font: { size: 10, family: 'Inter, sans-serif' },
+            color: '#64748b'
           }
         }
       }
-    }
+    },
+    plugins: [pl_trend_armada]
   });
 }
 
@@ -12186,7 +12485,7 @@ function getCRFallbackRawData() {
       </div>
 
       <div class="ff-kpi">
-        <span>SLA</span>
+        <span>PERFORMANCE</span>
         <b id="ffMSla">0%</b>
       </div>
 
@@ -12207,7 +12506,7 @@ function getCRFallbackRawData() {
       </div>
 
       <div class="ff-card">
-        <h3>Trend SLA</h3>
+        <h3 id="ffTrendTitle">Jenis Armada</h3>
         <div style="height: 220px; position: relative;">
           <canvas id="ffTrendChart"></canvas>
         </div>
