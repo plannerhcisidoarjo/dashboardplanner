@@ -5805,6 +5805,7 @@ function renderPerformanceArmada() {
     data.forEach(function(r) {
       var city = String(r['SHIPPINGLINE'] || 'Bandung').split(' ')[0].toUpperCase();
       if (city === 'ZYLLEM') city = 'SURABAYA';
+      if (city === '#N/A' || city === 'N/A' || !city || city === '-' || city === '—') city = 'DALKOT/TANPA TUJUAN';
       if (!cityMap[city]) {
         cityMap[city] = { name: city, type: r['AREA'] || 'LUAR KOTA', trips: 0, onTime: 0 };
       }
@@ -8429,13 +8430,18 @@ function renderTable(data) {
       '</div>';
     }
 
+    var sLine = r['SHIPPINGLINE'] || '';
+    if (sLine === '#N/A' || sLine === 'N/A' || !sLine || sLine === '—') {
+      sLine = 'DALKOT/TANPA TUJUAN';
+    }
+
     return '<tr>' +
       '<td><span class="badge ' + (r['PENYELESAIAN']==='SHIFT 1' ? 'badge-blue' : 'badge-amber') + '">' + escHtml(r['PENYELESAIAN'] || '—') + '</span></td>' +
       '<td style="font-family:var(--font-mono);font-size:11px;font-weight:700;">' + escHtml(r['TRANSNO'] || '—') + '</td>' +
       '<td><span class="status-pill" style="background:' + st.bg + ';color:' + st.color + ';border:1px solid ' + st.color + '40">' + st.emoji + ' ' + escHtml(r['STATUS'] || '—') + '</span></td>' +
       '<td>' + tl + '</td>' +
       '<td><span class="badge ' + (r['AREA']==='DALAM KOTA' ? 'badge-green' : 'badge-blue') + '" style="font-size:9px">' + escHtml(r['AREA'] || '—') + '</span></td>' +
-      '<td style="max-width:220px;overflow:hidden;text-overflow:ellipsis;color:var(--muted)" title="' + escHtml(r['SHIPPINGLINE'] || '') + '">' + escHtml(r['SHIPPINGLINE'] || '—') + '</td>' +
+      '<td style="max-width:220px;overflow:hidden;text-overflow:ellipsis;color:var(--muted)" title="' + escHtml(sLine) + '">' + escHtml(sLine) + '</td>' +
       '<td style="font-size:11px">' + escHtml(r['CARRIERID'] || '—') + '</td>' +
       '<td style="font-size:11px;color:var(--muted)">' + escHtml(r['JENISARMADA'] || '—') + '</td>' +
       '<td style="font-family:var(--font-mono);text-align:right">' + (parseInt(r['TOTAL CASEID']) || 0).toLocaleString('id-ID') + '</td>' +
@@ -8807,6 +8813,13 @@ function getTransportType(r) {
   return 'LAND';
 }
 
+function getCleanDestination(r) {
+  var dest = String(r['CITY'] || r['city'] || r['SHIPPING LINE'] || r['SHIPPINGLINE'] || '').toUpperCase().trim();
+  if (dest === 'ZYLLEM') return 'SURABAYA';
+  if (!dest || dest === '#N/A' || dest === 'N/A' || dest === '—' || dest === '-') return 'DALKOT/TANPA TUJUAN';
+  return dest;
+}
+
 function classifyFulfillmentRow(r) {
   var ket = String(r['Keterangan'] || r['keterangan'] || r['KETERANGAN'] || '').toUpperCase().trim();
   
@@ -8970,30 +8983,23 @@ function calculateFFDashboardData() {
   var destMap = {};
   var destVendorDetailMap = {};
   filteredRows.forEach(function(r) {
-    var dest = String(r['CITY'] || r['city'] || r['SHIPPING LINE'] || r['SHIPPINGLINE'] || 'Bandung').toUpperCase().trim();
-    var vendor =
-String(
-  r['CARRIER ID'] ||
-  r['CARRIERID'] ||
-  'INTERNAL'
-).trim();
+    var dest = getCleanDestination(r);
+    var vendor = String(r['CARRIER ID'] || r['CARRIERID'] || 'INTERNAL').trim();
 
-if(!destVendorDetailMap[dest]){
-  destVendorDetailMap[dest]={};
-}
+    if (!destVendorDetailMap[dest]) {
+      destVendorDetailMap[dest] = {};
+    }
 
-if(!destVendorDetailMap[dest][vendor]){
-  destVendorDetailMap[dest][vendor]={
-    vendor:vendor,
-    totalArmada:0,
-    onTime:0,
-    telatStuffing:0,
-    telat1Hari:0,
-    telat2HariUp:0
-  };
-}
-    if (dest === 'ZYLLEM') dest = 'SURABAYA';
-    if (!dest) dest = 'OTHER';
+    if (!destVendorDetailMap[dest][vendor]) {
+      destVendorDetailMap[dest][vendor] = {
+        vendor: vendor,
+        totalArmada: 0,
+        onTime: 0,
+        telatStuffing: 0,
+        telat1Hari: 0,
+        telat2HariUp: 0
+      };
+    }
     
     if (!destMap[dest]) {
       destMap[dest] = {
@@ -9007,23 +9013,6 @@ if(!destVendorDetailMap[dest][vendor]){
       };
     }
     
-    var vendor = String(r['CARRIER ID'] || r['CARRIERID'] || 'INTERNAL').trim();
-
-if (!destVendorDetailMap[dest]) {
-  destVendorDetailMap[dest] = {};
-}
-
-if (!destVendorDetailMap[dest][vendor]) {
-  destVendorDetailMap[dest][vendor] = {
-    vendor: vendor,
-    totalArmada: 0,
-    onTime: 0,
-    telatStuffing: 0,
-    telat1Hari: 0,
-    telat2HariUp: 0
-  };
-}
-
     var d = destMap[dest];
     d.totalArmada += 1;
     
@@ -9054,13 +9043,7 @@ if (cls.telat2HariUp) dv.telat2HariUp++;
   var vendorDestinationDetailMap = {};
   filteredRows.forEach(function(r) {
     var vendor = String(r['CARRIER ID'] || r['CARRIERID'] || 'INTERNAL').trim();
-    var destination = String(
-  r['CITY'] ||
-  r['city'] ||
-  r['SHIPPING LINE'] ||
-  r['SHIPPINGLINE'] ||
-  'OTHER'
-).toUpperCase().trim();
+    var destination = getCleanDestination(r);
 
 if (!vendorDestinationDetailMap[vendor]) {
   vendorDestinationDetailMap[vendor] = {};
@@ -9661,11 +9644,17 @@ function openDestinationModal(destination){
 
   var total=0;
   var onTime=0;
+  var telatStuffing=0;
+  var telat1Hari=0;
+  var telat2HariUp=0;
 
   Object.values(data).forEach(function(v){
 
     total += v.totalArmada;
     onTime += v.onTime;
+    telatStuffing += (v.telatStuffing || 0);
+    telat1Hari += (v.telat1Hari || 0);
+    telat2HariUp += (v.telat2HariUp || 0);
 
   });
 
@@ -9700,7 +9689,7 @@ function openDestinationModal(destination){
     .textContent =
       buildStars(sla);
 
-  renderPie(total,onTime);
+  renderPie(total, onTime, telatStuffing, telat1Hari, telat2HariUp);
 
   renderDestinationRanking(
     destination
@@ -9725,11 +9714,17 @@ function openVendorModal(vendor){
 
   var total=0;
   var onTime=0;
+  var telatStuffing=0;
+  var telat1Hari=0;
+  var telat2HariUp=0;
 
   Object.values(data).forEach(function(v){
 
     total += v.totalArmada;
     onTime += v.onTime;
+    telatStuffing += (v.telatStuffing || 0);
+    telat1Hari += (v.telat1Hari || 0);
+    telat2HariUp += (v.telat2HariUp || 0);
 
   });
 
@@ -9764,7 +9759,7 @@ function openVendorModal(vendor){
     .textContent =
       buildStars(sla);
 
-  renderPie(total,onTime);
+  renderPie(total, onTime, telatStuffing, telat1Hari, telat2HariUp);
 
   renderVendorRanking(vendor);
 
@@ -9778,10 +9773,77 @@ function openVendorModal(vendor){
     .classList.add('show');
 }
 
-function renderPie(total,onTime){
+function renderPie(total, onTime, telatStuffing, telat1Hari, telat2HariUp){
+
+  telatStuffing = telatStuffing || 0;
+  telat1Hari = telat1Hari || 0;
+  telat2HariUp = telat2HariUp || 0;
 
   if(FF_APP.pieChart)
     FF_APP.pieChart.destroy();
+
+  var dataVals = [
+    onTime,
+    telatStuffing,
+    telat1Hari,
+    telat2HariUp
+  ];
+
+  var dataLabels = [
+    'On Time',
+    'Telat Stuffing',
+    'Telat 1 Hari',
+    'Telat >2 Hari'
+  ];
+
+  var dataColors = [
+    '#00b894',
+    '#f6ad55',
+    '#ed8936',
+    '#e53e3e'
+  ];
+
+  var sum = dataVals.reduce(function(a, b) { return a + b; }, 0);
+
+  var pl_modal_pie_datalabels = {
+    id: 'pl_modal_pie_datalabels',
+    afterDatasetsDraw: function(chart) {
+      var ctx = chart.ctx;
+      var meta = chart.getDatasetMeta(0);
+      if (!meta || meta.hidden) return;
+      
+      ctx.save();
+      meta.data.forEach(function(arc, i) {
+        var val = chart.data.datasets[0].data[i];
+        if (val == null || val <= 0 || sum === 0) return;
+        
+        var percentage = (val / sum) * 100;
+        if (percentage < 3) return; // ignore extremely small slices to prevent text clutter
+        
+        var txt = percentage.toFixed(1) + '%';
+        ctx.font = 'bold 11px Inter, sans-serif';
+        ctx.fillStyle = '#ffffff';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        
+        var startAngle = arc.startAngle;
+        var endAngle = arc.endAngle;
+        var innerRadius = arc.innerRadius;
+        var outerRadius = arc.outerRadius;
+        
+        var midAngle = startAngle + (endAngle - startAngle) / 2;
+        var midRadius = innerRadius + (outerRadius - innerRadius) * 0.55;
+        
+        var textX = arc.x + Math.cos(midAngle) * midRadius;
+        var textY = arc.y + Math.sin(midAngle) * midRadius;
+        
+        ctx.shadowColor = 'rgba(0,0,0,0.7)';
+        ctx.shadowBlur = 3;
+        ctx.fillText(txt, textX, textY);
+      });
+      ctx.restore();
+    }
+  };
 
   FF_APP.pieChart =
     new Chart(
@@ -9791,20 +9853,13 @@ function renderPie(total,onTime){
         type:'doughnut',
 
         data:{
-          labels:[
-            'On Time',
-            'Delay'
-          ],
+          labels: dataLabels,
 
           datasets:[{
-            data:[
-              onTime,
-              total-onTime
-            ],
-            backgroundColor: [
-              '#10b981',
-              '#ef4444'
-            ]
+            data: dataVals,
+            backgroundColor: dataColors,
+            borderWidth: 1,
+            borderColor: '#fff'
           }]
         },
         options: {
@@ -9812,10 +9867,26 @@ function renderPie(total,onTime){
           maintainAspectRatio: false,
           plugins: {
             legend: {
-              position: 'bottom'
+              position: 'bottom',
+              labels: {
+                boxWidth: 12,
+                font: { family: 'Inter, sans-serif', size: 10, weight: '600' },
+                color: '#475569',
+                padding: 10
+              }
+            },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  var val = context.raw;
+                  var pct = sum > 0 ? (val / sum) * 100 : 0;
+                  return ' ' + context.label + ': ' + val + ' Trip (' + pct.toFixed(1) + '%)';
+                }
+              }
             }
           }
-        }
+        },
+        plugins: [pl_modal_pie_datalabels]
       }
     );
 }
@@ -9913,8 +9984,7 @@ function renderTrendChart(key, type) {
   var filtered = [];
   if (type === 'DEST') {
     filtered = rows.filter(function(r) {
-      var dest = String(r['CITY'] || r['city'] || r['SHIPPING LINE'] || r['SHIPPINGLINE'] || 'Bandung').toUpperCase().trim();
-      if (dest === 'ZYLLEM') dest = 'SURABAYA';
+      var dest = getCleanDestination(r);
       return dest === String(key).toUpperCase().trim();
     });
   } else if (type === 'VENDOR') {
@@ -9954,8 +10024,7 @@ function renderTrendChart(key, type) {
   var xEntitiesMap = {};
   filteredByDate.forEach(function(r) {
     if (type === 'VENDOR') {
-      var dest = String(r['CITY'] || r['city'] || r['SHIPPING LINE'] || r['SHIPPINGLINE'] || 'Bandung').toUpperCase().trim();
-      if (dest === 'ZYLLEM') dest = 'SURABAYA';
+      var dest = getCleanDestination(r);
       xEntitiesMap[dest] = (xEntitiesMap[dest] || 0) + 1;
     } else {
       var vendor = String(r['CARRIER ID'] || r['CARRIERID'] || 'INTERNAL').trim().toUpperCase();
@@ -10009,8 +10078,7 @@ function renderTrendChart(key, type) {
       // Find rows belonging to this entity
       var entityRows = filteredByDate.filter(function(r) {
         if (type === 'VENDOR') {
-          var dest = String(r['CITY'] || r['city'] || r['SHIPPING LINE'] || r['SHIPPINGLINE'] || 'Bandung').toUpperCase().trim();
-          if (dest === 'ZYLLEM') dest = 'SURABAYA';
+          var dest = getCleanDestination(r);
           return dest === entity;
         } else {
           var vendor = String(r['CARRIER ID'] || r['CARRIERID'] || 'INTERNAL').trim().toUpperCase();
@@ -10111,8 +10179,7 @@ function renderTrendChart(key, type) {
               
               var entityRows = filteredByDate.filter(function(r) {
                 if (type === 'VENDOR') {
-                  var dest = String(r['CITY'] || r['city'] || r['SHIPPING LINE'] || r['SHIPPINGLINE'] || 'Bandung').toUpperCase().trim();
-                  if (dest === 'ZYLLEM') dest = 'SURABAYA';
+                  var dest = getCleanDestination(r);
                   return dest === entity;
                 } else {
                   var vendor = String(r['CARRIER ID'] || r['CARRIERID'] || 'INTERNAL').trim().toUpperCase();
