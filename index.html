@@ -3815,27 +3815,62 @@ PLANNING REPORT</div>
 
     <!-- ── LEVEL RACKING DISTRIBUTION ── -->
     <div class="card" style="margin-bottom: 20px; border-top: 4px solid #0d9488;">
-      <div class="card-header">
+      <div class="card-header" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; padding-bottom:12px; border-bottom:1px solid var(--border);">
         <div>
           <div class="card-title">🏗️ LEVEL RACKING CASE ID YANG DIRELEASE</div>
           <div class="card-sub">Ketinggian rak penyimpanan (1 = paling bawah, 9 = paling tinggi) — untuk persiapan alat bantu & keselamatan picking</div>
         </div>
       </div>
 
-      <div id="cr-rack-bars" style="display:flex; gap:6px; align-items:flex-end; height:100px; margin-top:16px; padding:0 4px;">
-        <!-- 10 mini bar level 1-9, rendered via JS -->
-      </div>
-      <div style="display:flex; justify-content:space-between; padding:0 4px; margin-top:4px;">
-        <span style="font-size:9px; color:var(--muted); font-weight:700;">LV.1 (bawah)</span>
-        <span style="font-size:9px; color:var(--muted); font-weight:700;">LV.9 (tinggi)</span>
+      <!-- Segmented Level Selector Control & Tips -->
+      <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-top:14px; background:var(--surface2); padding:10px; border-radius:var(--radius-sm); border:1px solid var(--border);">
+        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+          <span style="font-size:11px; font-weight:800; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px;">🎛️ PILIH LEVEL RAK:</span>
+          <div style="display:flex; gap:4px; flex-wrap:wrap;" id="cr-rack-pills">
+            <!-- Rendered via JS -->
+          </div>
+        </div>
+        <div style="font-size:11px; color:var(--muted); font-style:italic; display:flex; align-items:center; gap:4px;">
+          <span>💡 Tip: Klik pill di atas atau batang grafik di bawah untuk breakdown area</span>
+        </div>
       </div>
 
-      <div id="cr-rack-summary" style="display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:16px;">
-        <!-- 3 kartu bucket rendered via JS -->
+      <!-- Beautiful, modern Rack Level Shelf Grid Visualizer -->
+      <div style="max-width: 950px; margin: 24px auto 16px auto; width: 100%;">
+        <div id="cr-rack-bars" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(95px, 1fr)); gap:10px;">
+          <!-- 9 Level cards, rendered via JS -->
+        </div>
+        
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 8px; margin-top:12px; border-top:1px solid var(--border); font-size:11px; color:var(--muted); flex-wrap:wrap; gap:10px;">
+          <span style="display:flex; align-items:center; gap:4px;">⬇️ LV.1 (Terbawah) s.d ⬆️ LV.9 (Tertinggi)</span>
+          <span style="font-style:italic;">Klik card level di atas untuk memfilter &amp; melakukan breakdown detail area</span>
+          <span style="font-weight:700; color:var(--text); text-transform:uppercase; letter-spacing:0.3px;">Seksi Level Racking</span>
+        </div>
+      </div>
+
+      <!-- Dynamic Content Container (Either static summary cards or interactive breakdown per area) -->
+      <div id="cr-rack-summary-container" style="margin-top:16px; transition:all 0.3s ease;">
+        <!-- Rendered via JS -->
       </div>
 
       <div id="cr-rack-alert" style="display:none; margin-top:12px; background:rgba(248,81,73,.1); border:1px solid rgba(248,81,73,.3); color:var(--red); padding:10px; border-radius:var(--radius-sm); font-size:11px; font-weight:600;">
         <!-- rendered via JS -->
+      </div>
+    </div>
+
+    <!-- ── NON-RACKING CASE ID DISTRIBUTION ── -->
+    <div class="card" style="margin-bottom: 20px; border-top: 4px solid #8b5cf6;">
+      <div class="card-header" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; padding-bottom:12px; border-bottom:1px solid var(--border);">
+        <div>
+          <div class="card-title">📦 SEBARAN CASE ID NON-RACKING</div>
+          <div class="card-sub">Case ID yang diletakkan di luar rak level, seperti di lantai (Floor/FLR), area transit/staging, buffer, atau crossdock</div>
+        </div>
+        <span id="cr-nonrack-total-badge" class="badge" style="background:#8b5cf6; color:#fff; font-family: var(--font-mono); font-weight:800; font-size:11px; padding:4px 10px; border-radius:6px;">0 Case</span>
+      </div>
+
+      <!-- Non-Racking Content Container (Area breakdown + detail LOC) -->
+      <div id="cr-nonrack-container" style="margin-top:16px; transition:all 0.3s ease;">
+        <!-- Rendered via JS -->
       </div>
     </div>
 
@@ -11150,6 +11185,362 @@ function getRackingLevel(locStr) {
   return digit;
 }
 
+var CR_SELECTED_RACK_LEVEL = 'all';
+var CR_SELECTED_BREAKDOWN_AREA = null;
+var CR_SELECTED_NONRACK_AREA = null;
+
+function setRackLevel(lvl) {
+  CR_SELECTED_RACK_LEVEL = lvl;
+  CR_SELECTED_BREAKDOWN_AREA = null; // reset selected area deep dive when level changes
+  renderRackingDistribution();
+}
+
+function setBreakdownArea(areaKey) {
+  if (CR_SELECTED_BREAKDOWN_AREA === areaKey) {
+    CR_SELECTED_BREAKDOWN_AREA = null; // toggle off
+  } else {
+    CR_SELECTED_BREAKDOWN_AREA = areaKey;
+  }
+  renderRackingDistribution();
+}
+
+function setNonRackArea(areaKey) {
+  if (CR_SELECTED_NONRACK_AREA === areaKey) {
+    CR_SELECTED_NONRACK_AREA = null; // toggle off
+  } else {
+    CR_SELECTED_NONRACK_AREA = areaKey;
+  }
+  renderNonRackingDistribution();
+}
+
+function getAreaLocDetails(selectedLevel, selectedArea) {
+  var locMap = {};
+  CR_UNIFIED_ROWS.forEach(function(item) {
+    var lvl = getRackingLevel(item.loc);
+    if (lvl !== selectedLevel) return;
+    
+    var areaVal = String(item.area || '').toUpperCase();
+    var areaKey = '1';
+    if (areaVal.indexOf('2') !== -1) areaKey = '2';
+    else if (areaVal.indexOf('3') !== -1) areaKey = '3';
+    
+    if (areaKey !== selectedArea) return;
+    
+    var locName = item.loc ? String(item.loc).trim().toUpperCase() : '(TANPA LOKASI)';
+    if (!locMap[locName]) {
+      locMap[locName] = {
+        loc: locName,
+        count: 0,
+        skuMap: {}
+      };
+    }
+    locMap[locName].count += 1;
+    
+    var skuVal = item.sku || 'NO SKU';
+    var descVal = item.desc || 'Tanpa Deskripsi';
+    if (!locMap[locName].skuMap[skuVal]) {
+      locMap[locName].skuMap[skuVal] = {
+        sku: skuVal,
+        desc: descVal,
+        count: 0
+      };
+    }
+    locMap[locName].skuMap[skuVal].count += 1;
+  });
+  
+  var result = Object.keys(locMap).map(function(lKey) {
+    var item = locMap[lKey];
+    var skus = Object.keys(item.skuMap).map(function(sKey) {
+      return item.skuMap[sKey];
+    });
+    skus.sort(function(a, b) { return b.count - a.count; });
+    return {
+      loc: item.loc,
+      count: item.count,
+      items: skus
+    };
+  });
+  
+  result.sort(function(a, b) {
+    if (a.loc < b.loc) return -1;
+    if (a.loc > b.loc) return 1;
+    return 0;
+  });
+  
+  return result;
+}
+
+function exportAreaBreakdownToCSV(level, areaKey) {
+  var areaInfos = {
+    '1': 'Area_1_Small_Storing',
+    '2': 'Area_2_Medium_Storing',
+    '3': 'Area_3_Bulky_Storing'
+  };
+  var areaName = areaInfos[areaKey] || 'Area_' + areaKey;
+  
+  // Header row
+  var headers = [
+    "CASEID", "SKU", "DESCRIPTION", "LOCATION", "ORDERKEY", "EXTRENORDERKEY", "SHIP TO", "SHIPTONAME", "STOREBOOKING", "CBM/CUBE", "ROUTE", "SOURCE", "BATCH"
+  ];
+  
+  var rows = [headers];
+  
+  CR_UNIFIED_ROWS.forEach(function(item) {
+    var lvl = getRackingLevel(item.loc);
+    if (lvl !== level) return;
+    
+    var areaVal = String(item.area || '').toUpperCase();
+    var itemAreaKey = '1';
+    if (areaVal.indexOf('2') !== -1) itemAreaKey = '2';
+    else if (areaVal.indexOf('3') !== -1) itemAreaKey = '3';
+    
+    if (itemAreaKey !== areaKey) return;
+    
+    // Values
+    var caseId = item.caseId || '';
+    var sku = item.sku || '';
+    var desc = item.desc || '';
+    var loc = item.loc || '';
+    var orderkey = item.orderkey || '';
+    var extrnorderkey = item.extrnorderkey || '';
+    var shipto = item.shipto || '';
+    var shiptoName = item.shiptoName || '';
+    var storebooking = item.storebooking || '';
+    var cbm = item.cbm || '';
+    var route = item.route || '';
+    var source = item.source || '';
+    var batch = item.batch || '';
+    
+    rows.push([
+      '"' + caseId.replace(/"/g, '""') + '"',
+      '"' + sku.replace(/"/g, '""') + '"',
+      '"' + desc.replace(/"/g, '""') + '"',
+      '"' + loc.replace(/"/g, '""') + '"',
+      '"' + orderkey.replace(/"/g, '""') + '"',
+      '"' + extrnorderkey.replace(/"/g, '""') + '"',
+      '"' + shipto.replace(/"/g, '""') + '"',
+      '"' + shiptoName.replace(/"/g, '""') + '"',
+      '"' + storebooking.replace(/"/g, '""') + '"',
+      '"' + cbm.replace(/"/g, '""') + '"',
+      '"' + route.replace(/"/g, '""') + '"',
+      '"' + source.replace(/"/g, '""') + '"',
+      '"' + batch.replace(/"/g, '""') + '"'
+    ]);
+  });
+  
+  var csvContent = rows.map(function(e) { return e.join(","); }).join("\n");
+  var blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  var url = URL.createObjectURL(blob);
+  
+  var link = document.createElement("a");
+  link.setAttribute("href", url);
+  var localDateSuffix = new Date().getFullYear() + '-' + String(new Date().getMonth() + 1).padStart(2, '0') + '-' + String(new Date().getDate()).padStart(2, '0');
+  link.setAttribute("download", "Racking_Level_" + level + "_" + areaName + "_" + localDateSuffix + ".csv");
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+function getLevelBreakdownData(selectedLevel) {
+  var counts = { '1': 0, '2': 0, '3': 0 };
+  var aislesMap = { '1': {}, '2': {}, '3': {} };
+  
+  CR_UNIFIED_ROWS.forEach(function(item) {
+    var lvl = getRackingLevel(item.loc);
+    if (lvl !== selectedLevel) return;
+    
+    var areaVal = String(item.area || '').toUpperCase();
+    var areaKey = '1';
+    if (areaVal.indexOf('2') !== -1) areaKey = '2';
+    else if (areaVal.indexOf('3') !== -1) areaKey = '3';
+    
+    counts[areaKey] += 1;
+    
+    if (item.loc) {
+      var aisle = String(item.loc).trim().substring(0, 2);
+      if (/^\d+$/.test(aisle)) {
+        aislesMap[areaKey][aisle] = (aislesMap[areaKey][aisle] || 0) + 1;
+      }
+    }
+  });
+  
+  var aisles = { '1': [], '2': [], '3': [] };
+  ['1', '2', '3'].forEach(function(aKey) {
+    var sortedAisles = Object.keys(aislesMap[aKey]).sort(function(a, b) {
+      return parseInt(a, 10) - parseInt(b, 10);
+    });
+    aisles[aKey] = sortedAisles;
+  });
+  
+  return { counts: counts, aisles: aisles };
+}
+
+function getNonRackingBreakdownData() {
+  var counts = { '1': 0, '2': 0, '3': 0 };
+  var aislesMap = { '1': {}, '2': {}, '3': {} };
+  
+  CR_UNIFIED_ROWS.forEach(function(item) {
+    var lvl = getRackingLevel(item.loc);
+    if (lvl !== null) return;
+    
+    var areaVal = String(item.area || '').toUpperCase();
+    var areaKey = '1';
+    if (areaVal.indexOf('2') !== -1) areaKey = '2';
+    else if (areaVal.indexOf('3') !== -1) areaKey = '3';
+    
+    counts[areaKey] += 1;
+    
+    if (item.loc) {
+      var locStr = String(item.loc).trim().toUpperCase();
+      var aisle = locStr.substring(0, 2);
+      if (/^\d+$/.test(aisle)) {
+        aislesMap[areaKey][aisle] = (aislesMap[areaKey][aisle] || 0) + 1;
+      } else {
+        var spec = 'OTHER';
+        if (locStr.indexOf('FLR') !== -1 || locStr.indexOf('FLOOR') !== -1) spec = 'FLR';
+        else if (locStr.indexOf('STG') !== -1 || locStr.indexOf('STAGING') !== -1) spec = 'STG';
+        aislesMap[areaKey][spec] = (aislesMap[areaKey][spec] || 0) + 1;
+      }
+    } else {
+      aislesMap[areaKey]['N/A'] = (aislesMap[areaKey]['N/A'] || 0) + 1;
+    }
+  });
+  
+  var aisles = { '1': [], '2': [], '3': [] };
+  ['1', '2', '3'].forEach(function(aKey) {
+    var sortedAisles = Object.keys(aislesMap[aKey]).sort();
+    aisles[aKey] = sortedAisles;
+  });
+  
+  return { counts: counts, aisles: aisles };
+}
+
+function getNonRackingAreaLocDetails(selectedArea) {
+  var locMap = {};
+  CR_UNIFIED_ROWS.forEach(function(item) {
+    var lvl = getRackingLevel(item.loc);
+    if (lvl !== null) return;
+    
+    var areaVal = String(item.area || '').toUpperCase();
+    var areaKey = '1';
+    if (areaVal.indexOf('2') !== -1) areaKey = '2';
+    else if (areaVal.indexOf('3') !== -1) areaKey = '3';
+    
+    if (areaKey !== selectedArea) return;
+    
+    var locName = item.loc ? String(item.loc).trim().toUpperCase() : '(TANPA LOKASI)';
+    if (!locMap[locName]) {
+      locMap[locName] = {
+        loc: locName,
+        count: 0,
+        skuMap: {}
+      };
+    }
+    locMap[locName].count += 1;
+    
+    var skuVal = item.sku || 'NO SKU';
+    var descVal = item.desc || 'Tanpa Deskripsi';
+    if (!locMap[locName].skuMap[skuVal]) {
+      locMap[locName].skuMap[skuVal] = {
+        sku: skuVal,
+        desc: descVal,
+        count: 0
+      };
+    }
+    locMap[locName].skuMap[skuVal].count += 1;
+  });
+  
+  var result = Object.keys(locMap).map(function(lKey) {
+    var item = locMap[lKey];
+    var skus = Object.keys(item.skuMap).map(function(sKey) {
+      return item.skuMap[sKey];
+    });
+    skus.sort(function(a, b) { return b.count - a.count; });
+    return {
+      loc: item.loc,
+      count: item.count,
+      items: skus
+    };
+  });
+  
+  result.sort(function(a, b) {
+    if (a.loc < b.loc) return -1;
+    if (a.loc > b.loc) return 1;
+    return 0;
+  });
+  
+  return result;
+}
+
+function exportNonRackingAreaBreakdownToCSV(areaKey) {
+  var areaInfos = {
+    '1': 'Area_1_Small_Storing',
+    '2': 'Area_2_Medium_Storing',
+    '3': 'Area_3_Bulky_Storing'
+  };
+  var areaName = areaInfos[areaKey] || 'Area_' + areaKey;
+  
+  var headers = [
+    "CASEID", "SKU", "DESCRIPTION", "LOCATION", "ORDERKEY", "EXTRENORDERKEY", "SHIP TO", "SHIPTONAME", "STOREBOOKING", "CBM/CUBE", "ROUTE", "SOURCE", "BATCH"
+  ];
+  
+  var rows = [headers];
+  
+  CR_UNIFIED_ROWS.forEach(function(item) {
+    var lvl = getRackingLevel(item.loc);
+    if (lvl !== null) return;
+    
+    var areaVal = String(item.area || '').toUpperCase();
+    var itemAreaKey = '1';
+    if (areaVal.indexOf('2') !== -1) itemAreaKey = '2';
+    else if (areaVal.indexOf('3') !== -1) itemAreaKey = '3';
+    
+    if (itemAreaKey !== areaKey) return;
+    
+    var caseId = item.caseId || '';
+    var sku = item.sku || '';
+    var desc = item.desc || '';
+    var loc = item.loc || '';
+    var orderkey = item.orderkey || '';
+    var extrnorderkey = item.extrnorderkey || '';
+    var shipto = item.shipto || '';
+    var shiptoName = item.shiptoName || '';
+    var storebooking = item.storebooking || '';
+    var cbm = item.cbm || '';
+    var route = item.route || '';
+    var source = item.source || '';
+    var batch = item.batch || '';
+    
+    rows.push([
+      '"' + caseId.replace(/"/g, '""') + '"',
+      '"' + sku.replace(/"/g, '""') + '"',
+      '"' + desc.replace(/"/g, '""') + '"',
+      '"' + loc.replace(/"/g, '""') + '"',
+      '"' + orderkey.replace(/"/g, '""') + '"',
+      '"' + extrnorderkey.replace(/"/g, '""') + '"',
+      '"' + shipto.replace(/"/g, '""') + '"',
+      '"' + shiptoName.replace(/"/g, '""') + '"',
+      '"' + storebooking.replace(/"/g, '""') + '"',
+      '"' + cbm.replace(/"/g, '""') + '"',
+      '"' + route.replace(/"/g, '""') + '"',
+      '"' + source.replace(/"/g, '""') + '"',
+      '"' + batch.replace(/"/g, '""') + '"'
+    ]);
+  });
+  
+  var csvContent = rows.map(function(e) { return e.join(","); }).join("\n");
+  var blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  var url = URL.createObjectURL(blob);
+  
+  var link = document.createElement("a");
+  link.setAttribute("href", url);
+  var localDateSuffix = new Date().getFullYear() + '-' + String(new Date().getMonth() + 1).padStart(2, '0') + '-' + String(new Date().getDate()).padStart(2, '0');
+  link.setAttribute("download", "Non_Racking_" + areaName + "_" + localDateSuffix + ".csv");
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
 var CR_RACK_BUCKET_META = [
   { key: 'low', label: 'RENDAH (Lv 1-3)', icon: '🟢', color: '#16a34a', note: 'Mudah dijangkau, tidak perlu alat bantu' },
   { key: 'mid', label: 'SEDANG (Lv 4-6)', icon: '🟡', color: '#d97706', note: 'Perlu tangga / step ladder' },
@@ -11159,37 +11550,118 @@ var CR_RACK_BUCKET_META = [
 function computeRackingDistribution() {
   var rackCounts = [0,0,0,0,0,0,0,0,0,0];
   var totalWithLoc = 0;
+  var nonRackingCount = 0;
 
   CR_UNIFIED_ROWS.forEach(function(item) {
     var level = getRackingLevel(item.loc);
-    if (level === null) return;
+    if (level === null) {
+      nonRackingCount += 1;
+      return;
+    }
     rackCounts[level] += 1; // 1 baris = 1 case, bukan pakai QTY
     totalWithLoc += 1;
   });
 
-  return { rackCounts: rackCounts, total: totalWithLoc };
+  return { rackCounts: rackCounts, total: totalWithLoc, nonRackingCount: nonRackingCount };
 }
 
 function renderRackingDistribution() {
   var result = computeRackingDistribution();
   var rackCounts = result.rackCounts;
   var total = result.total;
+  var nonRackingCount = result.nonRackingCount || 0;
+  var grandTotal = total + nonRackingCount;
 
-  // Render 9 mini bar (level 1-9) — level 0 tidak ditampilkan karena tidak ada secara fisik
+  // Render Pill Selector
+  var pillsEl = document.getElementById('cr-rack-pills');
+  if (pillsEl) {
+    var pillHtml = '';
+    var isAllActive = (CR_SELECTED_RACK_LEVEL === 'all');
+    pillHtml += '<button onclick="setRackLevel(\'all\')" style="border:none; padding:4px 12px; font-size:10px; font-weight:800; border-radius:100px; cursor:pointer; transition:all 0.2s; ' +
+      (isAllActive ? 'background:#2563eb; color:#fff; box-shadow:0 2px 4px rgba(37,99,235,0.2);' : 'background:rgba(0,0,0,0.05); color:var(--muted);') +
+      '">Semua</button>';
+      
+    for (var l = 1; l <= 9; l++) {
+      var isActive = (CR_SELECTED_RACK_LEVEL === l);
+      var col = l <= 3 ? '#16a34a' : l <= 6 ? '#d97706' : '#dc2626';
+      var bgActive = col;
+      var bgInactive = 'rgba(0,0,0,0.05)';
+      var fgInactive = 'var(--muted)';
+      
+      pillHtml += '<button onclick="setRackLevel(' + l + ')" style="border:none; padding:4px 12px; font-size:10px; font-weight:800; border-radius:100px; cursor:pointer; transition:all 0.2s; margin-left:2px; ' +
+        (isActive ? 'background:' + bgActive + '; color:#fff; box-shadow:0 2px 4px rgba(0,0,0,0.1); transform:scale(1.05);' : 'background:' + bgInactive + '; color:' + fgInactive + ';') +
+        '">L' + l + '</button>';
+    }
+
+    pillsEl.innerHTML = pillHtml;
+  }
+
+  // Render 9 mini bar (level 1-9) + Non-Racking (10th card)
   var barsEl = document.getElementById('cr-rack-bars');
   if (barsEl) {
     var rackCountsWithoutZero = rackCounts.slice(1); // buang index 0, sisakan level 1-9
     var maxVal = Math.max.apply(null, rackCountsWithoutZero) || 1;
-    barsEl.innerHTML = rackCountsWithoutZero.map(function(val, i) {
-      var lvl = i + 1; // level asli (1-9)
-      var pct = Math.max(4, Math.round((val / maxVal) * 100));
-      var col = lvl <= 3 ? '#16a34a' : lvl <= 6 ? '#d97706' : '#dc2626';
-      return '<div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%;" title="Level ' + lvl + ': ' + val + ' case">' +
-        '<div style="font-size:9px; font-weight:800; color:' + col + '; margin-bottom:2px;">' + (val > 0 ? val : '') + '</div>' +
-        '<div style="width:100%; max-width:26px; height:' + pct + '%; background:' + col + '; border-radius:4px 4px 0 0; transition:height 0.5s ease;"></div>' +
-        '<div style="font-size:9px; color:var(--muted); font-weight:700; margin-top:4px;">' + lvl + '</div>' +
+    var levelsAsc = [1, 2, 3, 4, 5, 6, 7, 8, 9]; // render dari Level 1 ke Level 9
+    
+    var cardsHtml = levelsAsc.map(function(lvl) {
+      var val = rackCounts[lvl];
+      var pct = total > 0 ? Math.round((val / total) * 100) : 0;
+      var ratio = maxVal > 0 ? val / maxVal : 0;
+      
+      // Determine colors based on case density, exactly like the aisle map!
+      var bg, text, shadowCol, label;
+      if (val <= 0) {
+        bg = 'var(--surface2)';
+        text = '#94a3b8';
+        shadowCol = 'rgba(15,23,42,0.02)';
+        label = 'Kosong';
+      } else if (ratio >= 0.75) {
+        bg = '#ef4444'; // Red
+        text = '#ffffff';
+        shadowCol = 'rgba(239, 68, 68, 0.4)';
+        label = 'Sangat Padat';
+      } else if (ratio >= 0.45) {
+        bg = '#3b82f6'; // Blue
+        text = '#ffffff';
+        shadowCol = 'rgba(59, 130, 246, 0.4)';
+        label = 'Padat';
+      } else {
+        bg = '#86efac'; // Green
+        text = '#14532d';
+        shadowCol = 'rgba(22, 163, 74, 0.25)';
+        label = 'Ringan';
+      }
+
+      var isSelected = (CR_SELECTED_RACK_LEVEL === 'all' || CR_SELECTED_RACK_LEVEL === lvl);
+      var isDirectlySelected = (CR_SELECTED_RACK_LEVEL === lvl);
+      
+      var opacity = isSelected ? '1' : '0.35';
+      
+      var activeStyle = isDirectlySelected 
+        ? 'background:' + bg + '; color:' + text + '; box-shadow: 0 0 0 3px var(--bg), 0 0 0 6px ' + bg + ', 0 12px 24px ' + shadowCol + '; transform: translateY(-6px) scale(1.05); z-index: 10;' 
+        : 'background:' + bg + '; color:' + text + '; border: 1px solid rgba(0,0,0,0.04);';
+      
+      return '<div onclick="setRackLevel(' + lvl + ')" title="Level ' + lvl + ': ' + val.toLocaleString() + ' case (' + pct + '%) — ' + label + '" ' +
+        'style="cursor:pointer; opacity:' + opacity + '; transition:all 0.25s cubic-bezier(0.4, 0, 0.2, 1); border-radius:12px; padding:12px 6px; text-align:center; display:flex; flex-direction:column; justify-content:center; align-items:center; aspect-ratio:1; min-height:105px; box-shadow:0 2px 6px rgba(15,23,42,0.06); ' + activeStyle + '" ' +
+        'onmouseover="if(!' + isDirectlySelected + ') { this.style.transform=\'translateY(-4px) scale(1.05)\'; this.style.boxShadow=\'0 8px 16px ' + shadowCol + '\'; }" ' +
+        'onmouseout="if(!' + isDirectlySelected + ') { this.style.transform=\'none\'; this.style.boxShadow=\'0 2px 6px rgba(15,23,42,0.06)\'; }">' +
+        
+        // "LEVEL" label
+        '<div style="font-size:9px; font-weight:800; text-transform:uppercase; letter-spacing:0.8px; opacity:0.85;">Level</div>' +
+        
+        // Level big number
+        '<div style="font-size:24px; font-weight:900; font-family:var(--font-display); line-height:1.1; margin:2px 0;">' + lvl + '</div>' +
+        
+        // Case count
+        '<div style="font-size:12px; font-weight:800; font-family:var(--font-mono);">' + val.toLocaleString() + '</div>' +
+        
+        // "case" label
+        '<div style="font-size:8px; font-weight:700; opacity:0.85; text-transform:uppercase; letter-spacing:0.3px;">case</div>' +
+        
       '</div>';
     }).join('');
+
+    barsEl.innerHTML = cardsHtml;
   }
 
   // Hitung 3 bucket
@@ -11198,17 +11670,168 @@ function renderRackingDistribution() {
   var high = rackCounts.slice(7,10).reduce(function(a,b){return a+b;},0);
   var bucketVals = { low: low, mid: mid, high: high };
 
-  var summaryEl = document.getElementById('cr-rack-summary');
-  if (summaryEl) {
-    summaryEl.innerHTML = CR_RACK_BUCKET_META.map(function(b) {
-      var val = bucketVals[b.key];
-      var pct = total > 0 ? ((val / total) * 100).toFixed(1) : 0;
-      return '<div style="border:1px solid var(--border); border-left:4px solid ' + b.color + '; border-radius:var(--radius-sm); padding:12px; background:var(--surface2);">' +
-        '<div style="font-size:10px; font-weight:800; color:' + b.color + '; text-transform:uppercase;">' + b.icon + ' ' + b.label + '</div>' +
-        '<div style="font-size:20px; font-weight:800; font-family:var(--font-mono); color:var(--text); margin-top:4px;">' + val.toLocaleString() + '<span style="font-size:11px; color:var(--muted); font-weight:600;"> (' + pct + '%)</span></div>' +
-        '<div style="font-size:10px; color:var(--muted); margin-top:4px;">' + b.note + '</div>' +
+  var summaryContainer = document.getElementById('cr-rack-summary-container');
+  if (summaryContainer) {
+    if (CR_SELECTED_RACK_LEVEL === 'all') {
+      var summaryHtml = '<div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:12px;">';
+      summaryHtml += CR_RACK_BUCKET_META.map(function(b) {
+        var val = bucketVals[b.key];
+        var pct = total > 0 ? ((val / total) * 100).toFixed(1) : 0;
+        return '<div style="border:1px solid var(--border); border-left:5px solid ' + b.color + '; border-radius:var(--radius-sm); padding:14px; background:var(--surface2); box-shadow:0 1px 3px rgba(0,0,0,0.01);">' +
+          '<div style="font-size:11px; font-weight:800; color:' + b.color + '; text-transform:uppercase; letter-spacing:0.5px;">' + b.icon + ' ' + b.label + '</div>' +
+          '<div style="font-size:22px; font-weight:800; font-family:var(--font-mono); color:var(--text); margin-top:6px; line-height:1;">' + val.toLocaleString() + ' <span style="font-size:12px; color:var(--muted); font-weight:600;">(' + pct + '%)</span></div>' +
+          '<div style="font-size:11px; color:var(--muted); margin-top:6px;">' + b.note + '</div>' +
+        '</div>';
+      }).join('');
+
+      summaryHtml += '</div>';
+      summaryContainer.innerHTML = summaryHtml;
+    } else {
+      var lvl = CR_SELECTED_RACK_LEVEL;
+      var levelLabel = lvl <= 3 ? 'RENDAH (Lv 1-3)' : lvl <= 6 ? 'SEDANG (Lv 4-6)' : 'TINGGI (Lv 7-9)';
+      var levelColor = lvl <= 3 ? '#16a34a' : lvl <= 6 ? '#d97706' : '#dc2626';
+      var levelNote = lvl <= 3 ? 'Mudah dijangkau, tidak perlu alat bantu' : lvl <= 6 ? 'Perlu tangga / step ladder' : 'Wajib forklift / reach truck + APD lengkap';
+      var lvlTotal = rackCounts[lvl];
+      
+      var breakdown = getLevelBreakdownData(lvl);
+      
+      var html = '<div style="background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius-sm); padding:16px; border-left:5px solid ' + levelColor + '; box-shadow:0 2px 8px rgba(0,0,0,0.02);">';
+      
+      html += '<div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:14px; border-bottom:1px dashed var(--border); padding-bottom:12px;">' +
+        '<div>' +
+          '<div style="font-size:14px; font-weight:800; color:var(--text); display:flex; align-items:center; gap:8px;">' +
+            '<span style="background:' + levelColor + '; color:#fff; font-size:10px; font-weight:800; padding:2px 8px; border-radius:100px;">LEVEL ' + lvl + '</span>' +
+            '<span>Breakdown ditiap Area Storing</span>' +
+          '</div>' +
+          '<div style="font-size:11px; color:var(--muted); margin-top:3px;">Kategori: <strong style="color:' + levelColor + ';">' + levelLabel + '</strong> — <i>' + levelNote + '</i></div>' +
+        '</div>' +
+        '<div style="text-align:right;">' +
+          '<div style="font-size:20px; font-weight:800; color:var(--text); font-family:var(--font-mono); line-height:1;">' + lvlTotal.toLocaleString() + ' <span style="font-size:12px; color:var(--muted); font-weight:600;">Case</span></div>' +
+          '<div style="font-size:10px; color:var(--muted); margin-top:3px;">Total di Level Ini</div>' +
+        '</div>' +
       '</div>';
-    }).join('');
+      
+      html += '<div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:12px;">';
+      
+      var areaInfos = [
+        { key: '1', name: 'Area 1 (Small Storing)', color: '#2563eb', bg: 'rgba(37,99,235,0.03)', border: 'rgba(37,99,235,0.12)' },
+        { key: '2', name: 'Area 2 (Medium Storing)', color: '#d97706', bg: 'rgba(217,119,6,0.03)', border: 'rgba(217,119,6,0.12)' },
+        { key: '3', name: 'Area 3 (Bulky Storing)', color: '#7c3aed', bg: 'rgba(124,58,237,0.03)', border: 'rgba(124,58,237,0.12)' }
+      ];
+      
+      areaInfos.forEach(function(area) {
+        var aCount = breakdown.counts[area.key];
+        var aPct = lvlTotal > 0 ? ((aCount / lvlTotal) * 100).toFixed(1) : 0;
+        var aAisles = breakdown.aisles[area.key];
+        var aislesStr = aAisles.length > 0 ? aAisles.map(function(as){ return '<span style="background:var(--surface2); border:1px solid var(--border); padding:2px 6px; border-radius:4px; font-family:var(--font-mono); font-size:10px; font-weight:700; color:var(--text);">' + as + '</span>'; }).join(' ') : '<span style="color:var(--muted); font-style:italic;">—</span>';
+        
+        var isAreaSelected = (CR_SELECTED_BREAKDOWN_AREA === area.key);
+        var activeAreaBorder = isAreaSelected ? 'border: 2px solid ' + area.color + '; box-shadow: 0 4px 12px ' + area.color + '22; transform: translateY(-2px);' : 'border: 1px solid var(--border);';
+        var activeAreaBg = isAreaSelected ? 'background: ' + area.bg + ';' : 'background: var(--surface);';
+        
+        html += '<div onclick="setBreakdownArea(\'' + area.key + '\')" style="' + activeAreaBorder + ' ' + activeAreaBg + ' border-radius:var(--radius-sm); padding:14px; display:flex; flex-direction:column; justify-content:space-between; cursor:pointer; transition:all 0.25s ease;" onmouseover="this.style.transform=\'translateY(-2px)\'; this.style.boxShadow=\'0 4px 10px rgba(0,0,0,0.04)\';" onmouseout="this.style.transform=\'' + (isAreaSelected ? 'translateY(-2px)' : 'translateY(0)') + '\'; this.style.boxShadow=\'' + (isAreaSelected ? '0 4px 12px ' + area.color + '22' : 'none') + '\';">' +
+          '<div>' +
+            '<div style="display:flex; align-items:center; justify-content:space-between; gap:6px; font-size:11px; font-weight:800; color:var(--muted); text-transform:uppercase; letter-spacing:0.3px;">' +
+              '<span style="display:flex; align-items:center; gap:6px;">' +
+                '<span style="width:8px; height:8px; border-radius:50%; background:' + area.color + '; display:inline-block;"></span>' +
+                area.name +
+              '</span>' +
+              (isAreaSelected ? '<span style="background:' + area.color + '; color:#fff; font-size:9px; font-weight:900; padding:1px 6px; border-radius:100px;">AKTIF</span>' : '<span style="font-size:9px; color:var(--muted); font-weight:600;">Klik untuk LOC 🔍</span>') +
+            '</div>' +
+            '<div style="font-size:22px; font-weight:800; font-family:var(--font-mono); color:var(--text); margin-top:8px; line-height:1;">' +
+              aCount.toLocaleString() + ' <span style="font-size:11px; color:var(--muted); font-weight:600;">(' + aPct + '%)</span>' +
+            '</div>' +
+            
+            '<div style="width:100%; height:8px; background:rgba(0,0,0,0.05); border-radius:100px; margin-top:10px; overflow:hidden;">' +
+              '<div style="width:' + aPct + '%; height:100%; background:' + area.color + '; border-radius:100px; transition:width 0.4s ease;"></div>' +
+            '</div>' +
+          '</div>' +
+          
+          '<div style="margin-top:14px; border-top:1px dashed var(--border); padding-top:10px;">' +
+            '<div style="font-size:10px; font-weight:800; color:var(--muted); text-transform:uppercase; margin-bottom:6px; letter-spacing:0.3px;">📍 Daftar Lorong (Aisle)</div>' +
+            '<div style="display:flex; gap:4px; flex-wrap:wrap;">' + aislesStr + '</div>' +
+          '</div>' +
+        '</div>';
+      });
+      
+      var selectedAreaInfo = areaInfos.find(function(a) { return a.key === CR_SELECTED_BREAKDOWN_AREA; });
+      if (selectedAreaInfo) {
+        var areaLocs = getAreaLocDetails(lvl, CR_SELECTED_BREAKDOWN_AREA);
+        
+        html += '</div>'; // End 3 columns
+        
+        // Detailed LOC lists
+        html += '<div style="margin-top:20px; background:var(--surface); border:1px solid ' + selectedAreaInfo.color + '; border-radius:var(--radius); padding:16px; box-shadow:0 4px 12px rgba(0,0,0,0.03);">';
+        
+        html += '<div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:12px; border-bottom:1px solid var(--border); padding-bottom:10px;">' +
+          '<div>' +
+            '<div style="font-size:13px; font-weight:800; color:' + selectedAreaInfo.color + '; text-transform:uppercase; letter-spacing:0.5px; display:flex; align-items:center; gap:8px;">' +
+              '📂 Detail Lokasi Penyimpanan Fisik (LOC) — ' + selectedAreaInfo.name +
+            '</div>' +
+            '<div style="font-size:11px; color:var(--muted); margin-top:2px;">Daftar lokasi rak di Level ' + lvl + ' yang berisi Case ID aktif</div>' +
+          '</div>' +
+          '<div style="display:flex; align-items:center; gap:8px;">' +
+            '<button onclick="exportAreaBreakdownToCSV(' + lvl + ', \'' + CR_SELECTED_BREAKDOWN_AREA + '\')" style="background:#10b981; border:1px solid #10b981; color:#fff; font-size:11px; padding:6px 12px; border-radius:6px; font-weight:700; display:inline-flex; align-items:center; gap:6px; cursor:pointer; box-shadow:0 2px 4px rgba(16,185,129,0.15); transition:background 0.2s;" onmouseover="this.style.background=\'#0d9488\'" onmouseout="this.style.background=\'#10b981\'">' +
+              '📥 Export Data' +
+            '</button>' +
+            '<div style="font-size:11px; font-weight:700; background:' + selectedAreaInfo.color + '; color:#fff; padding:6px 12px; border-radius:6px; font-family:var(--font-mono);">' +
+              areaLocs.length + ' Lokasi Aktif' +
+            '</div>' +
+          '</div>' +
+        '</div>';
+        
+        if (areaLocs.length === 0) {
+          html += '<div style="text-align:center; padding:30px; color:var(--muted); font-style:italic; font-size:12px;">Tidak ada data lokasi untuk area dan level ini.</div>';
+        } else {
+          // Render a beautiful grid of LOC details
+          html += '<div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:12px; max-height:280px; overflow-y:auto; padding-right:4px;">';
+          
+          areaLocs.forEach(function(locItem) {
+            var itemsHtml = locItem.items.map(function(itm) {
+              return '<div style="font-size:11px; display:flex; justify-content:space-between; align-items:flex-start; margin-top:4px; padding:4px 6px; background:var(--surface2); border-radius:4px; border-left:2px solid ' + selectedAreaInfo.color + '33;">' +
+                '<div style="max-width:82%;">' +
+                  '<strong style="color:var(--text); font-family:var(--font-mono); font-size:11px;">' + itm.sku + '</strong> ' +
+                  '<span style="color:var(--muted); font-size:10px; display:block; line-height:1.2; font-weight:500;">' + itm.desc + '</span>' +
+                '</div>' +
+                '<span style="font-weight:800; font-family:var(--font-mono); color:' + selectedAreaInfo.color + '; font-size:11px;">' + itm.count + ' c</span>' +
+              '</div>';
+            }).join('');
+            
+            html += '<div style="border:1px solid var(--border); border-radius:var(--radius-sm); padding:10px; background:var(--surface2); display:flex; flex-direction:column; justify-content:space-between;">' +
+              '<div>' +
+                '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">' +
+                  '<span style="font-family:var(--font-mono); font-size:12px; font-weight:800; color:var(--text); background:rgba(0,0,0,0.05); padding:2px 8px; border-radius:4px; border-left:3px solid ' + selectedAreaInfo.color + ';">📍 ' + locItem.loc + '</span>' +
+                  '<span style="font-size:11px; font-weight:800; color:var(--text); font-family:var(--font-mono);">' + locItem.count + ' Case</span>' +
+                '</div>' +
+                '<div style="border-top: 1px dashed var(--border); margin-top:6px; padding-top:4px;">' +
+                  itemsHtml +
+                '</div>' +
+              '</div>' +
+            '</div>';
+          });
+          
+          html += '</div>'; // End LOC Grid
+        }
+        
+        html += '</div>'; // End Detail container
+      } else {
+        html += '</div>'; // End 3 columns
+        html += '<div style="text-align:center; margin-top:14px; background:rgba(0,0,0,0.01); border:1px dashed var(--border); padding:14px; border-radius:var(--radius-sm); font-size:12px; color:var(--muted);">' +
+          '👆 <strong>Pilih salah satu Area Storing di atas</strong> untuk memunculkan detail lokasi penyimpanan (LOC) beserta SKU yang ada di dalamnya.' +
+        '</div>';
+      }
+      
+      html += '<div style="display:flex; justify-content:space-between; align-items:center; margin-top:14px; border-top:1px solid var(--border); padding-top:10px; flex-wrap:wrap; gap:10px;">' +
+        '<span style="font-size:11px; color:var(--muted);">💡 <i>Lorong dibaca dari 2 digit awal lokasi rack penyimpanan fisik.</i></span>' +
+        '<button onclick="setRackLevel(\'all\')" style="background:var(--surface); border:1px solid var(--border); color:var(--text); font-size:11px; padding:6px 12px; border-radius:var(--radius-sm); font-weight:700; cursor:pointer; display:flex; align-items:center; gap:6px; transition:all 0.2s;" onmouseover="this.style.background=\'rgba(0,0,0,0.02)\'" onmouseout="this.style.background=\'var(--surface)\'">' +
+          '⏪ Reset Ringkasan' +
+        '</button>' +
+      '</div>';
+      
+      html += '</div>'; // End container
+      
+      summaryContainer.innerHTML = html;
+    }
   }
 
   // Alert kalau ada level tinggi
@@ -11221,6 +11844,140 @@ function renderRackingDistribution() {
       alertEl.style.display = 'none';
     }
   }
+}
+
+function renderNonRackingDistribution() {
+  var result = computeRackingDistribution();
+  var nonRackingCount = result.nonRackingCount || 0;
+  
+  // Render total badge
+  var totalBadgeEl = document.getElementById('cr-nonrack-total-badge');
+  if (totalBadgeEl) {
+    totalBadgeEl.innerHTML = nonRackingCount.toLocaleString() + ' Case';
+  }
+  
+  var containerEl = document.getElementById('cr-nonrack-container');
+  if (!containerEl) return;
+  
+  if (nonRackingCount <= 0) {
+    containerEl.innerHTML = '<div style="text-align:center; padding:30px; color:var(--muted); font-style:italic; font-size:12px; background:var(--surface2); border-radius:var(--radius); border:1px dashed var(--border);">' +
+      'Tidak ada data Case ID Non-Racking pada data yang dimuat.' +
+    '</div>';
+    return;
+  }
+  
+  var breakdown = getNonRackingBreakdownData();
+  
+  var areaInfos = [
+    { key: '1', name: 'Area 1 (Small Storing)', color: '#2563eb', bg: 'rgba(37,99,235,0.03)', border: 'rgba(37,99,235,0.12)' },
+    { key: '2', name: 'Area 2 (Medium Storing)', color: '#d97706', bg: 'rgba(217,119,6,0.03)', border: 'rgba(217,119,6,0.12)' },
+    { key: '3', name: 'Area 3 (Bulky Storing)', color: '#7c3aed', bg: 'rgba(124,58,237,0.03)', border: 'rgba(124,58,237,0.12)' }
+  ];
+  
+  var html = '<div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:12px;">';
+  
+  areaInfos.forEach(function(area) {
+    var aCount = breakdown.counts[area.key];
+    var aPct = nonRackingCount > 0 ? ((aCount / nonRackingCount) * 100).toFixed(1) : 0;
+    var aAisles = breakdown.aisles[area.key];
+    var aislesStr = aAisles.length > 0 ? aAisles.map(function(as){ return '<span style="background:var(--surface2); border:1px solid var(--border); padding:2px 6px; border-radius:4px; font-family:var(--font-mono); font-size:10px; font-weight:700; color:var(--text);">' + as + '</span>'; }).join(' ') : '<span style="color:var(--muted); font-style:italic;">—</span>';
+    
+    var isAreaSelected = (CR_SELECTED_NONRACK_AREA === area.key);
+    var activeAreaBorder = isAreaSelected ? 'border: 2px solid ' + area.color + '; box-shadow: 0 4px 12px ' + area.color + '22; transform: translateY(-2px);' : 'border: 1px solid var(--border);';
+    var activeAreaBg = isAreaSelected ? 'background: ' + area.bg + ';' : 'background: var(--surface);';
+    
+    html += '<div onclick="setNonRackArea(\'' + area.key + '\')" style="' + activeAreaBorder + ' ' + activeAreaBg + ' border-radius:var(--radius-sm); padding:14px; display:flex; flex-direction:column; justify-content:space-between; cursor:pointer; transition:all 0.25s ease;" onmouseover="this.style.transform=\'translateY(-2px)\'; this.style.boxShadow=\'0 4px 10px rgba(0,0,0,0.04)\';" onmouseout="this.style.transform=\'' + (isAreaSelected ? 'translateY(-2px)' : 'translateY(0)') + '\'; this.style.boxShadow=\'' + (isAreaSelected ? '0 4px 12px ' + area.color + '22' : 'none') + '\';">' +
+      '<div>' +
+        '<div style="display:flex; align-items:center; justify-content:space-between; gap:6px; font-size:11px; font-weight:800; color:var(--muted); text-transform:uppercase; letter-spacing:0.3px;">' +
+          '<span style="display:flex; align-items:center; gap:6px;">' +
+            '<span style="width:8px; height:8px; border-radius:50%; background:' + area.color + '; display:inline-block;"></span>' +
+            area.name +
+          '</span>' +
+          (isAreaSelected ? '<span style="background:' + area.color + '; color:#fff; font-size:9px; font-weight:900; padding:1px 6px; border-radius:100px;">AKTIF</span>' : '<span style="font-size:9px; color:var(--muted); font-weight:600;">Klik untuk LOC 🔍</span>') +
+        '</div>' +
+        '<div style="font-size:22px; font-weight:800; font-family:var(--font-mono); color:var(--text); margin-top:8px; line-height:1;">' +
+          aCount.toLocaleString() + ' <span style="font-size:11px; color:var(--muted); font-weight:600;">(' + aPct + '%)</span>' +
+        '</div>' +
+        
+        '<div style="width:100%; height:8px; background:rgba(0,0,0,0.05); border-radius:100px; margin-top:10px; overflow:hidden;">' +
+          '<div style="width:' + aPct + '%; height:100%; background:' + area.color + '; border-radius:100px; transition:width 0.4s ease;"></div>' +
+        '</div>' +
+      '</div>' +
+      
+      '<div style="margin-top:14px; border-top:1px dashed var(--border); padding-top:10px;">' +
+        '<div style="font-size:10px; font-weight:800; color:var(--muted); text-transform:uppercase; margin-bottom:6px; letter-spacing:0.3px;">📍 Lokasi / Zona</div>' +
+        '<div style="display:flex; gap:4px; flex-wrap:wrap;">' + aislesStr + '</div>' +
+      '</div>' +
+    '</div>';
+  });
+  
+  html += '</div>'; // End 3 columns
+  
+  var selectedAreaInfo = areaInfos.find(function(a) { return a.key === CR_SELECTED_NONRACK_AREA; });
+  if (selectedAreaInfo) {
+    var areaLocs = getNonRackingAreaLocDetails(CR_SELECTED_NONRACK_AREA);
+    
+    // Detailed LOC lists
+    html += '<div style="margin-top:20px; background:var(--surface); border:1px solid ' + selectedAreaInfo.color + '; border-radius:var(--radius); padding:16px; box-shadow:0 4px 12px rgba(0,0,0,0.03);">';
+    
+    html += '<div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:12px; border-bottom:1px solid var(--border); padding-bottom:10px;">' +
+      '<div>' +
+        '<div style="font-size:13px; font-weight:800; color:' + selectedAreaInfo.color + '; text-transform:uppercase; letter-spacing:0.5px; display:flex; align-items:center; gap:8px;">' +
+          '📂 Detail Lokasi Penyimpanan (LOC) — ' + selectedAreaInfo.name +
+        '</div>' +
+        '<div style="font-size:11px; color:var(--muted); margin-top:2px;">Daftar lokasi non-rak di Area ini yang berisi Case ID aktif</div>' +
+      '</div>' +
+      '<div style="display:flex; align-items:center; gap:8px;">' +
+        '<button onclick="exportNonRackingAreaBreakdownToCSV(\'' + CR_SELECTED_NONRACK_AREA + '\')" style="background:#10b981; border:1px solid #10b981; color:#fff; font-size:11px; padding:6px 12px; border-radius:6px; font-weight:700; display:inline-flex; align-items:center; gap:6px; cursor:pointer; box-shadow:0 2px 4px rgba(16,185,129,0.15); transition:background 0.2s;" onmouseover="this.style.background=\'#0d9488\'" onmouseout="this.style.background=\'#10b981\'">' +
+          '📥 Export Data' +
+        '</button>' +
+        '<div style="font-size:11px; font-weight:700; background:' + selectedAreaInfo.color + '; color:#fff; padding:6px 12px; border-radius:6px; font-family:var(--font-mono);">' +
+          areaLocs.length + ' Lokasi Aktif' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+    
+    if (areaLocs.length === 0) {
+      html += '<div style="text-align:center; padding:30px; color:var(--muted); font-style:italic; font-size:12px;">Tidak ada data lokasi non-rak untuk area ini.</div>';
+    } else {
+      // Render LOC details
+      html += '<div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:12px; max-height:280px; overflow-y:auto; padding-right:4px;">';
+      
+      areaLocs.forEach(function(locItem) {
+        var itemsHtml = locItem.items.map(function(itm) {
+          return '<div style="font-size:11px; display:flex; justify-content:space-between; align-items:flex-start; margin-top:4px; padding:4px 6px; background:var(--surface2); border-radius:4px; border-left:2px solid ' + selectedAreaInfo.color + '33;">' +
+            '<div style="max-width:82%;">' +
+              '<strong style="color:var(--text); font-family:var(--font-mono); font-size:11px;">' + itm.sku + '</strong> ' +
+              '<span style="color:var(--muted); font-size:10px; display:block; line-height:1.2; font-weight:500;">' + itm.desc + '</span>' +
+            '</div>' +
+            '<span style="font-weight:800; font-family:var(--font-mono); color:' + selectedAreaInfo.color + '; font-size:11px;">' + itm.count + ' c</span>' +
+          '</div>';
+        }).join('');
+        
+        html += '<div style="border:1px solid var(--border); border-radius:var(--radius-sm); padding:10px; background:var(--surface2); display:flex; flex-direction:column; justify-content:space-between;">' +
+          '<div>' +
+            '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">' +
+              '<span style="font-family:var(--font-mono); font-size:12px; font-weight:800; color:var(--text); background:rgba(0,0,0,0.05); padding:2px 8px; border-radius:4px; border-left:3px solid ' + selectedAreaInfo.color + ';">📍 ' + locItem.loc + '</span>' +
+              '<span style="font-size:11px; font-weight:800; color:var(--text); font-family:var(--font-mono);">' + locItem.count + ' Case</span>' +
+            '</div>' +
+            '<div style="border-top: 1px dashed var(--border); margin-top:6px; padding-top:4px;">' +
+              itemsHtml +
+            '</div>' +
+          '</div>' +
+        '</div>';
+      });
+      
+      html += '</div>'; // End LOC Grid
+    }
+    
+    html += '</div>'; // End Detail container
+  } else {
+    html += '<div style="text-align:center; margin-top:14px; background:rgba(0,0,0,0.01); border:1px dashed var(--border); padding:14px; border-radius:var(--radius-sm); font-size:12px; color:var(--muted);">' +
+      '👆 <strong>Pilih salah satu Area Storing di atas</strong> untuk memunculkan detail lokasi penyimpanan (LOC) beserta SKU yang ada di dalamnya.' +
+    '</div>';
+  }
+  
+  containerEl.innerHTML = html;
 }
 
 // ── SEBARAN CASE ID PER LORONG (dibaca dari 2 karakter awal kolom LOC) ──
@@ -11449,17 +12206,27 @@ function normalizeCaseDetailSheet(rawRows, sourceTag, batchTag) {
 
   var headers = rawRows[0];
   var caseIdIdx = -1, skuIdx = -1, descIdx = -1, shiptoIdx = -1, areaIdx = -1, locIdx = -1, addDateIdx = -1, depIdx = -1;
+  var orderkeyIdx = -1, extrnorderkeyIdx = -1, shiptonameIdx = -1, storebookingIdx = -1, cbmIdx = -1, cubeIdx = -1, routeIdx = -1;
 
   for (var c = 0; c < headers.length; c++) {
-    var h = String(headers[c] || '').toUpperCase().trim().replace(/[\s_.\-]/g, '');
+    var h = String(headers[c] || '').toUpperCase().trim().replace(/[\s_.\-/]/g, '');
     if (h === 'CASEID') caseIdIdx = c;
     else if (h === 'SKU') skuIdx = c;
     else if (h === 'DESCR' || h === 'DESCRIPTION') descIdx = c;
-    else if (h === 'SHIPTO') shiptoIdx = c;
+    else if (h === 'SHIPTO' || h === 'SHIPTOCODE') shiptoIdx = c;
     else if (h === 'LOC' || h === 'LOCATION') locIdx = c;
     else if (h.indexOf('ADDDATE') !== -1) addDateIdx = c;
     else if (h === 'DEP') depIdx = c;
     else if (areaIdx === -1 && h.indexOf('AREA') !== -1) areaIdx = c;
+    
+    // Extra requested columns
+    if (h === 'ORDERKEY' || h === 'ORDERNO' || h === 'NOMORORDER') orderkeyIdx = c;
+    else if (h === 'EXTRENORDERKEY' || h === 'EXTRNORDERKEY' || h === 'EXTERNALORDERKEY') extrnorderkeyIdx = c;
+    else if (h === 'SHIPTONAME' || h === 'CUSTOMERNAME' || h === 'SHIPTONAMA' || h === 'NAMASHIPTO') shiptonameIdx = c;
+    else if (h === 'STOREBOOKING' || h === 'BOOKINGSTORE' || h === 'BOOKING') storebookingIdx = c;
+    else if (h === 'CBM' || h === 'VOLUME') cbmIdx = c;
+    else if (h === 'CUBE') cubeIdx = c;
+    else if (h === 'ROUTE' || h === 'ROUTECODE') routeIdx = c;
   }
 
   if (caseIdIdx === -1) {
@@ -11483,17 +12250,11 @@ function normalizeCaseDetailSheet(rawRows, sourceTag, batchTag) {
     var caseIdRaw = String(row[caseIdIdx] || '').trim();
     if (!caseIdRaw || caseIdRaw === '-' || caseIdRaw === '#N/A') continue;
 
-    // ── DIAGNOSTIC SEMENTARA ──
-    if (caseIdRaw === '21897517') {
-      console.log('[CR TRACE] Sheet ' + sourceTag + ' baris ' + r + ' → CASEID=' + caseIdRaw +
-        ' | raw SKU cell="' + row[skuIdx] + '" (length=' + String(row[skuIdx] || '').length + ')' +
-        ' | raw DESCR cell="' + row[descIdx] + '"');
-    }
-
     if (!caseMap[caseIdRaw]) {
       caseMap[caseIdRaw] = {
         caseId: caseIdRaw,
-        sku: '', desc: '', shipto: '', dep: '', area: '', loc: '', addDateRaw: null
+        sku: '', desc: '', shipto: '', dep: '', area: '', loc: '', addDateRaw: null,
+        orderkey: '', extrnorderkey: '', shiptoname: '', storebooking: '', cbm: '', route: ''
       };
       caseOrder.push(caseIdRaw);
     }
@@ -11507,17 +12268,31 @@ function normalizeCaseDetailSheet(rawRows, sourceTag, batchTag) {
     if (!rec.area && areaIdx !== -1) rec.area = String(row[areaIdx] || '').trim();
     if (!rec.loc && locIdx !== -1) rec.loc = String(row[locIdx] || '').trim();
     if (!rec.addDateRaw && addDateIdx !== -1 && row[addDateIdx]) rec.addDateRaw = row[addDateIdx];
-  }
-
-  if (caseMap['21897517']) {
-    console.log('[CR TRACE] Hasil akhir grouping CASEID 21897517 di sheet ' + sourceTag + ':', JSON.stringify(caseMap['21897517']));
+    
+    // Populate extra requested columns
+    if (!rec.orderkey && orderkeyIdx !== -1) rec.orderkey = String(row[orderkeyIdx] || '').trim();
+    if (!rec.extrnorderkey && extrnorderkeyIdx !== -1) rec.extrnorderkey = String(row[extrnorderkeyIdx] || '').trim();
+    if (!rec.shiptoname && shiptonameIdx !== -1) rec.shiptoname = String(row[shiptonameIdx] || '').trim();
+    if (!rec.storebooking && storebookingIdx !== -1) rec.storebooking = String(row[storebookingIdx] || '').trim();
+    if (!rec.cbm) {
+      if (cbmIdx !== -1 && row[cbmIdx]) rec.cbm = String(row[cbmIdx] || '').trim();
+      else if (cubeIdx !== -1 && row[cubeIdx]) rec.cbm = String(row[cubeIdx] || '').trim();
+    }
+    if (!rec.route && routeIdx !== -1) rec.route = String(row[routeIdx] || '').trim();
   }
 
   caseOrder.forEach(function(cid) {
     var rec = caseMap[cid];
     out.push({
+      caseId: rec.caseId,
       sku: rec.sku, desc: rec.desc, shipto: rec.shipto, dep: rec.dep, area: rec.area, loc: rec.loc,
       addDateRaw: rec.addDateRaw,
+      orderkey: rec.orderkey,
+      extrnorderkey: rec.extrnorderkey,
+      shiptoName: rec.shiptoname,
+      storebooking: rec.storebooking,
+      cbm: rec.cbm,
+      route: rec.route,
       source: sourceTag, batch: batchTag
     });
   });
@@ -11579,11 +12354,24 @@ function renderCaseIdReleasePage() {
     // 1 baris = 1 Case ID fisik. JANGAN dikalikan kolom QTY.
     var caseCount = 1;
 
+    // Check if SKU is valid (numeric OR starts with 'X' case-insensitively)
+    var sClean = String(skuVal).trim().toUpperCase();
+    var isNoSku = false;
+    if (!sClean || sClean === '-' || sClean === '—' || sClean === '#N/A' || sClean === 'N/A' || sClean === 'TANPA SKU' || sClean === '(TANPA SKU)' || sClean === 'NO SKU') {
+      isNoSku = true;
+    } else {
+      if (/^\d+$/.test(sClean) || /^X/i.test(sClean)) {
+        isNoSku = false;
+      } else {
+        isNoSku = true;
+      }
+    }
+
     // ── Total per SKU (untuk Top 5 SKU keseluruhan) ──
     // Case ID tanpa SKU tetap dihitung, tapi dikelompokkan terpisah
     // supaya tidak mengotori daftar Top 5 SKU asli.
     if (item.sku) {
-      if (!skuMap[skuVal]) skuMap[skuVal] = { count: 0, desc: descVal };
+      if (!skuMap[skuVal]) skuMap[skuVal] = { count: 0, desc: descVal, isNoSku: isNoSku };
       skuMap[skuVal].count += caseCount;
     }
 
@@ -11594,13 +12382,13 @@ function renderCaseIdReleasePage() {
     else if (areaVal.indexOf('3') !== -1) areaKey = '3';
 
     if (!areaSkuMap[areaKey]) areaSkuMap[areaKey] = {};
-    if (!areaSkuMap[areaKey][skuVal]) areaSkuMap[areaKey][skuVal] = { count: 0, desc: descVal };
+    if (!areaSkuMap[areaKey][skuVal]) areaSkuMap[areaKey][skuVal] = { count: 0, desc: descVal, isNoSku: isNoSku };
     areaSkuMap[areaKey][skuVal].count += caseCount;
 
     // ── Per Batch (P1/P2/HUB&LK = Batch 3 aktif, LP = Batch 1&2 buffer) ──
     var batchKey = item.batch || 'active';
     if (!batchSkuMap[batchKey]) batchSkuMap[batchKey] = {};
-    if (!batchSkuMap[batchKey][skuVal]) batchSkuMap[batchKey][skuVal] = { count: 0, desc: descVal };
+    if (!batchSkuMap[batchKey][skuVal]) batchSkuMap[batchKey][skuVal] = { count: 0, desc: descVal, isNoSku: isNoSku };
     batchSkuMap[batchKey][skuVal].count += caseCount;
 
     // ── Per Brand (dibaca dari kolom DEP, bukan SHIPTO) ──
@@ -11861,7 +12649,9 @@ function renderCaseIdReleasePage() {
   var kelsBar = document.getElementById('cr-bu-kels-bar'); if (kelsBar) kelsBar.style.width = kelsPct + '%';
 
   // ── Top SKU (disimpan untuk modal, bukan dirender langsung) ──
-  var skuArray = Object.keys(skuMap).map(function(k) { return { sku: k, count: skuMap[k].count, desc: skuMap[k].desc }; });
+  var skuArray = Object.keys(skuMap)
+    .filter(function(k) { return !skuMap[k].isNoSku; })
+    .map(function(k) { return { sku: k, count: skuMap[k].count, desc: skuMap[k].desc }; });
   skuArray.sort(function(a, b) { return b.count - a.count; });
   CR_TOP_SKU_LIST = skuArray.slice(0, 5);
 
@@ -11882,9 +12672,11 @@ function renderCaseIdReleasePage() {
   // Slice Top SKU per Area
   CR_TOP_SKU_PER_AREA = {};
   ['1', '2', '3'].forEach(function(areaKey) {
-    var arr = Object.keys(areaSkuMap[areaKey] || {}).map(function(k) { 
-      return { sku: k, count: areaSkuMap[areaKey][k].count, desc: areaSkuMap[areaKey][k].desc }; 
-    });
+    var arr = Object.keys(areaSkuMap[areaKey] || {})
+      .filter(function(k) { return !areaSkuMap[areaKey][k].isNoSku; })
+      .map(function(k) { 
+        return { sku: k, count: areaSkuMap[areaKey][k].count, desc: areaSkuMap[areaKey][k].desc }; 
+      });
     arr.sort(function(a, b) { return b.count - a.count; });
     CR_TOP_SKU_PER_AREA[areaKey] = arr.slice(0, 3);
     
@@ -11911,21 +12703,36 @@ function renderCaseIdReleasePage() {
   });
 
   // Slice Top SKU per Batch
-  var activeSkuArray = Object.keys(batchSkuMap['active'] || {}).map(function(k) {
-    return { sku: k, count: batchSkuMap['active'][k].count, desc: batchSkuMap['active'][k].desc };
-  });
+  var activeSkuArray = Object.keys(batchSkuMap['active'] || {})
+    .filter(function(k) { return !batchSkuMap['active'][k].isNoSku; })
+    .map(function(k) {
+      return { sku: k, count: batchSkuMap['active'][k].count, desc: batchSkuMap['active'][k].desc };
+    });
   activeSkuArray.sort(function(a, b) { return b.count - a.count; });
   
+  var bufferSkuArray = Object.keys(batchSkuMap['buffer'] || {})
+    .filter(function(k) { return !batchSkuMap['buffer'][k].isNoSku; })
+    .map(function(k) {
+      return { sku: k, count: batchSkuMap['buffer'][k].count, desc: batchSkuMap['buffer'][k].desc };
+    });
+  bufferSkuArray.sort(function(a, b) { return b.count - a.count; });
+
   CR_TOP_SKU_PER_BATCH = {
     'active': activeSkuArray.slice(0, 3),
-    'buffer': [
-      { sku: "10192843", count: 12, desc: "DANTE OFFICE CHAIR BLACK (BUFFER)" },
-      { sku: "10485911", count: 9, desc: "NEO ALONA WARDROBE 3 DOORS WALNUT (BUFFER)" },
-      { sku: "50281938", count: 7, desc: "MIDEA MICROWAVE OVEN 20L (BUFFER)" }
-    ]
+    'buffer': bufferSkuArray.slice(0, 3)
   };
+  
   if (CR_TOP_SKU_PER_BATCH['active'].length === 0) {
     CR_TOP_SKU_PER_BATCH['active'] = CR_TOP_SKU_LIST.slice(0, 3);
+  }
+  if (CR_TOP_SKU_PER_BATCH['buffer'].length === 0) {
+    if (!isCaseIdReleaseFetchedFromSheets) {
+      CR_TOP_SKU_PER_BATCH['buffer'] = [
+        { sku: "10192843", count: 12, desc: "DANTE OFFICE CHAIR BLACK (BUFFER)" },
+        { sku: "10485911", count: 9, desc: "NEO ALONA WARDROBE 3 DOORS WALNUT (BUFFER)" },
+        { sku: "50281938", count: 7, desc: "MIDEA MICROWAVE OVEN 20L (BUFFER)" }
+      ];
+    }
   }
 
   // ── LC & STUFFING RELEASE CALCULATION & RENDERING ──
@@ -12026,6 +12833,7 @@ function renderCaseIdReleasePage() {
 
   // ── Level Racking ──
   renderRackingDistribution();
+  renderNonRackingDistribution();
 
   // ── Sebaran per Lorong ──
   renderAisleDistribution();
