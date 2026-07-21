@@ -11608,28 +11608,28 @@ function renderRackingDistribution() {
       var pct = total > 0 ? Math.round((val / total) * 100) : 0;
       var ratio = maxVal > 0 ? val / maxVal : 0;
       
-      // Determine colors based on case density, exactly like the aisle map!
+      // Determine colors based on category: Rendah (Lv 1-3), Sedang (Lv 4-6), Tinggi (Lv 7-9)
       var bg, text, shadowCol, label;
       if (val <= 0) {
         bg = 'var(--surface2)';
         text = '#94a3b8';
         shadowCol = 'rgba(15,23,42,0.02)';
         label = 'Kosong';
-      } else if (ratio >= 0.75) {
-        bg = '#ef4444'; // Red
+      } else if (lvl <= 3) {
+        bg = '#16a34a'; // Green - Rendah
         text = '#ffffff';
-        shadowCol = 'rgba(239, 68, 68, 0.4)';
-        label = 'Sangat Padat';
-      } else if (ratio >= 0.45) {
-        bg = '#3b82f6'; // Blue
+        shadowCol = 'rgba(22, 163, 74, 0.4)';
+        label = 'Rendah (Lv 1-3)';
+      } else if (lvl <= 6) {
+        bg = '#d97706'; // Orange - Sedang
         text = '#ffffff';
-        shadowCol = 'rgba(59, 130, 246, 0.4)';
-        label = 'Padat';
+        shadowCol = 'rgba(217, 119, 6, 0.4)';
+        label = 'Sedang (Lv 4-6)';
       } else {
-        bg = '#86efac'; // Green
-        text = '#14532d';
-        shadowCol = 'rgba(22, 163, 74, 0.25)';
-        label = 'Ringan';
+        bg = '#dc2626'; // Red - Tinggi
+        text = '#ffffff';
+        shadowCol = 'rgba(220, 38, 38, 0.4)';
+        label = 'Tinggi (Lv 7-9)';
       }
 
       var isSelected = (CR_SELECTED_RACK_LEVEL === 'all' || CR_SELECTED_RACK_LEVEL === lvl);
