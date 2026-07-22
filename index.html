@@ -6515,9 +6515,11 @@ function initSlaTrendModalChart() {
           type: 'bar',
           label: 'SLA Hit Volume',
           data: hitPoints,
-          backgroundColor: 'rgba(16, 185, 129, 0.75)',
+          backgroundColor: 'rgba(16, 185, 129, 0.4)',
           borderColor: '#10b981',
-          borderWidth: 1,
+          borderWidth: 2,
+          borderRadius: 4,
+          borderSkipped: 'bottom',
           stack: 'volume',
           yAxisID: 'y',
           order: 2
@@ -6526,9 +6528,11 @@ function initSlaTrendModalChart() {
           type: 'bar',
           label: 'SLA Miss Volume', minBarLength: 5,
           data: misPoints,
-          backgroundColor: 'rgba(239, 68, 68, 0.75)',
+          backgroundColor: 'rgba(239, 68, 68, 0.3)',
           borderColor: '#ef4444',
-          borderWidth: 1,
+          borderWidth: 2,
+          borderRadius: 4,
+          borderSkipped: 'bottom',
           stack: 'volume',
           yAxisID: 'y',
           order: 2
@@ -6541,8 +6545,12 @@ function initSlaTrendModalChart() {
           backgroundColor: 'rgba(59, 149, 255, 0.05)',
           tension: 0.3,
           borderWidth: 3,
-          pointRadius: 4,
+          pointRadius: 5,
+          pointHoverRadius: 7,
           pointBackgroundColor: '#3b95ff',
+          pointBorderColor: '#fff',
+          pointBorderWidth: 2,
+          clip: false,
           yAxisID: 'y1',
           order: 1
         },
@@ -6554,8 +6562,12 @@ function initSlaTrendModalChart() {
           backgroundColor: 'rgba(226, 87, 62, 0.05)',
           tension: 0.3,
           borderWidth: 3,
-          pointRadius: 4,
+          pointRadius: 5,
+          pointHoverRadius: 7,
           pointBackgroundColor: '#e2573e',
+          pointBorderColor: '#fff',
+          pointBorderWidth: 2,
+          clip: false,
           yAxisID: 'y1',
           order: 1
         }
@@ -6564,6 +6576,7 @@ function initSlaTrendModalChart() {
     options: {
       responsive: true,
       maintainAspectRatio: false,
+      layout: { padding: { top: 28, right: 8 } },
       plugins: {
         legend: {
           labels: { color: '#8e9fae', font: { family: 'Plus Jakarta Sans', size: 10 } }
@@ -6624,8 +6637,171 @@ function initSlaTrendModalChart() {
           ticks: { color: '#8e9fae', font: { family: 'Plus Jakarta Sans', size: 10 } }
         }
       }
-    }
+    },
+    plugins: [createSlaBadgePlugin(9)]
   });
+}
+
+function createSlaBadgePlugin(fontSize) {
+  return {
+    id: 'pl_sla_badge',
+    afterDatasetsDraw: function(chart) {
+      var c = chart.ctx;
+      
+      // Find all active line datasets and their meta
+      var activeLines = [];
+      chart.data.datasets.forEach(function(d, di) {
+        if (d.type !== 'line') return;
+        var meta = chart.getDatasetMeta(di);
+        if (meta && !meta.hidden) {
+          activeLines.push({
+            dataset: d,
+            meta: meta,
+            datasetIndex: di
+          });
+        }
+      });
+      
+      if (activeLines.length === 0) return;
+      
+      var nPoints = activeLines[0].meta.data.length;
+      if (nPoints === 0) return;
+      
+      // Determine if data is dense (more than 10 points or tight spacing)
+      var firstPt = activeLines[0].meta.data[0];
+      var lastPt = activeLines[0].meta.data[nPoints - 1];
+      var avgSpacing = nPoints > 1 ? (lastPt.x - firstPt.x) / (nPoints - 1) : 100;
+      var isDense = nPoints > 10 || avgSpacing < 65;
+      
+      // Always show all percentage labels per user request
+      var drawFlagsByLine = [];
+      activeLines.forEach(function(line, lineIdx) {
+        var flags = new Array(nPoints).fill(true);
+        drawFlagsByLine.push(flags);
+      });
+      
+      // Draw badges
+      activeLines.forEach(function(line, lineIdx) {
+        var d = line.dataset;
+        var meta = line.meta;
+        var di = line.datasetIndex;
+        var flags = drawFlagsByLine[lineIdx];
+        
+        meta.data.forEach(function(pt, i) {
+          if (!flags[i]) return; // Skip if filtered out
+          
+          var v = d.data[i];
+          if (v == null) return;
+          var n = parseFloat(v);
+          var txt = n.toFixed(1) + '%';
+          var fSize = fontSize || 9;
+          
+          c.save();
+          
+          // Translate to the point coordinates for clean rotation and positioning
+          c.translate(pt.x, pt.y);
+          if (isDense) {
+            // Rotated diagonally by -35 degrees for dense layouts to avoid overlaps and stay readable
+            c.rotate(-35 * Math.PI / 180);
+          }
+          
+          c.font = '800 ' + fSize + 'px "Plus Jakarta Sans", sans-serif';
+          c.textAlign = 'center';
+          c.textBaseline = 'middle';
+          
+          var tw = c.measureText(txt).width;
+          var pad = 4;
+          var bw = tw + pad * 2;
+          var bh = fSize + 4;
+          
+          // Determine vertical shift direction ('up' or 'down')
+          var dir = 'up'; // Default above the point
+          
+          // If there are exactly 2 active lines, check for vertical overlap
+          if (activeLines.length === 2) {
+            var otherLineIdx = lineIdx === 0 ? 1 : 0;
+            var otherMeta = activeLines[otherLineIdx].meta;
+            var otherPt = otherMeta.data[i];
+            
+            // Check if they are vertically close
+            if (otherPt && Math.abs(pt.y - otherPt.y) < 24) {
+              var myVal = n;
+              var otherVal = parseFloat(activeLines[otherLineIdx].dataset.data[i] || 0);
+              
+              if (myVal > otherVal) {
+                dir = 'up'; // Higher percentage goes UP
+              } else if (myVal < otherVal) {
+                dir = 'down'; // Lower percentage goes DOWN
+              } else {
+                // If equal, separate them by index
+                dir = lineIdx === 0 ? 'up' : 'down';
+              }
+            }
+          }
+          
+          var gap = 12; // Beautifully float 12px away from the point to keep the dot visible and separate
+          var bx = -bw / 2;
+          var by = (dir === 'up') ? (-bh - gap) : (gap);
+          
+          var col = n >= 90 ? '#10b981' : n >= 80 ? '#f59e0b' : '#ef4444';
+          
+          c.save();
+          // Beautiful soft shadow
+          c.fillStyle = 'rgba(255,255,255,0.96)';
+          c.shadowColor = 'rgba(0, 0, 0, 0.08)';
+          c.shadowBlur = 4;
+          c.shadowOffsetY = 1;
+          
+          c.beginPath();
+          if (c.roundRect) {
+            c.roundRect(bx, by, bw, bh, 3);
+          } else {
+            c.rect(bx, by, bw, bh);
+          }
+          c.fill();
+          
+          c.shadowBlur = 0;
+          c.shadowOffsetY = 0;
+          c.strokeStyle = col;
+          c.lineWidth = 1;
+          
+          c.beginPath();
+          if (c.roundRect) {
+            c.roundRect(bx, by, bw, bh, 3);
+          } else {
+            c.rect(bx, by, bw, bh);
+          }
+          c.stroke();
+          
+          c.fillStyle = col;
+          c.fillText(txt, 0, by + bh / 2 + 0.5);
+          c.restore();
+          
+          // Redraw the line dot on top of the badge and shadow to guarantee it is 100% visible
+          var r = 5;
+          var bg = line.dataset.borderColor || '#3b95ff';
+          var stroke = '#fff';
+          var lw = 2;
+          if (pt.options) {
+            if (pt.options.radius !== undefined) r = pt.options.radius;
+            if (pt.options.backgroundColor) bg = pt.options.backgroundColor;
+            if (pt.options.borderColor) stroke = pt.options.borderColor;
+            if (pt.options.borderWidth !== undefined) lw = pt.options.borderWidth;
+          }
+          
+          c.beginPath();
+          c.arc(0, 0, r, 0, 2 * Math.PI);
+          c.fillStyle = bg;
+          c.fill();
+          c.strokeStyle = stroke;
+          c.lineWidth = lw;
+          c.stroke();
+          
+          c.restore();
+        });
+      });
+    }
+  };
 }
 
 function initSlaTrendOnPageCharts() {
@@ -6762,9 +6938,11 @@ function initSlaTrendOnPageCharts() {
           type: 'bar',
           label: 'SLA Hit Volume',
           data: grwHitPoints,
-          backgroundColor: 'rgba(16, 185, 129, 0.75)',
+          backgroundColor: 'rgba(16, 185, 129, 0.4)',
           borderColor: '#10b981',
-          borderWidth: 1,
+          borderWidth: 2,
+          borderRadius: 4,
+          borderSkipped: 'bottom',
           stack: 'volume',
           yAxisID: 'y',
           order: 2
@@ -6773,9 +6951,11 @@ function initSlaTrendOnPageCharts() {
           type: 'bar',
           label: 'SLA Miss Volume', minBarLength: 5,
           data: grwMisPoints,
-          backgroundColor: 'rgba(239, 68, 68, 0.75)',
+          backgroundColor: 'rgba(239, 68, 68, 0.3)',
           borderColor: '#ef4444',
-          borderWidth: 1,
+          borderWidth: 2,
+          borderRadius: 4,
+          borderSkipped: 'bottom',
           stack: 'volume',
           yAxisID: 'y',
           order: 2
@@ -6788,8 +6968,12 @@ function initSlaTrendOnPageCharts() {
           backgroundColor: 'rgba(59, 149, 255, 0.05)',
           tension: 0.3,
           borderWidth: 3,
-          pointRadius: 4,
+          pointRadius: 5,
+          pointHoverRadius: 7,
           pointBackgroundColor: '#3b95ff',
+          pointBorderColor: '#fff',
+          pointBorderWidth: 2,
+          clip: false,
           yAxisID: 'y1',
           order: 1
         }
@@ -6798,6 +6982,7 @@ function initSlaTrendOnPageCharts() {
     options: {
       responsive: true,
       maintainAspectRatio: false,
+      layout: { padding: { top: 24, right: 8 } },
       plugins: {
         legend: {
           labels: { color: '#8e9fae', font: { family: 'Plus Jakarta Sans', size: 10 } }
@@ -6858,7 +7043,8 @@ function initSlaTrendOnPageCharts() {
           ticks: { color: '#8e9fae', font: { family: 'Plus Jakarta Sans', size: 10 } }
         }
       }
-    }
+    },
+    plugins: [createSlaBadgePlugin(9)]
   });
 
   // Create Customer Chart
@@ -6870,9 +7056,11 @@ function initSlaTrendOnPageCharts() {
           type: 'bar',
           label: 'SLA Hit Volume',
           data: custHitPoints,
-          backgroundColor: 'rgba(16, 185, 129, 0.75)',
+          backgroundColor: 'rgba(16, 185, 129, 0.4)',
           borderColor: '#10b981',
-          borderWidth: 1,
+          borderWidth: 2,
+          borderRadius: 4,
+          borderSkipped: 'bottom',
           stack: 'volume',
           yAxisID: 'y',
           order: 2
@@ -6881,9 +7069,11 @@ function initSlaTrendOnPageCharts() {
           type: 'bar',
           label: 'SLA Miss Volume', minBarLength: 5,
           data: custMisPoints,
-          backgroundColor: 'rgba(239, 68, 68, 0.75)',
+          backgroundColor: 'rgba(239, 68, 68, 0.3)',
           borderColor: '#ef4444',
-          borderWidth: 1,
+          borderWidth: 2,
+          borderRadius: 4,
+          borderSkipped: 'bottom',
           stack: 'volume',
           yAxisID: 'y',
           order: 2
@@ -6896,8 +7086,12 @@ function initSlaTrendOnPageCharts() {
           backgroundColor: 'rgba(226, 87, 62, 0.05)',
           tension: 0.3,
           borderWidth: 3,
-          pointRadius: 4,
+          pointRadius: 5,
+          pointHoverRadius: 7,
           pointBackgroundColor: '#e2573e',
+          pointBorderColor: '#fff',
+          pointBorderWidth: 2,
+          clip: false,
           yAxisID: 'y1',
           order: 1
         }
@@ -6906,6 +7100,7 @@ function initSlaTrendOnPageCharts() {
     options: {
       responsive: true,
       maintainAspectRatio: false,
+      layout: { padding: { top: 24, right: 8 } },
       plugins: {
         legend: {
           labels: { color: '#8e9fae', font: { family: 'Plus Jakarta Sans', size: 10 } }
@@ -6966,7 +7161,8 @@ function initSlaTrendOnPageCharts() {
           ticks: { color: '#8e9fae', font: { family: 'Plus Jakarta Sans', size: 10 } }
         }
       }
-    }
+    },
+    plugins: [createSlaBadgePlugin(9)]
   });
 }
 
@@ -6989,10 +7185,16 @@ function initDatePickers() {
   var yesterdayStr = formatLocalDate(yesterday);
   var lastWeekStr = formatLocalDate(lastWeek);
   
+  var firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+  if (yesterday < firstDayOfMonth) {
+    firstDayOfMonth = new Date(yesterday.getFullYear(), yesterday.getMonth(), 1);
+  }
+  var firstDayStr = formatLocalDate(firstDayOfMonth);
+  
   var slaStart = document.getElementById('slaStartDate');
   var slaEnd = document.getElementById('slaEndDate');
   if (slaStart && slaEnd) {
-    slaStart.value = yesterdayStr;
+    slaStart.value = firstDayStr;
     slaEnd.value = yesterdayStr;
   }
   
@@ -7822,16 +8024,19 @@ function processResults(results) {
       var yesterdayVal = new Date();
       yesterdayVal.setDate(yesterdayVal.getDate() - 1);
       
-      var startY = earliest.getFullYear();
-      var startM = String(earliest.getMonth() + 1).padStart(2, '0');
-      var startD = String(earliest.getDate()).padStart(2, '0');
+      var firstDayVal = new Date(yesterdayVal.getFullYear(), yesterdayVal.getMonth(), 1);
+      
+      var startY = firstDayVal.getFullYear();
+      var startM = String(firstDayVal.getMonth() + 1).padStart(2, '0');
+      var startD = String(firstDayVal.getDate()).padStart(2, '0');
+      var firstDayStr = startY + '-' + startM + '-' + startD;
       
       var endY = yesterdayVal.getFullYear();
       var endM = String(yesterdayVal.getMonth() + 1).padStart(2, '0');
       var endD = String(yesterdayVal.getDate()).padStart(2, '0');
-      
       var yesterdayStr = endY + '-' + endM + '-' + endD;
-      slaStart.value = yesterdayStr;
+      
+      slaStart.value = firstDayStr;
       slaEnd.value = yesterdayStr;
     }
   }
@@ -8909,6 +9114,212 @@ function classifyFulfillmentRow(r) {
   }
 }
 
+function parseKeteranganJamToMinutes(val) {
+  if (val === undefined || val === null) return 0;
+  var str = String(val).trim().toLowerCase();
+  if (!str || str === '-' || str === '—' || str === '0' || str === 'on time') return 0;
+  
+  // If it's just a number, return it
+  if (/^\d+$/.test(str)) {
+    return parseInt(str, 10);
+  }
+  
+  // Try to match HH:MM or HH.MM
+  var hmMatch = str.match(/^(\d+)[.:](\d+)/);
+  if (hmMatch) {
+    return (parseInt(hmMatch[1], 10) * 60) + parseInt(hmMatch[2], 10);
+  }
+  
+  var minutes = 0;
+  
+  // Try to parse strings like "1 jam 20 menit" or "2 hours 15 mins"
+  var jamMatch = str.match(/(\d+)\s*(?:jam|hr|hour|h)/);
+  if (jamMatch) {
+    minutes += parseInt(jamMatch[1], 10) * 60;
+  }
+  
+  var menitMatch = str.match(/(\d+)\s*(?:menit|mnt|min|m)/);
+  if (menitMatch) {
+    minutes += parseInt(menitMatch[1], 10);
+  } else if (!jamMatch) {
+    // If there's no "jam" or "menit" keyword, but there is a number
+    var numMatch = str.match(/(\d+)/);
+    if (numMatch) {
+      minutes = parseInt(numMatch[1], 10);
+    }
+  }
+  
+  return minutes;
+}
+
+function renderAverageDelayBadge(item) {
+  if (!item) return '';
+  var avg = (item.delayedTrips || 0) > 0 ? (item.totalMinutes / item.delayedTrips) : 0;
+  var avgStr = avg.toFixed(1);
+  
+  var bg = '#f8fafc';
+  var text = '#475569';
+  var border = '#e2e8f0';
+  
+  if (avg > 60) {
+    bg = '#fef2f2';
+    text = '#dc2626';
+    border = '#fee2e2';
+  } else if (avg > 15) {
+    bg = '#fffbeb';
+    text = '#d97706';
+    border = '#fef3c7';
+  } else if (avg > 0) {
+    bg = '#f0f9ff';
+    text = '#0284c7';
+    border = '#e0f2fe';
+  } else {
+    bg = '#f0fdf4';
+    text = '#16a34a';
+    border = '#dcfce7';
+  }
+  
+  return '<div style="display:inline-flex; align-items:center; background:' + bg + '; border:1px solid ' + border + '; border-radius:4px; padding:1px 6px; font-size:10px; margin-left:8px; font-family:var(--font-mono); font-weight:700; color:' + text + ';" title="Total delay: ' + (item.totalMinutes || 0) + ' menit dari ' + (item.delayedTrips || 0) + ' trip telat">' +
+    '⏱️ ' + avgStr + 'm' +
+  '</div>';
+}
+
+function renderOverallDelaySummary(dataList, contextType) {
+  var container = document.getElementById('ffMDelaySummary');
+  if (!container) return;
+  
+  if (!dataList || dataList.length === 0) {
+    container.style.display = 'none';
+    container.innerHTML = '';
+    return;
+  }
+  
+  var overallTotalMinutes = 0;
+  var overallTotalTrips = 0;
+  var overallDelayedTrips = 0;
+  
+  dataList.forEach(function(item) {
+    overallTotalMinutes += (item.totalMinutes || 0);
+    overallTotalTrips += (item.totalTrips || 0);
+    overallDelayedTrips += (item.delayedTrips || 0);
+  });
+  
+  var overallAvg = overallDelayedTrips > 0 ? (overallTotalMinutes / overallDelayedTrips) : 0;
+  var overallAvgStr = overallAvg.toFixed(1);
+  var overallPctDelayed = overallTotalTrips > 0 ? ((overallDelayedTrips / overallTotalTrips) * 100).toFixed(0) : 0;
+  
+  // Sort by average delay minutes descending so the worst delays are highlighted first
+  var sortedList = dataList.slice().map(function(item) {
+    var name = contextType === 'DESTINATION' ? (item.vendor || 'UNKNOWN') : (item.destination || 'UNKNOWN');
+    var avg = (item.delayedTrips || 0) > 0 ? (item.totalMinutes / item.delayedTrips) : 0;
+    return {
+      name: name,
+      avg: avg,
+      totalMinutes: item.totalMinutes || 0,
+      totalTrips: item.totalTrips || 0,
+      delayedTrips: item.delayedTrips || 0
+    };
+  }).sort(function(a, b) {
+    return b.avg - a.avg;
+  });
+  
+  container.style.display = 'block';
+  container.style.padding = '8px 12px';
+  container.style.background = 'var(--surface)';
+  container.style.border = '1px solid var(--border)';
+  container.style.borderRadius = 'var(--radius)';
+  container.style.boxShadow = '0 1px 3px rgba(0,0,0,0.03)';
+  container.style.marginTop = '0px';
+  container.style.marginBottom = '15px';
+  
+  var overallBg = '#f8fafc';
+  var overallText = '#475569';
+  var overallBorder = '#e2e8f0';
+  var badgeColor = '#94a3b8';
+  
+  if (overallAvg > 60) {
+    overallBg = '#fef2f2';
+    overallText = '#dc2626';
+    overallBorder = '#fecaca';
+    badgeColor = '#ef4444';
+  } else if (overallAvg > 15) {
+    overallBg = '#fffbeb';
+    overallText = '#d97706';
+    overallBorder = '#fde68a';
+    badgeColor = '#f59e0b';
+  } else if (overallAvg > 0) {
+    overallBg = '#f0f9ff';
+    overallText = '#0284c7';
+    overallBorder = '#bae6fd';
+    badgeColor = '#3b82f6';
+  } else {
+    overallBg = '#f0fdf4';
+    overallText = '#16a34a';
+    overallBorder = '#bbf7d0';
+    badgeColor = '#10b981';
+  }
+  
+  var titleText = contextType === 'DESTINATION' 
+    ? '⏱️ Rerata Keterlambatan per Vendor' 
+    : '⏱️ Rerata Keterlambatan per Tujuan';
+    
+  var html = '<div style="display:flex; flex-direction:row; flex-wrap:wrap; gap:12px; align-items:stretch; width:100%;">' +
+    // Left Card: Overall KPI
+    '<div style="flex:1; min-width:180px; max-width:240px; background:' + overallBg + '; border:1px solid ' + overallBorder + '; border-radius:6px; padding:6px 10px; display:flex; flex-direction:column; justify-content:center; position:relative; overflow:hidden;">' +
+      '<div style="position:absolute; right:-6px; bottom:-10px; font-size:36px; opacity:0.07; pointer-events:none; transform:rotate(-15deg);">⏱️</div>' +
+      '<div style="font-size:8px; font-weight:800; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px;">Rerata Total Delay</div>' +
+      '<div style="display:flex; align-items:baseline; gap:4px; margin:2px 0;">' +
+        '<span style="font-size:20px; font-weight:900; color:' + overallText + '; font-family:var(--font-mono); line-height:1;">' + overallAvgStr + '</span>' +
+        '<span style="font-size:10px; font-weight:700; color:' + overallText + ';">menit</span>' +
+      '</div>' +
+      '<div style="font-size:9px; color:var(--muted); font-weight:500; display:flex; align-items:center; gap:3px;">' +
+        '<span style="display:inline-block; width:5px; height:5px; border-radius:50%; background:' + badgeColor + ';"></span>' +
+        '<span>' + overallDelayedTrips + '/' + overallTotalTrips + ' tr (' + overallPctDelayed + '% telat)</span>' +
+      '</div>' +
+    '</div>' +
+    // Right: List of item pills
+    '<div style="flex:2; min-width:240px; display:flex; flex-direction:column; justify-content:center; gap:6px;">' +
+      '<div style="font-size:10px; font-weight:800; color:var(--text); text-transform:uppercase; letter-spacing:0.3px; border-bottom:1px solid rgba(0,0,0,0.04); padding-bottom:3px; margin-bottom:2px;">' +
+        titleText +
+      '</div>' +
+      '<div style="display:flex; flex-wrap:wrap; gap:4px; align-content:flex-start;">';
+      
+  sortedList.forEach(function(item) {
+    var avgStr = item.avg.toFixed(1);
+    
+    var bg = '#f8fafc';
+    var text = '#475569';
+    var border = '#e2e8f0';
+    
+    if (item.avg > 60) {
+      bg = '#fef2f2';
+      text = '#dc2626';
+      border = '#fee2e2';
+    } else if (item.avg > 15) {
+      bg = '#fffbeb';
+      text = '#d97706';
+      border = '#fef3c7';
+    } else if (item.avg > 0) {
+      bg = '#f0f9ff';
+      text = '#0284c7';
+      border = '#e0f2fe';
+    } else {
+      bg = '#f0fdf4';
+      text = '#16a34a';
+      border = '#dcfce7';
+    }
+    
+    html += '<div title="Total delay: ' + item.totalMinutes + ' menit dari ' + item.delayedTrips + ' trip telat" style="display:inline-flex; align-items:center; background:' + bg + '; border:1px solid ' + border + '; border-radius:4px; padding:2px 6px; font-size:10px; font-weight:500; transition:all 0.1s ease-in-out;" onmouseover="this.style.transform=\'scale(1.02)\'" onmouseout="this.style.transform=\'none\'">' +
+      '<strong style="color:var(--text); margin-right:4px;">' + esc(item.name) + '</strong>' +
+      '<span style="font-weight:700; color:' + text + '; font-family:var(--font-mono); background:rgba(255,255,255,0.85); padding:0px 3px; border-radius:3px; font-size:9.5px; border:1px solid ' + border + ';">' + avgStr + 'm</span>' +
+      '<span style="color:var(--muted); font-size:9px; margin-left:4px; font-family:var(--font-mono);">' + item.delayedTrips + '/' + item.totalTrips + ' tr</span>' +
+    '</div>';
+  });
+  
+  html += '</div></div></div>';
+  container.innerHTML = html;
+}
+
 function calculateFFDashboardData() {
   if (!allFulfillmentData || !Array.isArray(allFulfillmentData)) return { totalRowsFiltered: 0, missCount: 0, successCount: 0, avgScore: 0, misses: [] };
   var filteredRows = allFulfillmentData.filter(function(r) {
@@ -9060,6 +9471,20 @@ if (cls.onTime) dv.onTime++;
 if (cls.telatStuffing) dv.telatStuffing++;
 if (cls.telat1Hari) dv.telat1Hari++;
 if (cls.telat2HariUp) dv.telat2HariUp++;
+
+    var ketJam = String(r['Keterangan Jam'] || r['keterangan jam'] || r['KETERANGAN JAM'] || r['KeteranganJam'] || r['KETERANGAN_JAM'] || r['Keterangan_Jam'] || '').trim();
+    var minutes = parseKeteranganJamToMinutes(ketJam);
+    if (dv.totalMinutes === undefined) {
+      dv.totalMinutes = 0;
+      dv.totalTrips = 0;
+      dv.delayedTrips = 0;
+    }
+    dv.totalMinutes += minutes;
+    dv.totalTrips += 1;
+    if (minutes > 0) {
+      dv.delayedTrips += 1;
+    }
+
     if (cls.onTime) d.onTime += 1;
     if (cls.telatStuffing) d.telatStuffing += 1;
     if (cls.telat1Hari) d.telat1Hari += 1;
@@ -9121,6 +9546,20 @@ if (cls.onTime) vd.onTime++;
 if (cls.telatStuffing) vd.telatStuffing++;
 if (cls.telat1Hari) vd.telat1Hari++;
 if (cls.telat2HariUp) vd.telat2HariUp++;
+
+    var ketJam = String(r['Keterangan Jam'] || r['keterangan jam'] || r['KETERANGAN JAM'] || r['KeteranganJam'] || r['KETERANGAN_JAM'] || r['Keterangan_Jam'] || '').trim();
+    var minutes = parseKeteranganJamToMinutes(ketJam);
+    if (vd.totalMinutes === undefined) {
+      vd.totalMinutes = 0;
+      vd.totalTrips = 0;
+      vd.delayedTrips = 0;
+    }
+    vd.totalMinutes += minutes;
+    vd.totalTrips += 1;
+    if (minutes > 0) {
+      vd.delayedTrips += 1;
+    }
+
     if (cls.onTime) v.onTime += 1;
     if (cls.telatStuffing) v.telatStuffing += 1;
     if (cls.telat1Hari) v.telat1Hari += 1;
@@ -9735,6 +10174,8 @@ function openDestinationModal(destination){
     'DEST'
   );
 
+  renderOverallDelaySummary(Object.values(data), 'DESTINATION');
+
   document
     .getElementById('ffDrillModal')
     .classList.add('show');
@@ -9802,6 +10243,8 @@ function openVendorModal(vendor){
     vendor,
     'VENDOR'
   );
+
+  renderOverallDelaySummary(Object.values(data), 'VENDOR');
 
   document
     .getElementById('ffDrillModal')
@@ -13388,6 +13831,8 @@ function getCRFallbackRawData() {
       </div>
 
     </div>
+
+    <div id="ffMDelaySummary" class="ff-card" style="margin-bottom: 20px; display: none;"></div>
 
     <div class="ff-card">
 
