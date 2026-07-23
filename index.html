@@ -9607,25 +9607,84 @@ function renderOverallDelaySummary(dataList, contextType) {
   container.innerHTML = html;
 }
 
+function isExcludedLcRow(r) {
+  if (!r || typeof r !== 'object') return true;
+
+  var typeLcVal = '';
+  var headerLcVal = '';
+
+  var keys = Object.keys(r);
+  for (var i = 0; i < keys.length; i++) {
+    var kClean = keys[i].toUpperCase().replace(/[^A-Z]/g, '');
+    if (kClean === 'TYPELC') {
+      typeLcVal = String(r[keys[i]] || '').trim().toUpperCase();
+    } else if (kClean === 'HEADERLC') {
+      headerLcVal = String(r[keys[i]] || '').trim().toUpperCase();
+    }
+  }
+
+  if (!typeLcVal) {
+    typeLcVal = String(r['TYPE LC'] || r['TYPE_LC'] || r['Type LC'] || r['Type_LC'] || '').trim().toUpperCase();
+  }
+  if (!headerLcVal) {
+    headerLcVal = String(r['HEADER LC'] || r['HEADER_LC'] || r['Header LC'] || r['Header_LC'] || '').trim().toUpperCase();
+  }
+
+  // Filter out if TYPE LC is "SUPPORT" or contains "SUPPORT"
+  if (typeLcVal === 'SUPPORT' || typeLcVal.indexOf('SUPPORT') !== -1) {
+    return true;
+  }
+
+  // Filter out if HEADER LC is "X" or starts with "X" or equals "X" or "HEADER X" or "X-SUPPORT"
+  if (headerLcVal === 'X' || headerLcVal.startsWith('X') || headerLcVal.indexOf('HEADER X') !== -1 || headerLcVal === 'X-SUPPORT') {
+    return true;
+  }
+
+  return false;
+}
+
 function calculateFFDashboardData() {
   if (!allFulfillmentData || !Array.isArray(allFulfillmentData)) return { totalRowsFiltered: 0, missCount: 0, successCount: 0, avgScore: 0, misses: [] };
+
+  var today = new Date();
+  var firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
+  var yesterday = new Date(today);
+  yesterday.setDate(today.getDate() - 1);
+  if (yesterday < firstDay) yesterday = new Date(firstDay);
+
+  function fmtYmd(d) {
+    var year = d.getFullYear();
+    var month = String(d.getMonth() + 1).padStart(2, '0');
+    var dateVal = String(d.getDate()).padStart(2, '0');
+    return year + '-' + month + '-' + dateVal;
+  }
+
+  var armTypeFilter = FF_APP.armType || 'EXTERNAL';
+  var sdStr = FF_APP.sd || fmtYmd(firstDay);
+  var edStr = FF_APP.ed || fmtYmd(yesterday);
+
   var filteredRows = allFulfillmentData.filter(function(r) {
+    if (!r || typeof r !== 'object') return false;
+
+    // 0. Exclude LC External & Internal with TYPE LC "SUPPORT" and/or HEADER LC "X"
+    if (isExcludedLcRow(r)) return false;
+
     // 1. Filter by Armada Type
     var type = String(r['TYPE ARMADA'] || r['TYPARMADA'] || '').toLowerCase();
-    if (FF_APP.armType === 'INTERNAL' && type !== 'internal') return false;
-    if (FF_APP.armType === 'EXTERNAL' && type !== 'external') return false;
+    if (armTypeFilter === 'INTERNAL' && type !== 'internal') return false;
+    if (armTypeFilter === 'EXTERNAL' && type !== 'external') return false;
     
     // 2. Filter by Date range
     var rDate = getRowDate(r);
     if (!rDate) return false;
     
-    if (FF_APP.sd) {
-      var sdDate = new Date(FF_APP.sd);
+    if (sdStr) {
+      var sdDate = new Date(sdStr);
       sdDate.setHours(0,0,0,0);
       if (rDate < sdDate) return false;
     }
-    if (FF_APP.ed) {
-      var edDate = new Date(FF_APP.ed);
+    if (edStr) {
+      var edDate = new Date(edStr);
       edDate.setHours(23,59,59,999);
       if (rDate > edDate) return false;
     }
@@ -11273,26 +11332,42 @@ function mkProg(pct){
 function renderFulfillmentArmadaPage() {
   bindFFListeners();
   
+  var ffType = document.getElementById('ff-type');
+  if (ffType) {
+    if (!ffType.value || ffType.value === 'ALL') {
+      ffType.value = 'EXTERNAL';
+    }
+    FF_APP.armType = ffType.value;
+  } else {
+    FF_APP.armType = 'EXTERNAL';
+  }
+
   var ffStart = document.getElementById('ff-start');
   var ffEnd = document.getElementById('ff-end');
-  if (ffStart && ffEnd && (!ffStart.value || !ffEnd.value)) {
-    var today = new Date();
-    var firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
-    var yesterday = new Date(today);
-    yesterday.setDate(today.getDate() - 1);
-    
-    function fmtYmd(d) {
-      var year = d.getFullYear();
-      var month = String(d.getMonth() + 1).padStart(2, '0');
-      var dateVal = String(d.getDate()).padStart(2, '0');
-      return year + '-' + month + '-' + dateVal;
+  
+  var today = new Date();
+  var firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
+  var yesterday = new Date(today);
+  yesterday.setDate(today.getDate() - 1);
+  if (yesterday < firstDay) yesterday = new Date(firstDay);
+  
+  function fmtYmd(d) {
+    var year = d.getFullYear();
+    var month = String(d.getMonth() + 1).padStart(2, '0');
+    var dateVal = String(d.getDate()).padStart(2, '0');
+    return year + '-' + month + '-' + dateVal;
+  }
+  
+  if (ffStart && ffEnd) {
+    if (!ffStart.value || !ffEnd.value) {
+      ffStart.value = fmtYmd(firstDay);
+      ffEnd.value = fmtYmd(yesterday);
     }
-    
-    ffStart.value = fmtYmd(firstDay);
-    ffEnd.value = fmtYmd(yesterday);
-    
     FF_APP.sd = ffStart.value;
     FF_APP.ed = ffEnd.value;
+  } else {
+    FF_APP.sd = fmtYmd(firstDay);
+    FF_APP.ed = fmtYmd(yesterday);
   }
   
   loadFulfillmentArmadaData();
