@@ -2297,24 +2297,110 @@
 .ff-kpi-grid{
   display:grid;
   grid-template-columns:repeat(4,1fr);
-  gap:14px;
-  margin-bottom:20px;
+  gap:16px;
+  margin-bottom:24px;
+}
+
+@media (max-width: 768px) {
+  .ff-kpi-grid {
+    grid-template-columns: repeat(2,1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .ff-kpi-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .ff-kpi{
-  background:#f8fafc;
-  border-radius:12px;
-  padding:18px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 16px;
+  padding: 20px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.ff-kpi:hover {
+  transform: translateY(-4px);
 }
 
 .ff-kpi span{
   display:block;
-  font-size:12px;
-  color:#64748b;
+  font-size:11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 8px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
 .ff-kpi b{
-  font-size:28px;
+  font-size:32px;
+  font-weight: 800;
+  line-height: 1.1;
+  font-family: 'Outfit', sans-serif;
+}
+
+/* Modifiers for KPI cards */
+.ff-kpi-total {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.04) 0%, rgba(99, 102, 241, 0.12) 100%);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  box-shadow: 0 4px 20px rgba(99, 102, 241, 0.04);
+}
+.ff-kpi-total span {
+  color: #6366f1;
+}
+.ff-kpi-total b {
+  color: #4f46e5;
+}
+
+.ff-kpi-ontime {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.04) 0%, rgba(16, 185, 129, 0.12) 100%);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  box-shadow: 0 4px 20px rgba(16, 185, 129, 0.04);
+}
+.ff-kpi-ontime span {
+  color: #10b981;
+}
+.ff-kpi-ontime b {
+  color: #059669;
+}
+
+.ff-kpi-performance {
+  background: linear-gradient(135deg, rgba(14, 165, 233, 0.04) 0%, rgba(14, 165, 233, 0.12) 100%);
+  border: 1px solid rgba(14, 165, 233, 0.2);
+  box-shadow: 0 4px 20px rgba(14, 165, 233, 0.04);
+}
+.ff-kpi-performance span {
+  color: #0284c7;
+}
+.ff-kpi-performance b {
+  color: #0369a1;
+}
+
+.ff-kpi-rating {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.04) 0%, rgba(245, 158, 11, 0.12) 100%);
+  border: 1px solid rgba(245, 158, 11, 0.2);
+  box-shadow: 0 4px 20px rgba(245, 158, 11, 0.04);
+}
+.ff-kpi-rating span {
+  color: #eab308;
+}
+.ff-kpi-rating b {
+  color: #ca8a04;
+}
+
+@keyframes starPulse {
+  0% { transform: scale(1); filter: drop-shadow(0 0 0 transparent); }
+  50% { transform: scale(1.1); filter: drop-shadow(0 0 4px rgba(245, 158, 11, 0.6)); }
+  100% { transform: scale(1); filter: drop-shadow(0 0 0 transparent); }
+}
+.rating-star-svg {
+  animation: starPulse 2.5s infinite ease-in-out;
 }
 
 .ff-chart-grid{
@@ -2324,11 +2410,73 @@
   margin-bottom:20px;
 }
 
+@media (max-width: 992px) {
+  .ff-chart-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 .ff-card{
   background:#fff;
-  border:1px solid #e2e8f0;
-  border-radius:14px;
-  padding:16px;
+  border:1px solid rgba(226, 232, 240, 0.8);
+  border-radius:16px;
+  padding:20px;
+  box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.02), 0 2px 8px -1px rgba(15, 23, 42, 0.02);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ff-card:hover {
+  border-color: rgba(99, 102, 241, 0.2);
+  box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.04), 0 8px 16px -6px rgba(15, 23, 42, 0.04);
+}
+
+.ff-card h3 {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 16px;
+  letter-spacing: -0.2px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Responsive Grid for Delay Analytics */
+.delay-summary-grid {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 20px;
+  align-items: stretch;
+}
+@media (max-width: 768px) {
+  .delay-summary-grid {
+    grid-template-columns: 1fr;
+  }
+}
+.delay-pills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 12px;
+  overflow-y: auto;
+  max-height: 250px;
+  padding-right: 4px;
+}
+.delay-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  position: relative;
+}
+.delay-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.05);
 }
 
 #ffCloseModal {
@@ -2507,12 +2655,22 @@ PLANNING REPORT</div>
         
         <!-- OLF Card -->
         <div class="card ov-card" id="ovOlfCard">
-          <div class="card-header">
-            <div>
-              <div class="card-title">OLF (ORDER LOAD FACTOR)</div>
-              <div class="card-sub">Dynamic volumetric capacity matching across trips</div>
+          <div class="card-header" style="align-items: flex-start; flex-direction: column; gap: 8px;">
+            <div style="display: flex; justify-content: space-between; width: 100%; align-items: flex-start;">
+              <div>
+                <div class="card-title" style="display: flex; align-items: center; gap: 8px;">
+                  OLF (ORDER LOAD FACTOR)
+                  <span class="badge" id="ovOlfStatus" style="background:var(--green); color:#fff;">Normal</span>
+                </div>
+                <div class="card-sub">Dynamic volumetric capacity matching across trips</div>
+              </div>
+              <div style="display: flex; gap: 6px; align-items: center;">
+                <input type="date" id="ovOlfStartDate" class="date-input" style="font-size:11px; padding:2px 6px;">
+                <span style="font-size:11px; color:var(--muted);">to</span>
+                <input type="date" id="ovOlfEndDate" class="date-input" style="font-size:11px; padding:2px 6px;">
+                <button class="filter-btn" style="padding:2px 8px; font-size:11px;" onclick="renderOverviewPage()">Go</button>
+              </div>
             </div>
-            <span class="badge" id="ovOlfStatus" style="background:var(--green); color:#fff;">Normal</span>
           </div>
           <div class="overview-chart-row">
             <div class="speedo-wrap">
@@ -3263,53 +3421,61 @@ PLANNING REPORT</div>
         <thead>
           <tr style="border-bottom:1px solid var(--border); color:var(--muted); font-size:11px;">
             <th rowspan="2" style="padding:8px 4px;">Business Unit</th>
-            <th colspan="4" style="text-align:center; border-bottom:1px solid var(--border); padding:8px 4px;">SLA GRW (Warehouse)</th>
-            <th colspan="4" style="text-align:center; border-bottom:1px solid var(--border); padding:8px 4px;">SLA Customer (Shipping)</th>
+            <th colspan="4" style="text-align:center; border-bottom:1px solid var(--border); border-right:3px solid var(--border); padding:8px 4px; background:rgba(37,99,235,0.06); color:var(--blue); font-weight:800;">🏭 SLA GRW (Warehouse)</th>
+            <th colspan="4" style="text-align:center; border-bottom:1px solid var(--border); padding:8px 4px; background:rgba(217,119,6,0.06); color:var(--amber); font-weight:800;">🚚 SLA Customer (Shipping)</th>
           </tr>
           <tr style="border-bottom:1px solid var(--border); color:var(--muted); font-size:10px;">
-            <th style="text-align:right; padding:6px 4px;">Hits</th>
-            <th style="text-align:right; padding:6px 4px;">Misses</th>
-            <th style="text-align:right; padding:6px 4px;">Total</th>
-            <th style="text-align:right; padding:6px 4px;">SLA %</th>
-            <th style="text-align:right; padding:6px 4px;">Hits</th>
-            <th style="text-align:right; padding:6px 4px;">Misses</th>
-            <th style="text-align:right; padding:6px 4px;">Total</th>
-            <th style="text-align:right; padding:6px 4px;">SLA %</th>
+            <th style="text-align:center; padding:6px 4px; background:rgba(37,99,235,0.03);">Hits</th>
+            <th style="text-align:center; padding:6px 4px; background:rgba(37,99,235,0.03);">Misses</th>
+            <th style="text-align:center; padding:6px 4px; background:rgba(37,99,235,0.03);">Total</th>
+            <th style="text-align:center; padding:6px 4px; border-right:3px solid var(--border); background:rgba(37,99,235,0.03);">SLA %</th>
+            <th style="text-align:center; padding:6px 4px; background:rgba(217,119,6,0.03);">Hits</th>
+            <th style="text-align:center; padding:6px 4px; background:rgba(217,119,6,0.03);">Misses</th>
+            <th style="text-align:center; padding:6px 4px; background:rgba(217,119,6,0.03);">Total</th>
+            <th style="text-align:center; padding:6px 4px; background:rgba(217,119,6,0.03);">SLA %</th>
           </tr>
         </thead>
         <tbody>
           <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
-            <td style="padding:10px 4px;"><strong>INFORMA</strong></td>
-            <td style="text-align:right; font-family:var(--font-mono); padding:10px 4px;" id="tblGrwHitInf">0</td>
-            <td style="text-align:right; font-family:var(--font-mono); padding:10px 4px;" id="tblGrwMissInf">0</td>
-            <td style="text-align:right; font-family:var(--font-mono); padding:10px 4px;" id="tblGrwTotInf">0</td>
-            <td style="text-align:right; font-family:var(--font-mono); font-weight:700; color:var(--blue); padding:10px 4px;" id="tblGrwPctInf">0%</td>
-            <td style="text-align:right; font-family:var(--font-mono); padding:10px 4px;" id="tblCustHitInf">0</td>
-            <td style="text-align:right; font-family:var(--font-mono); padding:10px 4px;" id="tblCustMissInf">0</td>
-            <td style="text-align:right; font-family:var(--font-mono); padding:10px 4px;" id="tblCustTotInf">0</td>
-            <td style="text-align:right; font-family:var(--font-mono); font-weight:700; color:var(--amber); padding:10px 4px;" id="tblCustPctInf">0%</td>
+            <td style="padding:8px 4px; width:90px; text-align:center; vertical-align:middle;">
+              <img src="https://lh3.googleusercontent.com/d/1T_T9ruGoVeGQjy4raxb7XdsEUM6tS2JU" alt="Informa" style="height:72px; width:auto; max-width:350px; object-fit:contain; display:block; margin:0 auto;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+              <span style="display:none; font-size:13px; font-weight:800; color:var(--muted); text-transform:uppercase;">INFORMA</span>
+            </td>
+            <td style="text-align:center; font-family:var(--font-mono); padding:10px 4px; background:rgba(37,99,235,0.02);" id="tblGrwHitInf">0</td>
+            <td style="text-align:center; font-family:var(--font-mono); padding:10px 4px; background:rgba(37,99,235,0.02);" id="tblGrwMissInf">0</td>
+            <td style="text-align:center; font-family:var(--font-mono); padding:10px 4px; background:rgba(37,99,235,0.02);" id="tblGrwTotInf">0</td>
+            <td style="text-align:center; font-family:var(--font-mono); font-weight:700; color:var(--blue); padding:10px 4px; border-right:3px solid var(--border); background:rgba(37,99,235,0.02);" id="tblGrwPctInf">0%</td>
+            <td style="text-align:center; font-family:var(--font-mono); padding:10px 4px; background:rgba(217,119,6,0.02);" id="tblCustHitInf">0</td>
+            <td style="text-align:center; font-family:var(--font-mono); padding:10px 4px; background:rgba(217,119,6,0.02);" id="tblCustMissInf">0</td>
+            <td style="text-align:center; font-family:var(--font-mono); padding:10px 4px; background:rgba(217,119,6,0.02);" id="tblCustTotInf">0</td>
+            <td style="text-align:center; font-family:var(--font-mono); font-weight:700; color:var(--amber); padding:10px 4px; background:rgba(217,119,6,0.02);" id="tblCustPctInf">0%</td>
+          </tr>
+          <td style="padding:8px 4px; width:90px; text-align:center; vertical-align:middle;">
+              <img src="https://lh3.googleusercontent.com/d/19sBMv6tjckvdw434w5-aFCjS8NDLM6S0" alt="Informa Electronics" style="height:72px; width:auto; max-width:350px; object-fit:contain; display:block; margin:0 auto;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+              <span style="display:none; font-size:13px; font-weight:800; color:var(--muted); text-transform:uppercase;">ELECTRONICS</span>
+            </td>
+            <td style="text-align:center; font-family:var(--font-mono); padding:10px 4px; background:rgba(37,99,235,0.02);" id="tblGrwHitIel">0</td>
+            <td style="text-align:center; font-family:var(--font-mono); padding:10px 4px; background:rgba(37,99,235,0.02);" id="tblGrwMissIel">0</td>
+            <td style="text-align:center; font-family:var(--font-mono); padding:10px 4px; background:rgba(37,99,235,0.02);" id="tblGrwTotIel">0</td>
+            <td style="text-align:center; font-family:var(--font-mono); font-weight:700; color:var(--blue); padding:10px 4px; border-right:3px solid var(--border); background:rgba(37,99,235,0.02);" id="tblGrwPctIel">0%</td>
+            <td style="text-align:center; font-family:var(--font-mono); padding:10px 4px; background:rgba(217,119,6,0.02);" id="tblCustHitIel">0</td>
+            <td style="text-align:center; font-family:var(--font-mono); padding:10px 4px; background:rgba(217,119,6,0.02);" id="tblCustMissIel">0</td>
+            <td style="text-align:center; font-family:var(--font-mono); padding:10px 4px; background:rgba(217,119,6,0.02);" id="tblCustTotIel">0</td>
+            <td style="text-align:center; font-family:var(--font-mono); font-weight:700; color:var(--amber); padding:10px 4px; background:rgba(217,119,6,0.02);" id="tblCustPctIel">0%</td>
           </tr>
           <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
-            <td style="padding:10px 4px;"><strong>ELECTRONICS</strong></td>
-            <td style="text-align:right; font-family:var(--font-mono); padding:10px 4px;" id="tblGrwHitIel">0</td>
-            <td style="text-align:right; font-family:var(--font-mono); padding:10px 4px;" id="tblGrwMissIel">0</td>
-            <td style="text-align:right; font-family:var(--font-mono); padding:10px 4px;" id="tblGrwTotIel">0</td>
-            <td style="text-align:right; font-family:var(--font-mono); font-weight:700; color:var(--blue); padding:10px 4px;" id="tblGrwPctIel">0%</td>
-            <td style="text-align:right; font-family:var(--font-mono); padding:10px 4px;" id="tblCustHitIel">0</td>
-            <td style="text-align:right; font-family:var(--font-mono); padding:10px 4px;" id="tblCustMissIel">0</td>
-            <td style="text-align:right; font-family:var(--font-mono); padding:10px 4px;" id="tblCustTotIel">0</td>
-            <td style="text-align:right; font-family:var(--font-mono); font-weight:700; color:var(--amber); padding:10px 4px;" id="tblCustPctIel">0%</td>
-          </tr>
-          <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
-            <td style="padding:10px 4px;"><strong>SELMA</strong></td>
-            <td style="text-align:right; font-family:var(--font-mono); padding:10px 4px;" id="tblGrwHitSel">0</td>
-            <td style="text-align:right; font-family:var(--font-mono); padding:10px 4px;" id="tblGrwMissSel">0</td>
-            <td style="text-align:right; font-family:var(--font-mono); padding:10px 4px;" id="tblGrwTotSel">0</td>
-            <td style="text-align:right; font-family:var(--font-mono); font-weight:700; color:var(--blue); padding:10px 4px;" id="tblGrwPctSel">0%</td>
-            <td style="text-align:right; font-family:var(--font-mono); padding:10px 4px;" id="tblCustHitSel">0</td>
-            <td style="text-align:right; font-family:var(--font-mono); padding:10px 4px;" id="tblCustMissSel">0</td>
-            <td style="text-align:right; font-family:var(--font-mono); padding:10px 4px;" id="tblCustTotSel">0</td>
-            <td style="text-align:right; font-family:var(--font-mono); font-weight:700; color:var(--amber); padding:10px 4px;" id="tblCustPctSel">0%</td>
+            <td style="padding:8px 4px; width:90px; text-align:center; vertical-align:middle;">
+              <img src="https://lh3.googleusercontent.com/d/1-K9Fmdmex6tysQbdpxTGXsubY945sayH" alt="Selma" style="height:72px; width:auto; max-width:350px; object-fit:contain; display:block; margin:0 auto;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+              <span style="display:none; font-size:13px; font-weight:800; color:var(--muted); text-transform:uppercase;">SELMA</span>
+            </td>
+            <td style="text-align:center; font-family:var(--font-mono); padding:10px 4px; background:rgba(37,99,235,0.02);" id="tblGrwHitSel">0</td>
+            <td style="text-align:center; font-family:var(--font-mono); padding:10px 4px; background:rgba(37,99,235,0.02);" id="tblGrwMissSel">0</td>
+            <td style="text-align:center; font-family:var(--font-mono); padding:10px 4px; background:rgba(37,99,235,0.02);" id="tblGrwTotSel">0</td>
+            <td style="text-align:center; font-family:var(--font-mono); font-weight:700; color:var(--blue); padding:10px 4px; border-right:3px solid var(--border); background:rgba(37,99,235,0.02);" id="tblGrwPctSel">0%</td>
+            <td style="text-align:center; font-family:var(--font-mono); padding:10px 4px; background:rgba(217,119,6,0.02);" id="tblCustHitSel">0</td>
+            <td style="text-align:center; font-family:var(--font-mono); padding:10px 4px; background:rgba(217,119,6,0.02);" id="tblCustMissSel">0</td>
+            <td style="text-align:center; font-family:var(--font-mono); padding:10px 4px; background:rgba(217,119,6,0.02);" id="tblCustTotSel">0</td>
+            <td style="text-align:center; font-family:var(--font-mono); font-weight:700; color:var(--amber); padding:10px 4px; background:rgba(217,119,6,0.02);" id="tblCustPctSel">0%</td>
           </tr>
         </tbody>
       </table>
@@ -5639,7 +5805,7 @@ function renderOverviewPage() {
   if (total > 0) {
     // OLF calculation from %LD remains from monitoring
     var sumLd = data.reduce(function(s, r) { return s + (parseInt(r['%LD']) || 0); }, 0);
-    olfTotal = Math.min(100, Math.round(sumLd / total));
+    olfTotal = Math.min(100, sumLd / total).toFixed(2);
     
     // Grouping by BU (Informa, Elec, Selma)
     var infData = data.filter(function(r) { return String(r['SHIPPINGLINE'] || '').toUpperCase().includes('INFORMA') || String(r['CARRIERID'] || '').toUpperCase().includes('IF'); });
@@ -5661,13 +5827,21 @@ function renderOverviewPage() {
       }
     }
     
-    olfStore = Math.min(100, olfTotal + 2);
-    olfCust = Math.max(0, olfTotal - 2);
+    olfStore = Math.min(100, parseFloat(olfTotal) + 2).toFixed(2);
+    olfCust = Math.max(0, parseFloat(olfTotal) - 2).toFixed(2);
   }
   
-  // Calculate OLF specifically from allOlfData for current month to H-1
+  // Calculate OLF specifically from allOlfData
   var olfDataRaw = allOlfData || [];
   if (olfDataRaw.length > 0) {
+    var startOlfStr = '';
+    var endOlfStr = '';
+    if (document.getElementById('ovOlfStartDate')) startOlfStr = document.getElementById('ovOlfStartDate').value;
+    if (document.getElementById('ovOlfEndDate')) endOlfStr = document.getElementById('ovOlfEndDate').value;
+    
+    var startOlfMs = startOlfStr ? parseDateStrHyphen(startOlfStr).getTime() : null;
+    var endOlfMs = endOlfStr ? parseDateStrHyphen(endOlfStr).getTime() : null;
+    
     var today = new Date();
     var firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
     firstDay.setHours(0,0,0,0);
@@ -5679,7 +5853,17 @@ function renderOverviewPage() {
       var rd = r.DATE_OBJ || getRowDate(r);
       if (!rd) return false;
       rd.setHours(0,0,0,0);
-      return rd >= firstDay && rd <= yesterday;
+      var ms = rd.getTime();
+      
+      if (startOlfMs && endOlfMs) {
+        return ms >= startOlfMs && ms <= endOlfMs;
+      } else if (startOlfMs) {
+        return ms >= startOlfMs;
+      } else if (endOlfMs) {
+        return ms <= endOlfMs;
+      } else {
+        return rd >= firstDay && rd <= yesterday;
+      }
     });
     
     if (filteredOlf.length > 0) {
@@ -5694,7 +5878,11 @@ function renderOverviewPage() {
       var count = filteredOlf.length;
       olfStore = (sumStore / count).toFixed(2);
       olfCust = (sumCust / count).toFixed(2);
-      olfTotal = Math.round(sumTotal / count);
+      olfTotal = (sumTotal / count).toFixed(2);
+    } else {
+      olfStore = '0.00';
+      olfCust = '0.00';
+      olfTotal = '0.00';
     }
   }
 
@@ -5703,9 +5891,9 @@ function renderOverviewPage() {
   setText('ovSlaGrwTotal', formatSlaPct(grwTotal));
   setText('ovSlaCustTotal', formatSlaPct(custTotal));
   
-  setText('ovOlfTotal', olfTotal + '%');
-  setText('ovOlfStore', olfStore + '%');
-  setText('ovOlfCust', olfCust + '%');
+  setText('ovOlfTotal', formatOlfPct(olfTotal) + '%');
+  setText('ovOlfStore', formatOlfPct(olfStore) + '%');
+  setText('ovOlfCust', formatOlfPct(olfCust) + '%');
   
   setText('ovSlaGrwInf', formatSlaPct(grwInf));
   setText('ovSlaGrwIel', formatSlaPct(grwIel));
@@ -5725,7 +5913,7 @@ function renderOverviewPage() {
   
   var warnEl = document.getElementById('ovOlfStatusWarning');
   var cardOlf = document.getElementById('ovOlfCard');
-  if (olfTotal < 85) {
+  if (parseFloat(olfTotal) < 85) {
     setText('ovOlfStatus', 'Warning');
     if (warnEl) warnEl.style.display = 'block';
     if (cardOlf) cardOlf.style.borderColor = 'var(--red)';
@@ -6515,11 +6703,7 @@ function initSlaTrendModalChart() {
           type: 'bar',
           label: 'SLA Hit Volume',
           data: hitPoints,
-          backgroundColor: 'rgba(16, 185, 129, 0.4)',
-          borderColor: '#10b981',
-          borderWidth: 2,
-          borderRadius: 4,
-          borderSkipped: 'bottom',
+          backgroundColor: '#00b894',
           stack: 'volume',
           yAxisID: 'y',
           order: 2
@@ -6528,11 +6712,9 @@ function initSlaTrendModalChart() {
           type: 'bar',
           label: 'SLA Miss Volume', minBarLength: 5,
           data: misPoints,
-          backgroundColor: 'rgba(239, 68, 68, 0.3)',
-          borderColor: '#ef4444',
-          borderWidth: 2,
-          borderRadius: 4,
-          borderSkipped: 'bottom',
+          backgroundColor: '#e53e3e',
+          borderRadius: { topLeft: 5, topRight: 5, bottomLeft: 0, bottomRight: 0 },
+          borderSkipped: false,
           stack: 'volume',
           yAxisID: 'y',
           order: 2
@@ -6542,14 +6724,13 @@ function initSlaTrendModalChart() {
           label: 'SLA GRW (Warehouse) %',
           data: grwPoints,
           borderColor: '#3b95ff',
-          backgroundColor: 'rgba(59, 149, 255, 0.05)',
-          tension: 0.3,
-          borderWidth: 3,
-          pointRadius: 5,
-          pointHoverRadius: 7,
+          backgroundColor: 'rgba(59, 149, 255, 0.1)',
+          fill: true,
+          tension: 0.35,
+          borderWidth: 2,
+          pointRadius: 4,
+          pointHoverRadius: 6,
           pointBackgroundColor: '#3b95ff',
-          pointBorderColor: '#fff',
-          pointBorderWidth: 2,
           clip: false,
           yAxisID: 'y1',
           order: 1
@@ -6559,14 +6740,13 @@ function initSlaTrendModalChart() {
           label: 'SLA Customer (Shipping) %',
           data: custPoints,
           borderColor: '#e2573e',
-          backgroundColor: 'rgba(226, 87, 62, 0.05)',
-          tension: 0.3,
-          borderWidth: 3,
-          pointRadius: 5,
-          pointHoverRadius: 7,
+          backgroundColor: 'rgba(226, 87, 62, 0.1)',
+          fill: true,
+          tension: 0.35,
+          borderWidth: 2,
+          pointRadius: 4,
+          pointHoverRadius: 6,
           pointBackgroundColor: '#e2573e',
-          pointBorderColor: '#fff',
-          pointBorderWidth: 2,
           clip: false,
           yAxisID: 'y1',
           order: 1
@@ -6601,7 +6781,7 @@ function initSlaTrendModalChart() {
             color: '#8e9fae',
             font: { family: 'Plus Jakarta Sans', size: 10, weight: 'bold' }
           },
-          grid: { color: 'rgba(33, 54, 84, 0.1)' },
+          grid: { color: 'rgba(33, 54, 84, 0.2)' },
           ticks: { color: '#8e9fae', font: { family: 'Fira Code', size: 10 } }
         },
         y1: {
@@ -6938,11 +7118,7 @@ function initSlaTrendOnPageCharts() {
           type: 'bar',
           label: 'SLA Hit Volume',
           data: grwHitPoints,
-          backgroundColor: 'rgba(16, 185, 129, 0.4)',
-          borderColor: '#10b981',
-          borderWidth: 2,
-          borderRadius: 4,
-          borderSkipped: 'bottom',
+          backgroundColor: '#00b894',
           stack: 'volume',
           yAxisID: 'y',
           order: 2
@@ -6951,11 +7127,9 @@ function initSlaTrendOnPageCharts() {
           type: 'bar',
           label: 'SLA Miss Volume', minBarLength: 5,
           data: grwMisPoints,
-          backgroundColor: 'rgba(239, 68, 68, 0.3)',
-          borderColor: '#ef4444',
-          borderWidth: 2,
-          borderRadius: 4,
-          borderSkipped: 'bottom',
+          backgroundColor: '#e53e3e',
+          borderRadius: { topLeft: 5, topRight: 5, bottomLeft: 0, bottomRight: 0 },
+          borderSkipped: false,
           stack: 'volume',
           yAxisID: 'y',
           order: 2
@@ -6965,14 +7139,13 @@ function initSlaTrendOnPageCharts() {
           label: 'SLA GRW Achievement %',
           data: grwPctPoints,
           borderColor: '#3b95ff',
-          backgroundColor: 'rgba(59, 149, 255, 0.05)',
-          tension: 0.3,
-          borderWidth: 3,
-          pointRadius: 5,
-          pointHoverRadius: 7,
+          backgroundColor: 'rgba(59, 149, 255, 0.1)',
+          fill: true,
+          tension: 0.35,
+          borderWidth: 2,
+          pointRadius: 4,
+          pointHoverRadius: 6,
           pointBackgroundColor: '#3b95ff',
-          pointBorderColor: '#fff',
-          pointBorderWidth: 2,
           clip: false,
           yAxisID: 'y1',
           order: 1
@@ -7007,7 +7180,7 @@ function initSlaTrendOnPageCharts() {
             color: '#8e9fae',
             font: { family: 'Plus Jakarta Sans', size: 10, weight: 'bold' }
           },
-          grid: { color: 'rgba(33, 54, 84, 0.1)' },
+          grid: { color: 'rgba(33, 54, 84, 0.2)' },
           ticks: { color: '#8e9fae', font: { family: 'Fira Code', size: 10 } }
         },
         y1: {
@@ -7056,11 +7229,7 @@ function initSlaTrendOnPageCharts() {
           type: 'bar',
           label: 'SLA Hit Volume',
           data: custHitPoints,
-          backgroundColor: 'rgba(16, 185, 129, 0.4)',
-          borderColor: '#10b981',
-          borderWidth: 2,
-          borderRadius: 4,
-          borderSkipped: 'bottom',
+          backgroundColor: '#00b894',
           stack: 'volume',
           yAxisID: 'y',
           order: 2
@@ -7069,11 +7238,9 @@ function initSlaTrendOnPageCharts() {
           type: 'bar',
           label: 'SLA Miss Volume', minBarLength: 5,
           data: custMisPoints,
-          backgroundColor: 'rgba(239, 68, 68, 0.3)',
-          borderColor: '#ef4444',
-          borderWidth: 2,
-          borderRadius: 4,
-          borderSkipped: 'bottom',
+          backgroundColor: '#e53e3e',
+          borderRadius: { topLeft: 5, topRight: 5, bottomLeft: 0, bottomRight: 0 },
+          borderSkipped: false,
           stack: 'volume',
           yAxisID: 'y',
           order: 2
@@ -7083,14 +7250,13 @@ function initSlaTrendOnPageCharts() {
           label: 'SLA Customer Achievement %',
           data: custPctPoints,
           borderColor: '#e2573e',
-          backgroundColor: 'rgba(226, 87, 62, 0.05)',
-          tension: 0.3,
-          borderWidth: 3,
-          pointRadius: 5,
-          pointHoverRadius: 7,
+          backgroundColor: 'rgba(226, 87, 62, 0.1)',
+          fill: true,
+          tension: 0.35,
+          borderWidth: 2,
+          pointRadius: 4,
+          pointHoverRadius: 6,
           pointBackgroundColor: '#e2573e',
-          pointBorderColor: '#fff',
-          pointBorderWidth: 2,
           clip: false,
           yAxisID: 'y1',
           order: 1
@@ -7125,7 +7291,7 @@ function initSlaTrendOnPageCharts() {
             color: '#8e9fae',
             font: { family: 'Plus Jakarta Sans', size: 10, weight: 'bold' }
           },
-          grid: { color: 'rgba(33, 54, 84, 0.1)' },
+          grid: { color: 'rgba(33, 54, 84, 0.2)' },
           ticks: { color: '#8e9fae', font: { family: 'Fira Code', size: 10 } }
         },
         y1: {
@@ -7206,7 +7372,7 @@ function initDatePickers() {
     armEnd.value = todayStr;
   }
 
-  // Set default dates for Overview SLA (Current Month to H-1)
+  // Set default dates for Overview SLA and OLF (Current Month to H-1)
   var firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
   var firstDayStr = formatLocalDate(firstDayOfMonth);
   
@@ -7215,6 +7381,13 @@ function initDatePickers() {
   if (ovSlaStart && ovSlaEnd) {
     ovSlaStart.value = firstDayStr;
     ovSlaEnd.value = yesterdayStr;
+  }
+  
+  var ovOlfStart = document.getElementById('ovOlfStartDate');
+  var ovOlfEnd = document.getElementById('ovOlfEndDate');
+  if (ovOlfStart && ovOlfEnd) {
+    ovOlfStart.value = firstDayStr;
+    ovOlfEnd.value = yesterdayStr;
   }
 }
 
@@ -8774,6 +8947,13 @@ function formatSlaPct(val) {
   return fixed.replace('.', ',') + '%';
 }
 
+function formatOlfPct(val) {
+  if (val === undefined || val === null || val === '-') return '-';
+  var num = parseFloat(val);
+  if (isNaN(num)) return String(val).replace(/\./g, ',');
+  return num.toFixed(2).replace('.', ',');
+}
+
 // Hitung batas bawah sumbu % secara dinamis, supaya penurunan kecil (mis. 100% -> 99,95%) tetap kelihatan
 function calcPctAxisMin() {
   var all = [];
@@ -9224,99 +9404,148 @@ function renderOverallDelaySummary(dataList, contextType) {
   });
   
   container.style.display = 'block';
-  container.style.padding = '8px 12px';
+  container.style.padding = '20px';
   container.style.background = 'var(--surface)';
   container.style.border = '1px solid var(--border)';
-  container.style.borderRadius = 'var(--radius)';
-  container.style.boxShadow = '0 1px 3px rgba(0,0,0,0.03)';
+  container.style.borderRadius = '16px';
+  container.style.boxShadow = '0 10px 25px -5px rgba(0,0,0,0.02), 0 8px 10px -6px rgba(0,0,0,0.02)';
   container.style.marginTop = '0px';
-  container.style.marginBottom = '15px';
+  container.style.marginBottom = '20px';
   
-  var overallBg = '#f8fafc';
+  var overallBg = 'rgba(71, 85, 105, 0.05)';
   var overallText = '#475569';
-  var overallBorder = '#e2e8f0';
-  var badgeColor = '#94a3b8';
+  var overallBorder = 'rgba(71, 85, 105, 0.15)';
+  var badgeColor = '#64748b';
+  var glowColor = 'rgba(100, 116, 139, 0.15)';
   
   if (overallAvg > 60) {
-    overallBg = '#fef2f2';
+    overallBg = 'rgba(239, 68, 68, 0.06)';
     overallText = '#dc2626';
-    overallBorder = '#fecaca';
+    overallBorder = 'rgba(239, 68, 68, 0.2)';
     badgeColor = '#ef4444';
+    glowColor = 'rgba(239, 68, 68, 0.15)';
   } else if (overallAvg > 15) {
-    overallBg = '#fffbeb';
+    overallBg = 'rgba(245, 158, 11, 0.06)';
     overallText = '#d97706';
-    overallBorder = '#fde68a';
+    overallBorder = 'rgba(245, 158, 11, 0.2)';
     badgeColor = '#f59e0b';
+    glowColor = 'rgba(245, 158, 11, 0.15)';
   } else if (overallAvg > 0) {
-    overallBg = '#f0f9ff';
+    overallBg = 'rgba(14, 165, 233, 0.06)';
     overallText = '#0284c7';
-    overallBorder = '#bae6fd';
+    overallBorder = 'rgba(14, 165, 233, 0.2)';
     badgeColor = '#3b82f6';
+    glowColor = 'rgba(14, 165, 233, 0.15)';
   } else {
-    overallBg = '#f0fdf4';
+    overallBg = 'rgba(16, 185, 129, 0.06)';
     overallText = '#16a34a';
-    overallBorder = '#bbf7d0';
+    overallBorder = 'rgba(16, 185, 129, 0.2)';
     badgeColor = '#10b981';
+    glowColor = 'rgba(16, 185, 129, 0.15)';
   }
   
   var titleText = contextType === 'DESTINATION' 
-    ? '⏱️ Rerata Keterlambatan per Vendor' 
-    : '⏱️ Rerata Keterlambatan per Tujuan';
+    ? 'Rerata Keterlambatan per Vendor' 
+    : 'Rerata Keterlambatan per Tujuan';
     
-  var html = '<div style="display:flex; flex-direction:row; flex-wrap:wrap; gap:12px; align-items:stretch; width:100%;">' +
-    // Left Card: Overall KPI
-    '<div style="flex:1; min-width:180px; max-width:240px; background:' + overallBg + '; border:1px solid ' + overallBorder + '; border-radius:6px; padding:6px 10px; display:flex; flex-direction:column; justify-content:center; position:relative; overflow:hidden;">' +
-      '<div style="position:absolute; right:-6px; bottom:-10px; font-size:36px; opacity:0.07; pointer-events:none; transform:rotate(-15deg);">⏱️</div>' +
-      '<div style="font-size:8px; font-weight:800; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px;">Rerata Total Delay</div>' +
-      '<div style="display:flex; align-items:baseline; gap:4px; margin:2px 0;">' +
-        '<span style="font-size:20px; font-weight:900; color:' + overallText + '; font-family:var(--font-mono); line-height:1;">' + overallAvgStr + '</span>' +
-        '<span style="font-size:10px; font-weight:700; color:' + overallText + ';">menit</span>' +
-      '</div>' +
-      '<div style="font-size:9px; color:var(--muted); font-weight:500; display:flex; align-items:center; gap:3px;">' +
-        '<span style="display:inline-block; width:5px; height:5px; border-radius:50%; background:' + badgeColor + ';"></span>' +
-        '<span>' + overallDelayedTrips + '/' + overallTotalTrips + ' tr (' + overallPctDelayed + '% telat)</span>' +
+  var maxAvg = sortedList.length > 0 ? Math.max.apply(Math, sortedList.map(function(o) { return o.avg; })) : 60;
+  if (maxAvg <= 0) maxAvg = 60;
+
+  var html = '<div style="display: flex; flex-direction: column; gap: 18px;">' +
+    // Top Title and Meta
+    '<div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); padding-bottom: 12px; margin-bottom: 4px;">' +
+      '<div style="display: flex; align-items: center; gap: 10px;">' +
+        '<span style="font-size: 20px; background: rgba(37,99,235,0.08); padding: 6px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center;">⏱️</span>' +
+        '<div>' +
+          '<h3 style="margin: 0; font-size: 15px; font-weight: 800; color: var(--text); letter-spacing: -0.2px;">Delay &amp; Fulfillment Analytics</h3>' +
+          '<p style="margin: 2px 0 0; font-size: 11px; color: #64748b; font-weight: 500;">Analisis keterlambatan berdasarkan durasi rata-rata per pengantaran.</p>' +
+        '</div>' +
       '</div>' +
     '</div>' +
-    // Right: List of item pills
-    '<div style="flex:2; min-width:240px; display:flex; flex-direction:column; justify-content:center; gap:6px;">' +
-      '<div style="font-size:10px; font-weight:800; color:var(--text); text-transform:uppercase; letter-spacing:0.3px; border-bottom:1px solid rgba(0,0,0,0.04); padding-bottom:3px; margin-bottom:2px;">' +
-        titleText +
+
+    // Grid Layout
+    '<div class="delay-summary-grid">' +
+      // Left overall card
+      '<div style="background:' + overallBg + '; border:1px solid ' + overallBorder + '; border-radius:12px; padding:20px; display:flex; flex-direction:column; justify-content:space-between; align-items:center; text-align:center; position:relative; overflow:hidden; box-shadow: 0 4px 12px ' + glowColor + '; transition:all 0.3s ease;">' +
+        '<div style="position:absolute; right:0; left:0; bottom:-16px; font-size:90px; opacity:0.04; pointer-events:none; font-weight: 900; text-align:center;">⏱️</div>' +
+        '<div style="display:flex; flex-direction:column; align-items:center; width:100%;">' +
+          '<span style="display:inline-flex; align-items:center; justify-content:center; gap:6px; padding:4px 10px; border-radius:99px; background:rgba(255,255,255,0.85); border:1px solid ' + overallBorder + '; font-size:10px; font-weight:800; color:' + overallText + '; text-transform:uppercase; letter-spacing:0.5px;">' +
+            '<span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:' + badgeColor + ';"></span>' +
+            'Rerata Total Delay' +
+          '</span>' +
+          '<div style="margin-top: 16px; display:flex; align-items:baseline; justify-content:center; gap:4px; width:100%;">' +
+            '<span style="font-size:36px; font-weight:800; color:' + overallText + '; font-family:\'Outfit\', sans-serif; line-height:1; letter-spacing:-1px;">' + overallAvgStr + '</span>' +
+            '<span style="font-size:13px; font-weight:700; color:' + overallText + '; opacity:0.85;">menit</span>' +
+          '</div>' +
+        '</div>' +
+        '<div style="margin-top: 20px;">' +
+          '<div style="display:flex; justify-content:space-between; align-items:center; font-size:11px; color:#475569; margin-bottom:6px; font-weight:600;">' +
+            '<span>Delayed Trips Ratio</span>' +
+            '<span style="font-family:var(--font-mono); color:var(--text);">' + overallDelayedTrips + ' / ' + overallTotalTrips + ' tr</span>' +
+          '</div>' +
+          '<div style="width:100%; height:6px; background:rgba(0,0,0,0.05); border-radius:99px; overflow:hidden;">' +
+            '<div style="width:' + overallPctDelayed + '%; height:100%; background:' + badgeColor + '; border-radius:99px;"></div>' +
+          '</div>' +
+          '<div style="display:flex; justify-content:space-between; align-items:center; font-size:10px; color:#64748b; margin-top:6px; font-weight: 500;">' +
+            '<span>Fulfillment On-Time Rate</span>' +
+            '<span style="font-weight:700; color:' + overallText + ';">' + (100 - overallPctDelayed) + '%</span>' +
+          '</div>' +
+        '</div>' +
       '</div>' +
-      '<div style="display:flex; flex-wrap:wrap; gap:4px; align-content:flex-start;">';
-      
+
+      // Right Side Grid of detailed cards
+      '<div style="display:flex; flex-direction:column; gap:12px; align-items:center; width:100%;">' +
+        '<h4 style="margin:0 auto 6px; font-size:12.5px; font-weight:800; color:#475569; text-transform:uppercase; letter-spacing:0.5px; display:flex; align-items:center; justify-content:center; gap:6px; text-align:center;">' +
+          '<span>🎯</span> ' + titleText +
+        '</h4>' +
+        '<div class="delay-pills-grid" style="width:100%;">';
+
   sortedList.forEach(function(item) {
     var avgStr = item.avg.toFixed(1);
     
-    var bg = '#f8fafc';
+    var bg = 'rgba(71, 85, 105, 0.05)';
     var text = '#475569';
-    var border = '#e2e8f0';
+    var border = 'rgba(71, 85, 105, 0.15)';
+    var fillPercent = Math.min(100, (item.avg / maxAvg) * 100);
     
     if (item.avg > 60) {
-      bg = '#fef2f2';
+      bg = 'rgba(239, 68, 68, 0.05)';
       text = '#dc2626';
-      border = '#fee2e2';
+      border = 'rgba(239, 68, 68, 0.15)';
     } else if (item.avg > 15) {
-      bg = '#fffbeb';
+      bg = 'rgba(245, 158, 11, 0.05)';
       text = '#d97706';
-      border = '#fef3c7';
+      border = 'rgba(245, 158, 11, 0.15)';
     } else if (item.avg > 0) {
-      bg = '#f0f9ff';
+      bg = 'rgba(14, 165, 233, 0.05)';
       text = '#0284c7';
-      border = '#e0f2fe';
+      border = 'rgba(14, 165, 233, 0.15)';
     } else {
-      bg = '#f0fdf4';
+      bg = 'rgba(16, 185, 129, 0.05)';
       text = '#16a34a';
-      border = '#dcfce7';
+      border = 'rgba(16, 185, 129, 0.15)';
     }
     
-    html += '<div title="Total delay: ' + item.totalMinutes + ' menit dari ' + item.delayedTrips + ' trip telat" style="display:inline-flex; align-items:center; background:' + bg + '; border:1px solid ' + border + '; border-radius:4px; padding:2px 6px; font-size:10px; font-weight:500; transition:all 0.1s ease-in-out;" onmouseover="this.style.transform=\'scale(1.02)\'" onmouseout="this.style.transform=\'none\'">' +
-      '<strong style="color:var(--text); margin-right:4px;">' + esc(item.name) + '</strong>' +
-      '<span style="font-weight:700; color:' + text + '; font-family:var(--font-mono); background:rgba(255,255,255,0.85); padding:0px 3px; border-radius:3px; font-size:9.5px; border:1px solid ' + border + ';">' + avgStr + 'm</span>' +
-      '<span style="color:var(--muted); font-size:9px; margin-left:4px; font-family:var(--font-mono);">' + item.delayedTrips + '/' + item.totalTrips + ' tr</span>' +
+    html += '<div class="delay-card" style="display:flex; flex-direction:column; align-items:center; text-align:center; padding:14px; justify-content:center; gap:8px;" title="Total delay: ' + item.totalMinutes + ' menit dari ' + item.delayedTrips + ' trip telat">' +
+      '<div style="width:100%; display:flex; flex-direction:column; align-items:center; gap:6px;">' +
+        '<span style="font-size:12px; font-weight:800; color:var(--text); max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="' + esc(item.name) + '">' + esc(item.name) + '</span>' +
+        '<span style="font-size:10.5px; font-weight:800; color:' + text + '; background:' + bg + '; border:1px solid ' + border + '; padding:3px 8px; border-radius:6px; font-family:var(--font-mono); display:inline-block; margin:0 auto; white-space:nowrap;">' +
+          avgStr + ' m' +
+        '</span>' +
+      '</div>' +
+      '<div style="width:100%; display:flex; flex-direction:column; align-items:center; gap:6px;">' +
+        '<div style="width:80%; height:4px; background:rgba(0,0,0,0.03); border-radius:99px; overflow:hidden;">' +
+          '<div style="width:' + fillPercent + '%; height:100%; background:' + text + '; border-radius:99px;"></div>' +
+        '</div>' +
+        '<div style="display:flex; justify-content:center; align-items:center; gap:4px; font-size:9.5px; color:#64748b; font-weight:600;">' +
+          '<span>Trip Telat:</span>' +
+          '<span style="font-family:var(--font-mono); font-weight:800; color:var(--text);">' + item.delayedTrips + ' / ' + item.totalTrips + '</span>' +
+        '</div>' +
+      '</div>' +
     '</div>';
   });
   
-  html += '</div></div></div>';
+  html += '</div></div></div></div>';
   container.innerHTML = html;
 }
 
@@ -10160,7 +10389,7 @@ function openDestinationModal(destination){
 
   document
     .getElementById('ffMRating')
-    .textContent =
+    .innerHTML =
       buildStars(sla);
 
   renderPie(total, onTime, telatStuffing, telat1Hari, telat2HariUp);
@@ -10232,7 +10461,7 @@ function openVendorModal(vendor){
 
   document
     .getElementById('ffMRating')
-    .textContent =
+    .innerHTML =
       buildStars(sla);
 
   renderPie(total, onTime, telatStuffing, telat1Hari, telat2HariUp);
@@ -10275,10 +10504,10 @@ function renderPie(total, onTime, telatStuffing, telat1Hari, telat2HariUp){
   ];
 
   var dataColors = [
-    '#00b894',
-    '#f6ad55',
-    '#ed8936',
-    '#e53e3e'
+    '#10b981',
+    '#eab308',
+    '#f97316',
+    '#ef4444'
   ];
 
   var sum = dataVals.reduce(function(a, b) { return a + b; }, 0);
@@ -10296,11 +10525,10 @@ function renderPie(total, onTime, telatStuffing, telat1Hari, telat2HariUp){
         if (val == null || val <= 0 || sum === 0) return;
         
         var percentage = (val / sum) * 100;
-        if (percentage < 3) return; // ignore extremely small slices to prevent text clutter
+        if (percentage < 4) return; // ignore small slices for clean UI
         
         var txt = percentage.toFixed(1) + '%';
-        ctx.font = 'bold 11px Inter, sans-serif';
-        ctx.fillStyle = '#ffffff';
+        ctx.font = '800 10px "Plus Jakarta Sans", sans-serif';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         
@@ -10315,10 +10543,46 @@ function renderPie(total, onTime, telatStuffing, telat1Hari, telat2HariUp){
         var textX = arc.x + Math.cos(midAngle) * midRadius;
         var textY = arc.y + Math.sin(midAngle) * midRadius;
         
-        ctx.shadowColor = 'rgba(0,0,0,0.7)';
-        ctx.shadowBlur = 3;
+        // Draw elegant white outline for 100% legibility on any slice or background
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 3;
+        ctx.lineJoin = 'round';
+        ctx.strokeText(txt, textX, textY);
+        
+        // Draw the text in rich slate dark charcoal
+        ctx.fillStyle = '#0f172a';
         ctx.fillText(txt, textX, textY);
       });
+      ctx.restore();
+    }
+  };
+
+  var pl_modal_pie_centertext = {
+    id: 'pl_modal_pie_centertext',
+    afterDraw: function(chart) {
+      var ctx = chart.ctx;
+      var meta = chart.getDatasetMeta(0);
+      if (!meta || !meta.data || meta.data.length === 0) return;
+      var centerArc = meta.data[0];
+      var textX = centerArc.x;
+      var textY = centerArc.y;
+      
+      ctx.save();
+      
+      var pct = sum > 0 ? ((onTime / sum) * 100) : 0;
+      
+      var fontSize = Math.max(16, Math.min(22, Math.round(chart.height / 11)));
+      ctx.font = '800 ' + fontSize + 'px "Outfit", sans-serif';
+      ctx.fillStyle = '#020617';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      
+      ctx.fillText(pct.toFixed(1) + '%', textX, textY - 6);
+      
+      ctx.font = '800 8px "Plus Jakarta Sans", sans-serif';
+      ctx.fillStyle = '#64748b';
+      ctx.fillText('ON-TIME RATE', textX, textY + 10);
+      
       ctx.restore();
     }
   };
@@ -10336,8 +10600,11 @@ function renderPie(total, onTime, telatStuffing, telat1Hari, telat2HariUp){
           datasets:[{
             data: dataVals,
             backgroundColor: dataColors,
-            borderWidth: 1,
-            borderColor: '#fff'
+            borderWidth: 2,
+            borderColor: '#ffffff',
+            borderRadius: 5,
+            spacing: 3,
+            cutout: '72%'
           }]
         },
         options: {
@@ -10347,13 +10614,24 @@ function renderPie(total, onTime, telatStuffing, telat1Hari, telat2HariUp){
             legend: {
               position: 'bottom',
               labels: {
-                boxWidth: 12,
-                font: { family: 'Inter, sans-serif', size: 10, weight: '600' },
+                boxWidth: 8,
+                boxHeight: 8,
+                usePointStyle: true,
+                pointStyle: 'circle',
+                font: { family: '"Plus Jakarta Sans", sans-serif', size: 10, weight: '700' },
                 color: '#475569',
-                padding: 10
+                padding: 14
               }
             },
             tooltip: {
+              backgroundColor: 'rgba(15, 23, 42, 0.95)',
+              titleFont: { family: '"Plus Jakarta Sans", sans-serif', size: 11, weight: '700' },
+              bodyFont: { family: '"Plus Jakarta Sans", sans-serif', size: 11 },
+              padding: 10,
+              borderRadius: 8,
+              boxWidth: 8,
+              boxHeight: 8,
+              usePointStyle: true,
               callbacks: {
                 label: function(context) {
                   var val = context.raw;
@@ -10364,19 +10642,31 @@ function renderPie(total, onTime, telatStuffing, telat1Hari, telat2HariUp){
             }
           }
         },
-        plugins: [pl_modal_pie_datalabels]
+        plugins: [pl_modal_pie_datalabels, pl_modal_pie_centertext]
       }
     );
 }
 
 function buildStars(sla) {
-  var stars = '';
-  if (sla >= 95) stars = '⭐⭐⭐⭐⭐';
-  else if (sla >= 80) stars = '⭐⭐⭐⭐';
-  else if (sla >= 60) stars = '⭐⭐⭐';
-  else if (sla >= 40) stars = '⭐⭐';
-  else stars = '⭐';
-  return stars;
+  var ratingCount = 5;
+  if (sla >= 95) ratingCount = 5;
+  else if (sla >= 80) ratingCount = 4;
+  else if (sla >= 60) ratingCount = 3;
+  else if (sla >= 40) ratingCount = 2;
+  else ratingCount = 1;
+
+  var html = '<div style="display:inline-flex; align-items:center; gap:4px;">';
+  for (var i = 1; i <= 5; i++) {
+    var isFilled = i <= ratingCount;
+    var color = isFilled ? '#eab308' : '#e2e8f0';
+    var delay = (i * 0.15).toFixed(2) + 's';
+    
+    html += '<svg class="rating-star-svg" style="width:20px; height:20px; fill:' + color + '; animation-delay: ' + delay + '; transition:all 0.3s ease;" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">' +
+              '<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>' +
+            '</svg>';
+  }
+  html += '</div>';
+  return html;
 }
 
 function renderDestinationRanking(destination) {
@@ -10476,9 +10766,9 @@ function renderTrendChart(key, type) {
   var titleEl = document.getElementById('ffTrendTitle');
   if (titleEl) {
     if (type === 'VENDOR') {
-      titleEl.textContent = 'Persentase Volume per Type Armada (per Tujuan)';
+      titleEl.innerHTML = '🚛 Persentase Volume per Type Armada <span style="font-size:11px; font-weight:500; color:#64748b; margin-left:4px;">(per Tujuan)</span>';
     } else {
-      titleEl.textContent = 'Persentase Volume per Type Armada (per Vendor)';
+      titleEl.innerHTML = '🚛 Persentase Volume per Type Armada <span style="font-size:11px; font-weight:500; color:#64748b; margin-left:4px;">(per Vendor)</span>';
     }
   }
 
@@ -10531,21 +10821,21 @@ function renderTrendChart(key, type) {
   var labels = xEntities;
 
   var armadaPalette = {
-    'WINGBOX': { bg: '#3b82f6', border: '#2563eb' },
-    'FUSO': { bg: '#10b981', border: '#059669' },
-    'CDD LONG CHASSIS': { bg: '#f59e0b', border: '#d97706' },
-    'CDD': { bg: '#8b5cf6', border: '#7c3aed' },
-    'CDE': { bg: '#ec4899', border: '#db2777' },
+    'WINGBOX': { bg: '#4f46e5', border: '#3730a3' },
+    'FUSO': { bg: '#06b6d4', border: '#0e7490' },
+    'CDD LONG CHASSIS': { bg: '#d946ef', border: '#a21caf' },
+    'CDD': { bg: '#8b5cf6', border: '#6d28d9' },
+    'CDE': { bg: '#ec4899', border: '#be185d' },
     'OTHER': { bg: '#64748b', border: '#475569' }
   };
 
   var fallbackColors = [
-    { bg: '#3b82f6', border: '#2563eb' },
-    { bg: '#10b981', border: '#059669' },
-    { bg: '#f59e0b', border: '#d97706' },
-    { bg: '#8b5cf6', border: '#7c3aed' },
-    { bg: '#ec4899', border: '#db2777' },
-    { bg: '#06b6d4', border: '#0891b2' },
+    { bg: '#4f46e5', border: '#3730a3' },
+    { bg: '#06b6d4', border: '#0e7490' },
+    { bg: '#d946ef', border: '#a21caf' },
+    { bg: '#8b5cf6', border: '#6d28d9' },
+    { bg: '#ec4899', border: '#be185d' },
+    { bg: '#3b82f6', border: '#1d4ed8' },
     { bg: '#64748b', border: '#475569' }
   ];
 
@@ -10582,10 +10872,11 @@ function renderTrendChart(key, type) {
       label: arm,
       data: dataPoints,
       backgroundColor: color.bg,
-      borderColor: color.border,
-      borderWidth: 1,
+      borderColor: '#ffffff',
+      borderWidth: 1.5,
+      borderSkipped: false,
       stack: 'armada',
-      maxBarThickness: 65
+      maxBarThickness: 32
     };
   });
 
@@ -10599,25 +10890,32 @@ function renderTrendChart(key, type) {
         c.save();
         meta.data.forEach(function(bar, i) {
           var v = d.data[i];
-          if (v == null || v < 0.5) return; // ignore absolute zeros or near zeros to prevent clutter
-          var txt = v.toFixed(1) + '%';
+          if (v == null || v <= 0) return; // Only skip actual zeros or nulls
           
           var segmentHeight = Math.abs(bar.base - bar.y);
+          var txt = v.toFixed(1) + '%';
           var fontSize = 10;
-          if (segmentHeight < 15) {
+          if (segmentHeight < 12) {
+            fontSize = 7;
+          } else if (segmentHeight < 20) {
             fontSize = 8;
           }
           
-          c.font = 'bold ' + fontSize + 'px Inter,sans-serif';
-          c.fillStyle = '#ffffff';
+          c.font = '800 ' + fontSize + 'px "Plus Jakarta Sans", sans-serif';
           c.textAlign = 'center';
           c.textBaseline = 'middle';
           
           var x = bar.x;
           var y = (bar.y + bar.base) / 2;
           
-          c.shadowColor = 'rgba(0,0,0,0.7)';
-          c.shadowBlur = 3;
+          // Draw elegant white outline for 100% legibility on any background color
+          c.strokeStyle = '#ffffff';
+          c.lineWidth = 2.5;
+          c.lineJoin = 'round';
+          c.strokeText(txt, x, y);
+          
+          // Draw the text in rich dark slate color
+          c.fillStyle = '#0f172a';
           c.fillText(txt, x, y);
         });
         c.restore();
@@ -10643,13 +10941,24 @@ function renderTrendChart(key, type) {
           display: true,
           position: 'top',
           labels: {
-            boxWidth: 11,
-            padding: 10,
-            font: { family: 'Inter, sans-serif', size: 10, weight: '600' },
-            color: '#64748b'
+            boxWidth: 8,
+            boxHeight: 8,
+            usePointStyle: true,
+            pointStyle: 'circle',
+            padding: 14,
+            font: { family: '"Plus Jakarta Sans", sans-serif', size: 10, weight: '700' },
+            color: '#475569'
           }
         },
         tooltip: {
+          backgroundColor: 'rgba(15, 23, 42, 0.95)',
+          titleFont: { family: '"Plus Jakarta Sans", sans-serif', size: 11, weight: '700' },
+          bodyFont: { family: '"Plus Jakarta Sans", sans-serif', size: 11 },
+          padding: 10,
+          borderRadius: 8,
+          boxWidth: 8,
+          boxHeight: 8,
+          usePointStyle: true,
           callbacks: {
             label: function(context) {
               var entity = xEntities[context.dataIndex];
@@ -10691,14 +11000,14 @@ function renderTrendChart(key, type) {
           title: {
             display: true,
             text: 'Persentase Volume (%)',
-            font: { family: 'Inter, sans-serif', size: 10, weight: '600' },
+            font: { family: '"Plus Jakarta Sans", sans-serif', size: 10, weight: '700' },
             color: '#64748b'
           },
           grid: {
-            color: '#f1f5f9'
+            color: 'rgba(226, 232, 240, 0.4)'
           },
           ticks: {
-            font: { size: 10, family: 'Inter, sans-serif' },
+            font: { size: 10, family: '"Plus Jakarta Sans", sans-serif' },
             color: '#64748b',
             callback: function(value) { return value + '%'; }
           }
@@ -10709,7 +11018,7 @@ function renderTrendChart(key, type) {
             display: false
           },
           ticks: {
-            font: { size: 10, family: 'Inter, sans-serif' },
+            font: { size: 10, family: '"Plus Jakarta Sans", sans-serif' },
             color: '#64748b'
           }
         }
@@ -10980,7 +11289,7 @@ function renderOlfPage() {
   }
 
   var total = data.length;
-  var olfTotal = 0;
+  var olfTotal = '0.00';
   var missCount = 0;
   var successCount = 0;
   var misses = [];
@@ -10989,7 +11298,7 @@ function renderOlfPage() {
     var sumLd = data.reduce(function(s, r) { 
       return s + (r.OLF_TOTAL !== undefined ? r.OLF_TOTAL : getOlfValue(r)); 
     }, 0);
-    olfTotal = Math.min(100, Math.round(sumLd / total));
+    olfTotal = Math.min(100, sumLd / total).toFixed(2);
     
     misses = data.filter(function(r) {
       var val = r.OLF_TOTAL !== undefined ? r.OLF_TOTAL : getOlfValue(r);
@@ -11021,7 +11330,7 @@ function updateOlfDashboard(score, missCount, totalCount, successCount, misses) 
   var tb = document.getElementById('tb-olf-details');
   var em = document.getElementById('em-olf-details');
 
-  if (scoreTxtEl) scoreTxtEl.innerHTML = score + '<span class="sy">%</span>';
+  if (scoreTxtEl) scoreTxtEl.innerHTML = formatOlfPct(score) + '<span class="sy">%</span>';
   if (missTxtEl) missTxtEl.innerText = missCount;
   if (totalTxtEl) totalTxtEl.innerText = totalCount;
   if (successTxtEl) successTxtEl.innerText = successCount;
@@ -11033,13 +11342,14 @@ function updateOlfDashboard(score, missCount, totalCount, successCount, misses) 
       olfChartInstance.destroy();
     }
 
-    var chartColor = score >= 85 ? '#3fb950' : score >= 70 ? '#d29922' : '#e53e3e';
+    var scoreNum = parseFloat(score) || 0;
+    var chartColor = scoreNum >= 85 ? '#3fb950' : scoreNum >= 70 ? '#d29922' : '#e53e3e';
 
     olfChartInstance = new Chart(ctx, {
       type: 'doughnut',
       data: {
         datasets: [{
-          data: [score, 100 - score],
+          data: [scoreNum, 100 - scoreNum],
           backgroundColor: [chartColor, '#e2e8f0'],
           borderWidth: 0,
           borderRadius: [4, 0]
@@ -11071,9 +11381,9 @@ function updateOlfDashboard(score, missCount, totalCount, successCount, misses) 
       misses.slice(0, 100).forEach(function(r) {
         var dateObj = r.DATE_OBJ || getRowDate(r);
         var formattedD = dateObj ? dateObj.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : (r.DATE || '-');
-        var storeVal = typeof r.OLF_STORE === 'number' ? r.OLF_STORE.toFixed(2) + '%' : (typeof r['OLF STORE'] === 'number' ? r['OLF STORE'].toFixed(2) + '%' : '-');
-        var custVal = typeof r.OLF_CUSTOMER === 'number' ? r.OLF_CUSTOMER.toFixed(2) + '%' : (typeof r['OLF CUSTOMER'] === 'number' ? r['OLF CUSTOMER'].toFixed(2) + '%' : '-');
-        var totalVal = typeof r.OLF_TOTAL === 'number' ? r.OLF_TOTAL.toFixed(2) + '%' : (typeof r.OLF === 'number' ? r.OLF.toFixed(2) + '%' : '-');
+        var storeVal = typeof r.OLF_STORE === 'number' ? formatOlfPct(r.OLF_STORE) + '%' : (typeof r['OLF STORE'] === 'number' ? formatOlfPct(r['OLF STORE']) + '%' : '-');
+        var custVal = typeof r.OLF_CUSTOMER === 'number' ? formatOlfPct(r.OLF_CUSTOMER) + '%' : (typeof r['OLF CUSTOMER'] === 'number' ? formatOlfPct(r['OLF CUSTOMER']) + '%' : '-');
+        var totalVal = typeof r.OLF_TOTAL === 'number' ? formatOlfPct(r.OLF_TOTAL) + '%' : (typeof r.OLF === 'number' ? formatOlfPct(r.OLF) + '%' : '-');
         
         h += '<tr>' +
           '<td>' + esc(formattedD) + '</td>' +
@@ -13792,24 +14102,24 @@ function getCRFallbackRawData() {
 
     <div class="ff-kpi-grid">
 
-      <div class="ff-kpi">
+      <div class="ff-kpi ff-kpi-total">
         <span>Total Armada</span>
         <b id="ffMTotal">0</b>
       </div>
 
-      <div class="ff-kpi">
+      <div class="ff-kpi ff-kpi-ontime">
         <span>On Time</span>
         <b id="ffMOnTime">0</b>
       </div>
 
-      <div class="ff-kpi">
-        <span>PERFORMANCE</span>
+      <div class="ff-kpi ff-kpi-performance">
+        <span>Performance</span>
         <b id="ffMSla">0%</b>
       </div>
 
-      <div class="ff-kpi">
+      <div class="ff-kpi ff-kpi-rating">
         <span>Rating</span>
-        <b id="ffMRating">★★★★★</b>
+        <b id="ffMRating" style="display: inline-flex; align-items: center; min-height: 35px; min-width: 100px;"></b>
       </div>
 
     </div>
@@ -13817,14 +14127,14 @@ function getCRFallbackRawData() {
     <div class="ff-chart-grid">
 
       <div class="ff-card">
-        <h3>On Time vs Delay</h3>
+        <h3>⏱️ On Time vs Delay</h3>
         <div style="height: 220px; position: relative;">
           <canvas id="ffPieChart"></canvas>
         </div>
       </div>
 
       <div class="ff-card">
-        <h3 id="ffTrendTitle">Jenis Armada</h3>
+        <h3 id="ffTrendTitle">🚛 Jenis Armada</h3>
         <div style="height: 220px; position: relative;">
           <canvas id="ffTrendChart"></canvas>
         </div>
