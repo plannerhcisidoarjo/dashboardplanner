@@ -1180,6 +1180,169 @@
     }
   }
 
+  /* ── 3D ORGANIZATIONAL CHART ULTRA MODERN FUTURISTIC STYLES ── */
+  @keyframes orgNodeEntrance {
+    0% { opacity: 0; transform: translateY(30px) scale(0.88) rotateX(12deg); }
+    100% { opacity: 1; transform: translateY(0) scale(1) rotateX(0deg); }
+  }
+
+  @keyframes orgGlowTop {
+    0%, 100% { box-shadow: 0 10px 30px rgba(245, 158, 11, 0.35), 0 0 20px rgba(245, 158, 11, 0.25); }
+    50% { box-shadow: 0 18px 45px rgba(245, 158, 11, 0.55), 0 0 35px rgba(245, 158, 11, 0.45); }
+  }
+
+  @keyframes orgGlowAsst {
+    0%, 100% { box-shadow: 0 12px 30px rgba(37, 99, 235, 0.3), 0 0 20px rgba(37, 99, 235, 0.2); }
+    50% { box-shadow: 0 20px 48px rgba(37, 99, 235, 0.55), 0 0 32px rgba(37, 99, 235, 0.4); }
+  }
+
+  @keyframes orgGlowSpv {
+    0%, 100% { box-shadow: 0 10px 28px rgba(16, 185, 129, 0.28), 0 0 18px rgba(16, 185, 129, 0.2); }
+    50% { box-shadow: 0 18px 42px rgba(16, 185, 129, 0.5), 0 0 28px rgba(16, 185, 129, 0.38); }
+  }
+
+  @keyframes orgGlowStaff {
+    0%, 100% { box-shadow: 0 8px 22px rgba(139, 92, 246, 0.25), 0 0 15px rgba(139, 92, 246, 0.18); }
+    50% { box-shadow: 0 16px 36px rgba(139, 92, 246, 0.48), 0 0 26px rgba(139, 92, 246, 0.35); }
+  }
+
+  @keyframes orgShimmerLight {
+    0% { transform: translate(-100%, -100%) rotate(45deg); }
+    100% { transform: translate(100%, 100%) rotate(45deg); }
+  }
+
+  @keyframes orgPulseDotLive {
+    0% { transform: scale(0.9); opacity: 0.8; }
+    50% { transform: scale(1.35); opacity: 1; box-shadow: 0 0 14px currentColor; }
+    100% { transform: scale(0.9); opacity: 0.8; }
+  }
+
+  .org-card-3d-wrapper {
+    perspective: 1200px;
+    display: inline-block;
+  }
+
+  .org-card-3d {
+    position: relative;
+    border-radius: 18px;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.35s ease, border-color 0.35s ease, filter 0.35s ease;
+    transform-style: preserve-3d;
+    overflow: hidden;
+    animation: orgNodeEntrance 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  /* Precision Diagonal 45-degree Light Sweep Beam */
+  .org-card-3d::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+      90deg, 
+      transparent 0%, 
+      rgba(255, 255, 255, 0.0) 38%, 
+      rgba(255, 255, 255, 0.25) 46%, 
+      rgba(255, 255, 255, 0.75) 50%, 
+      rgba(255, 255, 255, 0.25) 54%, 
+      rgba(255, 255, 255, 0.0) 62%, 
+      transparent 100%
+    );
+    transform: translate(-100%, -100%) rotate(45deg);
+    pointer-events: none;
+    z-index: 5;
+    opacity: 0;
+  }
+
+  .org-card-3d:hover::before, .org-card-3d:active::before {
+    opacity: 1;
+    animation: orgShimmerLight 0.7s cubic-bezier(0.25, 1, 0.5, 1);
+  }
+
+  .org-card-3d:hover {
+    transform: translateY(-8px) scale(1.035) rotateX(4deg) rotateY(-2deg);
+    z-index: 30 !important;
+    border-color: #ffffff !important;
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35), 0 0 30px rgba(255, 255, 255, 0.45) !important;
+    filter: brightness(1.08);
+  }
+
+  .org-card-3d:active {
+    transform: translateY(-2px) scale(0.98);
+    transition: all 0.12s ease;
+  }
+
+  /* No idle floating animation - static and stable */
+  .org-card-asst-mgr {
+    animation: orgNodeEntrance 0.5s ease-out forwards;
+  }
+
+  .org-card-spv {
+    animation: orgNodeEntrance 0.55s ease-out forwards;
+  }
+
+  .org-card-staff {
+    animation: orgNodeEntrance 0.6s ease-out forwards;
+  }
+
+  .org-dept-container-3d {
+    background: radial-gradient(circle at 50% 0%, rgba(37, 99, 235, 0.22) 0%, rgba(6, 182, 212, 0.12) 45%, rgba(15, 23, 42, 0.95) 100%), linear-gradient(135deg, rgba(15, 23, 42, 0.96) 0%, rgba(30, 41, 59, 0.94) 100%);
+    background-image: radial-gradient(rgba(56, 189, 248, 0.15) 1px, transparent 0);
+    background-size: 20px 20px;
+    border: 1.5px solid rgba(6, 182, 212, 0.45);
+    border-radius: 24px;
+    padding: 30px;
+    box-shadow: inset 0 0 30px rgba(6, 182, 212, 0.12), 0 16px 50px rgba(0, 0, 0, 0.35);
+    position: relative;
+    backdrop-filter: blur(16px);
+  }
+
+  .org-connector-pulse {
+    position: relative;
+    background: linear-gradient(180deg, #06b6d4, #2563eb);
+    box-shadow: 0 0 10px rgba(6, 182, 212, 0.6);
+  }
+
+  .org-modal-3d-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(10, 15, 30, 0.75);
+    backdrop-filter: blur(12px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .org-modal-3d-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .org-modal-3d-card {
+    background: var(--surface);
+    border: 1.5px solid rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+    width: 92%;
+    max-width: 580px;
+    padding: 28px;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4), 0 0 40px rgba(37, 99, 235, 0.2);
+    transform: scale(0.9) translateY(20px);
+    transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .org-modal-3d-overlay.active .org-modal-3d-card {
+    transform: scale(1) translateY(0);
+  }
+
   /* ── Fulfillment Armada Page Styles ── */
   #pg-fulfillment-armada {
     --bg: #f4f7fb;
@@ -2575,6 +2738,10 @@ PLANNING REPORT</div>
           </svg>
         </span>
         <span class="ni-text">Case ID Release</span>
+      </div>
+      <div id="ni-org-chart" class="ni" onclick="navTo('org-chart')">
+        <span class="ni-icon">👥</span>
+        <span class="ni-text">Struktur Organisasi</span>
       </div>
 
     </nav>
@@ -4145,6 +4312,166 @@ PLANNING REPORT</div>
 
 <!-- /PAGE: RISK & QUALITY CONTROL CENTER -->
 
+<!-- PAGE: STRUKTUR ORGANISASI -->
+<div id="pg-org-chart" class="pg">
+  <div class="org-section" style="padding: 16px;">
+
+    <!-- TOP HEADER BANNER (3D FUTURISTIC GLASS STYLE WITH INTEGRATED CONTROLS) -->
+    <div class="card" style="margin-bottom: 20px; background: radial-gradient(circle at 80% 20%, rgba(37, 99, 235, 0.3) 0%, transparent 55%), radial-gradient(circle at 20% 80%, rgba(6, 182, 212, 0.2) 0%, transparent 50%), linear-gradient(135deg, #0b1329 0%, #1e293b 50%, #0f172a 100%); color: #fff; border: 1.5px solid rgba(56, 189, 248, 0.35); box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.2); border-radius: 20px; padding: 22px; backdrop-filter: blur(16px); position: relative; overflow: hidden;">
+      
+      <!-- Top Row: Title, Info Badges & Primary Action Buttons -->
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 18px;">
+        <div>
+          <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+            <span style="background: rgba(59, 130, 246, 0.3); color: #93c5fd; border: 1px solid rgba(96, 165, 250, 0.5); padding: 4px 12px; border-radius: 20px; font-size: 10.5px; font-weight: 800; letter-spacing: 0.6px; box-shadow: 0 2px 10px rgba(37,99,235,0.3);">🏢 NDC SIDOARJO</span>
+            <span style="background: rgba(245, 158, 11, 0.25); color: #fde047; border: 1px solid rgba(245, 158, 11, 0.5); padding: 4px 12px; border-radius: 20px; font-size: 10.5px; font-weight: 800; box-shadow: 0 2px 10px rgba(245,158,11,0.25);">👥 TOTAL 9 PERSONEL</span>
+            <span class="spill" id="org-spill" style="background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.25); color: #f1f5f9; font-size: 10.5px;">
+              <span class="sdot" id="org-sdot" style="background: #22c55e;"></span>
+              <span id="org-stxt">Live Sheet Synced</span>
+            </span>
+          </div>
+          <h2 style="font-size: 22px; font-weight: 900; margin: 8px 0 3px 0; color: #ffffff; letter-spacing: -0.5px; text-shadow: 0 2px 12px rgba(0,0,0,0.5);">STRUKTUR ORGANISASI ORDER PROCESSING</h2>
+          <p style="font-size: 12.5px; color: #cbd5e1; margin: 0; font-weight: 500;">HCI NDC Sidoarjo - Pemetaan Hirarki Tim Bagian Order Processing</p>
+        </div>
+
+        <!-- Top Right Action Buttons -->
+        <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+          <a href="https://docs.google.com/spreadsheets/d/1ITpX4yc_VLL_qpbLZc1RHfwDzinUf2vnbQXewb_F4oM/edit?pli=1&gid=1501777569#gid=1501777569" target="_blank" rel="noopener" style="text-decoration: none;">
+            <button style="background: rgba(255,255,255,0.12); color: #fff; border: 1px solid rgba(255,255,255,0.25); padding: 9px 16px; border-radius: 10px; font-size: 11.5px; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 6px; backdrop-filter: blur(8px); transition: all 0.2s ease;" onmouseover="this.style.background='rgba(255,255,255,0.2)'" onmouseout="this.style.background='rgba(255,255,255,0.12)'">
+              <span>🔗 Live Sheet</span>
+            </button>
+          </a>
+          <button onclick="loadData()" style="background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); color: #fff; border: 1px solid #60a5fa; padding: 9px 18px; border-radius: 10px; font-size: 11.5px; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 6px; box-shadow: 0 6px 18px rgba(37,99,235,0.45); transition: all 0.2s ease;" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='none'">
+            <span>⟳ Refresh Data</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Bottom Row: Integrated Filter & View Toggles Bar -->
+      <div style="background: rgba(15, 23, 42, 0.75); padding: 12px 16px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.12); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; backdrop-filter: blur(10px);">
+        <!-- Search Input -->
+        <div style="display: flex; align-items: center; gap: 10px; flex: 1; min-width: 240px;">
+          <div style="position: relative; width: 100%;">
+            <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #38bdf8; font-size: 13px;">🔍</span>
+            <input type="text" id="orgSearchInput" placeholder="Cari Personel atau Jabatan..." oninput="filterOrgData()" style="width: 100%; background: #0f172a; border: 1px solid #334155; color: #fff; padding: 8px 12px 8px 36px; border-radius: 8px; font-size: 12px; font-weight: 600; outline: none; transition: border 0.2s ease;" onfocus="this.style.borderColor='#38bdf8'" onblur="this.style.borderColor='#334155'">
+          </div>
+        </div>
+
+        <!-- Filter Role & View Mode Buttons -->
+        <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+          <select id="orgRoleFilter" onchange="filterOrgData()" style="background: #0f172a; border: 1px solid #334155; color: #fff; padding: 8px 12px; border-radius: 8px; font-size: 11.5px; font-weight: 700; cursor: pointer; outline: none;">
+            <option value="ALL">Semua Posisi (ALL)</option>
+            <option value="ASST_MGR">Asst. Manager OP</option>
+            <option value="SUPERVISOR">Supervisor OP</option>
+            <option value="STAFF">Staff OP</option>
+          </select>
+
+          <!-- VIEW MODE TOGGLES (TREE CHART 3D & LIST TABLE ONLY) -->
+          <div style="display: flex; background: #0b1329; padding: 4px; border-radius: 10px; border: 1px solid rgba(56, 189, 248, 0.3);">
+            <button id="orgViewTreeBtn" onclick="setOrgViewMode('tree')" class="badge active" style="padding: 7px 16px; border-radius: 8px; border: none; cursor: pointer; font-size: 11.5px; font-weight: 800; background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); color: #fff; box-shadow: 0 3px 12px rgba(37,99,235,0.45); transition: all 0.2s ease;">
+              🌳 Tree Chart 3D
+            </button>
+            <button id="orgViewTableBtn" onclick="setOrgViewMode('table')" class="badge badge-muted" style="padding: 7px 16px; border-radius: 8px; border: none; cursor: pointer; font-size: 11.5px; font-weight: 800; background: transparent; color: #94a3b8; transition: all 0.2s ease;">
+              📋 List Table
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN CONTAINER FOR VIEWS (COMPACT 3D CONTAINER) -->
+    <div class="card" style="padding: 20px; background: var(--surface); min-height: 480px; border-radius: 14px; overflow-x: auto; box-shadow: 0 8px 24px rgba(0,0,0,0.08); border: 1px solid var(--border);">
+      
+      <!-- VIEW 1: TREE CHART 3D -->
+      <div id="orgViewTreeContainer" style="display: block;">
+        <div id="orgTreeContent" style="display: flex; flex-direction: column; align-items: center; gap: 20px; padding: 10px 0; width: 100%; min-width: 820px;">
+          <!-- Dynamically generated interactive 3D tree hierarchy -->
+        </div>
+      </div>
+
+      <!-- VIEW 2: LIST TABLE -->
+      <div id="orgViewTableContainer" style="display: none;">
+        <div style="overflow-x: auto;">
+          <table class="data-table" style="width: 100%; border-collapse: collapse; font-size: 12px;">
+            <thead>
+              <tr style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); color: #fff;">
+                <th style="padding: 10px 12px; width: 40px; text-align: center; border-top-left-radius: 8px;">No</th>
+                <th style="padding: 10px 12px;">Nama Personel</th>
+                <th style="padding: 10px 12px;">Jabatan / Job Title</th>
+                <th style="padding: 10px 12px; text-align: center;">Posisi / Status</th>
+                <th style="padding: 10px 12px;">Departemen / Bagian</th>
+                <th style="padding: 10px 12px; text-align: center; border-top-right-radius: 8px;">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="orgTableBody">
+              <!-- Injected by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+<!-- /PAGE: STRUKTUR ORGANISASI -->
+
+<!-- MODAL: PERSONEL DETAIL (3D FUTURISTIC GLASS STYLE) -->
+<div id="orgPersonelModal" class="sla-modal">
+  <div class="sla-modal-content" style="max-width: 560px; padding: 0; overflow: hidden; border-radius: 20px; border: 1.5px solid rgba(255, 255, 255, 0.15); box-shadow: 0 25px 60px rgba(0,0,0,0.4), 0 0 30px rgba(37,99,235,0.25);">
+    <div id="orgModalHeader" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); padding: 26px; color: #fff; position: relative; border-bottom: 1px solid rgba(255,255,255,0.1);">
+      <button class="sla-modal-close" onclick="closeOrgPersonelModal()" style="color: #fff; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.2); border-radius: 50%; width: 32px; height: 32px; top: 18px; right: 18px; font-weight: 900; cursor: pointer; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px);">✕</button>
+      <div style="display: flex; align-items: center; gap: 18px;">
+        <div id="orgModalAvatar" style="width: 68px; height: 68px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 900; color: #fff; border: 3px solid #ffffff; box-shadow: 0 8px 20px rgba(0,0,0,0.35); flex-shrink: 0;">
+          <!-- Initials -->
+        </div>
+        <div style="overflow: hidden;">
+          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+            <span id="orgModalLevelBadge" class="badge" style="background: #f59e0b; color: #fff; padding: 3px 12px; font-size: 10px; font-weight: 900; border-radius: 12px; letter-spacing: 0.5px;">MANAGER</span>
+            <span style="background: rgba(34, 197, 94, 0.15); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.3); padding: 2px 8px; border-radius: 10px; font-size: 9px; font-weight: 800;">🔴 Live Active</span>
+          </div>
+          <h3 id="orgModalName" style="margin: 0; font-size: 20px; font-weight: 900; color: #ffffff; letter-spacing: -0.3px; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">ANTONO</h3>
+          <p id="orgModalTitle" style="margin: 3px 0 0 0; font-size: 13px; color: #38bdf8; font-weight: 800;">MANAGER NDC SIDOARJO</p>
+        </div>
+      </div>
+    </div>
+    <div style="padding: 24px; background: var(--surface);">
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 18px;">
+        <div style="background: rgba(148, 163, 184, 0.08); padding: 12px; border-radius: 12px; border: 1px solid var(--border);">
+          <div style="font-size: 9.5px; color: var(--ts); font-weight: 800; text-transform: uppercase;">Unit Kerja</div>
+          <div id="orgModalUnit" style="font-size: 12px; font-weight: 900; color: var(--tp); margin-top: 3px;">Order Processing</div>
+        </div>
+        <div style="background: rgba(148, 163, 184, 0.08); padding: 12px; border-radius: 12px; border: 1px solid var(--border);">
+          <div style="font-size: 9.5px; color: var(--ts); font-weight: 800; text-transform: uppercase;">Lokasi</div>
+          <div style="font-size: 12px; font-weight: 900; color: var(--tp); margin-top: 3px;">NDC SIDOARJO</div>
+        </div>
+        <div style="background: rgba(148, 163, 184, 0.08); padding: 12px; border-radius: 12px; border: 1px solid var(--border);">
+          <div style="font-size: 9.5px; color: var(--ts); font-weight: 800; text-transform: uppercase;">Status SLA</div>
+          <div style="font-size: 12px; font-weight: 900; color: #10b981; margin-top: 3px;">🟢 100% On-Time</div>
+        </div>
+      </div>
+
+      <div style="background: linear-gradient(135deg, rgba(37, 99, 235, 0.05) 0%, rgba(6, 182, 212, 0.05) 100%); border-left: 4px solid #2563eb; padding: 14px; border-radius: 0 12px 12px 0; margin-bottom: 20px; border-top: 1px solid rgba(37,99,235,0.1); border-right: 1px solid rgba(37,99,235,0.1); border-bottom: 1px solid rgba(37,99,235,0.1);">
+        <div style="font-size: 11px; font-weight: 900; color: #2563eb; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
+          <span>📌 LINGKUP TANGGUNG JAWAB & FUNGSI JABATAN</span>
+        </div>
+        <p id="orgModalDescription" style="font-size: 12.5px; color: var(--tp); margin: 0; line-height: 1.6; font-weight: 500;">
+          <!-- Custom scope description -->
+        </p>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 12px; border-top: 1px dashed var(--border);">
+        <div style="font-size: 11px; color: var(--tm); font-weight: 700;">
+          <span>HCI NDC Sidoarjo • Order Processing Hierarchy</span>
+        </div>
+        <button onclick="closeOrgPersonelModal()" style="background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); color: #ffffff; border: none; padding: 9px 22px; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 12px; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);">
+          Tutup
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- Modal for Top Destinasi -->
 <div id="topDestModal" class="sla-modal">
   <div class="sla-modal-content" style="max-width: 500px;">
@@ -5312,7 +5639,8 @@ function navTo(page) {
     'fulfillment-armada': { title: "Fulfillment Armada", sub: "Monitoring ketepatan waktu kedatangan armada internal & eksternal" },
     olf: { title: "Order Late Fulfillment (OLF)", sub: "Order Load Factor" },
     'caseid-release': { title: "CASE ID RELEASE CONTROL", sub: "Staging lane preparation, picking priority & storing optimization helper" },
-    'risk-control': { title: "QUALITY CONTROL & OUTBOUND RISK ASSURANCE", sub: "Sistem mitigasi preventif potensi BARUS, TUGU, Kurang/Lebih Kirim, dan Discrepancy" }
+    'risk-control': { title: "QUALITY CONTROL & OUTBOUND RISK ASSURANCE", sub: "Sistem mitigasi preventif potensi BARUS, TUGU, Kurang/Lebih Kirim, dan Discrepancy" },
+    'org-chart': { title: "STRUKTUR ORGANISASI", sub: "ORDER PROCESSING HCI NDC SIDOARJO" }
   };
   
   var hdrTitle = document.getElementById('pageHeaderTitle');
@@ -5346,6 +5674,8 @@ function navTo(page) {
     renderCaseIdReleasePage();
   } else if (page === 'risk-control') {
     renderRiskControlPage();
+  } else if (page === 'org-chart') {
+    renderOrgChartPage();
   }
 
   // Close sidebar on mobile after navigating
@@ -8010,6 +8340,32 @@ var csvCaseIdReleaseLpUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/
   var csvSlaGrwUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1q-qxELBQZr3ABhVg-mw6Kvhl-e11RGQUmCTQjsXtz9g/gviz/tq?tqx=out:csv&sheet=SLA%20GRW');
   var csvSlaCustUrl1 = getProxyUrl('https://docs.google.com/spreadsheets/d/1q-qxELBQZr3ABhVg-mw6Kvhl-e11RGQUmCTQjsXtz9g/gviz/tq?tqx=out:csv&sheet=SLA%20CUST');
   var csvSlaCustUrl2 = getProxyUrl('https://docs.google.com/spreadsheets/d/1q-qxELBQZr3ABhVg-mw6Kvhl-e11RGQUmCTQjsXtz9g/gviz/tq?tqx=out:csv&sheet=SLA%20CUSTOMER');
+  var csvBacklogUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1ITpX4yc_VLL_qpbLZc1RHfwDzinUf2vnbQXewb_F4oM/gviz/tq?tqx=out:csv&sheet=BACKLOG');
+  var csvOrgChartUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1ITpX4yc_VLL_qpbLZc1RHfwDzinUf2vnbQXewb_F4oM/gviz/tq?tqx=out:csv&gid=1501777569');
+
+  var fetchOrgChart = new Promise(function(resolve) {
+    fetchAndParseCsv(csvOrgChartUrl, { header: true, skipEmptyLines: true }, function(data) {
+      if (data && data.length > 0) {
+        resolve(data);
+      } else {
+        fetchAndParseCsv(csvOrgChartUrl, { header: false, skipEmptyLines: true }, function(dataRaw) {
+          resolve(dataRaw || []);
+        });
+      }
+    });
+  });
+
+  var fetchBacklog = new Promise(function(resolve) {
+    fetchAndParseCsv(csvBacklogUrl, { header: true, skipEmptyLines: true }, function(data) {
+      if (data && data.length > 0) {
+        resolve(data);
+      } else {
+        fetchAndParseCsv(csvBacklogUrl, { header: false, skipEmptyLines: true }, function(dataRaw) {
+          resolve(dataRaw || []);
+        });
+      }
+    });
+  });
 
   var fetchCaseIdRelease = new Promise(function(resolve) {
     fetchAndParseCsv(csvCaseIdReleaseUrl, { header: false, skipEmptyLines: true }, function(data) {
@@ -8098,7 +8454,7 @@ var fetchCaseIdReleaseLp = new Promise(function(resolve) {
     });
   });
 
-  Promise.all([fetchMonitoring, fetchAging, fetchAgingCust, fetchContDate, fetchSlaGrw, fetchSlaCust, fetchFulfillment, fetchOlf, fetchCaseIdRelease, fetchCaseIdReleaseP1, fetchCaseIdReleaseP2, fetchCaseIdReleaseHubLk, fetchCaseIdReleaseLp])
+  Promise.all([fetchMonitoring, fetchAging, fetchAgingCust, fetchContDate, fetchSlaGrw, fetchSlaCust, fetchFulfillment, fetchOlf, fetchCaseIdRelease, fetchCaseIdReleaseP1, fetchCaseIdReleaseP2, fetchCaseIdReleaseHubLk, fetchCaseIdReleaseLp, fetchBacklog, fetchOrgChart])
     .then(function(results) {
       allSlaGrwData = results[4] || [];
       allSlaCustData = results[5] || [];
@@ -8112,6 +8468,10 @@ var fetchCaseIdReleaseLp = new Promise(function(resolve) {
       allCaseIdReleaseP2Data = results[10] || [];
       allCaseIdReleaseHubLkData = results[11] || [];
       allCaseIdReleaseLpData = results[12] || [];
+      allBacklogRawData = results[13] || [];
+      allBacklogData = parseBacklogSheetData(allBacklogRawData);
+      allOrgChartRawData = results[14] || [];
+      allOrgChartData = parseOrgChartSheetData(allOrgChartRawData);
       isCaseIdReleaseFetchedFromSheets = true;
 
       // Find dynamic URL in column N2 of SLA CUST
@@ -8403,6 +8763,8 @@ function onDataReady(updatedTime, isLive) {
     renderSlaDetailPage();
   } else if (activePage === 'olf') {
     renderOlfPage();
+  } else if (activePage === 'org-chart') {
+    renderOrgChartPage();
   }
 
   // Calculate OLF metrics from loaded external data and update dashboard
@@ -14206,6 +14568,1343 @@ function getCRFallbackRawData() {
     ["", "", "", "HCI AREA 3", "NON ACC", "33", "", "10.18"]
   ];
 }
+
+/* ==========================================================================
+   BACKLOG ORDER DASHBOARD LOGIC
+   ========================================================================== */
+var allBacklogRawData = [];
+var allBacklogData = [];
+var filteredBacklogData = [];
+
+var BO_STATE = {
+  currentPage: 1,
+  pageSize: 30,
+  sortCol: 'cbm',
+  sortDir: -1,
+  search: '',
+  dept: 'ALL',
+  dest: 'ALL',
+  planStatus: 'ALL',
+  reason: 'ALL'
+};
+
+var boDeptChartInstance = null;
+var boDestChartInstance = null;
+var boReasonChartInstance = null;
+var boPlanStatusChartInstance = null;
+
+function parseBacklogSheetData(rawData) {
+  var rows = [];
+  if (!rawData || !Array.isArray(rawData) || rawData.length === 0) {
+    return generateFallbackBacklogData();
+  }
+
+  var isArrayOfArrays = Array.isArray(rawData[0]);
+  if (isArrayOfArrays) {
+    var headerIdx = 0;
+    for (var i = 0; i < Math.min(10, rawData.length); i++) {
+      var rowStr = (rawData[i] || []).join(' ').toUpperCase();
+      if (rowStr.indexOf('TRANS') !== -1 || rowStr.indexOf('SKU') !== -1 || rowStr.indexOf('CONSIGNEE') !== -1 || rowStr.indexOf('COMPANY') !== -1 || rowStr.indexOf('SKUGROUP') !== -1 || rowStr.indexOf('DEPARTEMEN') !== -1) {
+        headerIdx = i;
+        break;
+      }
+    }
+    var headers = rawData[headerIdx] || [];
+    for (var r = headerIdx + 1; r < rawData.length; r++) {
+      var item = rowArrayToBacklogObj(rawData[r], headers);
+      if (item) rows.push(item);
+    }
+  } else {
+    for (var r = 0; r < rawData.length; r++) {
+      var item = rowObjToBacklogObj(rawData[r]);
+      if (item) rows.push(item);
+    }
+  }
+
+  if (rows.length === 0) {
+    return generateFallbackBacklogData();
+  }
+
+  return rows;
+}
+
+function rowObjToBacklogObj(r) {
+  if (!r || typeof r !== 'object') return null;
+  
+  var getVal = function(possibleKeys) {
+    var keys = Object.keys(r);
+    for (var i = 0; i < possibleKeys.length; i++) {
+      var p = possibleKeys[i].toLowerCase().replace(/[^a-z0-9]/g, '');
+      for (var j = 0; j < keys.length; j++) {
+        var k = keys[j].toLowerCase().replace(/[^a-z0-9]/g, '');
+        if (k === p || (p.length >= 3 && k.indexOf(p) !== -1)) {
+          return String(r[keys[j]] || '').trim();
+        }
+      }
+    }
+    return '';
+  };
+
+  var transNo = getVal(['transno', 'trans no', 'no order', 'do no', 'so no', 'no trans', 'order no', 'id']);
+  
+  // Departemen reads SKUGROUP
+  var dept = getVal(['skugroup', 'sku group', 'skugrp', 'departemen', 'department', 'bu', 'plant', 'divisi', 'dept']) || 'GENERAL';
+  
+  // Tujuan reads CONSIGNEEKEY and C_COMPANY
+  var consigneeKey = getVal(['consigneekey', 'consignee key', 'consignee']);
+  var cCompany = getVal(['c_company', 'c company', 'ccompany', 'company']);
+  var destination = '';
+  if (consigneeKey && cCompany) {
+    destination = consigneeKey + ' - ' + cCompany;
+  } else if (consigneeKey) {
+    destination = consigneeKey;
+  } else if (cCompany) {
+    destination = cCompany;
+  } else {
+    destination = getVal(['tujuan', 'destination', 'shipping line', 'kota', 'customer', 'ship to', 'area', 'expedition']) || 'N/A';
+  }
+
+  // SKU reads SKU
+  var sku = getVal(['sku', 'material', 'nama barang', 'item', 'deskripsi', 'product']) || 'N/A';
+  
+  var cbmStr = getVal(['total cbm', 'cbm', 'volume', 'cube']);
+  var noLc = getVal(['no lc', 'nolc', 'lc no', 'no. lc', 'lc_no', 'lc']);
+  var date = getVal(['date', 'tanggal', 'tgl', 'so date', 'order date', 'created date', 'stuffing date']);
+  var reason = getVal(['kategori reason', 'reason', 'alasan', 'keterangan', 'catatan', 'penyebab', 'remark', 'alasan delay']) || 'Belum Ditentukan';
+  var status = getVal(['status', 'kondisi', 'progress', 'status order']) || 'OUTSTANDING BACKLOG';
+
+  var cbm = parseFloat(cbmStr.replace(/,/g, '')) || 0;
+
+  if (!transNo && !sku && cbm === 0 && !consigneeKey) return null;
+
+  // Analysis if planned based on No LC
+  var isPlanned = false;
+  if (noLc && noLc.trim() !== '' && noLc.trim() !== '-' && noLc.trim() !== '0' && noLc.trim().toLowerCase() !== 'null' && noLc.trim().toLowerCase() !== 'nan') {
+    isPlanned = true;
+  }
+  var planStatus = isPlanned ? 'Sudah Plan' : 'Belum Plan';
+
+  return {
+    transNo: transNo || ('BG-' + Math.floor(Math.random()*89999+10000)),
+    dept: dept.toUpperCase(),
+    destination: destination,
+    consigneeKey: consigneeKey,
+    cCompany: cCompany,
+    sku: sku,
+    cbm: cbm > 0 ? cbm : 0.5,
+    noLc: noLc,
+    isPlanned: isPlanned,
+    planStatus: planStatus,
+    date: date || '2026-07-22',
+    reason: reason,
+    status: status
+  };
+}
+
+function rowArrayToBacklogObj(rowArr, headers) {
+  if (!rowArr || rowArr.length === 0) return null;
+  var obj = {};
+  for (var i = 0; i < (headers || []).length; i++) {
+    var h = String(headers[i] || ('col_' + i)).trim();
+    obj[h] = rowArr[i] !== undefined ? rowArr[i] : '';
+  }
+  return rowObjToBacklogObj(obj);
+}
+
+function generateFallbackBacklogData() {
+  var skugroups = ['INFORMA', 'ELECTRONICS', 'SELMA', 'GROCERIES', 'TOYS', 'HOMEWARE'];
+  var consignees = [
+    { key: 'CSG-001', company: 'PT MAJU SEJAHTERA BOGOR' },
+    { key: 'CSG-002', company: 'CV LOGISTIK NUSA BANDUNG' },
+    { key: 'CSG-003', company: 'HUB SURABAYA TIMUR' },
+    { key: 'CSG-004', company: 'DISTRIBUSI MEDAN UTARA' },
+    { key: 'CSG-005', company: 'PT RETAIL BALI NUSA' },
+    { key: 'CSG-006', company: 'DEPOT SEMARANG KOTA' },
+    { key: 'CSG-007', company: 'LOGISTIK MAKASSAR' },
+    { key: 'CSG-008', company: 'STORE PALEMBANG HUB' }
+  ];
+  var reasons = ['Over Capacity Armada', 'Pending Staging Lane', 'Stock Out / Discrepancy', 'Delay Customer Request', 'Pending Driver/Nopol', 'Waiting Picking Release'];
+  var skus = [
+    { sku: 'SKU-1001 KURSI ERGONOMIK PRO', skugroup: 'INFORMA' },
+    { sku: 'SKU-1002 MEJA MAKAN WOOD', skugroup: 'INFORMA' },
+    { sku: 'SKU-1003 LEMARI PAKAIAN 3D', skugroup: 'INFORMA' },
+    { sku: 'SKU-2001 TV LED 55 UHD SMART', skugroup: 'ELECTRONICS' },
+    { sku: 'SKU-2002 KULKAS 2 PINTU 320L', skugroup: 'ELECTRONICS' },
+    { sku: 'SKU-2003 MESIN CUCI FRONT 9KG', skugroup: 'ELECTRONICS' },
+    { sku: 'SKU-3001 SOFA BED MODERN 3S', skugroup: 'SELMA' },
+    { sku: 'SKU-3002 RACK TV MINIMALIS', skugroup: 'SELMA' },
+    { sku: 'SKU-4001 STORAGE BOX 50L', skugroup: 'GROCERIES' },
+    { sku: 'SKU-4002 PLASTIC PALLET HD', skugroup: 'GROCERIES' }
+  ];
+
+  var fallback = [];
+  for (var i = 0; i < 50; i++) {
+    var skuObj = skus[i % skus.length];
+    var csgObj = consignees[i % consignees.length];
+    var cbmVal = parseFloat((Math.random() * 8.5 + 0.5).toFixed(2));
+    var reasonVal = reasons[i % reasons.length];
+    var dayOffset = i % 7;
+    var d = new Date(2026, 6, 22 - dayOffset);
+    var dateStr = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    
+    // Simulate ~60% having No LC (Sudah Plan) and ~40% empty No LC (Belum Plan)
+    var hasLc = (i % 3 !== 0);
+    var lcNo = hasLc ? ('LC-2026-' + (8000 + i)) : '';
+
+    fallback.push({
+      transNo: 'BG-2607-' + String(1001 + i),
+      dept: skuObj.skugroup,
+      destination: csgObj.key + ' - ' + csgObj.company,
+      consigneeKey: csgObj.key,
+      cCompany: csgObj.company,
+      sku: skuObj.sku,
+      cbm: cbmVal,
+      date: dateStr,
+      noLc: lcNo,
+      isPlanned: hasLc,
+      planStatus: hasLc ? 'Sudah Plan' : 'Belum Plan',
+      reason: reasonVal,
+      status: 'OUTSTANDING BACKLOG'
+    });
+  }
+  return fallback;
+}
+
+function renderBacklogOrderPage() {
+  if (!allBacklogData || allBacklogData.length === 0) {
+    allBacklogData = parseBacklogSheetData(allBacklogRawData || []);
+  }
+
+  populateBacklogFilterOptions();
+  applyBacklogFilters();
+}
+
+function populateBacklogFilterOptions() {
+  var deptSelect = document.getElementById('boFilterDept');
+  var destSelect = document.getElementById('boFilterDest');
+  var reasonSelect = document.getElementById('boFilterReason');
+
+  if (!deptSelect || !destSelect || !reasonSelect) return;
+
+  var currentDept = deptSelect.value;
+  var currentDest = destSelect.value;
+  var currentReason = reasonSelect.value;
+
+  var depts = {};
+  var dests = {};
+  var reasons = {};
+
+  allBacklogData.forEach(function(item) {
+    if (item.dept) depts[item.dept] = true;
+    if (item.destination) dests[item.destination] = true;
+    if (item.reason) reasons[item.reason] = true;
+  });
+
+  // SKUGROUP Options
+  var deptKeys = Object.keys(depts).sort();
+  var deptHtml = '<option value="ALL">Semua SKUGROUP (ALL)</option>';
+  deptKeys.forEach(function(k) {
+    deptHtml += '<option value="' + k + '"' + (k === currentDept ? ' selected' : '') + '>' + k + '</option>';
+  });
+  deptSelect.innerHTML = deptHtml;
+
+  // Consignee / Dest Options
+  var destKeys = Object.keys(dests).sort();
+  var destHtml = '<option value="ALL">Semua Consignee (ALL)</option>';
+  destKeys.forEach(function(k) {
+    destHtml += '<option value="' + k + '"' + (k === currentDest ? ' selected' : '') + '>' + k + '</option>';
+  });
+  destSelect.innerHTML = destHtml;
+
+  // Reason Options
+  var reasonKeys = Object.keys(reasons).sort();
+  var reasonHtml = '<option value="ALL">Semua Reason (ALL)</option>';
+  reasonKeys.forEach(function(k) {
+    reasonHtml += '<option value="' + k + '"' + (k === currentReason ? ' selected' : '') + '>' + k + '</option>';
+  });
+  reasonSelect.innerHTML = reasonHtml;
+}
+
+function applyBacklogFilters() {
+  var searchVal = (document.getElementById('boFilterSearch')?.value || '').toLowerCase().trim();
+  var deptVal = document.getElementById('boFilterDept')?.value || 'ALL';
+  var destVal = document.getElementById('boFilterDest')?.value || 'ALL';
+  var planStatusVal = document.getElementById('boFilterPlanStatus')?.value || 'ALL';
+  var reasonVal = document.getElementById('boFilterReason')?.value || 'ALL';
+
+  BO_STATE.search = searchVal;
+  BO_STATE.dept = deptVal;
+  BO_STATE.dest = destVal;
+  BO_STATE.planStatus = planStatusVal;
+  BO_STATE.reason = reasonVal;
+
+  filteredBacklogData = allBacklogData.filter(function(item) {
+    if (deptVal !== 'ALL' && item.dept !== deptVal) return false;
+    if (destVal !== 'ALL' && item.destination !== destVal) return false;
+    if (reasonVal !== 'ALL' && item.reason !== reasonVal) return false;
+
+    if (planStatusVal === 'PLANNED' && !item.isPlanned) return false;
+    if (planStatusVal === 'UNPLANNED' && item.isPlanned) return false;
+
+    if (searchVal !== '') {
+      var matchTrans = (item.transNo || '').toLowerCase().indexOf(searchVal) !== -1;
+      var matchSku = (item.sku || '').toLowerCase().indexOf(searchVal) !== -1;
+      var matchDest = (item.destination || '').toLowerCase().indexOf(searchVal) !== -1;
+      var matchNoLc = (item.noLc || '').toLowerCase().indexOf(searchVal) !== -1;
+      var matchReason = (item.reason || '').toLowerCase().indexOf(searchVal) !== -1;
+      if (!matchTrans && !matchSku && !matchDest && !matchNoLc && !matchReason) return false;
+    }
+
+    return true;
+  });
+
+  updateBacklogKpis(filteredBacklogData);
+  renderBacklogCharts(filteredBacklogData);
+  renderBacklogDepartmentBreakdown(filteredBacklogData);
+  renderBacklogDestinationBreakdown(filteredBacklogData);
+  renderBacklogTopSku(filteredBacklogData);
+  renderBacklogMasterTable(filteredBacklogData);
+}
+
+function resetBacklogFilters() {
+  if (document.getElementById('boFilterSearch')) document.getElementById('boFilterSearch').value = '';
+  if (document.getElementById('boFilterDept')) document.getElementById('boFilterDept').value = 'ALL';
+  if (document.getElementById('boFilterDest')) document.getElementById('boFilterDest').value = 'ALL';
+  if (document.getElementById('boFilterPlanStatus')) document.getElementById('boFilterPlanStatus').value = 'ALL';
+  if (document.getElementById('boFilterReason')) document.getElementById('boFilterReason').value = 'ALL';
+  applyBacklogFilters();
+}
+
+function updateBacklogKpis(data) {
+  var totalRecords = data.length;
+  var totalCbm = 0;
+  var plannedCbm = 0;
+  var unplannedCbm = 0;
+  var plannedCount = 0;
+  var unplannedCount = 0;
+  var uniqueSkus = {};
+  var uniqueDests = {};
+
+  data.forEach(function(item) {
+    var cbmVal = (item.cbm || 0);
+    totalCbm += cbmVal;
+    if (item.isPlanned) {
+      plannedCbm += cbmVal;
+      plannedCount++;
+    } else {
+      unplannedCbm += cbmVal;
+      unplannedCount++;
+    }
+
+    if (item.sku) uniqueSkus[item.sku] = true;
+    if (item.destination) uniqueDests[item.destination] = true;
+  });
+
+  var plannedPct = totalCbm > 0 ? ((plannedCbm / totalCbm) * 100).toFixed(1) : '0';
+  var unplannedPct = totalCbm > 0 ? ((unplannedCbm / totalCbm) * 100).toFixed(1) : '0';
+
+  if (document.getElementById('boKpiRecords')) document.getElementById('boKpiRecords').textContent = totalRecords.toLocaleString('id-ID');
+  if (document.getElementById('boKpiCbm')) document.getElementById('boKpiCbm').textContent = totalCbm.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 2 }) + ' m³';
+  
+  if (document.getElementById('boKpiPlanned')) document.getElementById('boKpiPlanned').textContent = plannedCbm.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 2 }) + ' m³';
+  if (document.getElementById('boKpiPlannedSub')) document.getElementById('boKpiPlannedSub').textContent = 'No LC Terisi (' + plannedPct + '% Volume CBM)';
+  
+  if (document.getElementById('boKpiUnplanned')) document.getElementById('boKpiUnplanned').textContent = unplannedCbm.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 2 }) + ' m³';
+  if (document.getElementById('boKpiUnplannedSub')) document.getElementById('boKpiUnplannedSub').textContent = 'No LC Kosong (' + unplannedPct + '% Volume CBM)';
+
+  if (document.getElementById('boKpiSku')) document.getElementById('boKpiSku').textContent = Object.keys(uniqueSkus).length.toLocaleString('id-ID');
+  if (document.getElementById('boKpiDest')) document.getElementById('boKpiDest').textContent = Object.keys(uniqueDests).length.toLocaleString('id-ID');
+}
+
+function renderBacklogCharts(data) {
+  // Chart 1: SKUGROUP Doughnut (Calculated by CBM)
+  var deptMap = {};
+  data.forEach(function(d) {
+    var k = d.dept || 'OTHER';
+    deptMap[k] = (deptMap[k] || 0) + (d.cbm || 0);
+  });
+
+  var deptLabels = Object.keys(deptMap);
+  var deptValues = deptLabels.map(function(k) { return deptMap[k]; });
+  var palette = ['#2563eb', '#f59e0b', '#10b981', '#ec4899', '#8b5cf6', '#06b6d4', '#64748b'];
+
+  var ctxDept = document.getElementById('boChartDept');
+  if (ctxDept) {
+    if (boDeptChartInstance) boDeptChartInstance.destroy();
+    boDeptChartInstance = new Chart(ctxDept, {
+      type: 'doughnut',
+      data: {
+        labels: deptLabels,
+        datasets: [{
+          data: deptValues,
+          backgroundColor: palette.slice(0, deptLabels.length),
+          borderWidth: 2,
+          borderColor: 'var(--surface, #ffffff)'
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'right', labels: { boxWidth: 12, font: { size: 11, weight: '700' } } },
+          tooltip: {
+            callbacks: {
+              label: function(ctx) {
+                var total = ctx.dataset.data.reduce(function(a,b){ return a+b; }, 0);
+                var val = ctx.raw || 0;
+                var pct = total > 0 ? ((val / total)*100).toFixed(1) : 0;
+                return ctx.label + ': ' + val.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 2 }) + ' m³ (' + pct + '%)';
+              }
+            }
+          }
+        },
+        cutout: '65%'
+      }
+    });
+  }
+
+  // Chart 2: Top 10 Consignee Bar Chart (Calculated by CBM)
+  var destMap = {};
+  data.forEach(function(d) {
+    var k = d.destination || 'UNKNOWN';
+    destMap[k] = (destMap[k] || 0) + (d.cbm || 0);
+  });
+
+  var sortedDests = Object.keys(destMap).map(function(k) {
+    return { name: k, count: destMap[k] };
+  }).sort(function(a,b) { return b.count - a.count; }).slice(0, 10);
+
+  var ctxDest = document.getElementById('boChartDest');
+  if (ctxDest) {
+    if (boDestChartInstance) boDestChartInstance.destroy();
+    boDestChartInstance = new Chart(ctxDest, {
+      type: 'bar',
+      data: {
+        labels: sortedDests.map(function(d) { return d.name; }),
+        datasets: [{
+          label: 'Total Volume CBM (m³)',
+          data: sortedDests.map(function(d) { return d.count; }),
+          backgroundColor: '#3b82f6',
+          borderRadius: 6
+        }]
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: function(ctx) { return 'Volume Backlog: ' + ctx.raw.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 2 }) + ' m³'; }
+            }
+          }
+        },
+        scales: {
+          x: { grid: { color: 'rgba(148, 163, 184, 0.1)' } },
+          y: { grid: { display: false }, ticks: { font: { size: 10, weight: '600' } } }
+        }
+      }
+    });
+  }
+
+  // Chart 3: Reason Categories (Calculated by CBM)
+  var reasonMap = {};
+  data.forEach(function(d) {
+    var k = d.reason || 'Lain-lain';
+    reasonMap[k] = (reasonMap[k] || 0) + (d.cbm || 0);
+  });
+
+  var reasonLabels = Object.keys(reasonMap);
+  var reasonValues = reasonLabels.map(function(k) { return reasonMap[k]; });
+
+  var ctxReason = document.getElementById('boChartReason');
+  if (ctxReason) {
+    if (boReasonChartInstance) boReasonChartInstance.destroy();
+    boReasonChartInstance = new Chart(ctxReason, {
+      type: 'polarArea',
+      data: {
+        labels: reasonLabels,
+        datasets: [{
+          data: reasonValues,
+          backgroundColor: [
+            'rgba(239, 68, 68, 0.7)',
+            'rgba(245, 158, 11, 0.7)',
+            'rgba(59, 130, 246, 0.7)',
+            'rgba(139, 92, 246, 0.7)',
+            'rgba(16, 185, 129, 0.7)',
+            'rgba(236, 72, 153, 0.7)'
+          ]
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'right', labels: { boxWidth: 10, font: { size: 10 } } },
+          tooltip: {
+            callbacks: {
+              label: function(ctx) {
+                var total = ctx.dataset.data.reduce(function(a,b){ return a+b; }, 0);
+                var val = ctx.raw || 0;
+                var pct = total > 0 ? ((val / total)*100).toFixed(1) : 0;
+                return ctx.label + ': ' + val.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 2 }) + ' m³ (' + pct + '%)';
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+
+  // Chart 4: Planning Status Analysis by CBM
+  var plannedCbmTotal = 0;
+  var unplannedCbmTotal = 0;
+  data.forEach(function(d) {
+    var cbmVal = (d.cbm || 0);
+    if (d.isPlanned) plannedCbmTotal += cbmVal;
+    else unplannedCbmTotal += cbmVal;
+  });
+
+  var ctxPlanStatus = document.getElementById('boChartPlanStatus');
+  if (ctxPlanStatus) {
+    if (boPlanStatusChartInstance) boPlanStatusChartInstance.destroy();
+    boPlanStatusChartInstance = new Chart(ctxPlanStatus, {
+      type: 'doughnut',
+      data: {
+        labels: ['Sudah Plan (No LC Terisi)', 'Belum Plan (No LC Kosong)'],
+        datasets: [{
+          data: [plannedCbmTotal, unplannedCbmTotal],
+          backgroundColor: ['#10b981', '#ef4444'],
+          borderWidth: 2,
+          borderColor: 'var(--surface, #ffffff)'
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'right', labels: { boxWidth: 12, font: { size: 11, weight: '700' } } },
+          tooltip: {
+            callbacks: {
+              label: function(ctx) {
+                var total = ctx.dataset.data.reduce(function(a,b){ return a+b; }, 0);
+                var val = ctx.raw || 0;
+                var pct = total > 0 ? ((val / total)*100).toFixed(1) : 0;
+                return ctx.label + ': ' + val.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 2 }) + ' m³ (' + pct + '%)';
+              }
+            }
+          }
+        },
+        cutout: '65%'
+      }
+    });
+  }
+}
+
+function renderBacklogDepartmentBreakdown(data) {
+  var container = document.getElementById('boDeptCardsContainer');
+  if (!container) return;
+
+  var deptMap = {};
+  var grandTotalCbm = 0;
+
+  data.forEach(function(d) {
+    var k = d.dept || 'OTHER';
+    if (!deptMap[k]) {
+      deptMap[k] = { dept: k, records: 0, cbm: 0, plannedCbm: 0, unplannedCbm: 0, skus: {} };
+    }
+    var cbmVal = (d.cbm || 0);
+    deptMap[k].records += 1;
+    deptMap[k].cbm += cbmVal;
+    grandTotalCbm += cbmVal;
+
+    if (d.isPlanned) deptMap[k].plannedCbm += cbmVal;
+    else deptMap[k].unplannedCbm += cbmVal;
+
+    if (d.sku) deptMap[k].skus[d.sku] = true;
+  });
+
+  var depts = Object.keys(deptMap).map(function(k) {
+    return deptMap[k];
+  }).sort(function(a,b) { return b.cbm - a.cbm; });
+
+  if (depts.length === 0) {
+    container.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: var(--ts); padding: 20px;">Tidak ada data backlog terdeteksi untuk filter ini</div>';
+    return;
+  }
+
+  var colors = {
+    INFORMA: '#f59e0b',
+    ELECTRONICS: '#ec4899',
+    SELMA: '#10b981',
+    GROCERIES: '#2563eb',
+    TOYS: '#8b5cf6',
+    HOMEWARE: '#06b6d4'
+  };
+
+  var html = '';
+  depts.forEach(function(item) {
+    var color = colors[item.dept] || '#64748b';
+    var pct = grandTotalCbm > 0 ? ((item.cbm / grandTotalCbm)*100).toFixed(1) : '0';
+    var uniqueSkuCount = Object.keys(item.skus).length;
+
+    html += '<div class="card" style="border-top: 4px solid ' + color + '; padding: 16px; background: var(--surface); box-shadow: 0 4px 12px rgba(0,0,0,0.05);">';
+    html += '  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">';
+    html += '    <div style="font-size: 16px; font-weight: 800; color: var(--tp);">' + item.dept + '</div>';
+    html += '    <span style="background: ' + color + '22; color: ' + color + '; border: 1px solid ' + color + '44; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 800;">' + pct + '% Share CBM</span>';
+    html += '  </div>';
+    html += '  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px;">';
+    html += '    <div style="background: rgba(148, 163, 184, 0.08); padding: 8px; border-radius: 8px;">';
+    html += '      <div style="font-size: 10px; color: var(--ts); font-weight: 700; text-transform: uppercase;">Total Volume</div>';
+    html += '      <div style="font-size: 18px; font-weight: 900; color: ' + color + ';">' + item.cbm.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 2 }) + ' m³</div>';
+    html += '    </div>';
+    html += '    <div style="background: rgba(148, 163, 184, 0.08); padding: 8px; border-radius: 8px;">';
+    html += '      <div style="font-size: 10px; color: var(--ts); font-weight: 700; text-transform: uppercase;">Total Records</div>';
+    html += '      <div style="font-size: 18px; font-weight: 900; color: var(--tp);">' + item.records.toLocaleString('id-ID') + ' baris</div>';
+    html += '    </div>';
+    html += '  </div>';
+    html += '  <div style="display: flex; justify-content: space-between; font-size: 11px; color: var(--ts); font-weight: 600; margin-bottom: 8px;">';
+    html += '    <span style="color: #10b981;">✅ Plan: ' + item.plannedCbm.toLocaleString('id-ID', { maximumFractionDigits: 1 }) + ' m³</span>';
+    html += '    <span style="color: #ef4444;">⏳ Belum: ' + item.unplannedCbm.toLocaleString('id-ID', { maximumFractionDigits: 1 }) + ' m³</span>';
+    html += '  </div>';
+    html += '  <div style="display: flex; justify-content: space-between; font-size: 11px; color: var(--ts); font-weight: 600; margin-bottom: 6px;">';
+    html += '    <span>🏷️ ' + uniqueSkuCount.toLocaleString('id-ID') + ' SKUs</span>';
+    html += '  </div>';
+    html += '  <div style="width: 100%; background: var(--border); height: 6px; border-radius: 3px; overflow: hidden;">';
+    html += '    <div style="width: ' + pct + '%; background: ' + color + '; height: 100%;"></div>';
+    html += '  </div>';
+    html += '</div>';
+  });
+
+  container.innerHTML = html;
+}
+
+function renderBacklogDestinationBreakdown(data) {
+  var tbody = document.getElementById('boDestTableBody');
+  if (!tbody) return;
+
+  var destMap = {};
+  var grandTotalCbm = 0;
+
+  data.forEach(function(d) {
+    var k = d.destination || 'N/A';
+    if (!destMap[k]) {
+      destMap[k] = { dest: k, records: 0, cbm: 0, plannedCbm: 0, unplannedCbm: 0 };
+    }
+    var cbmVal = (d.cbm || 0);
+    destMap[k].records += 1;
+    destMap[k].cbm += cbmVal;
+    grandTotalCbm += cbmVal;
+
+    if (d.isPlanned) destMap[k].plannedCbm += cbmVal;
+    else destMap[k].unplannedCbm += cbmVal;
+  });
+
+  var sorted = Object.keys(destMap).map(function(k) { return destMap[k]; }).sort(function(a,b) { return b.cbm - a.cbm; });
+
+  if (sorted.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding: 16px; color: var(--ts);">Tidak ada data consignee / tujuan</td></tr>';
+    return;
+  }
+
+  var html = '';
+  sorted.forEach(function(item, idx) {
+    var pct = grandTotalCbm > 0 ? ((item.cbm / grandTotalCbm)*100).toFixed(1) : '0';
+    html += '<tr style="border-bottom: 1px solid var(--border);">';
+    html += '  <td style="padding: 10px; font-weight: 700; color: var(--ts);">' + (idx + 1) + '</td>';
+    html += '  <td style="padding: 10px; font-weight: 800; color: var(--tp);">' + item.dest + '</td>';
+    html += '  <td style="padding: 10px; text-align: right; font-weight: 800; color: #2563eb;">' + item.cbm.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 2 }) + ' m³</td>';
+    html += '  <td style="padding: 10px; text-align: center; font-weight: 800; color: #10b981;">' + item.plannedCbm.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' m³</td>';
+    html += '  <td style="padding: 10px; text-align: center; font-weight: 800; color: #ef4444;">' + item.unplannedCbm.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' m³</td>';
+    html += '  <td style="padding: 10px; text-align: center; font-weight: 800; color: #8b5cf6;">' + pct + '%</td>';
+    html += '  <td style="padding: 10px; text-align: right; font-weight: 700; color: var(--ts);">' + item.records.toLocaleString('id-ID') + '</td>';
+    html += '</tr>';
+  });
+
+  tbody.innerHTML = html;
+}
+
+function renderBacklogTopSku(data) {
+  var tbody = document.getElementById('boSkuTableBody');
+  if (!tbody) return;
+
+  var skuMap = {};
+  data.forEach(function(d) {
+    var k = d.sku || 'UNKNOWN';
+    if (!skuMap[k]) {
+      skuMap[k] = { sku: k, dept: d.dept || 'GENERAL', records: 0, cbm: 0, plannedCbm: 0, unplannedCbm: 0, dests: {} };
+    }
+    var cbmVal = (d.cbm || 0);
+    skuMap[k].records += 1;
+    skuMap[k].cbm += cbmVal;
+
+    if (d.isPlanned) skuMap[k].plannedCbm += cbmVal;
+    else skuMap[k].unplannedCbm += cbmVal;
+
+    if (d.destination) {
+      skuMap[k].dests[d.destination] = (skuMap[k].dests[d.destination] || 0) + cbmVal;
+    }
+  });
+
+  var sorted = Object.keys(skuMap).map(function(k) { return skuMap[k]; }).sort(function(a,b) { return b.cbm - a.cbm; }).slice(0, 20);
+
+  if (sorted.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding: 16px; color: var(--ts);">Tidak ada SKU terdaftar</td></tr>';
+    return;
+  }
+
+  var html = '';
+  sorted.forEach(function(item, idx) {
+    var topDest = '-';
+    var topDestVolume = 0;
+    Object.keys(item.dests).forEach(function(dk) {
+      if (item.dests[dk] > topDestVolume) {
+        topDestVolume = item.dests[dk];
+        topDest = dk;
+      }
+    });
+
+    var rankBadge = idx < 3 ? '🏆 ' + (idx + 1) : '#' + (idx + 1);
+    var rankColor = idx === 0 ? '#f59e0b' : (idx === 1 ? '#94a3b8' : (idx === 2 ? '#b45309' : 'var(--ts)'));
+    
+    var planRatioBadge = '<span class="badge" style="background: rgba(16,185,129,0.15); color: #10b981; padding: 2px 8px; border-radius: 6px;">' + item.plannedCbm.toLocaleString('id-ID', { maximumFractionDigits: 1 }) + ' m³ Plan</span> / <span class="badge" style="background: rgba(239,68,68,0.15); color: #ef4444; padding: 2px 8px; border-radius: 6px;">' + item.unplannedCbm.toLocaleString('id-ID', { maximumFractionDigits: 1 }) + ' m³ Belum</span>';
+
+    html += '<tr style="border-bottom: 1px solid var(--border);">';
+    html += '  <td style="padding: 10px; font-weight: 800; color: ' + rankColor + ';">' + rankBadge + '</td>';
+    html += '  <td style="padding: 10px; font-weight: 800; color: var(--tp);">' + item.sku + '</td>';
+    html += '  <td style="padding: 10px;"><span class="badge" style="background: rgba(37,99,235,0.1); color: #2563eb; padding: 2px 8px; border-radius: 6px; font-size: 11px;">' + item.dept + '</span></td>';
+    html += '  <td style="padding: 10px; text-align: right; font-weight: 900; color: #2563eb;">' + item.cbm.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 2 }) + ' m³</td>';
+    html += '  <td style="padding: 10px; text-align: center; font-size: 11px; font-weight: 700;">' + planRatioBadge + '</td>';
+    html += '  <td style="padding: 10px; text-align: right; font-weight: 700; color: var(--ts);">' + item.records.toLocaleString('id-ID') + '</td>';
+    html += '  <td style="padding: 10px; font-weight: 600; color: var(--ts); max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="' + topDest + '">' + topDest + '</td>';
+    html += '</tr>';
+  });
+
+  tbody.innerHTML = html;
+}
+
+function renderBacklogMasterTable(data) {
+  var tbody = document.getElementById('boMasterTableBody');
+  var infoEl = document.getElementById('boTablePaginationInfo');
+  var btnGroup = document.getElementById('boPaginationBtnGroup');
+
+  if (!tbody) return;
+
+  var sorted = data.slice().sort(function(a, b) {
+    var col = BO_STATE.sortCol;
+    var dir = BO_STATE.sortDir;
+    var valA = a[col] !== undefined ? a[col] : '';
+    var valB = b[col] !== undefined ? b[col] : '';
+
+    if (typeof valA === 'number' && typeof valB === 'number') {
+      return (valA - valB) * dir;
+    }
+    return String(valA).localeCompare(String(valB)) * dir;
+  });
+
+  var totalRows = sorted.length;
+  var pageSize = BO_STATE.pageSize;
+  var totalPages = Math.ceil(totalRows / pageSize) || 1;
+
+  if (BO_STATE.currentPage > totalPages) BO_STATE.currentPage = totalPages;
+  if (BO_STATE.currentPage < 1) BO_STATE.currentPage = 1;
+
+  var startIdx = (BO_STATE.currentPage - 1) * pageSize;
+  var endIdx = Math.min(startIdx + pageSize, totalRows);
+  var pageData = sorted.slice(startIdx, endIdx);
+
+  if (infoEl) {
+    infoEl.textContent = 'Menampilkan ' + (totalRows > 0 ? (startIdx + 1) : 0) + ' - ' + endIdx + ' dari ' + totalRows.toLocaleString('id-ID') + ' records backlog';
+  }
+
+  if (pageData.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="10" style="text-align: center; padding: 24px; color: var(--ts); font-weight: 600;">Belum ada data backlog yang sesuai dengan kata kunci filter.</td></tr>';
+    if (btnGroup) btnGroup.innerHTML = '';
+    return;
+  }
+
+  var html = '';
+  pageData.forEach(function(item, idx) {
+    var rowNum = startIdx + idx + 1;
+    
+    var planBadge = item.isPlanned
+      ? '<span class="badge" style="background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); padding: 3px 8px; border-radius: 6px; font-weight: 800; font-size: 10px;">✓ Sudah Plan</span>'
+      : '<span class="badge" style="background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); padding: 3px 8px; border-radius: 6px; font-weight: 800; font-size: 10px;">⌛ Belum Plan</span>';
+
+    html += '<tr style="border-bottom: 1px solid var(--border); transition: background 0.15s;" onmouseover="this.style.background=\'rgba(148,163,184,0.05)\'" onmouseout="this.style.background=\'transparent\'">';
+    html += '  <td style="padding: 8px 10px; text-align: center; font-weight: 700; color: var(--ts);">' + rowNum + '</td>';
+    html += '  <td style="padding: 8px 10px; font-weight: 800; color: #2563eb; font-family: monospace;">' + (item.transNo || '-') + '</td>';
+    html += '  <td style="padding: 8px 10px; font-size: 11px; color: var(--ts); font-weight: 600;">' + (item.date || '-') + '</td>';
+    html += '  <td style="padding: 8px 10px;"><span class="badge" style="background: rgba(30,41,59,0.08); color: var(--tp); font-weight: 800; padding: 2px 6px; border-radius: 4px; font-size: 11px;">' + (item.dept || '-') + '</span></td>';
+    html += '  <td style="padding: 8px 10px; font-weight: 700; color: var(--tp); max-width: 250px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="' + (item.destination || '') + '">' + (item.destination || '-') + '</td>';
+    html += '  <td style="padding: 8px 10px; font-weight: 600; color: var(--tp); max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="' + (item.sku || '') + '">' + (item.sku || '-') + '</td>';
+    html += '  <td style="padding: 8px 10px; text-align: right; font-weight: 700;">' + (item.cbm || 0).toLocaleString('id-ID', { maximumFractionDigits: 2 }) + '</td>';
+    html += '  <td style="padding: 8px 10px; font-family: monospace; font-weight: 700; color: var(--tp);">' + (item.noLc || '-') + '</td>';
+    html += '  <td style="padding: 8px 10px; text-align: center;">' + planBadge + '</td>';
+    html += '  <td style="padding: 8px 10px;"><span style="background: rgba(245, 158, 11, 0.12); color: #d97706; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 700;">' + (item.reason || '-') + '</span></td>';
+    html += '</tr>';
+  });
+
+  tbody.innerHTML = html;
+
+  if (btnGroup) {
+    var btnHtml = '';
+    btnHtml += '<button onclick="changeBacklogPage(' + (BO_STATE.currentPage - 1) + ')" ' + (BO_STATE.currentPage <= 1 ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : '') + ' style="padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface); font-weight: 700; font-size: 11px; cursor: pointer;">‹ Prev</button>';
+
+    var pStart = Math.max(1, BO_STATE.currentPage - 2);
+    var pEnd = Math.min(totalPages, pStart + 4);
+    if (pEnd - pStart < 4) pStart = Math.max(1, pEnd - 4);
+
+    for (var p = pStart; p <= pEnd; p++) {
+      var isActive = (p === BO_STATE.currentPage);
+      btnHtml += '<button onclick="changeBacklogPage(' + p + ')" style="padding: 6px 12px; border-radius: 6px; border: 1px solid ' + (isActive ? '#2563eb' : 'var(--border)') + '; background: ' + (isActive ? '#2563eb' : 'var(--surface)') + '; color: ' + (isActive ? '#fff' : 'var(--tp)') + '; font-weight: 800; font-size: 11px; cursor: pointer;">' + p + '</button>';
+    }
+
+    btnHtml += '<button onclick="changeBacklogPage(' + (BO_STATE.currentPage + 1) + ')" ' + (BO_STATE.currentPage >= totalPages ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : '') + ' style="padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface); font-weight: 700; font-size: 11px; cursor: pointer;">Next ›</button>';
+
+    btnGroup.innerHTML = btnHtml;
+  }
+}
+
+function sortBacklogTable(col) {
+  if (BO_STATE.sortCol === col) {
+    BO_STATE.sortDir = BO_STATE.sortDir * -1;
+  } else {
+    BO_STATE.sortCol = col;
+    BO_STATE.sortDir = (col === 'cbm' || col === 'records') ? -1 : 1;
+  }
+  renderBacklogMasterTable(filteredBacklogData);
+}
+
+function changeBacklogPage(p) {
+  BO_STATE.currentPage = p;
+  renderBacklogMasterTable(filteredBacklogData);
+}
+
+function changeBacklogPageSize() {
+  var sel = document.getElementById('boPageSizeSelect');
+  if (sel) {
+    BO_STATE.pageSize = parseInt(sel.value, 10) || 30;
+    BO_STATE.currentPage = 1;
+    renderBacklogMasterTable(filteredBacklogData);
+  }
+}
+
+function switchBacklogTab(tabKey) {
+  var tabs = ['dept', 'dest', 'sku'];
+  tabs.forEach(function(t) {
+    var btn = document.getElementById('boTabBtn' + t.charAt(0).toUpperCase() + t.slice(1));
+    var content = document.getElementById('boTab' + t.charAt(0).toUpperCase() + t.slice(1) + 'Content');
+    if (t === tabKey) {
+      if (btn) { btn.className = 'badge active'; btn.style.background = '#2563eb'; btn.style.color = '#fff'; }
+      if (content) content.style.display = 'block';
+    } else {
+      if (btn) { btn.className = 'badge badge-muted'; btn.style.background = 'transparent'; btn.style.color = 'var(--ts)'; }
+      if (content) content.style.display = 'none';
+    }
+  });
+}
+
+function exportBacklogCsv() {
+  if (!filteredBacklogData || filteredBacklogData.length === 0) {
+    alert('Tidak ada data backlog untuk di-export.');
+    return;
+  }
+
+  var csvRows = [];
+  csvRows.push(['No', 'TransNo', 'Tanggal', 'SKUGROUP', 'Consignee (Tujuan)', 'SKU', 'CBM', 'No LC', 'Status Plan', 'Kategori Reason'].join(','));
+
+  filteredBacklogData.forEach(function(item, idx) {
+    var row = [
+      idx + 1,
+      '"' + (item.transNo || '').replace(/"/g, '""') + '"',
+      '"' + (item.date || '').replace(/"/g, '""') + '"',
+      '"' + (item.dept || '').replace(/"/g, '""') + '"',
+      '"' + (item.destination || '').replace(/"/g, '""') + '"',
+      '"' + (item.sku || '').replace(/"/g, '""') + '"',
+      item.cbm || 0,
+      '"' + (item.noLc || '').replace(/"/g, '""') + '"',
+      '"' + (item.planStatus || '').replace(/"/g, '""') + '"',
+      '"' + (item.reason || '').replace(/"/g, '""') + '"'
+    ];
+    csvRows.push(row.join(','));
+  });
+
+  var blob = new Blob([csvRows.join('\n')], { type: 'text/csv;charset=utf-8;' });
+  var url = URL.createObjectURL(blob);
+  var link = document.createElement('a');
+  link.setAttribute('href', url);
+  link.setAttribute('download', 'Backlog_Order_Report_' + new Date().toISOString().slice(0,10) + '.csv');
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+/* ==========================================================================
+   STRUKTUR ORGANISASI ORDER PROCESSING HCI NDC SIDOARJO MODULE
+   ========================================================================== */
+var allOrgChartRawData = [];
+var allOrgChartData = [];
+var filteredOrgChartData = [];
+var currentOrgViewMode = 'tree'; // 'tree', 'grid', 'table'
+
+function parseOrgChartSheetData(rawData) {
+  if (!rawData || rawData.length === 0) {
+    return getFallbackOrgChartData();
+  }
+  var list = [];
+  rawData.forEach(function(row) {
+    if (!row) return;
+    var name = '';
+    var jobTitle = '';
+    if (typeof row === 'object' && !Array.isArray(row)) {
+      Object.keys(row).forEach(function(k) {
+        var kUpper = k.trim().toUpperCase();
+        if (kUpper === 'NAMA' || kUpper.indexOf('NAME') !== -1) {
+          name = String(row[k] || '').trim();
+        } else if (kUpper === 'JOB TITLE' || kUpper.indexOf('TITLE') !== -1 || kUpper.indexOf('JABATAN') !== -1) {
+          jobTitle = String(row[k] || '').trim();
+        }
+      });
+    } else if (Array.isArray(row)) {
+      if (row[0] && String(row[0]).toUpperCase().indexOf('NAMA') !== -1) return;
+      name = String(row[0] || '').trim();
+      jobTitle = String(row[1] || '').trim();
+    }
+    
+    if (name && name.toUpperCase() !== 'NAMA') {
+      list.push({
+        name: name,
+        jobTitle: jobTitle
+      });
+    }
+  });
+
+  if (list.length === 0) {
+    return getFallbackOrgChartData();
+  }
+  return list;
+}
+
+function getFallbackOrgChartData() {
+  return [
+    { name: "REZA PRAMANA HUTABARAT", jobTitle: "ASST ORDER PROCESSING MANAGER" },
+    { name: "GHALANG PANDU SADEWO", jobTitle: "ORDER PROCESSING SUPERVISOR" },
+    { name: "IRAWAN DWI PRAJONGGO", jobTitle: "ORDER PROCESSING SUPERVISOR" },
+    { name: "PUTUT WIJANARKO", jobTitle: "ORDER PROCESSING STAFF" },
+    { name: "RAKAI TRISNA PRASETYA", jobTitle: "ORDER PROCESSING STAFF" },
+    { name: "MUHAMMAD DIMAS RAMADHANI", jobTitle: "ORDER PROCESSING STAFF" },
+    { name: "RAKA WIBAWA PUTRA", jobTitle: "ORDER PROCESSING STAFF" },
+    { name: "MUHAMMAD FADEL SYAHPUTRA", jobTitle: "ORDER PROCESSING STAFF" },
+    { name: "ARIF SETYAWAN", jobTitle: "ORDER PROCESSING STAFF" }
+  ];
+}
+
+function getOrgRoleCategory(jobTitle) {
+  var t = (jobTitle || '').toUpperCase();
+  if (t.indexOf('MANAGER NDC') !== -1 || (t.indexOf('MANAGER') !== -1 && t.indexOf('ASST') === -1 && t.indexOf('ASSISTANT') === -1 && t.indexOf('ORDER PROCESSING') === -1)) {
+    return 'TOP_MGMT';
+  }
+  if (t.indexOf('ASST') !== -1 || t.indexOf('ASSISTANT') !== -1) {
+    return 'ASST_MGR';
+  }
+  if (t.indexOf('SUPERVISOR') !== -1 || t.indexOf('SPV') !== -1) {
+    return 'SUPERVISOR';
+  }
+  return 'STAFF';
+}
+
+function getRoleMeta(category) {
+  switch(category) {
+    case 'TOP_MGMT':
+      return { 
+        levelName: 'Top Management', 
+        badgeBg: 'rgba(255, 255, 255, 0.25)', 
+        badgeColor: '#ffffff', 
+        borderColor: '#fde047', 
+        gradient: 'linear-gradient(135deg, #b45309 0%, #f59e0b 50%, #ea580c 100%)', 
+        icon: '👑', 
+        glow: 'rgba(245, 158, 11, 0.45)',
+        titleColor: '#fef9c3',
+        dept: 'Top Management / NDC Sidoarjo'
+      };
+    case 'ASST_MGR':
+      return { 
+        levelName: 'Asst. Manager', 
+        badgeBg: 'rgba(255, 255, 255, 0.22)', 
+        badgeColor: '#ffffff', 
+        borderColor: '#93c5fd', 
+        gradient: 'linear-gradient(135deg, #1d4ed8 0%, #2563eb 50%, #0284c7 100%)', 
+        icon: '👔', 
+        glow: 'rgba(37, 99, 235, 0.45)',
+        titleColor: '#e0f2fe',
+        dept: 'Order Processing - NDC Sidoarjo'
+      };
+    case 'SUPERVISOR':
+      return { 
+        levelName: 'Supervisor OP', 
+        badgeBg: 'rgba(255, 255, 255, 0.22)', 
+        badgeColor: '#ffffff', 
+        borderColor: '#6ee7b7', 
+        gradient: 'linear-gradient(135deg, #047857 0%, #10b981 50%, #06b6d4 100%)', 
+        icon: '🎯', 
+        glow: 'rgba(16, 185, 129, 0.45)',
+        titleColor: '#ecfdf5',
+        dept: 'Order Processing - NDC Sidoarjo'
+      };
+    default:
+      return { 
+        levelName: 'Staff OP', 
+        badgeBg: 'rgba(255, 255, 255, 0.22)', 
+        badgeColor: '#ffffff', 
+        borderColor: '#d8b4fe', 
+        gradient: 'linear-gradient(135deg, #6d28d9 0%, #8b5cf6 50%, #d946ef 100%)', 
+        icon: '⚡', 
+        glow: 'rgba(139, 92, 246, 0.45)',
+        titleColor: '#fae8ff',
+        dept: 'Order Processing - NDC Sidoarjo'
+      };
+  }
+}
+
+function getInitials(name) {
+  if (!name) return 'OP';
+  var parts = name.trim().split(/\s+/);
+  if (parts.length === 1) return parts[0].substring(0, 2).toUpperCase();
+  return (parts[0][0] + parts[1][0]).toUpperCase();
+}
+
+function renderOrgChartPage() {
+  if (!allOrgChartData || allOrgChartData.length === 0) {
+    allOrgChartData = getFallbackOrgChartData();
+  }
+  filterOrgData();
+}
+
+function filterOrgData() {
+  var searchInput = document.getElementById('orgSearchInput');
+  var roleFilter = document.getElementById('orgRoleFilter');
+  var query = searchInput ? searchInput.value.trim().toLowerCase() : '';
+  var roleVal = roleFilter ? roleFilter.value : 'ALL';
+
+  filteredOrgChartData = allOrgChartData.filter(function(item) {
+    var cat = getOrgRoleCategory(item.jobTitle);
+    if (cat === 'TOP_MGMT') return false; // Hide Top Management completely
+    var matchesRole = (roleVal === 'ALL' || cat === roleVal);
+    var matchesQuery = !query ||
+      item.name.toLowerCase().indexOf(query) !== -1 ||
+      item.jobTitle.toLowerCase().indexOf(query) !== -1;
+    return matchesRole && matchesQuery;
+  });
+
+  updateOrgKpis(allOrgChartData);
+
+  if (currentOrgViewMode === 'tree') {
+    renderOrgTreeView(filteredOrgChartData);
+  } else if (currentOrgViewMode === 'table') {
+    renderOrgTableView(filteredOrgChartData);
+  } else {
+    renderOrgTreeView(filteredOrgChartData);
+  }
+}
+
+function updateOrgKpis(data) {
+  var asstEl = document.getElementById('orgKpiAsst');
+  var spvEl = document.getElementById('orgKpiSupervisor');
+  var stfEl = document.getElementById('orgKpiStaff');
+  var opTotalEl = document.getElementById('orgKpiOpTotal');
+
+  var asstCount = 0;
+  var spvCount = 0;
+  var stfCount = 0;
+
+  data.forEach(function(d) {
+    var cat = getOrgRoleCategory(d.jobTitle);
+    if (cat === 'ASST_MGR') asstCount++;
+    else if (cat === 'SUPERVISOR') spvCount++;
+    else if (cat === 'STAFF') stfCount++;
+  });
+
+  var opTotalCount = asstCount + spvCount + stfCount;
+
+  if (asstEl) asstEl.textContent = asstCount;
+  if (spvEl) spvEl.textContent = spvCount;
+  if (stfEl) stfEl.textContent = stfCount;
+  if (opTotalEl) opTotalEl.textContent = opTotalCount;
+}
+
+function setOrgViewMode(mode) {
+  currentOrgViewMode = mode;
+  var treeContainer = document.getElementById('orgViewTreeContainer');
+  var tableContainer = document.getElementById('orgViewTableContainer');
+
+  var treeBtn = document.getElementById('orgViewTreeBtn');
+  var tableBtn = document.getElementById('orgViewTableBtn');
+
+  if (treeBtn) {
+    treeBtn.style.background = 'transparent';
+    treeBtn.style.color = '#94a3b8';
+    treeBtn.style.boxShadow = 'none';
+  }
+  if (tableBtn) {
+    tableBtn.style.background = 'transparent';
+    tableBtn.style.color = '#94a3b8';
+    tableBtn.style.boxShadow = 'none';
+  }
+
+  if (mode === 'tree') {
+    if (treeContainer) treeContainer.style.display = 'block';
+    if (tableContainer) tableContainer.style.display = 'none';
+    if (treeBtn) { 
+      treeBtn.style.background = '#2563eb'; 
+      treeBtn.style.color = '#fff'; 
+      treeBtn.style.boxShadow = '0 2px 8px rgba(37,99,235,0.4)';
+    }
+    renderOrgTreeView(filteredOrgChartData);
+  } else if (mode === 'table') {
+    if (treeContainer) treeContainer.style.display = 'none';
+    if (tableContainer) tableContainer.style.display = 'block';
+    if (tableBtn) { 
+      tableBtn.style.background = '#2563eb'; 
+      tableBtn.style.color = '#fff'; 
+      tableBtn.style.boxShadow = '0 2px 8px rgba(37,99,235,0.4)';
+    }
+    renderOrgTableView(filteredOrgChartData);
+  }
+}
+
+function createNodeCardHtml(item, category) {
+  var meta = getRoleMeta(category);
+  var initials = getInitials(item.name);
+  var escapedName = (item.name || '').replace(/'/g, "\\'");
+  var escapedTitle = (item.jobTitle || '').replace(/'/g, "\\'");
+
+  var isTopMgmt = (category === 'TOP_MGMT');
+  var isAsst = (category === 'ASST_MGR');
+  var isSpv = (category === 'SUPERVISOR');
+
+  var cardClass = isTopMgmt ? 'org-card-top-mgmt' : (isAsst ? 'org-card-asst-mgr' : (isSpv ? 'org-card-spv' : 'org-card-staff'));
+  // Wider card dimensions so all names and job titles are written completely without truncating
+  var cardWidth = isTopMgmt ? '360px' : (isAsst ? '360px' : (isSpv ? '340px' : '320px'));
+
+  // Bright, vibrant gradient card backgrounds based on role
+  var bgGradient = meta.gradient;
+
+  var html = '';
+  html += '<div class="org-card-3d-wrapper" style="margin: 6px;">';
+  html += '  <div class="org-card-3d ' + cardClass + '" onclick="openOrgPersonelModal(\'' + escapedName + '\', \'' + escapedTitle + '\')" ';
+  html += '    style="background: ' + bgGradient + '; border: 2px solid ' + meta.borderColor + '; width: ' + cardWidth + '; padding: 16px; cursor: pointer; transform-style: preserve-3d; transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.35s ease, filter 0.35s ease; box-shadow: 0 12px 28px ' + meta.glow + ', 0 4px 14px rgba(0,0,0,0.25);">';
+  
+  html += '    <div style="position: absolute; top: 0; left: 0; right: 0; height: 5px; background: rgba(255,255,255,0.4);"></div>';
+  
+  html += '    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">';
+  html += '      <span style="font-size: 10px; font-weight: 900; background: ' + meta.badgeBg + '; color: ' + meta.badgeColor + '; padding: 3px 10px; border-radius: 12px; text-transform: uppercase; letter-spacing: 0.6px; backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.3);">' + meta.icon + ' ' + meta.levelName + '</span>';
+  html += '      <div style="display: flex; align-items: center; gap: 5px; background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255, 255, 255, 0.3); padding: 3px 8px; border-radius: 12px;">';
+  html += '        <span style="width: 7px; height: 7px; border-radius: 50%; background: #22c55e; display: inline-block; animation: orgPulseDotLive 1.8s infinite;"></span>';
+  html += '        <span style="font-size: 9px; font-weight: 900; color: #ffffff; letter-spacing: 0.4px;">ACTIVE</span>';
+  html += '      </div>';
+  html += '    </div>';
+
+  html += '    <div style="display: flex; align-items: flex-start; gap: 14px; margin-bottom: 12px;">';
+  html += '      <div style="position: relative; flex-shrink: 0;">';
+  html += '        <div style="width: 50px; height: 50px; border-radius: 50%; background: rgba(0,0,0,0.2); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 900; font-size: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); border: 2.5px solid #ffffff;">';
+  html +=            initials;
+  html += '        </div>';
+  html += '      </div>';
+  html += '      <div style="flex: 1; min-width: 0;">';
+  html += '        <h4 style="margin: 0 0 3px 0; font-size: 14px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: -0.2px; line-height: 1.35; word-break: break-word; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">' + item.name + '</h4>';
+  html += '        <div style="font-size: 11.5px; font-weight: 800; color: ' + meta.titleColor + '; line-height: 1.35; word-break: break-word; text-shadow: 0 1px 2px rgba(0,0,0,0.2);">' + item.jobTitle + '</div>';
+  html += '      </div>';
+  html += '    </div>';
+
+  html += '    <div style="padding-top: 10px; border-top: 1px dashed rgba(255,255,255,0.35); font-size: 10px; font-weight: 800; color: rgba(255,255,255,0.9); text-align: center; display: flex; justify-content: space-between; align-items: center;">';
+  html += '      <span>' + (isTopMgmt ? '🏢 Top Management' : '📦 Order Processing Dept') + '</span>';
+  html += '      <span style="color: #ffffff; font-weight: 900; text-shadow: 0 1px 2px rgba(0,0,0,0.2);">NDC SIDOARJO ➔</span>';
+  html += '    </div>';
+
+  html += '  </div>';
+  html += '</div>';
+
+  return html;
+}
+
+function renderOrgTreeView(data) {
+  var container = document.getElementById('orgTreeContent');
+  if (!container) return;
+
+  if (data.length === 0) {
+    container.innerHTML = '<div style="text-align: center; padding: 50px; color: var(--tm); font-weight: 800;">Tidak ada data personel ditemukan sesuai filter.</div>';
+    return;
+  }
+
+  var assts = data.filter(function(d) { return getOrgRoleCategory(d.jobTitle) === 'ASST_MGR'; });
+  var spvs = data.filter(function(d) { return getOrgRoleCategory(d.jobTitle) === 'SUPERVISOR'; });
+  var staff = data.filter(function(d) { return getOrgRoleCategory(d.jobTitle) === 'STAFF'; });
+
+  var html = '';
+
+  html += '<div style="display: flex; flex-direction: column; align-items: center; margin-bottom: 8px;">';
+  html += '  <div style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: #06b6d4; border: 1.5px solid #06b6d4; padding: 6px 18px; border-radius: 30px; font-size: 11px; font-weight: 900; letter-spacing: 0.6px; box-shadow: 0 6px 20px rgba(6, 182, 212, 0.35); display: flex; align-items: center; gap: 8px;">';
+  html += '    <span>📦 TIM BAGIAN ORDER PROCESSING</span>';
+  html += '    <span style="background: #06b6d4; color: #fff; padding: 2px 8px; border-radius: 12px; font-size: 10px; font-weight: 900;">' + (assts.length + spvs.length + staff.length) + ' Personel</span>';
+  html += '  </div>';
+  html += '  <div style="width: 3px; height: 20px; background: linear-gradient(to bottom, #06b6d4, #2563eb); border-radius: 3px; box-shadow: 0 0 8px rgba(37, 99, 235, 0.6);"></div>';
+  html += '</div>';
+
+  var hasOpMembers = (assts.length > 0 || spvs.length > 0 || staff.length > 0);
+
+  if (hasOpMembers) {
+    html += '<div class="org-dept-container-3d" style="width: 100%; max-width: 1120px; display: flex; flex-direction: column; align-items: center; gap: 24px;">';
+
+    if (assts.length > 0) {
+      html += '<div style="display: flex; flex-direction: column; align-items: center; width: 100%;">';
+      html += '  <div style="font-size: 11px; font-weight: 900; color: #60a5fa; background: rgba(37, 99, 235, 0.2); border: 1.5px solid rgba(59, 130, 246, 0.4); padding: 5px 16px; border-radius: 20px; margin-bottom: 12px; letter-spacing: 0.6px; box-shadow: 0 4px 14px rgba(37, 99, 235, 0.25);">👔 ASST MANAGER ORDER PROCESSING</div>';
+      html += '  <div style="display: flex; justify-content: center; gap: 24px; flex-wrap: wrap;">';
+      assts.forEach(function(a) {
+        html += createNodeCardHtml(a, 'ASST_MGR');
+      });
+      html += '  </div>';
+      html += '</div>';
+    }
+
+    if (assts.length > 0 && spvs.length > 0) {
+      html += '<div style="width: 3px; height: 26px; background: linear-gradient(to bottom, #2563eb, #10b981); border-radius: 3px; box-shadow: 0 0 10px rgba(16, 185, 129, 0.6);"></div>';
+    }
+
+    if (spvs.length > 0) {
+      html += '<div style="display: flex; flex-direction: column; align-items: center; width: 100%;">';
+      html += '  <div style="font-size: 11px; font-weight: 900; color: #34d399; background: rgba(16, 185, 129, 0.2); border: 1.5px solid rgba(16, 185, 129, 0.4); padding: 5px 16px; border-radius: 20px; margin-bottom: 12px; letter-spacing: 0.6px; box-shadow: 0 4px 14px rgba(16, 185, 129, 0.25);">🎯 SUPERVISOR ORDER PROCESSING</div>';
+      if (spvs.length > 1) {
+        html += '  <div style="width: 50%; max-width: 480px; height: 3px; background: linear-gradient(90deg, #10b981, #059669, #10b981); border-radius: 3px; margin-bottom: -10px; box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);"></div>';
+      }
+      html += '  <div style="display: flex; gap: 28px; justify-content: center; align-items: flex-start; flex-wrap: wrap; width: 100%;">';
+      spvs.forEach(function(s) {
+        html += '<div style="display: flex; flex-direction: column; align-items: center;">';
+        if (spvs.length > 1) {
+          html += '<div style="width: 3px; height: 14px; background: #10b981;"></div>';
+        }
+        html += createNodeCardHtml(s, 'SUPERVISOR');
+        html += '</div>';
+      });
+      html += '  </div>';
+      html += '</div>';
+    }
+
+    if ((assts.length > 0 || spvs.length > 0) && staff.length > 0) {
+      html += '<div style="width: 3px; height: 26px; background: linear-gradient(to bottom, #10b981, #8b5cf6); border-radius: 3px; box-shadow: 0 0 10px rgba(139, 92, 246, 0.6);"></div>';
+    }
+
+    if (staff.length > 0) {
+      html += '<div style="background: rgba(15, 23, 42, 0.6); border: 1.5px dashed rgba(139, 92, 246, 0.45); border-radius: 20px; padding: 22px; width: 100%; max-width: 1060px; box-shadow: inset 0 2px 14px rgba(139, 92, 246, 0.1);">';
+      html += '  <div style="text-align: center; font-size: 11.5px; font-weight: 900; color: #a78bfa; text-transform: uppercase; letter-spacing: 0.9px; margin-bottom: 16px; display: flex; align-items: center; justify-content: center; gap: 6px;">';
+      html += '    <span>⚡ TIM EKSEKUTOR OPERASIONAL STAFF (' + staff.length + ' PERSONEL)</span>';
+      html += '  </div>';
+      html += '  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(310px, 1fr)); gap: 16px; justify-items: center;">';
+      staff.forEach(function(st) {
+        html += createNodeCardHtml(st, 'STAFF');
+      });
+      html += '  </div>';
+      html += '</div>';
+    }
+
+    html += '</div>';
+  }
+
+  container.innerHTML = html;
+}
+
+function renderOrgTableView(data) {
+  var tbody = document.getElementById('orgTableBody');
+  if (!tbody) return;
+
+  if (data.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 30px; color: var(--tm); font-weight: 700;">Tidak ada data personel ditemukan sesuai filter.</td></tr>';
+    return;
+  }
+
+  var html = '';
+  data.forEach(function(item, idx) {
+    var cat = getOrgRoleCategory(item.jobTitle);
+    var meta = getRoleMeta(cat);
+    var escapedName = (item.name || '').replace(/'/g, "\\'");
+    var escapedTitle = (item.jobTitle || '').replace(/'/g, "\\'");
+
+    html += '<tr style="border-bottom: 1px solid var(--border); transition: background 0.15s ease;" onmouseover="this.style.background=\'rgba(37,99,235,0.03)\'" onmouseout="this.style.background=\'transparent\'">';
+    html += '  <td style="padding: 10px 12px; text-align: center; font-weight: 800; color: var(--ts);">' + (idx + 1) + '</td>';
+    html += '  <td style="padding: 10px 12px;">';
+    html += '    <div style="display: flex; align-items: center; gap: 8px;">';
+    html += '      <div style="width: 28px; height: 28px; border-radius: 50%; background: ' + meta.gradient + '; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 10px; border: 1px solid #fff;">' + getInitials(item.name) + '</div>';
+    html += '      <span style="font-weight: 800; color: var(--tp); text-transform: uppercase;">' + item.name + '</span>';
+    html += '    </div>';
+    html += '  </td>';
+    html += '  <td style="padding: 10px 12px; font-weight: 700; color: #2563eb;">' + item.jobTitle + '</td>';
+    html += '  <td style="padding: 10px 12px; text-align: center;">';
+    html += '    <span style="background: ' + meta.badgeBg + '; color: ' + meta.badgeColor + '; padding: 3px 8px; border-radius: 10px; font-size: 9px; font-weight: 900;">' + meta.icon + ' ' + meta.levelName + '</span>';
+    html += '  </td>';
+    html += '  <td style="padding: 10px 12px; font-weight: 700; color: var(--ts); font-size: 11px;">' + meta.dept + '</td>';
+    html += '  <td style="padding: 10px 12px; text-align: center;">';
+    html += '    <button onclick="openOrgPersonelModal(\'' + escapedName + '\', \'' + escapedTitle + '\')" style="background: rgba(37, 99, 235, 0.1); color: #2563eb; border: 1px solid rgba(37,99,235,0.3); padding: 4px 10px; border-radius: 6px; font-size: 10px; font-weight: 800; cursor: pointer;">🔍 Detail</button>';
+    html += '  </td>';
+    html += '</tr>';
+  });
+
+  tbody.innerHTML = html;
+}
+
+function openOrgPersonelModal(name, jobTitle) {
+  var modal = document.getElementById('orgPersonelModal');
+  var modalName = document.getElementById('orgModalName');
+  var modalTitle = document.getElementById('orgModalTitle');
+  var modalAvatar = document.getElementById('orgModalAvatar');
+  var modalLevelBadge = document.getElementById('orgModalLevelBadge');
+  var modalHeader = document.getElementById('orgModalHeader');
+  var modalDesc = document.getElementById('orgModalDescription');
+  var modalUnit = document.getElementById('orgModalUnit');
+
+  if (!modal) return;
+
+  var cat = getOrgRoleCategory(jobTitle);
+  var meta = getRoleMeta(cat);
+
+  if (modalName) modalName.textContent = name;
+  if (modalTitle) modalTitle.textContent = jobTitle;
+  if (modalAvatar) {
+    modalAvatar.textContent = getInitials(name);
+    modalAvatar.style.background = meta.gradient;
+  }
+  if (modalLevelBadge) {
+    modalLevelBadge.textContent = meta.icon + ' ' + meta.levelName.toUpperCase();
+    modalLevelBadge.style.background = meta.badgeBg;
+  }
+  if (modalHeader) {
+    modalHeader.style.background = 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)';
+  }
+  if (modalUnit) {
+    modalUnit.textContent = (cat === 'TOP_MGMT') ? 'Top Management' : 'Order Processing';
+  }
+
+  var descText = '';
+  if (cat === 'TOP_MGMT') {
+    descText = 'Memimpin dan bertanggung jawab penuh atas seluruh operasional National Distribution Center (NDC) Sidoarjo sebagai Top Management. Menetapkan arah strategis efisiensi fulfillment, pengelolaan SLA, integrasi antar-bagian, dan pengawasan kinerja unit kerja.';
+  } else if (cat === 'ASST_MGR') {
+    descText = 'Mendampingi Manager NDC dalam memimpin dan mengoordinasikan Bagian Order Processing (9 personel), memantau rilis order, kepatuhan jadwal loading armada, serta penyelesaian kendala operasional harian.';
+  } else if (cat === 'SUPERVISOR') {
+    descText = 'Melakukan supervisi langsung pada aktivitas harian pemrosesan order, alokasi armada, monitoring staging area, verifikasi Case ID Release, serta memastikan pencapaian SLA outbound setiap shift.';
+  } else {
+    descText = 'Melakukan eksekusi operasional pemrosesan order harian, persiapan dokumen jalan, verifikasi stok dan Case ID, koordinasi tim loading, serta memastikan order terkirim secara akurat dan tepat waktu.';
+  }
+
+  if (modalDesc) modalDesc.textContent = descText;
+
+  modal.classList.add('vis');
+}
+
+function closeOrgPersonelModal() {
+  var modal = document.getElementById('orgPersonelModal');
+  if (modal) modal.classList.remove('vis');
+}
+
 </script>
 
 <div id="ffDrillModal" class="ff-modal">
