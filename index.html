@@ -2743,6 +2743,10 @@ PLANNING REPORT</div>
         <span class="ni-icon">👥</span>
         <span class="ni-text">Struktur Organisasi</span>
       </div>
+      <div id="ni-interface-order" class="ni" onclick="navTo('interface-order')">
+        <span class="ni-icon">📦</span>
+        <span class="ni-text">Interface Order</span>
+      </div>
 
     </nav>
   </aside>
@@ -4416,6 +4420,171 @@ PLANNING REPORT</div>
 </div>
 <!-- /PAGE: STRUKTUR ORGANISASI -->
 
+<!-- PAGE: INTERFACE ORDER -->
+<div id="pg-interface-order" class="pg">
+  <!-- Top KPI Cards Row -->
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px;">
+    
+    <!-- KPI 1: Total Types -->
+    <div style="background: linear-gradient(135deg, rgba(37, 99, 235, 0.08) 0%, rgba(30, 58, 138, 0.04) 100%); border: 1.5px solid rgba(37, 99, 235, 0.2); border-radius: 16px; padding: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.04); position: relative; overflow: hidden;">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+        <span style="font-size: 11px; font-weight: 800; color: #2563eb; text-transform: uppercase; letter-spacing: 0.8px;">Total Type Order</span>
+        <span style="background: rgba(37, 99, 235, 0.15); color: #2563eb; padding: 4px 8px; border-radius: 8px; font-size: 11px; font-weight: 900;">10 Types</span>
+      </div>
+      <div id="ioKpiTypes" style="font-size: 28px; font-weight: 900; color: var(--tp); font-family: var(--font-mono);">10</div>
+      <div style="font-size: 11px; color: var(--ts); margin-top: 4px;">Kategori Order Terdaftar</div>
+    </div>
+
+    <!-- KPI 2: Total Order Keseluruhan -->
+    <div style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(6, 95, 70, 0.04) 100%); border: 1.5px solid rgba(16, 185, 129, 0.2); border-radius: 16px; padding: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.04); position: relative; overflow: hidden;">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+        <span style="font-size: 11px; font-weight: 800; color: #10b981; text-transform: uppercase; letter-spacing: 0.8px;">Total Order Keseluruhan</span>
+        <span style="background: rgba(16, 185, 129, 0.15); color: #10b981; padding: 4px 8px; border-radius: 8px; font-size: 11px; font-weight: 900;">DK + LK</span>
+      </div>
+      <div id="ioKpiTotalOrders" style="font-size: 28px; font-weight: 900; color: var(--tp); font-family: var(--font-mono);">0</div>
+      <div style="font-size: 11px; color: var(--ts); margin-top: 4px;">Akumulasi Seluruh Area</div>
+    </div>
+
+    <!-- KPI 3: Total CBM Keseluruhan -->
+    <div style="background: linear-gradient(135deg, rgba(6, 182, 212, 0.08) 0%, rgba(14, 116, 144, 0.04) 100%); border: 1.5px solid rgba(6, 182, 212, 0.2); border-radius: 16px; padding: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.04); position: relative; overflow: hidden;">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+        <span style="font-size: 11px; font-weight: 800; color: #0891b2; text-transform: uppercase; letter-spacing: 0.8px;">Total CBM Keseluruhan</span>
+        <span style="background: rgba(6, 182, 212, 0.15); color: #0891b2; padding: 4px 8px; border-radius: 8px; font-size: 11px; font-weight: 900;">m³</span>
+      </div>
+      <div id="ioKpiTotalCbm" style="font-size: 28px; font-weight: 900; color: #0891b2; font-family: var(--font-mono);">0.00</div>
+      <div style="font-size: 11px; color: var(--ts); margin-top: 4px;">Sum dari CBM_ORIGINAL_QTY</div>
+    </div>
+
+    <!-- KPI 4: TOP CBM STO (GRW) -->
+    <div style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.08) 0%, rgba(180, 83, 9, 0.04) 100%); border: 1.5px solid rgba(245, 158, 11, 0.2); border-radius: 16px; padding: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.04); position: relative; overflow: hidden;">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+        <span style="font-size: 11px; font-weight: 800; color: #d97706; text-transform: uppercase; letter-spacing: 0.8px;">Top STO CBM (GRW)</span>
+        <span style="background: rgba(245, 158, 11, 0.15); color: #d97706; padding: 4px 8px; border-radius: 8px; font-size: 11px; font-weight: 900;">🏆 Max Store</span>
+      </div>
+      <div id="ioKpiTopSto" style="font-size: 18px; font-weight: 900; color: var(--tp); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">—</div>
+      <div id="ioKpiTopStoSub" style="font-size: 11px; color: var(--ts); margin-top: 4px;">CBM: 0.00</div>
+    </div>
+
+  </div>
+
+  <!-- SECTION 1: BREAKDOWN TYPE ORDER TABLE -->
+  <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 22px; margin-bottom: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.03);">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; flex-wrap: wrap; gap: 12px;">
+      <div>
+        <h3 style="margin: 0; font-size: 16px; font-weight: 900; color: var(--tp); display: flex; align-items: center; gap: 8px;">
+          <span>📋 BREAKDOWN TYPE ORDER</span>
+          <span style="background: rgba(37,99,235,0.1); color: #2563eb; border: 1px solid rgba(37,99,235,0.2); font-size: 10px; font-weight: 800; padding: 2px 10px; border-radius: 12px;">SHEET: INTERFACE WMS</span>
+        </h3>
+        <p style="margin: 4px 0 0 0; font-size: 12px; color: var(--ts);">Area pengiriman Dalam Kota (DK) & Luar Kota (LK) berdasarkan CBM_ORIGINAL_QTY</p>
+      </div>
+      <div style="display: flex; gap: 10px; align-items: center;">
+        <input type="text" id="ioSearchTypeOrder" placeholder="Cari Type Order..." style="padding: 6px 14px; border: 1px solid var(--border); border-radius: 8px; font-size: 12px; background: var(--bg); color: var(--tp); outline: none; width: 180px;" onkeyup="filterIoTypeOrderTable()">
+        <button onclick="fetchInterfaceOrderData()" style="padding: 6px 14px; background: linear-gradient(135deg, #2563eb, #1d4ed8); color: #fff; border: none; border-radius: 8px; font-size: 12px; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+          <span>⟳ Refresh Data</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Breakdown Table -->
+    <div style="overflow-x: auto; border: 1px solid var(--border); border-radius: 12px;">
+      <table style="width: 100%; border-collapse: collapse; font-size: 12.5px; text-align: left;">
+        <thead>
+          <tr style="background: linear-gradient(135deg, #1e293b, #0f172a); color: #ffffff;">
+            <th style="padding: 12px 16px; font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; border-top-left-radius: 10px;">TYPE ORDER</th>
+            <th style="padding: 12px 16px; font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; text-align: center; background: rgba(37,99,235,0.2);">DK ORDER</th>
+            <th style="padding: 12px 16px; font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; text-align: right; background: rgba(37,99,235,0.25);">DK CBM</th>
+            <th style="padding: 12px 16px; font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; text-align: center; background: rgba(16,185,129,0.2);">LK ORDER</th>
+            <th style="padding: 12px 16px; font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; text-align: right; background: rgba(16,185,129,0.25);">LK CBM</th>
+            <th style="padding: 12px 16px; font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; text-align: center; background: rgba(245,158,11,0.2);">TOTAL ORDER</th>
+            <th style="padding: 12px 16px; font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; text-align: right; background: rgba(245,158,11,0.25); border-top-right-radius: 10px;">TOTAL CBM</th>
+          </tr>
+        </thead>
+        <tbody id="ioTypeOrderTableBody">
+          <!-- Injected via JS -->
+          <tr><td colspan="7" style="text-align: center; padding: 24px; color: var(--ts);">Memuat data interface wms...</td></tr>
+        </tbody>
+        <tfoot id="ioTypeOrderTableFoot" style="background: rgba(30, 41, 59, 0.95); color: #ffffff; font-weight: 900; font-family: var(--font-mono);">
+          <!-- Footer Totals injected via JS -->
+        </tfoot>
+      </table>
+    </div>
+  </div>
+
+  <!-- GRID FOR TOP CBM STO & SEBARAN AREA -->
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px;">
+    
+    <!-- SECTION 2: TOP CBM STO (GRW ONLY) -->
+    <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 22px; box-shadow: 0 10px 30px rgba(0,0,0,0.03);">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px;">
+        <div>
+          <h3 style="margin: 0; font-size: 15px; font-weight: 900; color: var(--tp); display: flex; align-items: center; gap: 8px;">
+            <span>🚚 TOP CBM STO</span>
+            <span style="background: rgba(245,158,11,0.15); color: #d97706; border: 1px solid rgba(245,158,11,0.3); font-size: 10px; font-weight: 800; padding: 2px 8px; border-radius: 10px;">ORDER GRW ONLY</span>
+          </h3>
+          <p style="margin: 3px 0 0 0; font-size: 11.5px; color: var(--ts);">Consignee Key, Company Name & Total CBM STO</p>
+        </div>
+        <input type="text" id="ioSearchSto" placeholder="Cari Consignee/Company..." style="padding: 5px 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 11.5px; background: var(--bg); color: var(--tp); outline: none; width: 150px;" onkeyup="filterIoStoTable()">
+      </div>
+
+      <div style="overflow-x: auto; max-height: 480px; overflow-y: auto; border: 1px solid var(--border); border-radius: 12px;">
+        <table style="width: 100%; border-collapse: collapse; font-size: 12px; text-align: left;">
+          <thead style="position: sticky; top: 0; z-index: 5;">
+            <tr style="background: #1e293b; color: #ffffff;">
+              <th style="padding: 10px 12px; font-weight: 800; font-size: 10.5px; text-transform: uppercase;">RANK</th>
+              <th style="padding: 10px 12px; font-weight: 800; font-size: 10.5px; text-transform: uppercase;">CONSIGNEEKEY</th>
+              <th style="padding: 10px 12px; font-weight: 800; font-size: 10.5px; text-transform: uppercase;">C_COMPANY</th>
+              <th style="padding: 10px 12px; font-weight: 800; font-size: 10.5px; text-transform: uppercase; text-align: center;">ORDER</th>
+              <th style="padding: 10px 12px; font-weight: 800; font-size: 10.5px; text-transform: uppercase; text-align: right;">CBM</th>
+            </tr>
+          </thead>
+          <tbody id="ioStoTableBody">
+            <!-- Injected via JS -->
+            <tr><td colspan="5" style="text-align: center; padding: 20px; color: var(--ts);">Memuat data STO GRW...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- SECTION 3: SEBARAN AREA STORING -->
+    <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 22px; box-shadow: 0 10px 30px rgba(0,0,0,0.03);">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+        <div>
+          <h3 style="margin: 0; font-size: 15px; font-weight: 900; color: var(--tp); display: flex; align-items: center; gap: 8px;">
+            <span>📍 SEBARAN AREA STORING</span>
+            <span style="background: rgba(16,185,129,0.15); color: #059669; border: 1px solid rgba(16,185,129,0.3); font-size: 10px; font-weight: 800; padding: 2px 8px; border-radius: 10px;">TYPE ORDER: GRW</span>
+          </h3>
+          <p style="margin: 3px 0 0 0; font-size: 11.5px; color: var(--ts);">Distribusi sebaran area storing GRW & total volume per department</p>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+          <button onclick="expandAllIoAreaGroups()" style="padding: 6px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 11px; font-weight: 800; background: rgba(37,99,235,0.08); color: #2563eb; cursor: pointer; transition: all 0.2s ease;">📂 Buka Semua</button>
+          <button onclick="collapseAllIoAreaGroups()" style="padding: 6px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 11px; font-weight: 800; background: rgba(100,116,139,0.08); color: var(--ts); cursor: pointer; transition: all 0.2s ease;">📁 Tutup Semua</button>
+          <input type="text" id="ioSearchArea" placeholder="Cari Zona / Dept..." style="padding: 6px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 11.5px; background: var(--bg); color: var(--tp); outline: none; width: 170px;" onkeyup="filterIoAreaTable()">
+        </div>
+      </div>
+
+      <div style="overflow-x: auto; max-height: 520px; overflow-y: auto; border: 1px solid var(--border); border-radius: 12px;">
+        <table style="width: 100%; border-collapse: collapse; font-size: 12px; text-align: left;">
+          <thead style="position: sticky; top: 0; z-index: 5;" id="ioAreaTableHead">
+            <tr style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: #ffffff;">
+              <th style="padding: 12px 16px; font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;">zona picking / dep</th>
+              <th style="padding: 12px 16px; font-weight: 800; font-size: 11px; text-transform: uppercase; text-align: right; letter-spacing: 0.5px;">Sum of CBM_ORIGINAL_QTY</th>
+            </tr>
+          </thead>
+          <tbody id="ioAreaTableBody">
+            <!-- Injected via JS -->
+            <tr><td colspan="2" style="text-align: center; padding: 20px; color: var(--ts);">Memuat sheet SEBARAN AREA STORING...</td></tr>
+          </tbody>
+          <tfoot id="ioAreaTableFoot">
+            <!-- Footer Totals -->
+          </tfoot>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+<!-- /PAGE: INTERFACE ORDER -->
+
 <!-- MODAL: PERSONEL DETAIL (3D FUTURISTIC GLASS STYLE) -->
 <div id="orgPersonelModal" class="sla-modal">
   <div class="sla-modal-content" style="max-width: 560px; padding: 0; overflow: hidden; border-radius: 20px; border: 1.5px solid rgba(255, 255, 255, 0.15); box-shadow: 0 25px 60px rgba(0,0,0,0.4), 0 0 30px rgba(37,99,235,0.25);">
@@ -5640,7 +5809,8 @@ function navTo(page) {
     olf: { title: "Order Late Fulfillment (OLF)", sub: "Order Load Factor" },
     'caseid-release': { title: "CASE ID RELEASE CONTROL", sub: "Staging lane preparation, picking priority & storing optimization helper" },
     'risk-control': { title: "QUALITY CONTROL & OUTBOUND RISK ASSURANCE", sub: "Sistem mitigasi preventif potensi BARUS, TUGU, Kurang/Lebih Kirim, dan Discrepancy" },
-    'org-chart': { title: "STRUKTUR ORGANISASI", sub: "ORDER PROCESSING HCI NDC SIDOARJO" }
+    'org-chart': { title: "STRUKTUR ORGANISASI", sub: "ORDER PROCESSING HCI NDC SIDOARJO" },
+    'interface-order': { title: "INTERFACE ORDER CONTROL PANEL", sub: "Breakdown Type Order, Top CBM STO & Sebaran Area Outbound" }
   };
   
   var hdrTitle = document.getElementById('pageHeaderTitle');
@@ -5676,6 +5846,8 @@ function navTo(page) {
     renderRiskControlPage();
   } else if (page === 'org-chart') {
     renderOrgChartPage();
+  } else if (page === 'interface-order') {
+    renderInterfaceOrderPage();
   }
 
   // Close sidebar on mobile after navigating
@@ -15903,6 +16075,667 @@ function openOrgPersonelModal(name, jobTitle) {
 function closeOrgPersonelModal() {
   var modal = document.getElementById('orgPersonelModal');
   if (modal) modal.classList.remove('vis');
+}
+
+// ══════════════════════════════════════════════════════════════════════
+//  INTERFACE ORDER DASHBOARD DATA ENGINE
+// ══════════════════════════════════════════════════════════════════════
+var ioInterfaceWmsData = [];
+var ioPvotAreaData = [];
+
+function renderInterfaceOrderPage() {
+  if (!ioInterfaceWmsData || ioInterfaceWmsData.length === 0) {
+    fetchInterfaceOrderData();
+  } else {
+    processAndRenderInterfaceOrder();
+  }
+}
+
+function fetchInterfaceOrderData() {
+  var tbodyWms = document.getElementById('ioTypeOrderTableBody');
+  var tbodySto = document.getElementById('ioStoTableBody');
+  var tbodyArea = document.getElementById('ioAreaTableBody');
+
+  if (tbodyWms) tbodyWms.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 24px; color: var(--ts);">⟳ Memuat data interface wms...</td></tr>';
+  if (tbodySto) tbodySto.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 20px; color: var(--ts);">⟳ Memuat STO GRW...</td></tr>';
+  if (tbodyArea) tbodyArea.innerHTML = '<tr><td colspan="3" style="text-align: center; padding: 20px; color: var(--ts);">⟳ Memuat sheet SEBARAN AREA STORING...</td></tr>';
+
+  var wmsUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1ITpX4yc_VLL_qpbLZc1RHfwDzinUf2vnbQXewb_F4oM/gviz/tq?tqx=out:csv&gid=192612710');
+  var pvotUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1ITpX4yc_VLL_qpbLZc1RHfwDzinUf2vnbQXewb_F4oM/gviz/tq?tqx=out:csv&gid=1258463016');
+
+  var loadedCount = 0;
+  function checkDone() {
+    loadedCount++;
+    if (loadedCount >= 2) {
+      processAndRenderInterfaceOrder();
+    }
+  }
+
+  fetchAndParseCsv(wmsUrl, { header: true, skipEmptyLines: true }, function(data) {
+    ioInterfaceWmsData = data || [];
+    checkDone();
+  });
+
+  fetchAndParseCsv(pvotUrl, { header: true, skipEmptyLines: true }, function(data) {
+    ioPvotAreaData = data || [];
+    checkDone();
+  });
+}
+
+function processAndRenderInterfaceOrder() {
+  renderIoBreakdownTypeOrderTable();
+  renderIoTopCbmStoTable();
+  renderIoPvotAreaTable();
+}
+
+function renderIoBreakdownTypeOrderTable() {
+  var tbody = document.getElementById('ioTypeOrderTableBody');
+  var tfoot = document.getElementById('ioTypeOrderTableFoot');
+  if (!tbody) return;
+
+  var STANDARD_TYPES = [
+    'CUSTOMER',
+    'Customer Sales Order',
+    'ECommerce ODI - Other Channel',
+    'ECommerce ODI - 3PL',
+    'ECommerce ODI - Own Fleet',
+    'GRW',
+    'TUGU',
+    'Internal Used - SAP',
+    'Damage',
+    'Write OFF - SAP'
+  ];
+
+  // Initialize summary map for the standard categories
+  var categoryMap = {};
+  STANDARD_TYPES.forEach(function(t) {
+    categoryMap[t] = {
+      typeOrder: t,
+      dkOrderCount: 0,
+      dkCbm: 0,
+      lkOrderCount: 0,
+      lkCbm: 0,
+      dkOrderSet: new Set(),
+      lkOrderSet: new Set()
+    };
+  });
+
+  if (ioInterfaceWmsData && ioInterfaceWmsData.length > 0) {
+    // Detect column keys in interface wms
+    var sample = ioInterfaceWmsData[0] || {};
+    var keys = Object.keys(sample);
+
+    var typeKey = findKey_(keys, ['TYPE ORDER', 'TYPE_ORDER', 'ORDER_TYPE', 'TYPE', 'STOREREQ_TYPE', 'TIPI_ORDER', 'ORDER TYPE']);
+    var areaKey = findKey_(keys, ['AREA', 'AREA_PENGIRIMAN', 'DESTINATION', 'AREA_KOTA', 'SHIP_TO_AREA', 'DEST']);
+    var cbmKey  = findKey_(keys, ['CBM_ORIGINAL_QTY', 'CBM_ORIGINAL', 'CBM_QTY', 'CBM', 'ORIGINAL_QTY', 'TOTAL_CBM']);
+    var orderKey = findKey_(keys, ['STOREREQ', 'ORDERNO', 'ORDER_NO', 'STOREREQ_NO', 'NO_ORDER', 'SO_NO', 'SO_NUMBER', 'TRANSNO', 'ORDER_KEY', 'ORDERKEY', 'DOCNO', 'TRX_NO']);
+
+    var seenRows = new Set();
+
+    ioInterfaceWmsData.forEach(function(row) {
+      var rawType = typeKey ? row[typeKey] : (row['TYPE ORDER'] || row['TYPE_ORDER'] || row['TYPE'] || '');
+      var rawArea = areaKey ? row[areaKey] : (row['AREA'] || row['DESTINATION'] || '');
+      var rawCbm  = cbmKey  ? row[cbmKey]  : (row['CBM_ORIGINAL_QTY'] || row['CBM'] || 0);
+      var rawOrd  = orderKey? row[orderKey]: null;
+
+      if (isInvalidIoVal(rawType)) return;
+      if (isInvalidIoVal(rawCbm)) return;
+
+      var mappedType = mapTypeOrderCategory(rawType);
+      if (!mappedType) return;
+
+      var cbmVal = parseCbmVal(rawCbm);
+      if (isNaN(cbmVal)) return;
+
+      var ordStr = (rawOrd && !isInvalidIoVal(rawOrd)) ? String(rawOrd).trim() : '';
+      var extOrdStr = row['EXTERNORDERKEY'] ? String(row['EXTERNORDERKEY']).trim() : '';
+      var skuStr = row['SKU'] ? String(row['SKU']).trim() : '';
+      var descrStr = row['DESCR'] ? String(row['DESCR']).trim() : '';
+
+      // Row-level deduplication to prevent double counting duplicate CSV entries
+      var rowKey = ordStr + '||' + extOrdStr + '||' + skuStr + '||' + descrStr + '||' + cbmVal + '||' + String(rawArea).trim() + '||' + mappedType;
+      if (seenRows.has(rowKey)) return;
+      seenRows.add(rowKey);
+
+      if (!categoryMap[mappedType]) {
+        categoryMap[mappedType] = {
+          typeOrder: mappedType,
+          dkOrderCount: 0,
+          dkCbm: 0,
+          lkOrderCount: 0,
+          lkCbm: 0,
+          dkOrderSet: new Set(),
+          lkOrderSet: new Set()
+        };
+      }
+
+      var isDk = isDkAreaString(rawArea);
+
+      if (isDk) {
+        categoryMap[mappedType].dkCbm += cbmVal;
+        if (ordStr !== '') {
+          categoryMap[mappedType].dkOrderSet.add(ordStr);
+        } else {
+          categoryMap[mappedType].dkOrderCount += 1;
+        }
+      } else {
+        categoryMap[mappedType].lkCbm += cbmVal;
+        if (ordStr !== '') {
+          categoryMap[mappedType].lkOrderSet.add(ordStr);
+        } else {
+          categoryMap[mappedType].lkOrderCount += 1;
+        }
+      }
+    });
+  }
+
+  // Calculate row counts from set sizes if distinct order keys were found
+  Object.keys(categoryMap).forEach(function(k) {
+    var cat = categoryMap[k];
+    if (cat.dkOrderSet.size > 0) cat.dkOrderCount = cat.dkOrderSet.size;
+    if (cat.lkOrderSet.size > 0) cat.lkOrderCount = cat.lkOrderSet.size;
+  });
+
+  // Ensure all categories present in data are displayed
+  var displayTypes = STANDARD_TYPES.slice();
+  Object.keys(categoryMap).forEach(function(catName) {
+    if (displayTypes.indexOf(catName) === -1) {
+      displayTypes.push(catName);
+    }
+  });
+
+  // Calculate Grand Totals
+  var grandDkOrder = 0, grandDkCbm = 0;
+  var grandLkOrder = 0, grandLkCbm = 0;
+  var grandTotalOrder = 0, grandTotalCbm = 0;
+
+  var html = '';
+  displayTypes.forEach(function(typeStr) {
+    var cat = categoryMap[typeStr] || { typeOrder: typeStr, dkOrderCount: 0, dkCbm: 0, lkOrderCount: 0, lkCbm: 0 };
+    var totOrder = cat.dkOrderCount + cat.lkOrderCount;
+    var totCbm = cat.dkCbm + cat.lkCbm;
+
+    grandDkOrder += cat.dkOrderCount;
+    grandDkCbm   += cat.dkCbm;
+    grandLkOrder += cat.lkOrderCount;
+    grandLkCbm   += cat.lkCbm;
+    grandTotalOrder += totOrder;
+    grandTotalCbm   += totCbm;
+
+    html += '<tr class="io-type-row" style="border-bottom: 1px solid var(--border); transition: background 0.2s ease;">';
+    html += '  <td style="padding: 12px 16px; font-weight: 800; color: var(--tp); display: flex; align-items: center; gap: 8px;">';
+    html += '    <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: ' + getTypeColor(typeStr) + ';"></span>';
+    html += '    <span>' + esc(typeStr) + '</span>';
+    html += '  </td>';
+    html += '  <td style="padding: 12px 16px; text-align: center; font-family: var(--font-mono); font-weight: 700; color: #2563eb;">' + fn(cat.dkOrderCount) + '</td>';
+    html += '  <td style="padding: 12px 16px; text-align: right; font-family: var(--font-mono); font-weight: 800; color: #2563eb;">' + fpCbm(cat.dkCbm) + '</td>';
+    html += '  <td style="padding: 12px 16px; text-align: center; font-family: var(--font-mono); font-weight: 700; color: #10b981;">' + fn(cat.lkOrderCount) + '</td>';
+    html += '  <td style="padding: 12px 16px; text-align: right; font-family: var(--font-mono); font-weight: 800; color: #10b981;">' + fpCbm(cat.lkCbm) + '</td>';
+    html += '  <td style="padding: 12px 16px; text-align: center; font-family: var(--font-mono); font-weight: 900; color: #d97706; background: rgba(245, 158, 11, 0.04);">' + fn(totOrder) + '</td>';
+    html += '  <td style="padding: 12px 16px; text-align: right; font-family: var(--font-mono); font-weight: 900; color: #d97706; background: rgba(245, 158, 11, 0.06);">' + fpCbm(totCbm) + '</td>';
+    html += '</tr>';
+  });
+
+  tbody.innerHTML = html;
+
+  // Render Footer Grand Total
+  if (tfoot) {
+    var footHtml = '<tr>';
+    footHtml += '  <td style="padding: 14px 16px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px;">TOTAL KESELURUHAN</td>';
+    footHtml += '  <td style="padding: 14px 16px; text-align: center; color: #60a5fa;">' + fn(grandDkOrder) + '</td>';
+    footHtml += '  <td style="padding: 14px 16px; text-align: right; color: #60a5fa;">' + fpCbm(grandDkCbm) + '</td>';
+    footHtml += '  <td style="padding: 14px 16px; text-align: center; color: #34d399;">' + fn(grandLkOrder) + '</td>';
+    footHtml += '  <td style="padding: 14px 16px; text-align: right; color: #34d399;">' + fpCbm(grandLkCbm) + '</td>';
+    footHtml += '  <td style="padding: 14px 16px; text-align: center; color: #fbbf24; background: rgba(245, 158, 11, 0.2);">' + fn(grandTotalOrder) + '</td>';
+    footHtml += '  <td style="padding: 14px 16px; text-align: right; color: #fbbf24; background: rgba(245, 158, 11, 0.25);">' + fpCbm(grandTotalCbm) + '</td>';
+    footHtml += '</tr>';
+    tfoot.innerHTML = footHtml;
+  }
+
+  // Update Top KPI Cards
+  setTxt('ioKpiTotalOrders', fn(grandTotalOrder));
+  setTxt('ioKpiTotalCbm', fpCbm(grandTotalCbm));
+}
+
+function renderIoTopCbmStoTable() {
+  var tbody = document.getElementById('ioStoTableBody');
+  if (!tbody) return;
+
+  if (!ioInterfaceWmsData || ioInterfaceWmsData.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 20px; color: var(--ts);">Tidak ada data interface wms.</td></tr>';
+    return;
+  }
+
+  var sample = ioInterfaceWmsData[0] || {};
+  var keys = Object.keys(sample);
+
+  var typeKey = findKey_(keys, ['TYPE ORDER', 'TYPE_ORDER', 'ORDER_TYPE', 'TYPE', 'STOREREQ_TYPE', 'TIPI_ORDER', 'ORDER TYPE']);
+  var consigneeKey = findKey_(keys, ['CONSIGNEEKEY', 'CONSIGNEE_KEY', 'CONSIGNEE', 'KODE_CONSIGNEE', 'ST_CODE', 'STORE']);
+  var companyKey   = findKey_(keys, ['C_COMPANY', 'COMPANY', 'C_NAME', 'NAMA_CONSIGNEE', 'PENERIMA', 'STORE_NAME', 'CCOMPANY']);
+  var cbmKey       = findKey_(keys, ['CBM_ORIGINAL_QTY', 'CBM_ORIGINAL', 'CBM_QTY', 'CBM', 'ORIGINAL_QTY']);
+  var orderKey     = findKey_(keys, ['STOREREQ', 'ORDERNO', 'ORDER_NO', 'STOREREQ_NO', 'NO_ORDER', 'SO_NO', 'SO_NUMBER', 'TRANSNO', 'ORDER_KEY', 'ORDERKEY', 'DOCNO', 'TRX_NO']);
+
+  var stoMap = {};
+  ioInterfaceWmsData.forEach(function(row) {
+    var rawType = typeKey ? row[typeKey] : (row['TYPE ORDER'] || row['TYPE'] || '');
+    if (isInvalidIoVal(rawType)) return;
+
+    var typeMapped = mapTypeOrderCategory(rawType);
+
+    // Strictly process order with TYPE = GRW only
+    var isGrw = (typeMapped === 'GRW') || 
+                (String(rawType).trim().toUpperCase() === 'GRW') || 
+                (String(rawType).toUpperCase().indexOf('GRW') !== -1);
+
+    if (!isGrw) return;
+
+    var cKey = consigneeKey ? row[consigneeKey] : (row['CONSIGNEEKEY'] || row['CONSIGNEE'] || 'UNKNOWN');
+    var comp = companyKey ? row[companyKey] : (row['C_COMPANY'] || row['COMPANY'] || cKey);
+    if (isInvalidIoVal(cKey) && isInvalidIoVal(comp)) return;
+
+    var rawCbm = cbmKey ? row[cbmKey] : (row['CBM_ORIGINAL_QTY'] || row['CBM'] || 0);
+    if (isInvalidIoVal(rawCbm)) return;
+    var cbm = parseCbmVal(rawCbm);
+    var ord  = orderKey ? row[orderKey] : null;
+
+    var groupKey = String(cKey).trim() + '___' + String(comp).trim();
+    if (!stoMap[groupKey]) {
+      stoMap[groupKey] = {
+        consigneekey: String(cKey).trim(),
+        company: String(comp).trim(),
+        totalCbm: 0,
+        orderCount: 0,
+        orderSet: new Set()
+      };
+    }
+
+    stoMap[groupKey].totalCbm += cbm;
+    if (ord && !isInvalidIoVal(ord) && String(ord).trim() !== '') {
+      stoMap[groupKey].orderSet.add(String(ord).trim());
+    } else {
+      stoMap[groupKey].orderCount += 1;
+    }
+  });
+
+  var list = Object.keys(stoMap).map(function(k) {
+    var item = stoMap[k];
+    if (item.orderSet.size > 0) item.orderCount = item.orderSet.size;
+    return item;
+  });
+
+  // Sort descending by total CBM
+  list.sort(function(a, b) { return b.totalCbm - a.totalCbm; });
+
+  if (list.length > 0) {
+    setTxt('ioKpiTopSto', list[0].company || list[0].consigneekey);
+    setTxt('ioKpiTopStoSub', 'CBM: ' + fpCbm(list[0].totalCbm) + ' m³ (' + list[0].orderCount + ' Order)');
+  } else {
+    setTxt('ioKpiTopSto', 'Tidak Ada Data STO');
+    setTxt('ioKpiTopStoSub', 'CBM: 0.00');
+  }
+
+  if (list.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 20px; color: var(--ts);">Tidak ada order STO (GRW) ditemukan.</td></tr>';
+    return;
+  }
+
+  var html = '';
+  list.forEach(function(item, idx) {
+    var rankBadge = idx === 0 ? '🥇' : (idx === 1 ? '🥈' : (idx === 2 ? '🥉' : (idx + 1)));
+    html += '<tr class="io-sto-row" style="border-bottom: 1px solid var(--border); transition: background 0.15s ease;">';
+    html += '  <td style="padding: 10px 12px; font-weight: 900; text-align: center; color: var(--tp);">' + rankBadge + '</td>';
+    html += '  <td style="padding: 10px 12px; font-family: var(--font-mono); font-weight: 800; color: #2563eb;">' + esc(item.consigneekey) + '</td>';
+    html += '  <td style="padding: 10px 12px; font-weight: 800; color: var(--tp); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 180px;" title="' + esc(item.company) + '">' + esc(item.company) + '</td>';
+    html += '  <td style="padding: 10px 12px; text-align: center; font-family: var(--font-mono); font-weight: 700; color: #10b981;">' + fn(item.orderCount) + '</td>';
+    html += '  <td style="padding: 10px 12px; text-align: right; font-family: var(--font-mono); font-weight: 900; color: #d97706;">' + fpCbm(item.totalCbm) + '</td>';
+    html += '</tr>';
+  });
+
+  tbody.innerHTML = html;
+}
+
+function renderIoPvotAreaTable() {
+  var tbody = document.getElementById('ioAreaTableBody');
+  var tfoot = document.getElementById('ioAreaTableFoot');
+  var thead = document.getElementById('ioAreaTableHead');
+
+  if (!tbody) return;
+
+  var sourceData = (ioInterfaceWmsData && ioInterfaceWmsData.length > 0) ? ioInterfaceWmsData : ioPvotAreaData;
+
+  if (!sourceData || sourceData.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="2" style="text-align: center; padding: 20px; color: var(--ts);">Data Interface WMS / Storing kosong atau tidak ditemukan.</td></tr>';
+    return;
+  }
+
+  var sample = sourceData[0] || {};
+  var keys = Object.keys(sample);
+
+  var typeKey = findKey_(keys, ['TYPE ORDER', 'TYPE_ORDER', 'ORDER_TYPE', 'TYPE', 'STOREREQ_TYPE', 'TIPI_ORDER', 'ORDER TYPE']);
+  var zonaKey = findKey_(keys, ['ZONA PICKING', 'ZONA_PICKING', 'ZONAPICKING', 'ZONA', 'PICKING_ZONE', 'PICKING', 'ZONE', 'ZONA/PICKING', 'AREA']);
+  var depKey  = findKey_(keys, ['DEP', 'DEPARTMENT', 'DEPT', 'DEPARTEMENT', 'DEPARTMEN', 'DEP_NAME', 'NAME_DEP', 'KATEGORI', 'CATEGORY']);
+  var cbmKey  = findKey_(keys, ['CBM_ORIGINAL_QTY', 'CBM_ORIGINAL', 'CBM_QTY', 'CBM', 'ORIGINAL_QTY', 'VOLUME']);
+
+  if (thead) {
+    var headHtml = '<tr style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: #ffffff;">';
+    headHtml += '  <th style="padding: 12px 16px; font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;">zona picking / dep</th>';
+    headHtml += '  <th style="padding: 12px 16px; font-weight: 800; font-size: 11px; text-transform: uppercase; text-align: right; letter-spacing: 0.5px;">Sum of CBM_ORIGINAL_QTY</th>';
+    headHtml += '</tr>';
+    thead.innerHTML = headHtml;
+  }
+
+  var zonaMap = {};
+  var grandTotalCbm = 0;
+
+  sourceData.forEach(function(row) {
+    var rawType = typeKey ? row[typeKey] : (row['TYPE ORDER'] || row['TYPE_ORDER'] || row['TYPE'] || '');
+    var rawZona = zonaKey ? row[zonaKey] : (row['ZONA PICKING'] || row['ZONA_PICKING'] || row['ZONA'] || row['AREA']);
+    var rawDep  = depKey  ? row[depKey]  : (row['DEP'] || row['DEPARTMENT'] || row['DEPT']);
+    var rawCbm  = cbmKey  ? row[cbmKey]  : (row['CBM_ORIGINAL_QTY'] || row['CBM'] || 0);
+
+    // Filter 1: TYPE ORDER MUST BE GRW ONLY
+    var typeMapped = mapTypeOrderCategory(rawType);
+    var isGrw = (typeMapped === 'GRW') || 
+                (String(rawType).trim().toUpperCase() === 'GRW') || 
+                (String(rawType).toUpperCase().indexOf('GRW') !== -1);
+    if (!isGrw) return;
+
+    // Filter 2: DO NOT ALLOW #N/A, N/A, TOTAL, GRAND TOTAL, etc.
+    if (isInvalidIoVal(rawZona) || isInvalidIoVal(rawDep) || isInvalidIoVal(rawCbm)) return;
+
+    var zonaStr = String(rawZona).trim();
+    var depStr  = String(rawDep).trim();
+    var cbmVal  = parseCbmVal(rawCbm);
+
+    if (isNaN(cbmVal)) return;
+
+    if (!zonaMap[zonaStr]) {
+      zonaMap[zonaStr] = {
+        depMap: {},
+        totalCbm: 0
+      };
+    }
+
+    if (!zonaMap[zonaStr].depMap[depStr]) {
+      zonaMap[zonaStr].depMap[depStr] = 0;
+    }
+
+    zonaMap[zonaStr].depMap[depStr] += cbmVal;
+    zonaMap[zonaStr].totalCbm += cbmVal;
+    grandTotalCbm += cbmVal;
+  });
+
+  var zonaList = Object.keys(zonaMap);
+  if (zonaList.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="2" style="text-align: center; padding: 24px; color: var(--ts);">Tidak ada data Storing dengan TYPE ORDER = GRW.</td></tr>';
+    if (tfoot) tfoot.innerHTML = '';
+    return;
+  }
+
+  zonaList.sort(function(a, b) {
+    var numA = parseInt(a.replace(/[^0-9]/g, ''), 10);
+    var numB = parseInt(b.replace(/[^0-9]/g, ''), 10);
+    if (!isNaN(numA) && !isNaN(numB)) {
+      return numA - numB;
+    }
+    return a.localeCompare(b);
+  });
+
+  var html = '';
+  zonaList.forEach(function(zona) {
+    var zData = zonaMap[zona];
+    var depList = Object.keys(zData.depMap);
+    depList.sort(function(a, b) { return a.localeCompare(b); });
+
+    var groupId = 'zona-' + zona.toLowerCase().replace(/[^a-z0-9]/g, '-');
+    var depCount = depList.length;
+    var pctStr = grandTotalCbm > 0 ? ((zData.totalCbm / grandTotalCbm) * 100).toFixed(1) : '0.0';
+
+    // Group Header Row: [-] AREA 1
+    html += '<tr class="io-area-group-row" data-group-id="' + groupId + '" data-collapsed="false" style="background: rgba(30, 41, 59, 0.05); border-top: 1.5px solid var(--border); border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.15s ease;" onclick="toggleIoAreaGroup(\'' + groupId + '\')">';
+    html += '  <td style="padding: 10px 14px; font-weight: 800; color: var(--tp); font-size: 12.5px; display: flex; align-items: center; gap: 10px;">';
+    html += '    <button class="io-area-toggle-btn" style="width: 20px; height: 20px; line-height: 18px; text-align: center; background: #334155; color: #fff; border: none; border-radius: 4px; font-size: 13px; font-weight: 900; cursor: pointer; display: inline-flex; align-items: center; justify-content: center;"><span id="io-area-icon-' + groupId + '">−</span></button>';
+    html += '    <span style="letter-spacing: -0.2px;">' + esc(zona) + '</span>';
+    html += '    <span style="background: rgba(37, 99, 235, 0.12); color: #2563eb; font-size: 10px; font-weight: 800; padding: 2px 8px; border-radius: 10px; border: 1px solid rgba(37, 99, 235, 0.2);">' + depCount + ' Dept</span>';
+    html += '    <span style="background: rgba(16, 185, 129, 0.12); color: #059669; font-size: 10px; font-weight: 800; padding: 2px 8px; border-radius: 10px; border: 1px solid rgba(16, 185, 129, 0.2);">' + pctStr + '%</span>';
+    html += '  </td>';
+    html += '  <td style="padding: 10px 14px; text-align: right; font-family: var(--font-mono); font-weight: 800; color: var(--tp); font-size: 12px;">' + fpCbm(zData.totalCbm) + '</td>';
+    html += '</tr>';
+
+    // Department Sub-rows
+    depList.forEach(function(dep) {
+      var cbm = zData.depMap[dep];
+      html += '<tr class="io-area-dep-row io-area-dep-row-' + groupId + '" style="border-bottom: 1px dashed rgba(226, 232, 240, 0.7); transition: background 0.15s ease;">';
+      html += '  <td style="padding: 7px 14px 7px 42px; color: var(--tp); font-size: 11.5px; font-weight: 500;">' + esc(dep) + '</td>';
+      html += '  <td style="padding: 7px 14px; text-align: right; font-family: var(--font-mono); font-size: 11.5px; font-weight: 600; color: var(--tp);">' + fpCbm(cbm) + '</td>';
+      html += '</tr>';
+    });
+
+    // Area Total Subtotal Row: AREA 1 Total
+    html += '<tr class="io-area-subtotal-row io-area-subtotal-row-' + groupId + '" style="background: rgba(226, 232, 240, 0.5); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); font-weight: 800;">';
+    html += '  <td style="padding: 9px 14px; color: var(--tp); font-size: 12px; font-weight: 800;">' + esc(zona) + ' Total</td>';
+    html += '  <td style="padding: 9px 14px; text-align: right; font-family: var(--font-mono); font-size: 12px; font-weight: 900; color: var(--tp);">' + fpCbm(zData.totalCbm) + '</td>';
+    html += '</tr>';
+  });
+
+  tbody.innerHTML = html;
+
+  if (tfoot) {
+    var footHtml = '<tr style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: #ffffff; font-weight: 900; box-shadow: 0 0 15px rgba(16, 185, 129, 0.15);">';
+    footHtml += '  <td style="padding: 14px 16px; font-size: 13px; font-weight: 900; letter-spacing: 0.3px; display: flex; align-items: center; gap: 8px;">';
+    footHtml += '    <span>Grand Total</span>';
+    footHtml += '    <span style="background: rgba(52, 211, 153, 0.2); color: #34d399; font-size: 10px; font-weight: 800; padding: 2px 8px; border-radius: 10px; border: 1px solid rgba(52, 211, 153, 0.3);">GRW Storing</span>';
+    footHtml += '  </td>';
+    footHtml += '  <td style="padding: 14px 16px; text-align: right; font-family: var(--font-mono); font-size: 14px; color: #34d399; font-weight: 900;">' + fpCbm(grandTotalCbm) + '</td>';
+    footHtml += '</tr>';
+    tfoot.innerHTML = footHtml;
+  }
+}
+
+// ── HELPER UTILITIES FOR INTERFACE ORDER ─────────────────────────────
+function isInvalidIoVal(val) {
+  if (val === null || val === undefined) return true;
+  var s = String(val).trim().toUpperCase();
+  if (!s || s === '#N/A' || s === 'N/A' || s === '#VALUE!' || s === '#REF!' || s.indexOf('#N/A') !== -1 || s.indexOf('#VALUE!') !== -1 || s.indexOf('#REF!') !== -1 || s === 'TOTAL' || s === 'GRAND TOTAL' || s === 'SUM' || s === 'UNDEFINED' || s === 'NULL' || s.startsWith('#') || s.startsWith('=')) {
+    return true;
+  }
+  return false;
+}
+
+function findKey_(keys, candidates) {
+  if (!keys || !keys.length) return undefined;
+  for (var i = 0; i < candidates.length; i++) {
+    var cand = candidates[i].toUpperCase().replace(/[\s_]+/g, '');
+    var found = keys.find(function(k) {
+      return k.toUpperCase().replace(/[\s_]+/g, '') === cand;
+    });
+    if (found) return found;
+  }
+  for (var i = 0; i < candidates.length; i++) {
+    var cand = candidates[i].toUpperCase().replace(/[\s_]+/g, '');
+    var found = keys.find(function(k) {
+      return k.toUpperCase().replace(/[\s_]+/g, '').indexOf(cand) !== -1;
+    });
+    if (found) return found;
+  }
+  return undefined;
+}
+
+function parseCbmVal(v) {
+  if (v === null || v === undefined) return 0;
+  if (isInvalidIoVal(v)) return 0;
+  if (typeof v === 'number') return isNaN(v) ? 0 : v;
+  var str = String(v).trim();
+  if (!str || isInvalidIoVal(str)) return 0;
+  if (str.indexOf(',') !== -1 && str.indexOf('.') !== -1) {
+    if (str.indexOf('.') < str.indexOf(',')) {
+      str = str.replace(/\./g, '').replace(',', '.');
+    } else {
+      str = str.replace(/,/g, '');
+    }
+  } else if (str.indexOf(',') !== -1) {
+    str = str.replace(',', '.');
+  }
+  var num = parseFloat(str.replace(/[^0-9.-]/g, ''));
+  return isNaN(num) ? 0 : num;
+}
+
+function fpCbm(v) {
+  if (v === null || v === undefined || isNaN(v)) return '0,00';
+  return Number(v).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+function mapTypeOrderCategory(raw) {
+  if (isInvalidIoVal(raw)) return '';
+  var s = String(raw).trim().toUpperCase();
+
+  if (s === 'CUSTOMER SALES ORDER' || s === 'CSO' || s.indexOf('SALES ORDER') !== -1) return 'Customer Sales Order';
+  if (s.indexOf('OTHER CHANNEL') !== -1 || s.indexOf('OTHER') !== -1) return 'ECommerce ODI - Other Channel';
+  if (s.indexOf('3PL') !== -1) return 'ECommerce ODI - 3PL';
+  if (s.indexOf('OWN FLEET') !== -1 || s.indexOf('OWNFLEET') !== -1) return 'ECommerce ODI - Own Fleet';
+  if (s === 'GRW' || s.indexOf('GRW') !== -1 || s === 'STO' || s.indexOf('STORE TO STORE') !== -1) return 'GRW';
+  if (s === 'TUGU' || s.indexOf('TUGU') !== -1) return 'TUGU';
+  if (s.indexOf('INTERNAL USED') !== -1 || s.indexOf('INTERNAL') !== -1) return 'Internal Used - SAP';
+  if (s === 'DAMAGE' || s.indexOf('DAMAGE') !== -1) return 'Damage';
+  if (s.indexOf('WRITE OFF') !== -1 || s.indexOf('WRITEOFF') !== -1) return 'Write OFF - SAP';
+  if (s === 'CUSTOMER' || s === 'CUST') return 'CUSTOMER';
+
+  return String(raw).trim();
+}
+
+function isDkAreaString(area) {
+  if (!area) return true;
+  var a = String(area).trim().toUpperCase();
+  if (a === 'DK' || a.indexOf('DALAM KOTA') !== -1 || a.indexOf('SURABAYA') !== -1 || a.indexOf('SIDOARJO') !== -1 || a.indexOf('GRESIK') !== -1) {
+    return true;
+  }
+  return false;
+}
+
+function getTypeColor(typeStr) {
+  switch (typeStr) {
+    case 'CUSTOMER': return '#2563eb';
+    case 'Customer Sales Order': return '#3b82f6';
+    case 'ECommerce ODI - Other Channel': case 'E-Commerce - Other Channel': return '#8b5cf6';
+    case 'ECommerce ODI - 3PL': case 'E-Commerce - 3PL': return '#ec4899';
+    case 'ECommerce ODI - Own Fleet': case 'E-Commerce - Own Fleet': return '#f43f5e';
+    case 'GRW': return '#f59e0b';
+    case 'TUGU': return '#10b981';
+    case 'Internal Used - SAP': return '#06b6d4';
+    case 'Damage': return '#ef4444';
+    case 'Write OFF - SAP': return '#64748b';
+    default: return '#3b82f6';
+  }
+}
+
+function toggleIoAreaGroup(groupId) {
+  var gRow = document.querySelector('.io-area-group-row[data-group-id="' + groupId + '"]');
+  var icon = document.getElementById('io-area-icon-' + groupId);
+  var depRows = document.querySelectorAll('.io-area-dep-row-' + groupId);
+  if (!gRow) return;
+
+  var isCollapsed = gRow.getAttribute('data-collapsed') === 'true';
+  if (isCollapsed) {
+    gRow.setAttribute('data-collapsed', 'false');
+    if (icon) icon.textContent = '−';
+    depRows.forEach(function(row) { row.style.display = ''; });
+  } else {
+    gRow.setAttribute('data-collapsed', 'true');
+    if (icon) icon.textContent = '+';
+    depRows.forEach(function(row) { row.style.display = 'none'; });
+  }
+}
+
+function expandAllIoAreaGroups() {
+  var groupRows = document.querySelectorAll('.io-area-group-row');
+  groupRows.forEach(function(gRow) {
+    var groupId = gRow.getAttribute('data-group-id');
+    gRow.setAttribute('data-collapsed', 'false');
+    var icon = document.getElementById('io-area-icon-' + groupId);
+    if (icon) icon.textContent = '−';
+    var depRows = document.querySelectorAll('.io-area-dep-row-' + groupId);
+    depRows.forEach(function(row) { row.style.display = ''; });
+  });
+}
+
+function collapseAllIoAreaGroups() {
+  var groupRows = document.querySelectorAll('.io-area-group-row');
+  groupRows.forEach(function(gRow) {
+    var groupId = gRow.getAttribute('data-group-id');
+    gRow.setAttribute('data-collapsed', 'true');
+    var icon = document.getElementById('io-area-icon-' + groupId);
+    if (icon) icon.textContent = '+';
+    var depRows = document.querySelectorAll('.io-area-dep-row-' + groupId);
+    depRows.forEach(function(row) { row.style.display = 'none'; });
+  });
+}
+
+function filterIoTypeOrderTable() {
+  var input = document.getElementById('ioSearchTypeOrder');
+  if (!input) return;
+  var q = input.value.toLowerCase().trim();
+  var rows = document.querySelectorAll('#ioTypeOrderTableBody tr');
+  rows.forEach(function(row) {
+    var txt = row.textContent.toLowerCase();
+    row.style.display = txt.indexOf(q) !== -1 ? '' : 'none';
+  });
+}
+
+function filterIoStoTable() {
+  var input = document.getElementById('ioSearchSto');
+  if (!input) return;
+  var q = input.value.toLowerCase().trim();
+  var rows = document.querySelectorAll('#ioStoTableBody tr');
+  rows.forEach(function(row) {
+    var txt = row.textContent.toLowerCase();
+    row.style.display = txt.indexOf(q) !== -1 ? '' : 'none';
+  });
+}
+
+function filterIoAreaTable() {
+  var input = document.getElementById('ioSearchArea');
+  if (!input) return;
+  var filter = input.value.toLowerCase().trim();
+  
+  var groupRows = document.querySelectorAll('.io-area-group-row');
+  groupRows.forEach(function(gRow) {
+    var groupId = gRow.getAttribute('data-group-id');
+    var groupText = gRow.textContent.toLowerCase();
+    var depRows = document.querySelectorAll('.io-area-dep-row-' + groupId);
+    var subtotalRow = document.querySelector('.io-area-subtotal-row-' + groupId);
+    
+    var anyMatch = false;
+    if (!filter) {
+      gRow.style.display = '';
+      if (subtotalRow) subtotalRow.style.display = '';
+      var isCollapsed = gRow.getAttribute('data-collapsed') === 'true';
+      depRows.forEach(function(dRow) {
+        dRow.style.display = isCollapsed ? 'none' : '';
+      });
+      return;
+    }
+    
+    if (groupText.indexOf(filter) !== -1) {
+      anyMatch = true;
+    }
+    
+    depRows.forEach(function(dRow) {
+      if (dRow.textContent.toLowerCase().indexOf(filter) !== -1) {
+        anyMatch = true;
+        dRow.style.display = '';
+      } else {
+        dRow.style.display = 'none';
+      }
+    });
+    
+    if (anyMatch) {
+      gRow.style.display = '';
+      if (subtotalRow) subtotalRow.style.display = '';
+    } else {
+      gRow.style.display = 'none';
+      if (subtotalRow) subtotalRow.style.display = 'none';
+    }
+  });
 }
 
 </script>
