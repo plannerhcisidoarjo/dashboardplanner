@@ -8,6 +8,7 @@
 <link rel="icon" type="image/png" href="favicon.png">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <style>
@@ -2709,6 +2710,18 @@ PLANNING REPORT</div>
         <span class="ni-icon">⏱</span>
         <span class="ni-text">SLA</span>
       </div>
+      <div id="ni-fulfillment-armada" class="ni" onclick="navTo('fulfillment-armada')">
+        <span class="ni-icon">🚚</span>
+        <span class="ni-text">Fulfillment Armada</span>
+      </div>
+      <div id="ni-interface-order" class="ni" onclick="navTo('interface-order')">
+        <span class="ni-icon">📦</span>
+        <span class="ni-text">Interface Order</span>
+      </div>
+      <div id="ni-monitoring-portal" class="ni" onclick="navTo('monitoring-portal')">
+        <span class="ni-icon">🎧</span>
+        <span class="ni-text">Monitoring Portal CX</span>
+      </div>
       <div id="ni-aging" class="ni" onclick="navTo('aging')">
         <span class="ni-icon">🕒</span>
         <span class="ni-text">Aging Pool</span>
@@ -2716,10 +2729,6 @@ PLANNING REPORT</div>
       <div id="ni-loading" class="ni" onclick="navTo('loading')">
         <span class="ni-icon">🚚</span>
         <span class="ni-text">Progress Loading</span>
-      </div>
-      <div id="ni-fulfillment-armada" class="ni" onclick="navTo('fulfillment-armada')">
-        <span class="ni-icon">🚚</span>
-        <span class="ni-text">Fulfillment Armada</span>
       </div>
       <div id="ni-caseid-release" class="ni" onclick="navTo('caseid-release')">
         <span class="ni-icon" style="display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 18px; vertical-align: middle;">
@@ -2743,10 +2752,6 @@ PLANNING REPORT</div>
         <span class="ni-icon">👥</span>
         <span class="ni-text">Struktur Organisasi</span>
       </div>
-      <div id="ni-interface-order" class="ni" onclick="navTo('interface-order')">
-        <span class="ni-icon">📦</span>
-        <span class="ni-text">Interface Order</span>
-      </div>
 
     </nav>
   </aside>
@@ -2754,10 +2759,16 @@ PLANNING REPORT</div>
   <!-- Main Content Area -->
   <main id="mn" class="main-content">
     <!-- Sticky Sub-Header inside Main Content -->
-    <div class="page-subheader">
+    <div class="page-subheader" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
       <div>
         <h2 id="pageHeaderTitle" class="page-title">ORDER FULFILLMENT & PLANNING REPORT</h2>
         <p id="pageHeaderSub" class="page-sub">Integrated Outbound Control Panel</p>
+      </div>
+      <div id="pageHeaderActionContainer" style="display: flex; gap: 10px; align-items: center;">
+        <button id="btnCaptureInterfaceOrder" onclick="captureInterfaceOrderPagePng()" style="display: none; padding: 7px 15px; background: linear-gradient(135deg, #059669, #047857); color: #ffffff; border: none; border-radius: 10px; font-size: 12px; font-weight: 800; cursor: pointer; box-shadow: 0 4px 12px rgba(5, 150, 105, 0.25); transition: all 0.2s ease; align-items: center; gap: 7px;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+          <span>📸 Capture Halaman Laporan</span>
+        </button>
       </div>
     </div>
     
@@ -4452,7 +4463,7 @@ PLANNING REPORT</div>
         <span style="background: rgba(6, 182, 212, 0.15); color: #0891b2; padding: 4px 8px; border-radius: 8px; font-size: 11px; font-weight: 900;">m³</span>
       </div>
       <div id="ioKpiTotalCbm" style="font-size: 28px; font-weight: 900; color: #0891b2; font-family: var(--font-mono);">0.00</div>
-      <div style="font-size: 11px; color: var(--ts); margin-top: 4px;">Sum dari CBM_ORIGINAL_QTY</div>
+      <div style="font-size: 11px; color: var(--ts); margin-top: 4px;">Total CBM Interface Order</div>
     </div>
 
     <!-- KPI 4: TOP CBM STO (GRW) -->
@@ -4475,7 +4486,7 @@ PLANNING REPORT</div>
           <span>📋 BREAKDOWN TYPE ORDER</span>
           <span style="background: rgba(37,99,235,0.1); color: #2563eb; border: 1px solid rgba(37,99,235,0.2); font-size: 10px; font-weight: 800; padding: 2px 10px; border-radius: 12px;">SHEET: INTERFACE WMS</span>
         </h3>
-        <p style="margin: 4px 0 0 0; font-size: 12px; color: var(--ts);">Area pengiriman Dalam Kota (DK) & Luar Kota (LK) berdasarkan CBM_ORIGINAL_QTY</p>
+        <p style="margin: 4px 0 0 0; font-size: 12px; color: var(--ts);">Area pengiriman Dalam Kota (DK) & Luar Kota (LK) berdasarkan ORDER & CBM</p>
       </div>
       <div style="display: flex; gap: 10px; align-items: center;">
         <input type="text" id="ioSearchTypeOrder" placeholder="Cari Type Order..." style="padding: 6px 14px; border: 1px solid var(--border); border-radius: 8px; font-size: 12px; background: var(--bg); color: var(--tp); outline: none; width: 180px;" onkeyup="filterIoTypeOrderTable()">
@@ -4489,14 +4500,14 @@ PLANNING REPORT</div>
     <div style="overflow-x: auto; border: 1px solid var(--border); border-radius: 12px;">
       <table style="width: 100%; border-collapse: collapse; font-size: 12.5px; text-align: left;">
         <thead>
-          <tr style="background: linear-gradient(135deg, #1e293b, #0f172a); color: #ffffff;">
-            <th style="padding: 12px 16px; font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; border-top-left-radius: 10px;">TYPE ORDER</th>
-            <th style="padding: 12px 16px; font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; text-align: center; background: rgba(37,99,235,0.2);">DK ORDER</th>
-            <th style="padding: 12px 16px; font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; text-align: right; background: rgba(37,99,235,0.25);">DK CBM</th>
-            <th style="padding: 12px 16px; font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; text-align: center; background: rgba(16,185,129,0.2);">LK ORDER</th>
-            <th style="padding: 12px 16px; font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; text-align: right; background: rgba(16,185,129,0.25);">LK CBM</th>
-            <th style="padding: 12px 16px; font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; text-align: center; background: rgba(245,158,11,0.2);">TOTAL ORDER</th>
-            <th style="padding: 12px 16px; font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; text-align: right; background: rgba(245,158,11,0.25); border-top-right-radius: 10px;">TOTAL CBM</th>
+          <tr style="background-color: #1e293b; background-image: linear-gradient(135deg, #1e293b, #0f172a); color: #ffffff;">
+            <th style="padding: 12px 16px; font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; border-top-left-radius: 10px; background-color: #223b65; color: #ffffff;">TYPE ORDER</th>
+            <th style="padding: 12px 16px; font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; text-align: center; background-color: #223b65; color: #ffffff;">DK ORDER</th>
+            <th style="padding: 12px 16px; font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; text-align: right; background-color: #244173; color: #ffffff;">DK CBM</th>
+            <th style="padding: 12px 16px; font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; text-align: center; background-color: #1b4335; color: #ffffff;">LK ORDER</th>
+            <th style="padding: 12px 16px; font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; text-align: right; background-color: #1d4b3b; color: #ffffff;">LK CBM</th>
+            <th style="padding: 12px 16px; font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; text-align: center; background-color: #423c28; color: #ffffff;">TOTAL ORDER</th>
+            <th style="padding: 12px 16px; font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; text-align: right; background-color: #4b422a; border-top-right-radius: 10px; color: #ffffff;">TOTAL CBM</th>
           </tr>
         </thead>
         <tbody id="ioTypeOrderTableBody">
@@ -4510,6 +4521,172 @@ PLANNING REPORT</div>
     </div>
   </div>
 
+  <!-- SECTION 0: REPORT DEMAND IN, SHIPMENT OUT & BACKLOG ORDERS DC SIDOARJO -->
+  <div id="ioDsReportSectionCard" style="background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 22px; margin-bottom: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.03);">
+    
+    <!-- Header Title Banner -->
+    <div style="background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 50%, #0284c7 100%); padding: 14px 20px; border-radius: 12px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; color: #ffffff; box-shadow: 0 4px 14px rgba(37,99,235,0.25);">
+      <div>
+        <h2 style="margin: 0; font-size: 16px; font-weight: 900; letter-spacing: 0.5px; text-transform: uppercase; display: flex; align-items: center; gap: 10px;">
+          <span style="font-size: 18px;">📊</span>
+          <span>REPORT DEMAND IN, SHIPMENT OUT & BACKLOG ORDERS DC SIDOARJO</span>
+        </h2>
+        <p style="margin: 4px 0 0 0; font-size: 11.5px; opacity: 0.95; font-weight: 500;">Monitoring tren harian Demand In, Shipment Out, dan akumulasi Backlog DC Sidoarjo</p>
+      </div>
+      <div style="display: flex; gap: 8px; align-items: center;">
+        <span style="background: rgba(255,255,255,0.2); padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 800; backdrop-filter: blur(4px);">DC SIDOARJO</span>
+        <span style="background: #10b981; color: #ffffff; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 900; display: flex; align-items: center; gap: 4px;">
+          <span style="width: 6px; height: 6px; background: #fff; border-radius: 50%; display: inline-block;"></span> LIVE METRICS
+        </span>
+      </div>
+    </div>
+
+    <!-- Filter & Parameter Toolbar -->
+    <div style="background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 14px 18px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
+      <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        <!-- Start Date -->
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <label style="font-size: 11px; font-weight: 800; color: var(--ts); text-transform: uppercase; white-space: nowrap;">Start Date:</label>
+          <input type="date" id="ioDsStartDate" value="2026-07-01" style="padding: 6px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 12px; background: var(--surface); color: var(--tp); font-family: var(--font-mono); outline: none;" onchange="updateDsReportChart()">
+        </div>
+
+        <!-- End Date -->
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <label style="font-size: 11px; font-weight: 800; color: var(--ts); text-transform: uppercase; white-space: nowrap;">End Date:</label>
+          <input type="date" id="ioDsEndDate" value="2026-07-29" style="padding: 6px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 12px; background: var(--surface); color: var(--tp); font-family: var(--font-mono); outline: none;" onchange="updateDsReportChart()">
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div style="display: flex; gap: 8px;">
+        <button onclick="updateDsReportChart()" style="padding: 7px 16px; background: #2563eb; color: #fff; border: none; border-radius: 8px; font-size: 12px; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.2s ease;">
+          <span>🔍 Filter</span>
+        </button>
+        <button onclick="exportDsReportCsv()" style="padding: 7px 16px; background: #0f766e; color: #fff; border: none; border-radius: 8px; font-size: 12px; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.2s ease;">
+          <span>📥 Export CSV</span>
+        </button>
+        <button id="btnCaptureDsReport" onclick="captureDsReportPng()" style="padding: 7px 16px; background: linear-gradient(135deg, #7c3aed, #6d28d9); color: #fff; border: none; border-radius: 8px; font-size: 12px; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.2s ease; box-shadow: 0 2px 8px rgba(124,58,237,0.25);">
+          <span>📸 Capture PNG Laporan</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- 5 Highlight KPI Cards Row -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; margin-bottom: 22px;">
+      
+      <!-- Card 1: Backlog Periode -->
+      <div style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.08) 0%, rgba(185, 28, 28, 0.03) 100%); border: 1.5px solid rgba(239, 68, 68, 0.25); border-radius: 12px; padding: 14px; position: relative;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
+          <span style="font-size: 10px; font-weight: 800; color: #dc2626; text-transform: uppercase; letter-spacing: 0.5px;">Backlog Periode</span>
+          <span style="font-size: 16px;">⏱️</span>
+        </div>
+        <div id="ioDsKpiBacklog" style="font-size: 22px; font-weight: 900; color: #dc2626; font-family: var(--font-mono);">1,693</div>
+        <div id="ioDsKpiBacklogSub" style="font-size: 10px; color: var(--ts); margin-top: 4px; font-weight: 600;">29 Jul 2026</div>
+      </div>
+
+      <!-- Card 2: Avg Demand In -->
+      <div style="background: linear-gradient(135deg, rgba(37, 99, 235, 0.08) 0%, rgba(29, 78, 216, 0.03) 100%); border: 1.5px solid rgba(37, 99, 235, 0.25); border-radius: 12px; padding: 14px; position: relative;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
+          <span style="font-size: 10px; font-weight: 800; color: #2563eb; text-transform: uppercase; letter-spacing: 0.5px;">Avg Demand In</span>
+          <span style="font-size: 16px;">📥</span>
+        </div>
+        <div id="ioDsKpiAvgDemand" style="font-size: 22px; font-weight: 900; color: #2563eb; font-family: var(--font-mono);">529 CBM</div>
+        <div id="ioDsKpiAvgDemandSub" style="font-size: 10px; color: var(--ts); margin-top: 4px; font-weight: 600;">(9 Cont-40) | 01 - 29 Jul 2026</div>
+      </div>
+
+      <!-- Card 3: Avg Shipment Out -->
+      <div style="background: linear-gradient(135deg, rgba(217, 119, 6, 0.08) 0%, rgba(180, 83, 9, 0.03) 100%); border: 1.5px solid rgba(217, 119, 6, 0.25); border-radius: 12px; padding: 14px; position: relative;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
+          <span style="font-size: 10px; font-weight: 800; color: #d97706; text-transform: uppercase; letter-spacing: 0.5px;">Avg Shipment Out</span>
+          <span style="font-size: 16px;">📤</span>
+        </div>
+        <div id="ioDsKpiAvgShipment" style="font-size: 22px; font-weight: 900; color: #d97706; font-family: var(--font-mono);">523 CBM</div>
+        <div id="ioDsKpiAvgShipmentSub" style="font-size: 10px; color: var(--ts); margin-top: 4px; font-weight: 600;">(9 Cont-40) | 01 - 29 Jul 2026</div>
+      </div>
+
+      <!-- Card 4: Demand In Tertinggi -->
+      <div style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(5, 150, 105, 0.03) 100%); border: 1.5px solid rgba(16, 185, 129, 0.25); border-radius: 12px; padding: 14px; position: relative;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
+          <span style="font-size: 10px; font-weight: 800; color: #059669; text-transform: uppercase; letter-spacing: 0.5px;">Demand In Tertinggi</span>
+          <span style="font-size: 16px;">📊</span>
+        </div>
+        <div id="ioDsKpiMaxDemand" style="font-size: 22px; font-weight: 900; color: #059669; font-family: var(--font-mono);">797 CBM</div>
+        <div id="ioDsKpiMaxDemandSub" style="font-size: 10px; color: var(--ts); margin-top: 4px; font-weight: 600;">(13 Cont-40) | 20 Jul 2026</div>
+      </div>
+
+      <!-- Card 5: Shipment Out Tertinggi -->
+      <div style="background: linear-gradient(135deg, rgba(147, 51, 234, 0.08) 0%, rgba(126, 34, 206, 0.03) 100%); border: 1.5px solid rgba(147, 51, 234, 0.25); border-radius: 12px; padding: 14px; position: relative;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
+          <span style="font-size: 10px; font-weight: 800; color: #7e22ce; text-transform: uppercase; letter-spacing: 0.5px;">Shipment Out Tertinggi</span>
+          <span style="font-size: 16px;">🚀</span>
+        </div>
+        <div id="ioDsKpiMaxShipment" style="font-size: 22px; font-weight: 900; color: #7e22ce; font-family: var(--font-mono);">709 CBM</div>
+        <div id="ioDsKpiMaxShipmentSub" style="font-size: 10px; color: var(--ts); margin-top: 4px; font-weight: 600;">(12 Cont-40) | 22 Jul 2026</div>
+      </div>
+
+    </div>
+
+    <!-- MAIN CONTENT: SPLIT GRID (LEFT TABLE 390px, RIGHT COMBINATION CHART) -->
+    <div style="display: grid; grid-template-columns: minmax(370px, 400px) 1fr; gap: 18px; align-items: start;">
+      
+      <!-- LEFT SIDE: DAILY DATA TABLE -->
+      <div style="background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 12px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+          <span style="font-size: 11.5px; font-weight: 900; color: var(--tp); text-transform: uppercase;">📋 DATA PERIODE</span>
+          <span style="font-size: 10px; font-weight: 800; color: var(--ts); background: var(--surface); padding: 2px 8px; border-radius: 10px; border: 1px solid var(--border);" id="ioDsRowCount">29 Hari</span>
+        </div>
+
+        <div style="overflow-x: auto; max-height: 440px; overflow-y: auto; border: 1px solid var(--border); border-radius: 8px; background: var(--surface);">
+          <table style="width: 100%; border-collapse: collapse; font-size: 10.5px; text-align: left; min-width: 350px;">
+            <thead style="position: sticky; top: 0; z-index: 5;">
+              <tr style="background: #1e293b; color: #ffffff;">
+                <th style="padding: 8px 8px; font-weight: 800; text-transform: uppercase; white-space: nowrap; font-size: 10px;">Periode</th>
+                <th style="padding: 8px 6px; font-weight: 800; text-transform: uppercase; text-align: center; color: #34d399; white-space: nowrap; font-size: 10px;">Demand In</th>
+                <th style="padding: 8px 6px; font-weight: 800; text-transform: uppercase; text-align: center; color: #c084fc; white-space: nowrap; font-size: 10px;">Shipment Out</th>
+                <th style="padding: 8px 6px; font-weight: 800; text-transform: uppercase; text-align: center; color: #fb7185; white-space: nowrap; font-size: 10px;">Backlog</th>
+                <th style="padding: 8px 6px; font-weight: 800; text-transform: uppercase; text-align: center; color: #cbd5e1; white-space: nowrap; font-size: 10px;">Nol</th>
+              </tr>
+            </thead>
+            <tbody id="ioDsReportTableBody">
+              <!-- Injected via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- RIGHT SIDE: COMBINATION BAR & LINE CHART -->
+      <div style="background: var(--bg); border: 1px solid var(--border); border-radius: 14px; padding: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.02);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 10px; border-bottom: 1px solid var(--border); padding-bottom: 12px;">
+          <div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="font-size: 13px; font-weight: 900; color: var(--tp); letter-spacing: 0.2px;">📈 TREN DEMAND IN, SHIPMENT OUT & BACKLOG</span>
+              <span style="background: rgba(37, 99, 235, 0.1); color: #2563eb; font-size: 10px; font-weight: 800; padding: 2px 8px; border-radius: 12px; border: 1px solid rgba(37, 99, 235, 0.2);">REAL-TIME</span>
+            </div>
+            <span style="font-size: 10.5px; color: var(--ts); display: block; margin-top: 2px;">Grafik interaktif kombinasi Batang & Garis Tren DC Sidoarjo</span>
+          </div>
+          <div style="display: flex; gap: 8px; align-items: center; font-size: 11px; font-weight: 800; flex-wrap: wrap;">
+            <button onclick="toggleDsDataset(1)" id="btnDsDsDemand" style="display: flex; align-items: center; gap: 6px; color: #047857; background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.25); padding: 4px 10px; border-radius: 20px; cursor: pointer; transition: all 0.2s ease;">
+              <span style="width: 8px; height: 8px; background: linear-gradient(135deg, #34d399, #059669); border-radius: 2px; display: inline-block;"></span> Demand In
+            </button>
+            <button onclick="toggleDsDataset(2)" id="btnDsDsShipment" style="display: flex; align-items: center; gap: 6px; color: #6d28d9; background: rgba(124,58,237,0.08); border: 1px solid rgba(124,58,237,0.25); padding: 4px 10px; border-radius: 20px; cursor: pointer; transition: all 0.2s ease;">
+              <span style="width: 8px; height: 8px; background: linear-gradient(135deg, #c084fc, #7e22ce); border-radius: 2px; display: inline-block;"></span> Shipment Out
+            </button>
+            <button onclick="toggleDsDataset(0)" id="btnDsDsBacklog" style="display: flex; align-items: center; gap: 6px; color: #be123c; background: rgba(244,63,94,0.08); border: 1px solid rgba(244,63,94,0.25); padding: 4px 10px; border-radius: 20px; cursor: pointer; transition: all 0.2s ease;">
+              <span style="width: 10px; height: 3px; background: #f43f5e; border-radius: 2px; display: inline-block;"></span> Backlog
+            </button>
+          </div>
+        </div>
+
+        <!-- Canvas Container -->
+        <div style="position: relative; width: 100%; height: 420px;">
+          <canvas id="ioDsReportChart"></canvas>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
   <!-- GRID FOR TOP CBM STO & SEBARAN AREA -->
   <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px;">
     
@@ -4521,20 +4698,20 @@ PLANNING REPORT</div>
             <span>🚚 TOP CBM STO</span>
             <span style="background: rgba(245,158,11,0.15); color: #d97706; border: 1px solid rgba(245,158,11,0.3); font-size: 10px; font-weight: 800; padding: 2px 8px; border-radius: 10px;">ORDER GRW ONLY</span>
           </h3>
-          <p style="margin: 3px 0 0 0; font-size: 11.5px; color: var(--ts);">Consignee Key, Company Name & Total CBM STO</p>
+          <p style="margin: 3px 0 0 0; font-size: 11.5px; color: var(--ts);">Kode Site, Tujuan & Total CBM STO</p>
         </div>
-        <input type="text" id="ioSearchSto" placeholder="Cari Consignee/Company..." style="padding: 5px 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 11.5px; background: var(--bg); color: var(--tp); outline: none; width: 150px;" onkeyup="filterIoStoTable()">
+        <input type="text" id="ioSearchSto" placeholder="Cari Site/Tujuan..." style="padding: 5px 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 11.5px; background: var(--bg); color: var(--tp); outline: none; width: 150px;" onkeyup="filterIoStoTable()">
       </div>
 
       <div style="overflow-x: auto; max-height: 480px; overflow-y: auto; border: 1px solid var(--border); border-radius: 12px;">
         <table style="width: 100%; border-collapse: collapse; font-size: 12px; text-align: left;">
           <thead style="position: sticky; top: 0; z-index: 5;">
             <tr style="background: #1e293b; color: #ffffff;">
-              <th style="padding: 10px 12px; font-weight: 800; font-size: 10.5px; text-transform: uppercase;">RANK</th>
-              <th style="padding: 10px 12px; font-weight: 800; font-size: 10.5px; text-transform: uppercase;">CONSIGNEEKEY</th>
-              <th style="padding: 10px 12px; font-weight: 800; font-size: 10.5px; text-transform: uppercase;">C_COMPANY</th>
-              <th style="padding: 10px 12px; font-weight: 800; font-size: 10.5px; text-transform: uppercase; text-align: center;">ORDER</th>
-              <th style="padding: 10px 12px; font-weight: 800; font-size: 10.5px; text-transform: uppercase; text-align: right;">CBM</th>
+              <th style="padding: 10px 12px; font-weight: 800; font-size: 10.5px; text-transform: uppercase; background-color: #223b65; color: #ffffff;">RANK</th>
+              <th style="padding: 10px 12px; font-weight: 800; font-size: 10.5px; text-transform: uppercase; background-color: #223b65; color: #ffffff;">CONSIGNEEKEY</th>
+              <th style="padding: 10px 12px; font-weight: 800; font-size: 10.5px; text-transform: uppercase; background-color: #223b65; color: #ffffff;">C_COMPANY</th>
+              <th style="padding: 10px 12px; font-weight: 800; font-size: 10.5px; text-transform: uppercase; background-color: #223b65; text-align: center; color: #ffffff;">ORDER</th>
+              <th style="padding: 10px 12px; font-weight: 800; font-size: 10.5px; text-transform: uppercase; background-color: #223b65; text-align: right; color: #ffffff;">CBM</th>
             </tr>
           </thead>
           <tbody id="ioStoTableBody">
@@ -4566,8 +4743,8 @@ PLANNING REPORT</div>
         <table style="width: 100%; border-collapse: collapse; font-size: 12px; text-align: left;">
           <thead style="position: sticky; top: 0; z-index: 5;" id="ioAreaTableHead">
             <tr style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: #ffffff;">
-              <th style="padding: 12px 16px; font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;">zona picking / dep</th>
-              <th style="padding: 12px 16px; font-weight: 800; font-size: 11px; text-transform: uppercase; text-align: right; letter-spacing: 0.5px;">Sum of CBM_ORIGINAL_QTY</th>
+              <th style="padding: 12px 16px; font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: #ffffff;">zona picking / dep</th>
+              <th style="padding: 12px 16px; font-weight: 800; font-size: 11px; text-transform: uppercase; text-align: right; letter-spacing: 0.5px; color: #ffffff;">TOTAL CBM</th>
             </tr>
           </thead>
           <tbody id="ioAreaTableBody">
@@ -4584,6 +4761,214 @@ PLANNING REPORT</div>
   </div>
 </div>
 <!-- /PAGE: INTERFACE ORDER -->
+
+<!-- PAGE: MONITORING PORTAL CX -->
+<div id="pg-monitoring-portal" class="pg">
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px;">
+    
+    <!-- KPI 1: Done -->
+    <div style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(5, 150, 105, 0.04) 100%); border: 1.5px solid rgba(16, 185, 129, 0.2); border-radius: 16px; padding: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.04); position: relative; overflow: hidden;">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+        <h4 style="margin: 0; font-size: 13px; font-weight: 800; color: #10b981; letter-spacing: 0.5px; text-transform: uppercase;">PROCESSED (DONE)</h4>
+        <span style="background: rgba(16, 185, 129, 0.15); color: #059669; padding: 4px 8px; border-radius: 8px; font-size: 11px; font-weight: 900;">✔</span>
+      </div>
+      <div id="cxKpiDone" style="font-size: 28px; font-weight: 900; color: #059669; font-family: var(--font-mono);">0</div>
+      <div style="font-size: 11px; color: var(--ts); margin-top: 4px;">Request sudah diproses tim NDC</div>
+    </div>
+
+    <!-- KPI 2: Waiting -->
+    <div style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.08) 0%, rgba(217, 119, 6, 0.04) 100%); border: 1.5px solid rgba(245, 158, 11, 0.2); border-radius: 16px; padding: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.04); position: relative; overflow: hidden;">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+        <h4 style="margin: 0; font-size: 13px; font-weight: 800; color: #d97706; letter-spacing: 0.5px; text-transform: uppercase;">WAITING / IDLE</h4>
+        <span style="background: rgba(245, 158, 11, 0.15); color: #b45309; padding: 4px 8px; border-radius: 8px; font-size: 11px; font-weight: 900;">⌛</span>
+      </div>
+      <div id="cxKpiWaiting" style="font-size: 28px; font-weight: 900; color: #b45309; font-family: var(--font-mono);">0</div>
+      <div style="font-size: 11px; color: var(--ts); margin-top: 4px;">Menunggu antrian / Belum diproses</div>
+    </div>
+
+    <!-- KPI 3: Rejected -->
+    <div style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.08) 0%, rgba(220, 38, 38, 0.04) 100%); border: 1.5px solid rgba(239, 68, 68, 0.2); border-radius: 16px; padding: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.04); position: relative; overflow: hidden;">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+        <h4 style="margin: 0; font-size: 13px; font-weight: 800; color: #ef4444; letter-spacing: 0.5px; text-transform: uppercase;">REJECTED</h4>
+        <span style="background: rgba(239, 68, 68, 0.15); color: #dc2626; padding: 4px 8px; border-radius: 8px; font-size: 11px; font-weight: 900;">✖</span>
+      </div>
+      <div id="cxKpiRejected" style="font-size: 28px; font-weight: 900; color: #dc2626; font-family: var(--font-mono);">0</div>
+      <div style="font-size: 11px; color: var(--ts); margin-top: 4px;">Ditolak dengan alasan</div>
+    </div>
+
+    <!-- KPI 4: Rata-Rata Done Per Hari -->
+    <div style="background: linear-gradient(135deg, rgba(37, 99, 235, 0.08) 0%, rgba(30, 58, 138, 0.04) 100%); border: 1.5px solid rgba(37, 99, 235, 0.2); border-radius: 16px; padding: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.04); position: relative; overflow: hidden;">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+        <h4 style="margin: 0; font-size: 13px; font-weight: 800; color: #2563eb; letter-spacing: 0.5px; text-transform: uppercase;">AVG DONE / HARI</h4>
+        <span style="background: rgba(37, 99, 235, 0.15); color: #1d4ed8; padding: 4px 8px; border-radius: 8px; font-size: 11px; font-weight: 900;">📊</span>
+      </div>
+      <div id="cxKpiAvgDone" style="font-size: 28px; font-weight: 900; color: #1d4ed8; font-family: var(--font-mono);">0</div>
+      <div style="font-size: 11px; color: var(--ts); margin-top: 4px;">Rata-rata Done Harian NDC SIDOARJO</div>
+    </div>
+    
+    <!-- KPI 5: Completion Rate -->
+    <div style="background: linear-gradient(135deg, rgba(168, 85, 247, 0.08) 0%, rgba(147, 51, 234, 0.04) 100%); border: 1.5px solid rgba(168, 85, 247, 0.2); border-radius: 16px; padding: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.04); position: relative; overflow: hidden;">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+        <h4 style="margin: 0; font-size: 13px; font-weight: 800; color: #a855f7; letter-spacing: 0.5px; text-transform: uppercase;">COMPLETION RATE</h4>
+        <span style="background: rgba(168, 85, 247, 0.15); color: #9333ea; padding: 4px 8px; border-radius: 8px; font-size: 11px; font-weight: 900;">📈</span>
+      </div>
+      <div id="cxKpiCompRate" style="font-size: 28px; font-weight: 900; color: #9333ea; font-family: var(--font-mono);">0%</div>
+      <div style="font-size: 11px; color: var(--ts); margin-top: 4px;">% Done vs Total Request (Sejak Awal)</div>
+    </div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; margin-bottom: 24px;">
+    
+    <!-- BREAKDOWN KATEGORI -->
+    <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 22px; box-shadow: 0 10px 30px rgba(0,0,0,0.03);">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; flex-wrap: wrap; gap: 12px;">
+        <div>
+          <h3 style="margin: 0; font-size: 16px; font-weight: 900; color: var(--tp); display: flex; align-items: center; gap: 8px;">
+            <span>📋 SUMMARY KATEGORI REQUEST</span>
+            <span style="background: rgba(16,185,129,0.1); color: #059669; border: 1px solid rgba(16,185,129,0.2); font-size: 10px; font-weight: 800; padding: 2px 10px; border-radius: 12px;">TOP 10</span>
+          </h3>
+          <p style="margin: 4px 0 0 0; font-size: 12px; color: var(--ts);">Jumlah Done, Waiting, dan Rejected per kategori</p>
+        </div>
+        <button onclick="openCxCategoryModal()" style="padding: 8px 16px; border: none; border-radius: 8px; font-size: 12px; font-weight: 800; background: #2563eb; color: #ffffff; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 4px 12px rgba(37,99,235,0.2);">Lihat Semua Summary</button>
+      </div>
+      <div style="overflow-x: auto; border: 1px solid var(--border); border-radius: 12px;">
+        <table style="width: 100%; border-collapse: collapse; font-size: 12.5px; text-align: left;">
+          <thead>
+            <tr style="background-color: #1e293b; background-image: linear-gradient(135deg, #1e293b, #0f172a); color: #ffffff;">
+              <th style="padding: 12px 16px; font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; border-top-left-radius: 10px; color: #ffffff; background-color: #1e293b;">KATEGORI REQUEST</th>
+              <th style="padding: 12px 16px; font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; text-align: center; background-color: #1b4335; color: #ffffff;">DONE</th>
+              <th style="padding: 12px 16px; font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; text-align: center; background-color: #423c28; color: #ffffff;">WAITING</th>
+              <th style="padding: 12px 16px; font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; text-align: center; background-color: #4b1d1d; color: #ffffff;">REJECTED</th>
+              <th style="padding: 12px 16px; font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; text-align: center; background-color: #223b65; border-top-right-radius: 10px; color: #ffffff;">TOTAL</th>
+            </tr>
+          </thead>
+          <tbody id="cxCategoryTableBody">
+            <!-- Injected via JS -->
+            <tr><td colspan="5" style="text-align: center; padding: 24px; color: var(--ts);">Memuat data portal CX...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    
+    <!-- AVG/HARI PER KATEGORI -->
+    <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 22px; box-shadow: 0 10px 30px rgba(0,0,0,0.03);">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
+        <div>
+          <h3 style="margin: 0; font-size: 16px; font-weight: 900; color: var(--tp); display: flex; align-items: center; gap: 8px;">
+            <span>⏱️ AVG DONE / HARI</span>
+          </h3>
+          <p style="margin: 4px 0 0 0; font-size: 12px; color: var(--ts);">Rata-rata Done Harian per Kategori</p>
+        </div>
+      </div>
+      <div style="overflow-x: auto; border: 1px solid var(--border); border-radius: 12px;">
+        <table style="width: 100%; border-collapse: collapse; font-size: 12.5px; text-align: left;">
+          <thead>
+            <tr style="background-color: #1e293b; background-image: linear-gradient(135deg, #1e293b, #0f172a); color: #ffffff;">
+              <th style="padding: 12px 16px; font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; border-top-left-radius: 10px; color: #ffffff; background-color: #1e293b;">KATEGORI REQUEST</th>
+              <th style="padding: 12px 16px; font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; text-align: center; background-color: #0f766e; border-top-right-radius: 10px; color: #ffffff;">AVG DONE/HARI</th>
+            </tr>
+          </thead>
+          <tbody id="cxCategoryAvgTableBody">
+            <!-- Injected via JS -->
+            <tr><td colspan="2" style="text-align: center; padding: 24px; color: var(--ts);">Memuat data portal CX...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- RECENT REJECTED -->
+    <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 22px; box-shadow: 0 10px 30px rgba(0,0,0,0.03);">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
+        <div>
+          <h3 style="margin: 0; font-size: 16px; font-weight: 900; color: var(--tp); display: flex; align-items: center; gap: 8px;">
+            <span>❌ TERBARU: REJECTED</span>
+          </h3>
+          <p style="margin: 4px 0 0 0; font-size: 12px; color: var(--ts);">List alasan dan detail request yang direject</p>
+        </div>
+      </div>
+      <div style="overflow-x: auto; max-height: 400px; overflow-y: auto; border: 1px solid var(--border); border-radius: 12px;">
+        <table style="width: 100%; border-collapse: collapse; font-size: 12px; text-align: left;">
+          <thead style="position: sticky; top: 0; z-index: 5;">
+            <tr style="background: #1e293b; color: #ffffff;">
+              <th style="padding: 10px 12px; font-weight: 800; font-size: 10.5px; text-transform: uppercase; color: #ffffff; background-color: #1e293b;">ID REQUEST</th>
+              <th style="padding: 10px 12px; font-weight: 800; font-size: 10.5px; text-transform: uppercase; color: #ffffff; background-color: #1e293b;">KATEGORI</th>
+              <th style="padding: 10px 12px; font-weight: 800; font-size: 10.5px; text-transform: uppercase; color: #ffffff; background-color: #1e293b;">ALASAN (REJECT)</th>
+            </tr>
+          </thead>
+          <tbody id="cxRejectedTableBody">
+            <!-- Injected via JS -->
+            <tr><td colspan="3" style="text-align: center; padding: 20px; color: var(--ts);">Memuat data portal CX...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- TREND HARIAN ROW -->
+  <div style="display: grid; grid-template-columns: 1fr; gap: 24px; margin-bottom: 24px;">
+    <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 22px; box-shadow: 0 10px 30px rgba(0,0,0,0.03);">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
+        <div>
+          <h3 style="margin: 0; font-size: 16px; font-weight: 900; color: var(--tp); display: flex; align-items: center; gap: 8px;">
+            <span>📈 TREND HARIAN (Request vs Done)</span>
+          </h3>
+          <p style="margin: 4px 0 0 0; font-size: 12px; color: var(--ts);">Komparasi Total Request vs Done per hari (Bulan Berjalan hingga H-1)</p>
+        </div>
+      </div>
+      <div style="width: 100%; height: 300px; margin-bottom: 24px;">
+        <canvas id="cxDailyTrendChart"></canvas>
+      </div>
+      <div style="overflow-x: auto; max-height: 400px; overflow-y: auto; border: 1px solid var(--border); border-radius: 12px;">
+        <table style="width: 100%; border-collapse: collapse; font-size: 12px; text-align: left;">
+          <thead style="position: sticky; top: 0; z-index: 5;">
+            <tr style="background: #1e293b; color: #ffffff;">
+              <th style="padding: 10px 12px; font-weight: 800; font-size: 11px; text-transform: uppercase; color: #ffffff; background-color: #1e293b;">TANGGAL</th>
+              <th style="padding: 10px 12px; font-weight: 800; font-size: 11px; text-transform: uppercase; color: #ffffff; text-align: center; background-color: #223b65;">TOTAL REQUEST</th>
+              <th style="padding: 10px 12px; font-weight: 800; font-size: 11px; text-transform: uppercase; color: #ffffff; text-align: center; background-color: #1b4335;">DONE</th>
+              <th style="padding: 10px 12px; font-weight: 800; font-size: 11px; text-transform: uppercase; color: #ffffff; text-align: center; background-color: #423c28;">WAITING</th>
+              <th style="padding: 10px 12px; font-weight: 800; font-size: 11px; text-transform: uppercase; color: #ffffff; text-align: center; background-color: #4b1d1d;">REJECTED</th>
+              <th style="padding: 10px 12px; font-weight: 800; font-size: 11px; text-transform: uppercase; color: #ffffff; text-align: center; background-color: #581c87;">% COMPLETION</th>
+            </tr>
+          </thead>
+          <tbody id="cxDailyTrendTableBody">
+            <!-- Injected via JS -->
+            <tr><td colspan="6" style="text-align: center; padding: 20px; color: var(--ts);">Memuat trend harian...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- /PAGE: MONITORING PORTAL CX -->
+
+<!-- MODAL: CX CATEGORY SUMMARY -->
+<div id="cxCategoryModal" class="sla-modal">
+  <div class="sla-modal-content" style="max-width: 800px; padding: 0; overflow: hidden; border-radius: 20px; border: 1.5px solid rgba(255, 255, 255, 0.15); box-shadow: 0 25px 60px rgba(0,0,0,0.4), 0 0 30px rgba(16,185,129,0.25);">
+    <div style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); padding: 26px; color: #fff; position: relative; border-bottom: 1px solid rgba(255,255,255,0.1);">
+      <button onclick="closeCxCategoryModal()" style="position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.1); border: none; color: #fff; width: 32px; height: 32px; border-radius: 50%; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center;">✕</button>
+      <h2 style="margin: 0 0 6px 0; font-size: 20px; font-weight: 900; letter-spacing: 0.5px;">📋 SEMUA KATEGORI REQUEST</h2>
+      <p style="margin: 0; font-size: 13px; color: #94a3b8;">Breakdown summary Done, Waiting, dan Rejected per kategori</p>
+    </div>
+    <div style="padding: 24px; background: var(--bg); max-height: 65vh; overflow-y: auto;">
+      <div style="overflow-x: auto; border: 1px solid var(--border); border-radius: 12px;">
+        <table style="width: 100%; border-collapse: collapse; font-size: 12.5px; text-align: left;">
+          <thead style="position: sticky; top: 0; z-index: 5;">
+            <tr style="background-color: #1e293b; color: #ffffff;">
+              <th style="padding: 12px 16px; font-weight: 800; font-size: 11px; text-transform: uppercase; border-top-left-radius: 8px; background-color: #1e293b;">KATEGORI REQUEST</th>
+              <th style="padding: 12px 16px; font-weight: 800; font-size: 11px; text-transform: uppercase; text-align: center; background-color: #1b4335;">DONE</th>
+              <th style="padding: 12px 16px; font-weight: 800; font-size: 11px; text-transform: uppercase; text-align: center; background-color: #423c28;">WAITING</th>
+              <th style="padding: 12px 16px; font-weight: 800; font-size: 11px; text-transform: uppercase; text-align: center; background-color: #4b1d1d;">REJECTED</th>
+              <th style="padding: 12px 16px; font-weight: 800; font-size: 11px; text-transform: uppercase; text-align: center; background-color: #223b65; border-top-right-radius: 8px;">TOTAL</th>
+            </tr>
+          </thead>
+          <tbody id="cxCategoryModalTableBody">
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- MODAL: PERSONEL DETAIL (3D FUTURISTIC GLASS STYLE) -->
 <div id="orgPersonelModal" class="sla-modal">
@@ -5810,7 +6195,8 @@ function navTo(page) {
     'caseid-release': { title: "CASE ID RELEASE CONTROL", sub: "Staging lane preparation, picking priority & storing optimization helper" },
     'risk-control': { title: "QUALITY CONTROL & OUTBOUND RISK ASSURANCE", sub: "Sistem mitigasi preventif potensi BARUS, TUGU, Kurang/Lebih Kirim, dan Discrepancy" },
     'org-chart': { title: "STRUKTUR ORGANISASI", sub: "ORDER PROCESSING HCI NDC SIDOARJO" },
-    'interface-order': { title: "INTERFACE ORDER CONTROL PANEL", sub: "Breakdown Type Order, Top CBM STO & Sebaran Area Outbound" }
+    'interface-order': { title: "INTERFACE ORDER CONTROL PANEL", sub: "Breakdown Type Order, Top CBM STO & Sebaran Area Storing" },
+    'monitoring-portal': { title: "MONITORING PORTAL CX", sub: "Monitoring SLA & Hasil Proses Tim NDC Sidoarjo" }
   };
   
   var hdrTitle = document.getElementById('pageHeaderTitle');
@@ -5820,6 +6206,11 @@ function navTo(page) {
   }
   if (hdrSub && titleMap[page]) {
     hdrSub.textContent = titleMap[page].sub;
+  }
+
+  var btnCapHeader = document.getElementById('btnCaptureInterfaceOrder');
+  if (btnCapHeader) {
+    btnCapHeader.style.display = (page === 'interface-order') ? 'inline-flex' : 'none';
   }
   
   // Trigger specific page renders
@@ -5848,6 +6239,8 @@ function navTo(page) {
     renderOrgChartPage();
   } else if (page === 'interface-order') {
     renderInterfaceOrderPage();
+  } else if (page === 'monitoring-portal') {
+    renderMonitoringPortalPage();
   }
 
   // Close sidebar on mobile after navigating
@@ -16102,11 +16495,12 @@ function fetchInterfaceOrderData() {
 
   var wmsUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1ITpX4yc_VLL_qpbLZc1RHfwDzinUf2vnbQXewb_F4oM/gviz/tq?tqx=out:csv&gid=192612710');
   var pvotUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1ITpX4yc_VLL_qpbLZc1RHfwDzinUf2vnbQXewb_F4oM/gviz/tq?tqx=out:csv&gid=1258463016');
+  var dsReportUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1ITpX4yc_VLL_qpbLZc1RHfwDzinUf2vnbQXewb_F4oM/gviz/tq?tqx=out:csv&gid=155620981');
 
   var loadedCount = 0;
   function checkDone() {
     loadedCount++;
-    if (loadedCount >= 2) {
+    if (loadedCount >= 3) {
       processAndRenderInterfaceOrder();
     }
   }
@@ -16120,12 +16514,63 @@ function fetchInterfaceOrderData() {
     ioPvotAreaData = data || [];
     checkDone();
   });
+
+  fetchAndParseCsv(dsReportUrl, { header: true, skipEmptyLines: true }, function(data) {
+    if (data && data.length > 0) {
+      var parsedData = [];
+      data.forEach(function(row) {
+        var keys = Object.keys(row);
+        var dateVal = row['PERIODE'] || row['Periode'] || row['periode'] || row['DATE'] || row['Tanggal'] || (keys.length > 0 ? row[keys[0]] : null);
+        var demandInVal = row['DEMAND IN'] || row['Demand In'] || row['demand_in'] || (keys.length > 1 ? row[keys[1]] : null);
+        var shipmentOutVal = row['SHIPMENT OUT'] || row['Shipment Out'] || row['shipment_out'] || (keys.length > 2 ? row[keys[2]] : null);
+        var backlogVal = row['BACKLOG'] || row['Backlog'] || row['backlog'] || (keys.length > 3 ? row[keys[3]] : null);
+        var nolVal = row['SHIPMENT NOL'] || row['Shipment Nol'] || row['NOL'] || row['Nol'] || (keys.length > 4 ? row[keys[4]] : 0);
+
+        function cleanNum(v) {
+          if (v === null || v === undefined) return 0;
+          var s = String(v).replace(/,/g, '').trim();
+          var n = parseFloat(s);
+          return isNaN(n) ? 0 : n;
+        }
+
+        if (dateVal) {
+          var dateStr = String(dateVal).trim();
+          if (dateStr.indexOf('/') !== -1) {
+            var parts = dateStr.split('/');
+            if (parts.length === 3 && parts[2].length === 4) {
+              dateStr = parts[2] + '-' + (parts[1].length === 1 ? '0' + parts[1] : parts[1]) + '-' + (parts[0].length === 1 ? '0' + parts[0] : parts[0]);
+            }
+          }
+
+          parsedData.push({
+            date: dateStr,
+            demandIn: cleanNum(demandInVal),
+            shipmentOut: cleanNum(shipmentOutVal),
+            backlog: cleanNum(backlogVal),
+            nol: cleanNum(nolVal)
+          });
+        }
+      });
+
+      if (parsedData.length > 0) {
+        ioDsRawDailyData = parsedData;
+        var elStart = document.getElementById('ioDsStartDate');
+        var elEnd = document.getElementById('ioDsEndDate');
+        if (elStart && elEnd) {
+          elStart.value = ioDsRawDailyData[0].date;
+          elEnd.value = ioDsRawDailyData[ioDsRawDailyData.length - 1].date;
+        }
+      }
+    }
+    checkDone();
+  });
 }
 
 function processAndRenderInterfaceOrder() {
   renderIoBreakdownTypeOrderTable();
   renderIoTopCbmStoTable();
   renderIoPvotAreaTable();
+  renderDsReportSection();
 }
 
 function renderIoBreakdownTypeOrderTable() {
@@ -16170,8 +16615,6 @@ function renderIoBreakdownTypeOrderTable() {
     var cbmKey  = findKey_(keys, ['CBM_ORIGINAL_QTY', 'CBM_ORIGINAL', 'CBM_QTY', 'CBM', 'ORIGINAL_QTY', 'TOTAL_CBM']);
     var orderKey = findKey_(keys, ['STOREREQ', 'ORDERNO', 'ORDER_NO', 'STOREREQ_NO', 'NO_ORDER', 'SO_NO', 'SO_NUMBER', 'TRANSNO', 'ORDER_KEY', 'ORDERKEY', 'DOCNO', 'TRX_NO']);
 
-    var seenRows = new Set();
-
     ioInterfaceWmsData.forEach(function(row) {
       var rawType = typeKey ? row[typeKey] : (row['TYPE ORDER'] || row['TYPE_ORDER'] || row['TYPE'] || '');
       var rawArea = areaKey ? row[areaKey] : (row['AREA'] || row['DESTINATION'] || '');
@@ -16191,11 +16634,6 @@ function renderIoBreakdownTypeOrderTable() {
       var extOrdStr = row['EXTERNORDERKEY'] ? String(row['EXTERNORDERKEY']).trim() : '';
       var skuStr = row['SKU'] ? String(row['SKU']).trim() : '';
       var descrStr = row['DESCR'] ? String(row['DESCR']).trim() : '';
-
-      // Row-level deduplication to prevent double counting duplicate CSV entries
-      var rowKey = ordStr + '||' + extOrdStr + '||' + skuStr + '||' + descrStr + '||' + cbmVal + '||' + String(rawArea).trim() + '||' + mappedType;
-      if (seenRows.has(rowKey)) return;
-      seenRows.add(rowKey);
 
       if (!categoryMap[mappedType]) {
         categoryMap[mappedType] = {
@@ -16419,7 +16857,7 @@ function renderIoPvotAreaTable() {
   if (thead) {
     var headHtml = '<tr style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: #ffffff;">';
     headHtml += '  <th style="padding: 12px 16px; font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;">zona picking / dep</th>';
-    headHtml += '  <th style="padding: 12px 16px; font-weight: 800; font-size: 11px; text-transform: uppercase; text-align: right; letter-spacing: 0.5px;">Sum of CBM_ORIGINAL_QTY</th>';
+    headHtml += '  <th style="padding: 12px 16px; font-weight: 800; font-size: 11px; text-transform: uppercase; text-align: right; letter-spacing: 0.5px;">TOTAL CBM</th>';
     headHtml += '</tr>';
     thead.innerHTML = headHtml;
   }
@@ -16532,6 +16970,485 @@ function renderIoPvotAreaTable() {
   }
 }
 
+
+// ── REPORT DEMAND IN, SHIPMENT OUT & BACKLOG ORDERS DC SIDOARJO ─────────
+var ioDsChartInstance = null;
+
+var ioDsRawDailyData = [
+  { date: '2026-07-01', demandIn: 568, shipmentOut: 440, backlog: 1752, nol: 1 },
+  { date: '2026-07-02', demandIn: 544, shipmentOut: 657, backlog: 1666, nol: 3 },
+  { date: '2026-07-03', demandIn: 503, shipmentOut: 433, backlog: 1927, nol: 0 },
+  { date: '2026-07-04', demandIn: 590, shipmentOut: 477, backlog: 1826, nol: 2 },
+  { date: '2026-07-05', demandIn: 484, shipmentOut: 477, backlog: 1678, nol: 1 },
+  { date: '2026-07-06', demandIn: 560, shipmentOut: 645, backlog: 1705, nol: 2 },
+  { date: '2026-07-07', demandIn: 561, shipmentOut: 531, backlog: 1571, nol: 0 },
+  { date: '2026-07-08', demandIn: 505, shipmentOut: 593, backlog: 1483, nol: 1 },
+  { date: '2026-07-09', demandIn: 416, shipmentOut: 496, backlog: 1402, nol: 2 },
+  { date: '2026-07-10', demandIn: 528, shipmentOut: 576, backlog: 1364, nol: 2 },
+  { date: '2026-07-11', demandIn: 560, shipmentOut: 278, backlog: 1631, nol: 13 },
+  { date: '2026-07-12', demandIn: 401, shipmentOut: 594, backlog: 1448, nol: 3 },
+  { date: '2026-07-13', demandIn: 494, shipmentOut: 534, backlog: 1374, nol: 9 },
+  { date: '2026-07-14', demandIn: 573, shipmentOut: 514, backlog: 1487, nol: 1 },
+  { date: '2026-07-15', demandIn: 489, shipmentOut: 492, backlog: 1425, nol: 4 },
+  { date: '2026-07-16', demandIn: 458, shipmentOut: 394, backlog: 1499, nol: 3 },
+  { date: '2026-07-17', demandIn: 482, shipmentOut: 576, backlog: 1391, nol: 1 },
+  { date: '2026-07-18', demandIn: 522, shipmentOut: 438, backlog: 1473, nol: 1 },
+  { date: '2026-07-19', demandIn: 453, shipmentOut: 489, backlog: 1465, nol: 4 },
+  { date: '2026-07-20', demandIn: 797, shipmentOut: 453, backlog: 1804, nol: 2 },
+  { date: '2026-07-21', demandIn: 567, shipmentOut: 427, backlog: 1912, nol: 3 },
+  { date: '2026-07-22', demandIn: 692, shipmentOut: 709, backlog: 1894, nol: 9 },
+  { date: '2026-07-23', demandIn: 517, shipmentOut: 640, backlog: 1761, nol: 0 },
+  { date: '2026-07-24', demandIn: 536, shipmentOut: 568, backlog: 1728, nol: 1 },
+  { date: '2026-07-25', demandIn: 558, shipmentOut: 500, backlog: 1787, nol: 0 },
+  { date: '2026-07-26', demandIn: 531, shipmentOut: 590, backlog: 1733, nol: 0 },
+  { date: '2026-07-27', demandIn: 539, shipmentOut: 534, backlog: 1730, nol: 3 },
+  { date: '2026-07-28', demandIn: 519, shipmentOut: 501, backlog: 1743, nol: 4 },
+  { date: '2026-07-29', demandIn: 489, shipmentOut: 532, backlog: 1693, nol: 7 }
+];
+
+function renderDsReportSection() {
+  updateDsReportChart();
+}
+
+function updateDsReportChart() {
+  var startDate = document.getElementById('ioDsStartDate') ? document.getElementById('ioDsStartDate').value : '';
+  var endDate = document.getElementById('ioDsEndDate') ? document.getElementById('ioDsEndDate').value : '';
+
+  var filtered = ioDsRawDailyData.filter(function(item) {
+    if (startDate && item.date < startDate) return false;
+    if (endDate && item.date > endDate) return false;
+    return true;
+  });
+
+  if (filtered.length === 0) filtered = ioDsRawDailyData;
+
+  var processedData = filtered.map(function(item) {
+    return {
+      date: item.date,
+      demandIn: item.demandIn,
+      shipmentOut: item.shipmentOut,
+      backlog: item.backlog,
+      nol: item.nol
+    };
+  });
+
+  var totalDemandIn = 0;
+  var totalShipmentOut = 0;
+  var maxDemandObj = { val: -1, date: '-' };
+  var maxShipmentObj = { val: -1, date: '-' };
+  var latestBacklog = processedData.length > 0 ? processedData[processedData.length - 1] : { backlog: 0, date: '-' };
+
+  processedData.forEach(function(d) {
+    totalDemandIn += d.demandIn;
+    totalShipmentOut += d.shipmentOut;
+    if (d.demandIn > maxDemandObj.val) {
+      maxDemandObj.val = d.demandIn;
+      maxDemandObj.date = d.date;
+    }
+    if (d.shipmentOut > maxShipmentObj.val) {
+      maxShipmentObj.val = d.shipmentOut;
+      maxShipmentObj.date = d.date;
+    }
+  });
+
+  var avgDemand = processedData.length > 0 ? Math.round(totalDemandIn / processedData.length) : 0;
+  var avgShipment = processedData.length > 0 ? Math.round(totalShipmentOut / processedData.length) : 0;
+
+  function fmtDt(dStr) {
+    if (!dStr || dStr === '-') return '-';
+    var parts = dStr.split('-');
+    if (parts.length === 3) {
+      var mNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      var mIdx = parseInt(parts[1], 10) - 1;
+      return parts[2] + ' ' + (mNames[mIdx] || parts[1]) + ' ' + parts[0];
+    }
+    return dStr;
+  }
+
+  var elBacklog = document.getElementById('ioDsKpiBacklog');
+  var elBacklogSub = document.getElementById('ioDsKpiBacklogSub');
+  if (elBacklog) elBacklog.textContent = fn(latestBacklog.backlog);
+  if (elBacklogSub) elBacklogSub.textContent = fmtDt(latestBacklog.date) + ' (~' + Math.round(latestBacklog.backlog / 60) + ' Cont-40)';
+
+  var elAvgDemand = document.getElementById('ioDsKpiAvgDemand');
+  var elAvgDemandSub = document.getElementById('ioDsKpiAvgDemandSub');
+  if (elAvgDemand) elAvgDemand.textContent = fn(avgDemand) + ' CBM';
+  if (elAvgDemandSub) elAvgDemandSub.textContent = '(~' + Math.round(avgDemand / 60) + ' Cont-40) | ' + fmtDt(startDate) + ' - ' + fmtDt(endDate);
+
+  var elAvgShipment = document.getElementById('ioDsKpiAvgShipment');
+  var elAvgShipmentSub = document.getElementById('ioDsKpiAvgShipmentSub');
+  if (elAvgShipment) elAvgShipment.textContent = fn(avgShipment) + ' CBM';
+  if (elAvgShipmentSub) elAvgShipmentSub.textContent = '(~' + Math.round(avgShipment / 60) + ' Cont-40) | ' + fmtDt(startDate) + ' - ' + fmtDt(endDate);
+
+  var elMaxDemand = document.getElementById('ioDsKpiMaxDemand');
+  var elMaxDemandSub = document.getElementById('ioDsKpiMaxDemandSub');
+  if (elMaxDemand) elMaxDemand.textContent = fn(maxDemandObj.val) + ' CBM';
+  if (elMaxDemandSub) elMaxDemandSub.textContent = '(~' + Math.round(maxDemandObj.val / 60) + ' Cont-40) | ' + fmtDt(maxDemandObj.date);
+
+  var elMaxShipment = document.getElementById('ioDsKpiMaxShipment');
+  var elMaxShipmentSub = document.getElementById('ioDsKpiMaxShipmentSub');
+  if (elMaxShipment) elMaxShipment.textContent = fn(maxShipmentObj.val) + ' CBM';
+  if (elMaxShipmentSub) elMaxShipmentSub.textContent = '(~' + Math.round(maxShipmentObj.val / 60) + ' Cont-40) | ' + fmtDt(maxShipmentObj.date);
+
+  var tbody = document.getElementById('ioDsReportTableBody');
+  var elCount = document.getElementById('ioDsRowCount');
+  if (elCount) elCount.textContent = processedData.length + ' Hari';
+
+  if (tbody) {
+    var tblHtml = '';
+    processedData.forEach(function(r) {
+      var isMaxDem = r.date === maxDemandObj.date;
+      var isMaxShip = r.date === maxShipmentObj.date;
+      var bgRow = isMaxDem ? 'rgba(16, 185, 129, 0.08)' : (isMaxShip ? 'rgba(147, 51, 234, 0.08)' : 'transparent');
+
+      tblHtml += '<tr style="border-bottom: 1px solid var(--border); background: ' + bgRow + '; transition: background 0.2s ease;">';
+      tblHtml += '  <td style="padding: 7px 8px; font-weight: 800; color: #2563eb; font-family: var(--font-mono); white-space: nowrap;">' + esc(r.date) + '</td>';
+      tblHtml += '  <td style="padding: 7px 6px; text-align: center; font-family: var(--font-mono); font-weight: 800; color: #059669; white-space: nowrap;">' + fn(r.demandIn) + (isMaxDem ? ' 🏆' : '') + '</td>';
+      tblHtml += '  <td style="padding: 7px 6px; text-align: center; font-family: var(--font-mono); font-weight: 800; color: #7c3aed; white-space: nowrap;">' + fn(r.shipmentOut) + (isMaxShip ? ' 🚀' : '') + '</td>';
+      tblHtml += '  <td style="padding: 7px 6px; text-align: center; font-family: var(--font-mono); font-weight: 900; color: #e11d48; background: rgba(244, 63, 94, 0.06); white-space: nowrap;">' + fn(r.backlog) + '</td>';
+      tblHtml += '  <td style="padding: 7px 6px; text-align: center; font-family: var(--font-mono); font-weight: 700; color: ' + (r.nol > 0 ? '#ef4444' : 'var(--ts)') + '; white-space: nowrap;">' + fn(r.nol) + '</td>';
+      tblHtml += '</tr>';
+    });
+    tbody.innerHTML = tblHtml;
+  }
+
+  var canvas = document.getElementById('ioDsReportChart');
+  if (!canvas) return;
+  var ctx = canvas.getContext('2d');
+
+  if (ioDsChartInstance) {
+    ioDsChartInstance.destroy();
+  }
+
+  var labels = processedData.map(function(d) { return d.date; });
+  var arrDemandIn = processedData.map(function(d) { return d.demandIn; });
+  var arrShipmentOut = processedData.map(function(d) { return d.shipmentOut; });
+  var arrBacklog = processedData.map(function(d) { return d.backlog; });
+
+  // Create gradients for modern visual presentation
+  var gradientDemand = ctx.createLinearGradient(0, 0, 0, 380);
+  gradientDemand.addColorStop(0, '#10b981');
+  gradientDemand.addColorStop(1, '#0d9488');
+
+  var gradientShipment = ctx.createLinearGradient(0, 0, 0, 380);
+  gradientShipment.addColorStop(0, '#a855f7');
+  gradientShipment.addColorStop(1, '#6d28d9');
+
+  var gradientBacklog = ctx.createLinearGradient(0, 0, 0, 380);
+  gradientBacklog.addColorStop(0, 'rgba(244, 63, 94, 0.25)');
+  gradientBacklog.addColorStop(1, 'rgba(244, 63, 94, 0.01)');
+
+  var ioDatalabelsPlugin = {
+    id: 'ioDatalabelsPlugin',
+    afterDatasetsDraw: function(chart) {
+      var ctxChart = chart.ctx;
+      var categoryCount = chart.data.labels ? chart.data.labels.length : 1;
+      var chartWidth = chart.chartArea ? (chart.chartArea.right - chart.chartArea.left) : 600;
+      var categoryWidth = chartWidth / Math.max(categoryCount, 1);
+
+      ctxChart.save();
+
+      chart.data.datasets.forEach(function(dataset, dsIdx) {
+        var meta = chart.getDatasetMeta(dsIdx);
+        if (meta.hidden) return;
+
+        var isBacklog = (dataset.label === 'Backlog');
+        var isDemand = (dataset.label === 'Demand In');
+
+        meta.data.forEach(function(element, idx) {
+          var val = dataset.data[idx];
+          if (val === null || val === undefined || val === 0) return;
+
+          var x = element.x;
+          var y = element.y;
+          var formattedVal = fn(val);
+
+          if (isBacklog) {
+            // Backlog line dataset: Draw label strictly above point with clean white background halo
+            ctxChart.save();
+            ctxChart.font = '800 8.5px "Plus Jakarta Sans", sans-serif';
+            ctxChart.textAlign = 'center';
+            ctxChart.textBaseline = 'bottom';
+
+            var tw = ctxChart.measureText(formattedVal).width;
+            ctxChart.fillStyle = 'rgba(255, 255, 255, 0.88)';
+            ctxChart.fillRect(x - tw / 2 - 2, y - 18, tw + 4, 11);
+
+            ctxChart.fillStyle = '#be123c';
+            ctxChart.fillText(formattedVal, x, y - 7);
+            ctxChart.restore();
+          } else {
+            // Bar datasets (Demand In & Shipment Out): ALWAYS OUTSIDE above top of bar
+            ctxChart.save();
+
+            if (categoryWidth < 55) {
+              // Dense view: Rotate -90deg so labels point vertically UPWARDS above bar top
+              // This guarantees Demand In and Shipment Out labels never overlap horizontally!
+              ctxChart.translate(x, y - 4);
+              ctxChart.rotate(-Math.PI / 2);
+              ctxChart.font = '800 8px "Plus Jakarta Sans", sans-serif';
+              ctxChart.textAlign = 'left';
+              ctxChart.textBaseline = 'middle';
+              ctxChart.fillStyle = isDemand ? '#047857' : '#6d28d9';
+              ctxChart.fillText(formattedVal, 0, 0);
+            } else {
+              // Wide view: Horizontal text centered above top of bar
+              ctxChart.font = '800 9px "Plus Jakarta Sans", sans-serif';
+              ctxChart.textAlign = 'center';
+              ctxChart.textBaseline = 'bottom';
+              ctxChart.fillStyle = isDemand ? '#047857' : '#6d28d9';
+              ctxChart.fillText(formattedVal, x, y - 4);
+            }
+
+            ctxChart.restore();
+          }
+        });
+      });
+
+      ctxChart.restore();
+    }
+  };
+
+  ioDsChartInstance = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [
+        {
+          type: 'line',
+          label: 'Backlog',
+          data: arrBacklog,
+          borderColor: '#f43f5e',
+          backgroundColor: gradientBacklog,
+          borderWidth: 3,
+          pointBackgroundColor: '#ffffff',
+          pointBorderColor: '#f43f5e',
+          pointBorderWidth: 2.5,
+          pointRadius: 4,
+          pointHoverRadius: 8,
+          pointHoverBackgroundColor: '#f43f5e',
+          pointHoverBorderColor: '#ffffff',
+          pointHoverBorderWidth: 3,
+          tension: 0.35,
+          fill: true,
+          order: 1
+        },
+        {
+          type: 'bar',
+          label: 'Demand In',
+          data: arrDemandIn,
+          backgroundColor: gradientDemand,
+          hoverBackgroundColor: '#059669',
+          borderRadius: { topLeft: 6, topRight: 6, bottomLeft: 0, bottomRight: 0 },
+          borderSkipped: 'bottom',
+          barPercentage: 0.65,
+          categoryPercentage: 0.65,
+          order: 2
+        },
+        {
+          type: 'bar',
+          label: 'Shipment Out',
+          data: arrShipmentOut,
+          backgroundColor: gradientShipment,
+          hoverBackgroundColor: '#7e22ce',
+          borderRadius: { topLeft: 6, topRight: 6, bottomLeft: 0, bottomRight: 0 },
+          borderSkipped: 'bottom',
+          barPercentage: 0.65,
+          categoryPercentage: 0.65,
+          order: 3
+        }
+      ]
+    },
+    plugins: [ioDatalabelsPlugin],
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      animation: {
+        duration: 900,
+        easing: 'easeOutQuart'
+      },
+      interaction: {
+        mode: 'index',
+        intersect: false
+      },
+      layout: {
+        padding: { top: 38, bottom: 5, left: 5, right: 5 }
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: 'rgba(15, 23, 42, 0.92)',
+          titleFont: { family: 'Plus Jakarta Sans', size: 12, weight: 'bold' },
+          bodyFont: { family: 'Plus Jakarta Sans', size: 11 },
+          padding: 12,
+          cornerRadius: 10,
+          borderColor: 'rgba(255, 255, 255, 0.15)',
+          borderWidth: 1,
+          boxPadding: 4,
+          usePointStyle: true,
+          callbacks: {
+            label: function(context) {
+              var val = context.parsed.y;
+              var label = context.dataset.label || '';
+              var c40 = Math.round(val / 60);
+              return ' ' + label + ': ' + fn(val) + ' CBM (~' + c40 + ' Cont-40)';
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          ticks: {
+            color: '#64748b',
+            font: { family: 'Plus Jakarta Sans', size: 9.5, weight: '700' },
+            maxRotation: 60,
+            minRotation: 45
+          },
+          grid: { display: false }
+        },
+        y: {
+          beginAtZero: true,
+          ticks: {
+            color: '#64748b',
+            font: { family: 'Plus Jakarta Sans', size: 10, weight: '600' }
+          },
+          grid: {
+            color: 'rgba(226, 232, 240, 0.6)',
+            borderDash: [4, 4]
+          }
+        }
+      }
+    }
+  });
+}
+
+function toggleDsDataset(dsIdx) {
+  if (!ioDsChartInstance) return;
+  var isVisible = ioDsChartInstance.isDatasetVisible(dsIdx);
+  if (isVisible) {
+    ioDsChartInstance.hide(dsIdx);
+  } else {
+    ioDsChartInstance.show(dsIdx);
+  }
+  
+  var btnIds = ['btnDsDsBacklog', 'btnDsDsDemand', 'btnDsDsShipment'];
+  var btn = document.getElementById(btnIds[dsIdx]);
+  if (btn) {
+    btn.style.opacity = isVisible ? '0.4' : '1';
+    btn.style.textDecoration = isVisible ? 'line-through' : 'none';
+  }
+}
+
+function exportDsReportCsv() {
+  if (!ioDsRawDailyData || ioDsRawDailyData.length === 0) return;
+  var csvContent = "data:text/csv;charset=utf-8,Periode,Demand In,Shipment Out,Backlog,Shipment Nol\n";
+  ioDsRawDailyData.forEach(function(r) {
+    csvContent += [r.date, r.demandIn, r.shipmentOut, r.backlog, r.nol].join(",") + "\n";
+  });
+  var encodedUri = encodeURI(csvContent);
+  var link = document.createElement("a");
+  link.setAttribute("href", encodedUri);
+  link.setAttribute("download", "Report_Demand_Shipment_Backlog_DC_Sidoarjo.csv");
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+function captureDsReportPng() {
+  var element = document.getElementById('ioDsReportSectionCard');
+  var btn = document.getElementById('btnCaptureDsReport');
+  if (!element) return;
+
+  var originalText = btn ? btn.innerHTML : '';
+  if (btn) btn.innerHTML = '<span>⏳ Capturing...</span>';
+
+  if (typeof html2canvas === 'undefined') {
+    alert('Library html2canvas belum siap. Silakan muat ulang halaman.');
+    if (btn) btn.innerHTML = originalText;
+    return;
+  }
+
+  html2canvas(element, {
+    scale: 2,
+    useCORS: true,
+    backgroundColor: '#ffffff',
+    logging: false
+  }).then(function(canvas) {
+    var image = canvas.toDataURL("image/png");
+    var a = document.createElement('a');
+    a.href = image;
+    var startDate = document.getElementById('ioDsStartDate') ? document.getElementById('ioDsStartDate').value : '';
+    var endDate = document.getElementById('ioDsEndDate') ? document.getElementById('ioDsEndDate').value : '';
+    a.download = 'Laporan_Demand_Shipment_Backlog_DC_Sidoarjo_' + (startDate || 'period') + '_sd_' + (endDate || 'period') + '.png';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    if (btn) btn.innerHTML = originalText;
+  }).catch(function(err) {
+    console.error('Capture PNG error:', err);
+    alert('Gagal mengambil gambar: ' + (err.message || err));
+    if (btn) btn.innerHTML = originalText;
+  });
+}
+
+function captureInterfaceOrderPagePng() {
+  var element = document.getElementById('pg-interface-order');
+  var btn1 = document.getElementById('btnCaptureIoPageHeader');
+  var btn2 = document.getElementById('btnCaptureInterfaceOrder');
+  if (!element) return;
+
+  var orig1 = btn1 ? btn1.innerHTML : '';
+  var orig2 = btn2 ? btn2.innerHTML : '';
+
+  if (btn1) { btn1.innerHTML = '<span>⏳ Capturing Laporan...</span>'; btn1.disabled = true; }
+  if (btn2) { btn2.innerHTML = '<span>⏳ Capturing Laporan...</span>'; btn2.disabled = true; }
+
+  if (typeof html2canvas === 'undefined') {
+    alert('Library html2canvas belum siap. Silakan muat ulang halaman.');
+    if (btn1) { btn1.innerHTML = orig1; btn1.disabled = false; }
+    if (btn2) { btn2.innerHTML = orig2; btn2.disabled = false; }
+    return;
+  }
+
+  window.scrollTo({ top: 0, behavior: 'instant' });
+
+  setTimeout(function() {
+    html2canvas(element, {
+      scale: 2,
+      useCORS: true,
+      backgroundColor: document.body.classList.contains('dark') ? '#0f172a' : '#f8fafc',
+      logging: false,
+      scrollX: 0,
+      scrollY: -window.scrollY
+    }).then(function(canvas) {
+      var image = canvas.toDataURL("image/png");
+      var a = document.createElement('a');
+      a.href = image;
+      var today = new Date().toISOString().split('T')[0];
+      a.download = 'Laporan_Interface_Order_Control_Panel_' + today + '.png';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+
+      if (btn1) { btn1.innerHTML = orig1; btn1.disabled = false; }
+      if (btn2) { btn2.innerHTML = orig2; btn2.disabled = false; }
+    }).catch(function(err) {
+      console.error('Capture Interface Order Page error:', err);
+      alert('Gagal mengambil gambar halaman: ' + (err.message || err));
+      if (btn1) { btn1.innerHTML = orig1; btn1.disabled = false; }
+      if (btn2) { btn2.innerHTML = orig2; btn2.disabled = false; }
+    });
+  }, 150);
+}
+
+function toggleDsChartFormat() {
+  var elConvert = document.getElementById('ioDsConvertCont40');
+  if (elConvert) {
+    elConvert.checked = !elConvert.checked;
+    updateDsReportChart();
+  }
+}
+
 // ── HELPER UTILITIES FOR INTERFACE ORDER ─────────────────────────────
 function isInvalidIoVal(val) {
   if (val === null || val === undefined) return true;
@@ -16576,7 +17493,7 @@ function parseCbmVal(v) {
   } else if (str.indexOf(',') !== -1) {
     str = str.replace(',', '.');
   }
-  var num = parseFloat(str.replace(/[^0-9.-]/g, ''));
+  var num = parseFloat(str.replace(/[^0-9.eE+-]/g, ''));
   return isNaN(num) ? 0 : num;
 }
 
@@ -16736,6 +17653,393 @@ function filterIoAreaTable() {
       if (subtotalRow) subtotalRow.style.display = 'none';
     }
   });
+}
+
+// ══════════════════════════════════════════════════════════════════════
+//  MONITORING PORTAL CX DATA ENGINE
+// ══════════════════════════════════════════════════════════════════════
+var cxPortalData = [];
+var cxCategoriesData = [];
+var cxDailyTrendData = [];
+
+function renderMonitoringPortalPage() {
+  if (!cxPortalData || cxPortalData.length === 0) {
+    fetchMonitoringPortalData();
+  } else {
+    processAndRenderMonitoringPortal();
+  }
+}
+
+function fetchMonitoringPortalData() {
+  var tbodyCat = document.getElementById('cxCategoryTableBody');
+  var tbodyRej = document.getElementById('cxRejectedTableBody');
+  
+  if (tbodyCat) tbodyCat.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 24px; color: var(--ts);">⟳ Memuat data portal CX...</td></tr>';
+  if (tbodyRej) tbodyRej.innerHTML = '<tr><td colspan="3" style="text-align: center; padding: 24px; color: var(--ts);">⟳ Memuat data portal CX...</td></tr>';
+
+  var cxUrl = "https://docs.google.com/spreadsheets/d/1vpYq040_6iyN0ft8Pjm-m9ZlL9sX-t4eNV89ngaKZGs/gviz/tq?tqx=out:csv&gid=0";
+  
+  Papa.parse(cxUrl, {
+    download: true,
+    header: true,
+    skipEmptyLines: true,
+    complete: function(results) {
+      if (results && results.data && results.data.length > 0) {
+        cxPortalData = results.data;
+        processAndRenderMonitoringPortal();
+      } else {
+        if (tbodyCat) tbodyCat.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 24px; color: var(--ts);">❌ Gagal memuat data / Data kosong.</td></tr>';
+        if (tbodyRej) tbodyRej.innerHTML = '<tr><td colspan="3" style="text-align: center; padding: 24px; color: var(--ts);">❌ Gagal memuat data / Data kosong.</td></tr>';
+      }
+    },
+    error: function(err) {
+      console.error("Error fetching Portal CX Data:", err);
+      if (tbodyCat) tbodyCat.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 24px; color: var(--ts);">❌ Terjadi kesalahan jaringan.</td></tr>';
+      if (tbodyRej) tbodyRej.innerHTML = '<tr><td colspan="3" style="text-align: center; padding: 24px; color: var(--ts);">❌ Terjadi kesalahan jaringan.</td></tr>';
+    }
+  });
+}
+
+function processAndRenderMonitoringPortal() {
+  var totalDone = 0;
+  var totalWaiting = 0;
+  var totalRejected = 0;
+  var datesWithDone = new Set();
+  var dailyStats = {};
+  
+  var categories = {};
+  var rejectedList = [];
+
+  cxPortalData.forEach(function(row) {
+    var jsonStr = row['DC Responsible Detail JSON'];
+    if (!jsonStr) return;
+    
+    var ndcObj = null;
+    try {
+      // Fix string for JSON parse if it's single quoted or malformed by PapaParse
+      var fixedStr = jsonStr.trim();
+      var arr = JSON.parse(fixedStr);
+      if (Array.isArray(arr)) {
+        for (var i=0; i<arr.length; i++) {
+          if (arr[i].name && arr[i].name.toUpperCase().indexOf('NDC SIDOARJO') !== -1) {
+            ndcObj = arr[i];
+            break;
+          }
+        }
+      }
+    } catch(e) {
+      // If parsing fails, fallback to simple string matching
+      if (jsonStr.toUpperCase().indexOf('NDC SIDOARJO') !== -1) {
+        ndcObj = {
+          name: 'NDC Sidoarjo',
+          status: row['Status DC Responsible'] || '',
+          note: row['Keterangan DC Responsible'] || ''
+        };
+      }
+    }
+    
+    if (!ndcObj) return; // Not NDC Sidoarjo
+    
+    var stat = (ndcObj.status || '').trim().toUpperCase();
+    var note = (ndcObj.note || '').trim().toUpperCase();
+    
+    var catStr = (row['Kategori Request'] || '').trim();
+    if (!catStr) catStr = 'TIDAK DIKETAHUI';
+    
+    var isDone = stat.indexOf('DONE') !== -1 || note.indexOf('DONE') !== -1;
+    var isRejected = stat.indexOf('REJECTED') !== -1 || note.indexOf('REJECTED') !== -1;
+    // assume waiting if not done/rejected
+    var isWaiting = !isDone && !isRejected;
+
+    var tsStr = (row['Timestamp'] || '').trim();
+    if (tsStr) {
+      var dPartStats = tsStr.split(' ')[0];
+      if (dPartStats.includes('/')) {
+        var dp = dPartStats.split('/');
+        if (dp.length === 3) {
+          if (dp[2].length === 4) dPartStats = dp[2] + '-' + dp[0].padStart(2, '0') + '-' + dp[1].padStart(2, '0');
+          else if (dp[0].length === 4) dPartStats = dp[0] + '-' + dp[1].padStart(2, '0') + '-' + dp[2].padStart(2, '0');
+        }
+      }
+      
+      if (!dailyStats[dPartStats]) {
+        dailyStats[dPartStats] = { date: dPartStats, total: 0, done: 0, rejected: 0, waiting: 0 };
+      }
+      dailyStats[dPartStats].total++;
+      if (isDone) dailyStats[dPartStats].done++;
+      else if (isRejected) dailyStats[dPartStats].rejected++;
+      else dailyStats[dPartStats].waiting++;
+    }
+
+    // Track for KPI
+    if (isDone) {
+      totalDone++;
+      if (tsStr) {
+        var dPart = dPartStats; // use the formatted one
+        datesWithDone.add(dPart);
+      }
+    } else if (isRejected) {
+      totalRejected++;
+      rejectedList.push({
+        id: (row['ID Request'] || '-'),
+        cat: catStr,
+        reason: ndcObj.note || ndcObj.status || '-'
+      });
+    } else {
+      totalWaiting++;
+    }
+
+    // Category aggregation
+    var cats = catStr.split('|');
+    cats.forEach(function(c) {
+      var cat = c.trim();
+      if (!cat) cat = 'TIDAK DIKETAHUI';
+      if (!categories[cat]) {
+        categories[cat] = { done: 0, waiting: 0, rejected: 0, total: 0, datesWithDone: new Set() };
+      }
+      categories[cat].total++;
+      if (isDone) {
+        categories[cat].done++;
+        var tsCat = (row['Timestamp'] || '').trim();
+        if (tsCat) {
+          var dPartCat = tsCat.split(' ')[0];
+          categories[cat].datesWithDone.add(dPartCat);
+        }
+      }
+      else if (isRejected) categories[cat].rejected++;
+      else categories[cat].waiting++;
+    });
+  });
+
+  // KPI calculations
+  var avgDone = 0;
+  if (datesWithDone.size > 0) {
+    avgDone = Math.round(totalDone / datesWithDone.size);
+  } else if (totalDone > 0) {
+    avgDone = totalDone;
+  }
+
+  setTxt('cxKpiDone', fn(totalDone));
+  setTxt('cxKpiWaiting', fn(totalWaiting));
+  setTxt('cxKpiRejected', fn(totalRejected));
+  setTxt('cxKpiAvgDone', fn(avgDone));
+  
+  var totalRequests = totalDone + totalWaiting + totalRejected;
+  var compRate = totalRequests > 0 ? Math.round((totalDone / totalRequests) * 100) : 0;
+  setTxt('cxKpiCompRate', compRate + '%');
+
+  // Prepare Daily Trend Data
+  var dailyArr = Object.values(dailyStats);
+  dailyArr.sort(function(a, b) {
+    var da = new Date(a.date);
+    var db = new Date(b.date);
+    return db - da; // Descending
+  });
+  cxDailyTrendData = dailyArr;
+  renderCxDailyTrendTable();
+
+  // Render Category Table
+  var catArr = Object.keys(categories).map(function(k) {
+    var stat = categories[k];
+    var avgDoneCat = 0;
+    if (stat.datesWithDone && stat.datesWithDone.size > 0) {
+      avgDoneCat = Math.round(stat.done / stat.datesWithDone.size);
+    } else if (stat.done > 0) {
+      avgDoneCat = stat.done;
+    }
+    stat.avgDone = avgDoneCat;
+    return { name: k, stats: stat };
+  });
+  // Sort by total descending
+  catArr.sort(function(a, b) { return b.stats.total - a.stats.total; });
+  cxCategoriesData = catArr;
+
+  renderCxCategoryTable(10); // Show top 10
+
+  // Render Rejected Table (Recent ones first)
+  var tbodyRej = document.getElementById('cxRejectedTableBody');
+  if (tbodyRej) {
+    var htmlRej = '';
+    var recentRej = rejectedList.slice().reverse().slice(0, 50); // limit to 50 for perf
+    recentRej.forEach(function(rej) {
+      htmlRej += '<tr style="border-bottom: 1px solid var(--border); transition: background 0.2s ease;">';
+      htmlRej += '  <td style="padding: 10px 12px; font-weight: 700; font-size: 11px; color: var(--tp);">' + esc(rej.id) + '</td>';
+      htmlRej += '  <td style="padding: 10px 12px; font-size: 11px; color: var(--ts);">' + esc(rej.cat) + '</td>';
+      htmlRej += '  <td style="padding: 10px 12px; font-size: 11px; color: #b91c1c; max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="' + esc(rej.reason) + '">' + esc(rej.reason) + '</td>';
+      htmlRej += '</tr>';
+    });
+
+    if (htmlRej === '') {
+      htmlRej = '<tr><td colspan="3" style="text-align: center; padding: 24px; color: var(--ts);">Tidak ada rejected hari ini. 🎉</td></tr>';
+    }
+    tbodyRej.innerHTML = htmlRej;
+  }
+}
+
+function renderCxCategoryTable(limit) {
+  var tbodyCat = document.getElementById('cxCategoryTableBody');
+  if (!tbodyCat) return;
+
+  var displayArr = limit ? cxCategoriesData.slice(0, limit) : cxCategoriesData;
+  var htmlCat = '';
+  displayArr.forEach(function(item) {
+    htmlCat += '<tr style="border-bottom: 1px solid var(--border); transition: background 0.2s ease;">';
+    htmlCat += '  <td style="padding: 12px 16px; font-weight: 700; color: var(--tp);">' + esc(item.name) + '</td>';
+    htmlCat += '  <td style="padding: 12px 16px; text-align: center; font-family: var(--font-mono); font-weight: 800; color: #047857;">' + fn(item.stats.done) + '</td>';
+    htmlCat += '  <td style="padding: 12px 16px; text-align: center; font-family: var(--font-mono); font-weight: 800; color: #b45309;">' + fn(item.stats.waiting) + '</td>';
+    htmlCat += '  <td style="padding: 12px 16px; text-align: center; font-family: var(--font-mono); font-weight: 800; color: #b91c1c;">' + fn(item.stats.rejected) + '</td>';
+    htmlCat += '  <td style="padding: 12px 16px; text-align: center; font-family: var(--font-mono); font-weight: 900; color: #1d4ed8; background: rgba(37, 99, 235, 0.08);">' + fn(item.stats.total) + '</td>';
+    htmlCat += '</tr>';
+  });
+  
+  if (htmlCat === '') {
+    htmlCat = '<tr><td colspan="5" style="text-align: center; padding: 24px; color: var(--ts);">Tidak ada data</td></tr>';
+  }
+  tbodyCat.innerHTML = htmlCat;
+
+  // Render Average per Category Table
+  var tbodyAvg = document.getElementById('cxCategoryAvgTableBody');
+  if (tbodyAvg) {
+    // Sort by avg descending for this table
+    var avgArr = displayArr.slice().sort(function(a, b) { return b.stats.avgDone - a.stats.avgDone; });
+    var htmlAvg = '';
+    avgArr.forEach(function(item) {
+      htmlAvg += '<tr style="border-bottom: 1px solid var(--border); transition: background 0.2s ease;">';
+      htmlAvg += '  <td style="padding: 12px 16px; font-weight: 700; color: var(--tp);">' + esc(item.name) + '</td>';
+      htmlAvg += '  <td style="padding: 12px 16px; text-align: center; font-family: var(--font-mono); font-weight: 800; color: #115e59;">' + fn(item.stats.avgDone) + '</td>';
+      htmlAvg += '</tr>';
+    });
+    if (htmlAvg === '') {
+      htmlAvg = '<tr><td colspan="2" style="text-align: center; padding: 24px; color: var(--ts);">Tidak ada data</td></tr>';
+    }
+    tbodyAvg.innerHTML = htmlAvg;
+  }
+}
+
+var cxTrendChartInstance = null;
+
+function renderCxDailyTrendTable() {
+  var tbody = document.getElementById('cxDailyTrendTableBody');
+  if (!tbody) return;
+
+  var now = new Date();
+  var yyyy = now.getFullYear();
+  var mm = String(now.getMonth() + 1).padStart(2, '0');
+  var dd = String(now.getDate()).padStart(2, '0');
+  var todayStr = yyyy + '-' + mm + '-' + dd;
+  var firstDayStr = yyyy + '-' + mm + '-01';
+
+  // Filter default: bulan berjalan hingga hari ini (agar tidak kosong jika data hanya ada hari ini)
+  var displayData = cxDailyTrendData.filter(function(item) {
+    return item.date >= firstDayStr && item.date <= todayStr;
+  });
+
+  // Table (Descending)
+  var tableData = displayData.slice().sort(function(a, b) {
+    return new Date(b.date) - new Date(a.date);
+  });
+
+  var html = '';
+  tableData.forEach(function(item) {
+    var cRate = item.total > 0 ? Math.round((item.done / item.total) * 100) : 0;
+    html += '<tr style="border-bottom: 1px solid var(--border); transition: background 0.2s ease;">';
+    html += '  <td style="padding: 10px 12px; font-weight: 700; font-size: 11px; color: var(--tp);">' + esc(item.date) + '</td>';
+    html += '  <td style="padding: 10px 12px; text-align: center; font-family: var(--font-mono); font-weight: 900; color: #1d4ed8; background: rgba(37, 99, 235, 0.08);">' + fn(item.total) + '</td>';
+    html += '  <td style="padding: 10px 12px; text-align: center; font-family: var(--font-mono); font-weight: 800; color: #047857;">' + fn(item.done) + '</td>';
+    html += '  <td style="padding: 10px 12px; text-align: center; font-family: var(--font-mono); font-weight: 800; color: #b45309;">' + fn(item.waiting) + '</td>';
+    html += '  <td style="padding: 10px 12px; text-align: center; font-family: var(--font-mono); font-weight: 800; color: #b91c1c;">' + fn(item.rejected) + '</td>';
+    html += '  <td style="padding: 10px 12px; text-align: center; font-family: var(--font-mono); font-weight: 900; color: #7e22ce; background: rgba(168, 85, 247, 0.08);">' + cRate + '%</td>';
+    html += '</tr>';
+  });
+
+  if (html === '') {
+    html = '<tr><td colspan="6" style="text-align: center; padding: 24px; color: var(--ts);">Tidak ada data trend harian di periode ini.</td></tr>';
+  }
+  tbody.innerHTML = html;
+
+  // Chart (Ascending)
+  var chartData = displayData.slice().sort(function(a, b) {
+    return new Date(a.date) - new Date(b.date);
+  });
+  renderCxDailyTrendChart(chartData);
+}
+
+function renderCxDailyTrendChart(data) {
+  var canvas = document.getElementById('cxDailyTrendChart');
+  if (!canvas) return;
+  var ctx = canvas.getContext('2d');
+
+  if (cxTrendChartInstance) {
+    cxTrendChartInstance.destroy();
+  }
+
+  var labels = data.map(function(d) { return d.date.substring(5); }); // MM-DD
+  var dataTotal = data.map(function(d) { return d.total; });
+  var dataDone = data.map(function(d) { return d.done; });
+
+  cxTrendChartInstance = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [
+        {
+          label: 'Total Request',
+          data: dataTotal,
+          borderColor: '#2563eb',
+          backgroundColor: 'rgba(37, 99, 235, 0.1)',
+          borderWidth: 2,
+          tension: 0.3,
+          fill: true
+        },
+        {
+          label: 'Done',
+          data: dataDone,
+          borderColor: '#10b981',
+          backgroundColor: 'rgba(16, 185, 129, 0.1)',
+          borderWidth: 2,
+          tension: 0.3,
+          fill: true
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'top', labels: { color: document.documentElement.classList.contains('dark') ? '#cbd5e1' : '#334155', font: { family: 'Plus Jakarta Sans', weight: 'bold' } } },
+        tooltip: { mode: 'index', intersect: false }
+      },
+      scales: {
+        x: { ticks: { color: '#94a3b8', font: { family: 'Plus Jakarta Sans' } }, grid: { display: false } },
+        y: { ticks: { color: '#94a3b8', font: { family: 'Plus Jakarta Sans' } }, grid: { color: document.documentElement.classList.contains('dark') ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)' }, beginAtZero: true }
+      }
+    }
+  });
+}
+
+function openCxCategoryModal() {
+  var tbodyModal = document.getElementById('cxCategoryModalTableBody');
+  if (tbodyModal) {
+    var htmlCat = '';
+    cxCategoriesData.forEach(function(item) {
+      htmlCat += '<tr style="border-bottom: 1px solid var(--border); transition: background 0.2s ease;">';
+      htmlCat += '  <td style="padding: 12px 16px; font-weight: 700; color: var(--tp);">' + esc(item.name) + '</td>';
+      htmlCat += '  <td style="padding: 12px 16px; text-align: center; font-family: var(--font-mono); font-weight: 800; color: #047857;">' + fn(item.stats.done) + '</td>';
+      htmlCat += '  <td style="padding: 12px 16px; text-align: center; font-family: var(--font-mono); font-weight: 800; color: #b45309;">' + fn(item.stats.waiting) + '</td>';
+      htmlCat += '  <td style="padding: 12px 16px; text-align: center; font-family: var(--font-mono); font-weight: 800; color: #b91c1c;">' + fn(item.stats.rejected) + '</td>';
+      htmlCat += '  <td style="padding: 12px 16px; text-align: center; font-family: var(--font-mono); font-weight: 900; color: #1d4ed8; background: rgba(37, 99, 235, 0.08);">' + fn(item.stats.total) + '</td>';
+      htmlCat += '</tr>';
+    });
+    tbodyModal.innerHTML = htmlCat;
+  }
+  
+  var modal = document.getElementById('cxCategoryModal');
+  if (modal) modal.classList.add('active');
+}
+
+function closeCxCategoryModal() {
+  var modal = document.getElementById('cxCategoryModal');
+  if (modal) modal.classList.remove('active');
 }
 
 </script>
