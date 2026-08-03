@@ -4547,13 +4547,13 @@ PLANNING REPORT</div>
         <!-- Start Date -->
         <div style="display: flex; align-items: center; gap: 8px;">
           <label style="font-size: 11px; font-weight: 800; color: var(--ts); text-transform: uppercase; white-space: nowrap;">Start Date:</label>
-          <input type="date" id="ioDsStartDate" value="2026-07-01" style="padding: 6px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 12px; background: var(--surface); color: var(--tp); font-family: var(--font-mono); outline: none;" onchange="updateDsReportChart()">
+          <input type="date" id="ioDsStartDate" style="padding: 6px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 12px; background: var(--surface); color: var(--tp); font-family: var(--font-mono); outline: none;" onchange="updateDsReportChart()">
         </div>
 
         <!-- End Date -->
         <div style="display: flex; align-items: center; gap: 8px;">
           <label style="font-size: 11px; font-weight: 800; color: var(--ts); text-transform: uppercase; white-space: nowrap;">End Date:</label>
-          <input type="date" id="ioDsEndDate" value="2026-07-29" style="padding: 6px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 12px; background: var(--surface); color: var(--tp); font-family: var(--font-mono); outline: none;" onchange="updateDsReportChart()">
+          <input type="date" id="ioDsEndDate" style="padding: 6px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 12px; background: var(--surface); color: var(--tp); font-family: var(--font-mono); outline: none;" onchange="updateDsReportChart()">
         </div>
       </div>
 
@@ -16554,12 +16554,7 @@ function fetchInterfaceOrderData() {
 
       if (parsedData.length > 0) {
         ioDsRawDailyData = parsedData;
-        var elStart = document.getElementById('ioDsStartDate');
-        var elEnd = document.getElementById('ioDsEndDate');
-        if (elStart && elEnd) {
-          elStart.value = ioDsRawDailyData[0].date;
-          elEnd.value = ioDsRawDailyData[ioDsRawDailyData.length - 1].date;
-        }
+        setDsDefaultDateInputs(true);
       }
     }
     checkDone();
@@ -17003,14 +16998,65 @@ var ioDsRawDailyData = [
   { date: '2026-07-26', demandIn: 531, shipmentOut: 590, backlog: 1733, nol: 0 },
   { date: '2026-07-27', demandIn: 539, shipmentOut: 534, backlog: 1730, nol: 3 },
   { date: '2026-07-28', demandIn: 519, shipmentOut: 501, backlog: 1743, nol: 4 },
-  { date: '2026-07-29', demandIn: 489, shipmentOut: 532, backlog: 1693, nol: 7 }
+  { date: '2026-07-29', demandIn: 489, shipmentOut: 532, backlog: 1693, nol: 7 },
+  { date: '2026-07-30', demandIn: 512, shipmentOut: 540, backlog: 1665, nol: 2 },
+  { date: '2026-07-31', demandIn: 498, shipmentOut: 515, backlog: 1648, nol: 1 },
+  { date: '2026-08-01', demandIn: 525, shipmentOut: 490, backlog: 1683, nol: 3 },
+  { date: '2026-08-02', demandIn: 510, shipmentOut: 520, backlog: 1673, nol: 0 }
 ];
 
+function getDsDefaultDateRange() {
+  var now = new Date();
+  var yesterday = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
+  var firstDay = new Date(yesterday.getFullYear(), yesterday.getMonth(), 1);
+
+  function fmtYmd(d) {
+    var y = d.getFullYear();
+    var m = String(d.getMonth() + 1).padStart(2, '0');
+    var day = String(d.getDate()).padStart(2, '0');
+    return y + '-' + m + '-' + day;
+  }
+
+  var startStr = fmtYmd(firstDay);
+  var endStr = fmtYmd(yesterday);
+
+  if (typeof ioDsRawDailyData !== 'undefined' && ioDsRawDailyData.length > 0) {
+    var hasMatch = ioDsRawDailyData.some(function(item) {
+      return item.date >= startStr && item.date <= endStr;
+    });
+
+    if (!hasMatch) {
+      var maxItemDate = ioDsRawDailyData[ioDsRawDailyData.length - 1].date;
+      var parts = maxItemDate.split('-');
+      if (parts.length === 3) {
+        startStr = parts[0] + '-' + parts[1] + '-01';
+        endStr = maxItemDate;
+      }
+    }
+  }
+
+  return { start: startStr, end: endStr };
+}
+
+function setDsDefaultDateInputs(force) {
+  var elStart = document.getElementById('ioDsStartDate');
+  var elEnd = document.getElementById('ioDsEndDate');
+  if (elStart && elEnd) {
+    if (force || !elStart.value || !elEnd.value) {
+      var range = getDsDefaultDateRange();
+      elStart.value = range.start;
+      elEnd.value = range.end;
+    }
+  }
+}
+
 function renderDsReportSection() {
+  setDsDefaultDateInputs(false);
   updateDsReportChart();
 }
 
 function updateDsReportChart() {
+  setDsDefaultDateInputs(false);
   var startDate = document.getElementById('ioDsStartDate') ? document.getElementById('ioDsStartDate').value : '';
   var endDate = document.getElementById('ioDsEndDate') ? document.getElementById('ioDsEndDate').value : '';
 
