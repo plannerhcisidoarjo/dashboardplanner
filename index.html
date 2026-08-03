@@ -2893,7 +2893,7 @@ PLANNING REPORT</div>
             <span class="badge badge-amber">LP: <strong id="ovMapLp">0</strong></span>
           </div>
         </div>
-        <div id="coverage-map" style="height:400px; width:100%; border-radius:8px; margin-top:12px; background:#121b26;"></div>
+        <div id="coverage-map" style="height:400px; width:100%; border-radius:8px; margin-top:12px; background:#121b26; cursor:default;"></div>
       </div>
     </div>
     
@@ -5205,6 +5205,7 @@ var isLiveData   = false;
 var activePage   = 'overview';
 var mapInstance  = null;
 var mapMarkers   = [];
+var mapBoundsStore = null;
 var userStartPoint = [-7.4478, 112.7183]; // NDC Sidoarjo as initial / default start
 var hasUserGeolocation = false;
 var otdChartInstance = null;
@@ -6399,12 +6400,27 @@ function drawSpeedometer(canvasId, targetValue) {
 
 function initOverviewMap() {
   if (mapInstance) {
+    setTimeout(function() {
+      mapInstance.invalidateSize();
+      if (mapBoundsStore) {
+        mapInstance.fitBounds(mapBoundsStore, { padding: [25, 25] });
+      }
+    }, 100);
     loadMapMarkersFromSpreadsheet();
     return;
   }
   
   try {
-    mapInstance = L.map('coverage-map', { zoomControl: false }).setView([-7.4478, 112.7183], 5);
+    mapInstance = L.map('coverage-map', {
+      zoomControl: false,
+      dragging: false,
+      touchZoom: false,
+      doubleClickZoom: false,
+      scrollWheelZoom: false,
+      boxZoom: false,
+      keyboard: false,
+      tap: false
+    }).setView([-7.4478, 112.7183], 5);
     
     L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
@@ -6559,8 +6575,20 @@ function loadMapMarkersFromSpreadsheet() {
           }
         });
         
-        // Auto-center map on the userStartPoint
-        if (mapInstance) {
+        // Auto-fit map bounds so all nodes/points are clearly visible
+        if (mapInstance && validMarkers.length > 0) {
+          var boundsPoints = [userStartPoint];
+          validMarkers.forEach(function(m) {
+            boundsPoints.push([m.lat, m.lng]);
+          });
+          mapBoundsStore = L.latLngBounds(boundsPoints);
+          setTimeout(function() {
+            if (mapInstance) {
+              mapInstance.invalidateSize();
+              mapInstance.fitBounds(mapBoundsStore, { padding: [25, 25] });
+            }
+          }, 100);
+        } else if (mapInstance) {
           mapInstance.setView(userStartPoint, 5);
         }
         
