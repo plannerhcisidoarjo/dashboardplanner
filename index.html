@@ -2798,11 +2798,11 @@ PLANNING REPORT</div>
             </div>
             <div class="ov-stats-list">
               <div class="ov-stat-item">
-                <span class="ov-stat-lbl">SLA GRW (Warehouse)</span>
+                <span class="ov-stat-lbl">SLA GRW</span>
                 <span class="ov-stat-val text-blue" id="ovSlaGrwTotal">0%</span>
               </div>
               <div class="ov-stat-item">
-                <span class="ov-stat-lbl">SLA Customer (Shipping)</span>
+                <span class="ov-stat-lbl">SLA Customer</span>
                 <span class="ov-stat-val text-amber" id="ovSlaCustTotal">0%</span>
               </div>
             </div>
@@ -3327,6 +3327,176 @@ PLANNING REPORT</div>
 
     </div>
 
+    <!-- AGING & STATUS BREAKDOWN MATRIX TABLE CARD -->
+    <div class="card" style="margin-top:20px; overflow:hidden; border-radius:14px; box-shadow: 0 4px 20px -2px rgba(0,0,0,0.05); border: 1px solid var(--border);">
+      <div style="height:4px; background: linear-gradient(90deg, #2563eb, #0284c7, #f59e0b, #ea580c, #dc2626);"></div>
+      <div class="card-header" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; padding:18px 20px 12px 20px;">
+        <div>
+          <div class="card-title" style="display:flex; align-items:center; gap:10px; font-size:15px; font-weight:800; letter-spacing:-0.2px;">
+            <span style="display:inline-flex; align-items:center; justify-content:center; width:32px; height:32px; border-radius:8px; background:linear-gradient(135deg, rgba(37,99,235,0.12), rgba(220,38,38,0.12)); color:#2563eb; font-size:16px;">📊</span>
+            <span>BREAKDOWN AGING & STATUS ORDER POOL</span>
+          </div>
+          <div class="card-sub" style="font-size:12px; color:var(--ts); margin-top:3px;">Matriks status operasional order berdasarkan rentang aging dengan indikator khusus aging kritis (8-14, 15-21, 22+ Hari)</div>
+        </div>
+        
+        <!-- Filter Controls -->
+        <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+          <div style="display:flex; align-items:center; gap:6px;">
+            <label style="font-size:11px; font-weight:700; color:var(--ts); text-transform:uppercase;">Kategori:</label>
+            <select id="agingMatrixSourceFilter" class="filter-select" onchange="renderAgingMatrixTable()" style="padding:6px 12px; border-radius:8px; font-size:12px; font-weight:600; background:var(--surface); border:1px solid var(--border); color:var(--tp);">
+              <option value="ALL">Semua (GRW + Customer)</option>
+              <option value="GRW">Order GRW</option>
+              <option value="CUST">Order Customer</option>
+            </select>
+          </div>
+
+          <div style="display:flex; align-items:center; gap:6px;">
+            <label style="font-size:11px; font-weight:700; color:var(--ts); text-transform:uppercase;">Booking:</label>
+            <select id="agingMatrixBookingFilter" class="filter-select" onchange="renderAgingMatrixTable()" style="padding:6px 12px; border-radius:8px; font-size:12px; font-weight:600; background:var(--surface); border:1px solid var(--border); color:var(--tp);">
+              <option value="ALL">Semua Booking (Regular + Transit)</option>
+              <option value="REGULAR">Regular</option>
+              <option value="TRANSIT">Transit</option>
+            </select>
+          </div>
+
+          <div style="display:flex; align-items:center; gap:6px;">
+            <label style="font-size:11px; font-weight:700; color:var(--ts); text-transform:uppercase;">Metric:</label>
+            <select id="agingMatrixMetricFilter" class="filter-select" onchange="renderAgingMatrixTable()" style="padding:6px 12px; border-radius:8px; font-size:12px; font-weight:600; background:var(--surface); border:1px solid var(--border); color:var(--tp);">
+              <option value="ORDER">By Order (Jumlah Order)</option>
+              <option value="CBM">By CBM (Total Volume m³)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Badges Summary Row -->
+      <div id="agingMatrixKpiBadges" style="display:flex; align-items:center; gap:10px; padding:0 20px 14px 20px; flex-wrap:wrap;"></div>
+
+      <!-- Table Container -->
+      <div class="table-wrap" style="overflow-x:auto; padding:0 20px 20px 20px;">
+        <table class="order-table" id="agingMatrixTable" style="width:100%; border-collapse:separate; border-spacing:0; text-align:left; border-radius:10px; border:1px solid var(--border); overflow:hidden;">
+          <thead>
+            <tr style="background:var(--surface-hover); border-bottom:2px solid var(--border);">
+              <th style="padding:12px 16px; font-size:12px; font-weight:800; color:var(--tp); text-transform:uppercase; letter-spacing:0.3px; width:210px;">Status Order</th>
+              <th style="padding:12px 14px; font-size:12px; font-weight:800; color:var(--tp); text-align:right; text-transform:uppercase; letter-spacing:0.3px; min-width:85px;">Total</th>
+              <th style="padding:10px 12px; text-align:right; min-width:85px;">
+                <span style="padding:4px 8px; border-radius:12px; background:rgba(16,185,129,0.12); color:#059669; font-size:11px; font-weight:700; display:inline-block;">0 Hari</span>
+              </th>
+              <th style="padding:10px 12px; text-align:right; min-width:85px;">
+                <span style="padding:4px 8px; border-radius:12px; background:rgba(14,165,233,0.12); color:#0284c7; font-size:11px; font-weight:700; display:inline-block;">1-3 Hari</span>
+              </th>
+              <th style="padding:10px 12px; text-align:right; min-width:85px;">
+                <span style="padding:4px 8px; border-radius:12px; background:rgba(245,158,11,0.12); color:#d97706; font-size:11px; font-weight:700; display:inline-block;">4-7 Hari</span>
+              </th>
+              <th style="padding:10px 12px; text-align:right; min-width:110px; background:rgba(245,158,11,0.06); border-left:1px dashed rgba(245,158,11,0.3);">
+                <span style="padding:4px 10px; border-radius:12px; background:rgba(245,158,11,0.2); color:#b45309; font-size:11px; font-weight:800; border:1px solid rgba(245,158,11,0.4); display:inline-flex; align-items:center; gap:4px; box-shadow:0 1px 3px rgba(245,158,11,0.15);">⚠️ 8-14 Hari</span>
+              </th>
+              <th style="padding:10px 12px; text-align:right; min-width:110px; background:rgba(234,88,12,0.06);">
+                <span style="padding:4px 10px; border-radius:12px; background:rgba(234,88,12,0.2); color:#c2410c; font-size:11px; font-weight:800; border:1px solid rgba(234,88,12,0.4); display:inline-flex; align-items:center; gap:4px; box-shadow:0 1px 3px rgba(234,88,12,0.15);">🔥 15-21 Hari</span>
+              </th>
+              <th style="padding:10px 12px; text-align:right; min-width:110px; background:rgba(220,38,38,0.06);">
+                <span style="padding:4px 10px; border-radius:12px; background:rgba(220,38,38,0.22); color:#dc2626; font-size:11px; font-weight:800; border:1px solid rgba(220,38,38,0.45); display:inline-flex; align-items:center; gap:4px; box-shadow:0 1px 3px rgba(220,38,38,0.2);">🚨 22+ Hari</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody id="agingMatrixTableBody">
+            <!-- Rendered via JS -->
+          </tbody>
+          <tfoot id="agingMatrixTableFoot" style="border-top:2px solid var(--border); font-weight:800;">
+            <!-- Rendered via JS -->
+          </tfoot>
+        </table>
+      </div>
+    </div>
+
+    <!-- DETAIL REASON AGING ORDER (8-14, 15-21, 22+ HARI) CARD -->
+    <div class="card" id="agingReasonCard" style="margin-top:20px; overflow:hidden; border-radius:14px; box-shadow: 0 4px 20px -2px rgba(0,0,0,0.05); border: 1px solid var(--border);">
+      <div style="height:4px; background: linear-gradient(90deg, #f59e0b, #ea580c, #dc2626);"></div>
+      
+      <div class="card-header" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; padding:18px 20px 12px 20px;">
+        <div>
+          <div class="card-title" style="display:flex; align-items:center; gap:10px; font-size:15px; font-weight:800; letter-spacing:-0.2px;">
+            <span style="display:inline-flex; align-items:center; justify-content:center; width:32px; height:32px; border-radius:8px; background:linear-gradient(135deg, rgba(245,158,11,0.15), rgba(220,38,38,0.18)); color:#dc2626; font-size:16px;">📝</span>
+            <span>DETAIL REASON & CATATAN KENDALA AGING (8-14, 15-21, 22+ HARI)</span>
+          </div>
+          <div class="card-sub" style="font-size:12px; color:var(--ts); margin-top:3px;">
+            Rincian alasan penundaan & status pengiriman untuk order dengan rentang aging kritis dari Sheet Live
+          </div>
+        </div>
+
+        <!-- Filter Controls for Aging Reason -->
+        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+          <!-- Search box -->
+          <div style="position:relative; min-width:180px;">
+            <input type="text" id="agingReasonSearch" placeholder="Cari tujuan, reason, status..." oninput="renderAgingReasonSection()" style="width:100%; padding:6px 12px 6px 28px; border-radius:8px; font-size:12px; background:var(--surface); border:1px solid var(--border); color:var(--tp); font-weight:500;">
+            <span style="position:absolute; left:9px; top:50%; transform:translateY(-50%); opacity:0.5; font-size:12px;">🔍</span>
+          </div>
+
+          <!-- Filter Rentang Aging -->
+          <div style="display:flex; align-items:center; gap:4px;">
+            <label style="font-size:11px; font-weight:700; color:var(--ts); text-transform:uppercase;">Aging:</label>
+            <select id="agingReasonBucketFilter" class="filter-select" onchange="renderAgingReasonSection()" style="padding:6px 10px; border-radius:8px; font-size:12px; font-weight:600; background:var(--surface); border:1px solid var(--border); color:var(--tp);">
+              <option value="ALL">Semua Critical (8-14, 15-21, 22+)</option>
+              <option value="8-14">8-14 Hari</option>
+              <option value="15-21">15-21 Hari</option>
+              <option value="22 UP">22+ Hari</option>
+            </select>
+          </div>
+
+          <!-- Filter Reason / Kendala -->
+          <div style="display:flex; align-items:center; gap:4px;">
+            <label style="font-size:11px; font-weight:700; color:var(--ts); text-transform:uppercase;">Reason:</label>
+            <select id="agingReasonTextFilter" class="filter-select" onchange="renderAgingReasonSection()" style="padding:6px 10px; border-radius:8px; font-size:12px; font-weight:600; background:var(--surface); border:1px solid var(--border); color:var(--tp);">
+              <option value="ALL">Semua Reason</option>
+            </select>
+          </div>
+
+          <!-- Filter Status Order -->
+          <div style="display:flex; align-items:center; gap:4px;">
+            <label style="font-size:11px; font-weight:700; color:var(--ts); text-transform:uppercase;">Status:</label>
+            <select id="agingReasonStatusFilter" class="filter-select" onchange="renderAgingReasonSection()" style="padding:6px 10px; border-radius:8px; font-size:12px; font-weight:600; background:var(--surface); border:1px solid var(--border); color:var(--tp);">
+              <option value="ALL">Semua Status</option>
+            </select>
+          </div>
+
+          <!-- Filter Area -->
+          <div style="display:flex; align-items:center; gap:4px;">
+            <label style="font-size:11px; font-weight:700; color:var(--ts); text-transform:uppercase;">Area:</label>
+            <select id="agingReasonAreaFilter" class="filter-select" onchange="renderAgingReasonSection()" style="padding:6px 10px; border-radius:8px; font-size:12px; font-weight:600; background:var(--surface); border:1px solid var(--border); color:var(--tp);">
+              <option value="ALL">Semua Area</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- KPI Summary Badges for Reason Section -->
+      <div id="agingReasonKpiBadges" style="display:flex; align-items:center; gap:10px; padding:0 20px 14px 20px; flex-wrap:wrap;"></div>
+
+      <!-- Table Container -->
+      <div class="table-wrap" style="overflow-x:auto; padding:0 20px 20px 20px;">
+        <table class="order-table" id="agingReasonTable" style="width:100%; border-collapse:separate; border-spacing:0; text-align:left; border-radius:10px; border:1px solid var(--border); overflow:hidden;">
+          <thead>
+            <tr style="background:var(--surface-hover); border-bottom:2px solid var(--border);">
+              <th style="padding:12px 14px; font-size:11px; font-weight:800; color:var(--tp); text-transform:uppercase; letter-spacing:0.3px; width:45px; text-align:center;">#</th>
+              <th style="padding:12px 14px; font-size:11px; font-weight:800; color:var(--tp); text-transform:uppercase; letter-spacing:0.3px; min-width:110px;">Rentang Aging</th>
+              <th style="padding:12px 14px; font-size:11px; font-weight:800; color:var(--tp); text-transform:uppercase; letter-spacing:0.3px; min-width:75px;">Area</th>
+              <th style="padding:12px 14px; font-size:11px; font-weight:800; color:var(--tp); text-transform:uppercase; letter-spacing:0.3px; text-align:right; min-width:90px;">Jumlah Order</th>
+              <th style="padding:12px 14px; font-size:11px; font-weight:800; color:var(--tp); text-transform:uppercase; letter-spacing:0.3px; min-width:140px;">Status Order</th>
+              <th style="padding:12px 14px; font-size:11px; font-weight:800; color:var(--tp); text-transform:uppercase; letter-spacing:0.3px; min-width:160px;">Tujuan / Destinasi</th>
+              <th style="padding:12px 14px; font-size:11px; font-weight:800; color:var(--tp); text-transform:uppercase; letter-spacing:0.3px; min-width:180px;">Detail Reason / Kendala</th>
+              <th style="padding:12px 14px; font-size:11px; font-weight:800; color:var(--tp); text-transform:uppercase; letter-spacing:0.3px; min-width:130px;">Plan Kirim</th>
+            </tr>
+          </thead>
+          <tbody id="agingReasonTableBody">
+            <!-- Rendered via JS -->
+          </tbody>
+          <tfoot id="agingReasonTableFoot">
+            <!-- Rendered via JS -->
+          </tfoot>
+        </table>
+      </div>
+    </div>
+
   <div class="card" style="margin-top:16px;">
   <div class="card-header">
     <div>
@@ -3603,8 +3773,8 @@ PLANNING REPORT</div>
         <thead>
           <tr style="border-bottom:1px solid var(--border); color:var(--muted); font-size:11px;">
             <th rowspan="2" style="padding:6px 10px; vertical-align:middle; width:120px; text-align:center;">Business Unit</th>
-            <th colspan="4" style="text-align:center; border-bottom:1px solid var(--border); border-right:3px solid var(--border); padding:6px 8px; background:rgba(37,99,235,0.06); color:var(--blue); font-weight:800;">🏭 SLA GRW (Warehouse)</th>
-            <th colspan="4" style="text-align:center; border-bottom:1px solid var(--border); padding:6px 8px; background:rgba(217,119,6,0.06); color:var(--amber); font-weight:800;">🚚 SLA Customer (Shipping)</th>
+            <th colspan="4" style="text-align:center; border-bottom:1px solid var(--border); border-right:3px solid var(--border); padding:6px 8px; background:rgba(37,99,235,0.06); color:var(--blue); font-weight:800;">🏭 SLA GRW</th>
+            <th colspan="4" style="text-align:center; border-bottom:1px solid var(--border); padding:6px 8px; background:rgba(217,119,6,0.06); color:var(--amber); font-weight:800;">🚚 SLA Customer</th>
           </tr>
           <tr style="border-bottom:1px solid var(--border); color:var(--muted); font-size:10px;">
             <th style="text-align:center; padding:4px 6px; background:rgba(37,99,235,0.03);">Hits</th>
@@ -3673,6 +3843,18 @@ PLANNING REPORT</div>
         <div class="card-sub">Detailed audit trail of all orders missing the 95% threshold</div>
       </div>
       <div style="display:flex; gap:12px; align-items: center; flex-wrap: wrap; width: 100%; margin-top: 10px; border-top: 1px solid var(--border); padding-top: 12px;">
+        <!-- Type Order Filter Toggle -->
+        <div class="filter-group">
+          <span class="filter-label">Type Order:</span>
+          <div class="filter-toggle" id="slaMissTypeToggle">
+            <button class="active" onclick="setSlaMissType('ALL', this)">Semua</button>
+            <button onclick="setSlaMissType('GRW', this)">GRW</button>
+            <button onclick="setSlaMissType('CUSTOMER', this)">CUSTOMER</button>
+          </div>
+        </div>
+
+        <div class="filter-divider" style="height: 24px;"></div>
+
         <!-- Area Toggle -->
         <div class="filter-group">
           <span class="filter-label">Area:</span>
@@ -3698,15 +3880,15 @@ PLANNING REPORT</div>
 
         <!-- Category Dropdown -->
         <div class="filter-group">
-          <span class="filter-label">Kategori:</span>
-          <select id="slaMissCategorySelect" class="filter-select" style="min-width: 150px; padding: 4px 8px; font-size: 11px;" onchange="setSlaMissCategory(this.value)">
+          <span class="filter-label">Kategori Reason:</span>
+          <select id="slaMissCategorySelect" class="filter-select" style="min-width: 160px; padding: 4px 8px; font-size: 11px;" onchange="setSlaMissCategory(this.value)">
             <option value="ALL">Semua Kategori</option>
           </select>
         </div>
 
         <!-- Search Box & Export -->
         <div style="display:flex; gap:8px; align-items: center; margin-left: auto;">
-          <input type="text" id="slaMissSearch" class="search-box" style="margin-bottom:0; width:220px;" placeholder="Cari pesanan terlambat..." oninput="applySlaMissFilters()">
+          <input type="text" id="slaMissSearch" class="search-box" style="margin-bottom:0; width:200px;" placeholder="Cari pesanan terlambat..." oninput="applySlaMissFilters()">
           <button class="btn-refresh" style="font-size:11px; padding:4px 10px; background:var(--blue); border-color:var(--blue);" onclick="exportSlaMissToCsv()">📥 Export CSV</button>
         </div>
       </div>
@@ -3716,6 +3898,7 @@ PLANNING REPORT</div>
         <thead>
           <tr style="border-bottom:1px solid var(--border); color:var(--muted); font-size:11px;">
             <th style="padding:8px 4px; text-align:center;">No</th>
+            <th style="padding:8px 4px; text-align:center;">TYPE ORDER</th>
             <th style="padding:8px 4px;">ORDERKEY</th>
             <th style="padding:8px 4px;">EXTERNORDERKEY</th>
             <th style="padding:8px 4px;">SHIP TO NAME</th>
@@ -3883,9 +4066,9 @@ PLANNING REPORT</div>
     <div class="tp" id="tab-byvendor">
       <table class="dt" id="tbl-vendor">
         <colgroup id="cg-vendor">
-          <col style="width:20%"><col style="width:8%"><col style="width:8%">
-          <col style="width:9%"><col style="width:10%"><col style="width:10%">
-          <col style="width:10%"><col style="width:25%">
+          <col style="width:18%"><col style="width:8%"><col style="width:8%">
+          <col style="width:9%"><col style="width:9%"><col style="width:9%">
+          <col style="width:9%"><col style="width:14%"><col style="width:16%">
         </colgroup>
         <thead><tr id="thead-vendor">
           <th class="hn">Vendor</th>
@@ -3896,6 +4079,7 @@ PLANNING REPORT</div>
           <th class="hd nh">Tlat 1 Hari</th>
           <th class="hd nh">Tlat &gt;2 Hari</th>
           <th class="hn nh">Ketepatan</th>
+          <th class="hn nh">Rate</th>
         </tr></thead>
         <tbody id="tb-vendor"></tbody>
       </table>
@@ -5216,7 +5400,9 @@ var slaCustTrendOnPageChartInstance = null;
 var allSlaGrwData = [];
 var allSlaCustData = [];
 var allSlaData = [];
-var allSlaMissedData = [];
+var allSlaGrwMissedData = [];
+var allSlaCustMissedData = [];
+var slaMissTypeFilter = 'ALL';
 var slaMissAreaFilter = 'ALL';
 var slaMissCategoryFilter = 'ALL';
 var currentSlaMissedList = [];
@@ -5253,6 +5439,21 @@ var RAW_ORDER_POOL_CUST = [];
 var GRW_PLAN_AREAS = [];
 var agingSortCol = 'priority';
 var agingSortDir = -1;
+
+function isInvalidArea(a) {
+  if (a === null || a === undefined) return false;
+  var str = String(a).toUpperCase().trim();
+  if (!str) return false;
+  return (
+    str.indexOf('#N/A') !== -1 ||
+    str === 'N/A' ||
+    str === 'NA' ||
+    str.startsWith('#') ||
+    str.indexOf('#REF') !== -1 ||
+    str.indexOf('#VALUE') !== -1 ||
+    str.indexOf('#ERROR') !== -1
+  );
+}
 
 function sortAgingTable(col) {
   if (agingSortCol === col) {
@@ -5311,10 +5512,10 @@ function populateAreaFilter() {
   var currentVal = areaSelect.value;
   var uniqueAreas = {};
   ORDER_POOL.forEach(function(o) {
-    if (o.area) uniqueAreas[o.area] = true;
+    if (o.area && !isInvalidArea(o.area)) uniqueAreas[o.area] = true;
   });
   RAW_ORDER_POOL.forEach(function(o) {
-    if (o.area) uniqueAreas[o.area] = true;
+    if (o.area && !isInvalidArea(o.area)) uniqueAreas[o.area] = true;
   });
   
   var sortedAreas = Object.keys(uniqueAreas).sort();
@@ -5349,6 +5550,7 @@ function applyAgingFilters() {
 
   // Show all data instead of just Unplanned if Unplanned isn't set properly
   var filteredOrders = ORDER_POOL.filter(function(order) {
+    if (isInvalidArea(order.area)) return false;
     if (areaFilter && order.area !== areaFilter) return false;
     if (searchQuery) {
       var inID = order.id.toLowerCase().includes(searchQuery);
@@ -5385,6 +5587,7 @@ function applyAgingFilters() {
   });
 
   var filteredRawOrders = RAW_ORDER_POOL.filter(function(order) {
+    if (isInvalidArea(order.area)) return false;
     if (areaFilter && order.area !== areaFilter) return false;
     if (searchQuery) {
       var inID = order.id.toLowerCase().includes(searchQuery);
@@ -5402,12 +5605,546 @@ function applyAgingFilters() {
   renderAgingKPIs(filteredOrders, totalRawCBM);
   renderFTLShortage(unplannedRawOrders);
   renderAgingChart(filteredOrders);
+  renderAgingMatrixTable();
+  renderAgingReasonSection();
 
   if (sourceFilter === 'CUST' || sourceFilter === 'GRW') {
     document.getElementById('proyeksiPlanningCard').style.display = 'block';
     renderProyeksiPlanning(unplannedRawOrders, sourceFilter);
   } else {
     document.getElementById('proyeksiPlanningCard').style.display = 'none';
+  }
+}
+
+function getStatusDot(st) {
+  var color = '#94a3b8';
+  if (st === 'Created Internally') color = '#2563eb';
+  else if (st === 'Did Not Allocate') color = '#f59e0b';
+  else if (st === 'Not Started') color = '#64748b';
+  else if (st === 'Released') color = '#0891b2';
+  else if (st === 'Picked Complete') color = '#7c3aed';
+  else if (st === 'In Loading') color = '#d97706';
+  else if (st === 'Loaded') color = '#059669';
+  else if (st === 'Unplanned') color = '#ea580c';
+  else if (st === 'Planned') color = '#10b981';
+  return '<span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:' + color + '; margin-right:8px; flex-shrink:0;"></span>';
+}
+
+function renderAgingMatrixTable() {
+  var tbody = document.getElementById('agingMatrixTableBody');
+  var tfoot = document.getElementById('agingMatrixTableFoot');
+  var kpiWrap = document.getElementById('agingMatrixKpiBadges');
+  if (!tbody) return;
+
+  var srcFilterEl = document.getElementById('agingMatrixSourceFilter');
+  var bookFilterEl = document.getElementById('agingMatrixBookingFilter');
+  var metricFilterEl = document.getElementById('agingMatrixMetricFilter');
+  
+  var srcVal = srcFilterEl ? srcFilterEl.value : 'ALL';
+  var bookVal = bookFilterEl ? bookFilterEl.value : 'ALL';
+  var metricVal = metricFilterEl ? metricFilterEl.value : 'ORDER'; // 'ORDER' or 'CBM'
+
+  var grwOrders = ORDER_POOL_GRW || [];
+  var custOrders = ORDER_POOL_CUST || [];
+  
+  var combined = [];
+  if (srcVal === 'GRW') {
+    combined = grwOrders;
+  } else if (srcVal === 'CUST') {
+    combined = custOrders;
+  } else {
+    combined = grwOrders.concat(custOrders);
+  }
+
+  var filtered = combined.filter(function(o) {
+    if (!o || isInvalidArea(o.area)) return false;
+    if (bookVal !== 'ALL') {
+      var bType = (o.bookingType || 'REGULAR').toUpperCase();
+      if (bType !== bookVal) return false;
+    }
+    return true;
+  });
+
+  var statusMap = {};
+  var grandTotalCount = 0;
+  var grandTotalCbm = 0;
+  var bucketTotals = {
+    b0_count: 0, b0_cbm: 0,
+    b1_3_count: 0, b1_3_cbm: 0,
+    b4_7_count: 0, b4_7_cbm: 0,
+    b8_14_count: 0, b8_14_cbm: 0,
+    b15_21_count: 0, b15_21_cbm: 0,
+    b22_up_count: 0, b22_up_cbm: 0
+  };
+
+  filtered.forEach(function(o) {
+    var rawSt = (o.rawStatus || o.status || 'Unspecified').trim();
+    if (!rawSt) rawSt = 'Unspecified';
+
+    var displayStatus = rawSt.toLowerCase().replace(/\b\w/g, function(l) { return l.toUpperCase(); });
+
+    if (!statusMap[displayStatus]) {
+      statusMap[displayStatus] = {
+        name: displayStatus,
+        totalCount: 0,
+        totalCbm: 0,
+        b0_count: 0, b0_cbm: 0,
+        b1_3_count: 0, b1_3_cbm: 0,
+        b4_7_count: 0, b4_7_cbm: 0,
+        b8_14_count: 0, b8_14_cbm: 0,
+        b15_21_count: 0, b15_21_cbm: 0,
+        b22_up_count: 0, b22_up_cbm: 0
+      };
+    }
+
+    var cbm = typeof o.cbm === 'number' ? o.cbm : (parseFloat(o.cbm) || 0);
+    var days = typeof o.daysAgo === 'number' ? o.daysAgo : 0;
+
+    statusMap[displayStatus].totalCount++;
+    statusMap[displayStatus].totalCbm += cbm;
+    grandTotalCount++;
+    grandTotalCbm += cbm;
+
+    if (days <= 0) {
+      statusMap[displayStatus].b0_count++;
+      statusMap[displayStatus].b0_cbm += cbm;
+      bucketTotals.b0_count++;
+      bucketTotals.b0_cbm += cbm;
+    } else if (days >= 1 && days <= 3) {
+      statusMap[displayStatus].b1_3_count++;
+      statusMap[displayStatus].b1_3_cbm += cbm;
+      bucketTotals.b1_3_count++;
+      bucketTotals.b1_3_cbm += cbm;
+    } else if (days >= 4 && days <= 7) {
+      statusMap[displayStatus].b4_7_count++;
+      statusMap[displayStatus].b4_7_cbm += cbm;
+      bucketTotals.b4_7_count++;
+      bucketTotals.b4_7_cbm += cbm;
+    } else if (days >= 8 && days <= 14) {
+      statusMap[displayStatus].b8_14_count++;
+      statusMap[displayStatus].b8_14_cbm += cbm;
+      bucketTotals.b8_14_count++;
+      bucketTotals.b8_14_cbm += cbm;
+    } else if (days >= 15 && days <= 21) {
+      statusMap[displayStatus].b15_21_count++;
+      statusMap[displayStatus].b15_21_cbm += cbm;
+      bucketTotals.b15_21_count++;
+      bucketTotals.b15_21_cbm += cbm;
+    } else {
+      statusMap[displayStatus].b22_up_count++;
+      statusMap[displayStatus].b22_up_cbm += cbm;
+      bucketTotals.b22_up_count++;
+      bucketTotals.b22_up_cbm += cbm;
+    }
+  });
+
+  var PREFERRED_STATUS_ORDER = [
+    'Created Internally',
+    'Did Not Allocate',
+    'Not Started',
+    'Released',
+    'Picked Complete',
+    'In Loading',
+    'Loaded',
+    'Unplanned',
+    'Planned'
+  ];
+
+  var statusList = Object.keys(statusMap);
+  statusList.sort(function(a, b) {
+    var idxA = PREFERRED_STATUS_ORDER.indexOf(a);
+    var idxB = PREFERRED_STATUS_ORDER.indexOf(b);
+    if (idxA !== -1 && idxB !== -1) return idxA - idxB;
+    if (idxA !== -1) return -1;
+    if (idxB !== -1) return 1;
+    return a.localeCompare(b);
+  });
+
+  if (kpiWrap) {
+    if (metricVal === 'CBM') {
+      var critCbm = bucketTotals.b8_14_cbm + bucketTotals.b15_21_cbm + bucketTotals.b22_up_cbm;
+      kpiWrap.innerHTML = 
+        '<span class="badge" style="background:rgba(37,99,235,0.1); color:#2563eb; font-weight:700; padding:6px 12px; border-radius:20px; font-size:12px;">Total CBM: <strong>' + grandTotalCbm.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' CBM</strong></span>' +
+        '<span class="badge" style="background:rgba(16,185,129,0.1); color:#059669; font-weight:700; padding:6px 12px; border-radius:20px; font-size:12px;">Fresh (0-3 Hari): <strong>' + (bucketTotals.b0_cbm + bucketTotals.b1_3_cbm).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' CBM</strong></span>' +
+        '<span class="badge" style="background:rgba(245,158,11,0.1); color:#d97706; font-weight:700; padding:6px 12px; border-radius:20px; font-size:12px;">Aging (4-7 Hari): <strong>' + bucketTotals.b4_7_cbm.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' CBM</strong></span>' +
+        '<span class="badge" style="background:rgba(239,68,68,0.1); color:#dc2626; font-weight:700; padding:6px 12px; border-radius:20px; font-size:12px;">Critical Aging (≥8 Hari): <strong>' + critCbm.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' CBM</strong></span>';
+    } else {
+      var critCount = bucketTotals.b8_14_count + bucketTotals.b15_21_count + bucketTotals.b22_up_count;
+      kpiWrap.innerHTML = 
+        '<span class="badge" style="background:rgba(37,99,235,0.1); color:#2563eb; font-weight:700; padding:6px 12px; border-radius:20px; font-size:12px;">Total Order: <strong>' + grandTotalCount.toLocaleString('id-ID') + ' Order</strong></span>' +
+        '<span class="badge" style="background:rgba(16,185,129,0.1); color:#059669; font-weight:700; padding:6px 12px; border-radius:20px; font-size:12px;">Fresh (0-3 Hari): <strong>' + (bucketTotals.b0_count + bucketTotals.b1_3_count).toLocaleString('id-ID') + ' Order</strong></span>' +
+        '<span class="badge" style="background:rgba(245,158,11,0.1); color:#d97706; font-weight:700; padding:6px 12px; border-radius:20px; font-size:12px;">Aging (4-7 Hari): <strong>' + bucketTotals.b4_7_count.toLocaleString('id-ID') + ' Order</strong></span>' +
+        '<span class="badge" style="background:rgba(239,68,68,0.1); color:#dc2626; font-weight:700; padding:6px 12px; border-radius:20px; font-size:12px;">Critical Aging (≥8 Hari): <strong>' + critCount.toLocaleString('id-ID') + ' Order</strong></span>';
+    }
+  }
+
+  if (statusList.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:32px; color:var(--ts); font-size:13px;">Tidak ada data order pool yang sesuai dengan filter.</td></tr>';
+    tfoot.innerHTML = '';
+    return;
+  }
+
+  var formatCell = function(cnt, cbmVal, bucketType) {
+    var hasVal = metricVal === 'CBM' ? cbmVal > 0.001 : cnt > 0;
+    var rawText = metricVal === 'CBM' 
+      ? (cbmVal > 0 ? cbmVal.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '0,00')
+      : (cnt > 0 ? cnt.toLocaleString('id-ID') : '0');
+
+    if (!hasVal) {
+      return '<span style="color:var(--ts); opacity:0.35; font-size:12px;">' + rawText + '</span>';
+    }
+
+    if (bucketType === 'b0') {
+      return '<span style="font-weight:700; color:#059669; font-size:12px;">' + rawText + '</span>';
+    }
+    if (bucketType === 'b1_3') {
+      return '<span style="font-weight:700; color:#0284c7; font-size:12px;">' + rawText + '</span>';
+    }
+    if (bucketType === 'b4_7') {
+      return '<span style="font-weight:700; color:#d97706; font-size:12px; background:rgba(245,158,11,0.1); padding:2px 6px; border-radius:4px;">' + rawText + '</span>';
+    }
+    if (bucketType === 'b8_14') {
+      return '<span style="display:inline-flex; align-items:center; gap:5px; padding:3px 8px; border-radius:6px; background:rgba(245,158,11,0.18); color:#b45309; font-weight:800; border:1px solid rgba(245,158,11,0.4); font-size:12px; box-shadow:0 1px 3px rgba(245,158,11,0.15);"><span style="width:6px; height:6px; border-radius:50%; background:#d97706; display:inline-block;"></span>' + rawText + '</span>';
+    }
+    if (bucketType === 'b15_21') {
+      return '<span style="display:inline-flex; align-items:center; gap:5px; padding:3px 8px; border-radius:6px; background:rgba(234,88,12,0.2); color:#c2410c; font-weight:800; border:1px solid rgba(234,88,12,0.45); font-size:12px; box-shadow:0 1px 3px rgba(234,88,12,0.2);"><span style="width:6px; height:6px; border-radius:50%; background:#ea580c; display:inline-block;"></span>' + rawText + '</span>';
+    }
+    if (bucketType === 'b22_up') {
+      return '<span style="display:inline-flex; align-items:center; gap:5px; padding:3px 8px; border-radius:6px; background:rgba(220,38,38,0.22); color:#dc2626; font-weight:800; border:1px solid rgba(220,38,38,0.5); font-size:12px; box-shadow:0 2px 5px rgba(220,38,38,0.25);"><span style="width:6px; height:6px; border-radius:50%; background:#dc2626; display:inline-block; box-shadow:0 0 6px #dc2626;"></span>' + rawText + '</span>';
+    }
+
+    return '<span style="font-weight:700; color:var(--tp); font-size:12px;">' + rawText + '</span>';
+  };
+
+  var bodyHtml = '';
+  statusList.forEach(function(stKey, idx) {
+    var item = statusMap[stKey];
+    var bgStyle = (idx % 2 === 1) ? 'background:var(--surface2);' : 'background:var(--surface);';
+
+    bodyHtml += '<tr style="border-bottom:1px solid var(--border); ' + bgStyle + ' transition:background 0.15s ease;" onmouseover="this.style.background=\'rgba(37,99,235,0.05)\'" onmouseout="this.style.background=\'' + ((idx % 2 === 1) ? 'var(--surface2)' : 'var(--surface)') + '\'">';
+    bodyHtml += '  <td style="padding:10px 16px; font-weight:700; color:var(--tp); font-size:13px; display:flex; align-items:center;">' + getStatusDot(item.name) + item.name + '</td>';
+    bodyHtml += '  <td style="padding:10px 14px; text-align:right; font-weight:800; color:var(--tp); font-size:13px; font-family:var(--font-mono);">' + formatCell(item.totalCount, item.totalCbm, 'total') + '</td>';
+    bodyHtml += '  <td style="padding:10px 12px; text-align:right; font-family:var(--font-mono);">' + formatCell(item.b0_count, item.b0_cbm, 'b0') + '</td>';
+    bodyHtml += '  <td style="padding:10px 12px; text-align:right; font-family:var(--font-mono);">' + formatCell(item.b1_3_count, item.b1_3_cbm, 'b1_3') + '</td>';
+    bodyHtml += '  <td style="padding:10px 12px; text-align:right; font-family:var(--font-mono);">' + formatCell(item.b4_7_count, item.b4_7_cbm, 'b4_7') + '</td>';
+    bodyHtml += '  <td style="padding:10px 12px; text-align:right; font-family:var(--font-mono); background:rgba(245,158,11,0.03); border-left:1px dashed rgba(245,158,11,0.3);">' + formatCell(item.b8_14_count, item.b8_14_cbm, 'b8_14') + '</td>';
+    bodyHtml += '  <td style="padding:10px 12px; text-align:right; font-family:var(--font-mono); background:rgba(234,88,12,0.03);">' + formatCell(item.b15_21_count, item.b15_21_cbm, 'b15_21') + '</td>';
+    bodyHtml += '  <td style="padding:10px 12px; text-align:right; font-family:var(--font-mono); background:rgba(220,38,38,0.03);">' + formatCell(item.b22_up_count, item.b22_up_cbm, 'b22_up') + '</td>';
+    bodyHtml += '</tr>';
+  });
+
+  tbody.innerHTML = bodyHtml;
+
+  var formatFootCell = function(cnt, cbmVal, bucketType) {
+    var rawText = metricVal === 'CBM'
+      ? cbmVal.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' m³'
+      : cnt.toLocaleString('id-ID') + ' Order';
+    var hasVal = metricVal === 'CBM' ? cbmVal > 0.001 : cnt > 0;
+
+    if (!hasVal) {
+      return '<span style="color:var(--ts); opacity:0.5; font-size:12px;">' + (metricVal === 'CBM' ? '0,00' : '0') + '</span>';
+    }
+
+    if (bucketType === 'b8_14') {
+      return '<span style="display:inline-flex; align-items:center; gap:4px; padding:4px 10px; border-radius:8px; background:#b45309; color:#ffffff; font-weight:800; font-size:12px; box-shadow:0 2px 4px rgba(180,83,9,0.3);">⚠️ ' + rawText + '</span>';
+    }
+    if (bucketType === 'b15_21') {
+      return '<span style="display:inline-flex; align-items:center; gap:4px; padding:4px 10px; border-radius:8px; background:#c2410c; color:#ffffff; font-weight:800; font-size:12px; box-shadow:0 2px 4px rgba(194,65,12,0.3);">🔥 ' + rawText + '</span>';
+    }
+    if (bucketType === 'b22_up') {
+      return '<span style="display:inline-flex; align-items:center; gap:4px; padding:4px 10px; border-radius:8px; background:#dc2626; color:#ffffff; font-weight:800; font-size:12px; box-shadow:0 2px 6px rgba(220,38,38,0.35);">🚨 ' + rawText + '</span>';
+    }
+
+    return '<span style="font-weight:800; color:var(--tp); font-size:12px;">' + rawText + '</span>';
+  };
+
+  var footHtml = '<tr style="background:var(--surface-hover); border-top:2px solid var(--border); font-weight:800;">';
+  footHtml += '  <td style="padding:12px 16px; font-size:13px; color:var(--tp); font-weight:800;">TOTAL ALL STATUS</td>';
+  footHtml += '  <td style="padding:12px 14px; text-align:right; font-size:13px; color:var(--tp); font-weight:800; font-family:var(--font-mono);">' + (metricVal === 'CBM' ? grandTotalCbm.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' m³' : grandTotalCount.toLocaleString('id-ID') + ' Order') + '</td>';
+  footHtml += '  <td style="padding:12px 12px; text-align:right; font-size:12px; color:#059669; font-weight:800; font-family:var(--font-mono);">' + formatFootCell(bucketTotals.b0_count, bucketTotals.b0_cbm, 'b0') + '</td>';
+  footHtml += '  <td style="padding:12px 12px; text-align:right; font-size:12px; color:#0284c7; font-weight:800; font-family:var(--font-mono);">' + formatFootCell(bucketTotals.b1_3_count, bucketTotals.b1_3_cbm, 'b1_3') + '</td>';
+  footHtml += '  <td style="padding:12px 12px; text-align:right; font-size:12px; color:#d97706; font-weight:800; font-family:var(--font-mono);">' + formatFootCell(bucketTotals.b4_7_count, bucketTotals.b4_7_cbm, 'b4_7') + '</td>';
+  footHtml += '  <td style="padding:12px 12px; text-align:right; font-size:12px; font-family:var(--font-mono); background:rgba(245,158,11,0.06); border-left:1px dashed rgba(245,158,11,0.3);">' + formatFootCell(bucketTotals.b8_14_count, bucketTotals.b8_14_cbm, 'b8_14') + '</td>';
+  footHtml += '  <td style="padding:12px 12px; text-align:right; font-size:12px; font-family:var(--font-mono); background:rgba(234,88,12,0.06);">' + formatFootCell(bucketTotals.b15_21_count, bucketTotals.b15_21_cbm, 'b15_21') + '</td>';
+  footHtml += '  <td style="padding:12px 12px; text-align:right; font-size:12px; font-family:var(--font-mono); background:rgba(220,38,38,0.06);">' + formatFootCell(bucketTotals.b22_up_count, bucketTotals.b22_up_cbm, 'b22_up') + '</td>';
+  footHtml += '</tr>';
+
+  tfoot.innerHTML = footHtml;
+}
+
+// Detail Reason Aging Sheet Data
+var allAgingReasonRawData = [];
+var allAgingReasonData = [];
+
+function escapeHtml(str) {
+  if (str === null || str === undefined) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+function parseAgingReasonSheetData(rows) {
+  if (!Array.isArray(rows) || rows.length === 0) return [];
+
+  var result = [];
+  var is2D = Array.isArray(rows[0]);
+
+  if (is2D) {
+    var headers = rows[0].map(function(h) { return String(h).toUpperCase().trim().replace(/[\s_]+/g, ''); });
+    var idxAging = headers.findIndex(function(h) { return h.match(/^AGING$|^RENTANGAGING$|^UMUR$/); });
+    var idxArea = headers.findIndex(function(h) { return h.match(/^AREA$|^WILAYAH$|^ZONA$/); });
+    var idxQty = headers.findIndex(function(h) { return h.match(/^JUMLAHORDER$|^ORDER$|^QTY$|^JUMLAH$|^COUNT$/); });
+    var idxStatus = headers.findIndex(function(h) { return h.match(/^STATUS$|^STATUSORDER$/); });
+    var idxTujuan = headers.findIndex(function(h) { return h.match(/^TUJUAN$|^DESTINATION$|^KOTA$|^CUSTOMER$/); });
+    var idxReason = headers.findIndex(function(h) { return h.match(/^REASON$|^ALASAN$|^KENDALA$|^CATATAN$/); });
+    var idxPlan = headers.findIndex(function(h) { return h.match(/^PLANKIRIM$|^PLANDELIVERY$|^TGLKIRIM$|^JADWAL$/); });
+
+    for (var i = 1; i < rows.length; i++) {
+      var row = rows[i];
+      if (!row || row.length === 0) continue;
+      
+      var aging = idxAging !== -1 ? String(row[idxAging] || '').trim() : '';
+      var area = idxArea !== -1 ? String(row[idxArea] || '').trim() : '';
+      var qty = idxQty !== -1 ? parseInt(row[idxQty]) || 1 : 1;
+      var status = idxStatus !== -1 ? String(row[idxStatus] || '').trim() : '';
+      var tujuan = idxTujuan !== -1 ? String(row[idxTujuan] || '').trim() : '';
+      var reason = idxReason !== -1 ? String(row[idxReason] || '').trim() : '';
+      var planKirim = idxPlan !== -1 ? String(row[idxPlan] || '').trim() : '';
+
+      if (!aging && !reason && !tujuan) continue;
+
+      result.push({
+        aging: aging,
+        area: area,
+        qty: qty,
+        status: status,
+        tujuan: tujuan,
+        reason: reason,
+        planKirim: planKirim
+      });
+    }
+  } else {
+    rows.forEach(function(row) {
+      if (!row || typeof row !== 'object') return;
+      var keys = Object.keys(row);
+      function getVal(patt) {
+        var k = keys.find(function(key) { return key.toUpperCase().replace(/[\s_]+/g, '').match(patt); });
+        return k !== undefined ? row[k] : '';
+      }
+
+      var aging = String(getVal(/^AGING$|^RENTANGAGING$|^UMUR$/) || '').trim();
+      var area = String(getVal(/^AREA$|^WILAYAH$|^ZONA$/) || '').trim();
+      var qty = parseInt(getVal(/^JUMLAHORDER$|^ORDER$|^QTY$|^JUMLAH$|^COUNT$/)) || 1;
+      var status = String(getVal(/^STATUS$|^STATUSORDER$/) || '').trim();
+      var tujuan = String(getVal(/^TUJUAN$|^DESTINATION$|^KOTA$|^CUSTOMER$/) || '').trim();
+      var reason = String(getVal(/^REASON$|^ALASAN$|^KENDALA$|^CATATAN$/) || '').trim();
+      var planKirim = String(getVal(/^PLANKIRIM$|^PLANDELIVERY$|^TGLKIRIM$|^JADWAL$/) || '').trim();
+
+      if (!aging && !reason && !tujuan) return;
+
+      result.push({
+        aging: aging,
+        area: area,
+        qty: qty,
+        status: status,
+        tujuan: tujuan,
+        reason: reason,
+        planKirim: planKirim
+      });
+    });
+  }
+
+  return result;
+}
+
+function populateAgingReasonFilterDropdowns() {
+  var reasonSelect = document.getElementById('agingReasonTextFilter');
+  var statusSelect = document.getElementById('agingReasonStatusFilter');
+  var areaSelect = document.getElementById('agingReasonAreaFilter');
+
+  if (!reasonSelect || !statusSelect || !areaSelect) return;
+
+  var currentReason = reasonSelect.value || 'ALL';
+  var currentStatus = statusSelect.value || 'ALL';
+  var currentArea = areaSelect.value || 'ALL';
+
+  var uniqueReasons = {};
+  var uniqueStatuses = {};
+  var uniqueAreas = {};
+
+  allAgingReasonData.forEach(function(item) {
+    if (item.reason) uniqueReasons[item.reason] = true;
+    if (item.status) uniqueStatuses[item.status] = true;
+    if (item.area && !isInvalidArea(item.area)) uniqueAreas[item.area] = true;
+  });
+
+  // Populate Reason dropdown
+  var reasonHtml = '<option value="ALL">Semua Reason (' + Object.keys(uniqueReasons).length + ')</option>';
+  Object.keys(uniqueReasons).sort().forEach(function(r) {
+    reasonHtml += '<option value="' + escapeHtml(r) + '">' + escapeHtml(r) + '</option>';
+  });
+  reasonSelect.innerHTML = reasonHtml;
+  reasonSelect.value = uniqueReasons[currentReason] ? currentReason : 'ALL';
+
+  // Populate Status dropdown
+  var statusHtml = '<option value="ALL">Semua Status (' + Object.keys(uniqueStatuses).length + ')</option>';
+  Object.keys(uniqueStatuses).sort().forEach(function(st) {
+    statusHtml += '<option value="' + escapeHtml(st) + '">' + escapeHtml(st) + '</option>';
+  });
+  statusSelect.innerHTML = statusHtml;
+  statusSelect.value = uniqueStatuses[currentStatus] ? currentStatus : 'ALL';
+
+  // Populate Area dropdown
+  var areaHtml = '<option value="ALL">Semua Area (' + Object.keys(uniqueAreas).length + ')</option>';
+  Object.keys(uniqueAreas).sort().forEach(function(ar) {
+    areaHtml += '<option value="' + escapeHtml(ar) + '">' + escapeHtml(ar) + '</option>';
+  });
+  areaSelect.innerHTML = areaHtml;
+  areaSelect.value = uniqueAreas[currentArea] ? currentArea : 'ALL';
+}
+
+function renderAgingReasonSection() {
+  var tbody = document.getElementById('agingReasonTableBody');
+  var tfoot = document.getElementById('agingReasonTableFoot');
+  var kpiWrap = document.getElementById('agingReasonKpiBadges');
+
+  if (!tbody) return;
+
+  var reasonSelect = document.getElementById('agingReasonTextFilter');
+  if (reasonSelect && reasonSelect.options.length <= 1 && allAgingReasonData.length > 0) {
+    populateAgingReasonFilterDropdowns();
+  }
+
+  var bucketVal = (document.getElementById('agingReasonBucketFilter') || {}).value || 'ALL';
+  var reasonVal = (document.getElementById('agingReasonTextFilter') || {}).value || 'ALL';
+  var statusVal = (document.getElementById('agingReasonStatusFilter') || {}).value || 'ALL';
+  var areaVal = (document.getElementById('agingReasonAreaFilter') || {}).value || 'ALL';
+  var searchVal = ((document.getElementById('agingReasonSearch') || {}).value || '').toLowerCase().trim();
+
+  var filtered = allAgingReasonData.filter(function(item) {
+    if (!item) return false;
+
+    // Bucket filter
+    if (bucketVal !== 'ALL') {
+      var aUpper = String(item.aging).toUpperCase().trim();
+      var bUpper = String(bucketVal).toUpperCase().trim();
+      if (bUpper === '22 UP' || bUpper === '22+' || bUpper === '22') {
+        if (aUpper.indexOf('22') === -1 && aUpper.indexOf('UP') === -1 && aUpper.indexOf('>') === -1) return false;
+      } else {
+        if (aUpper !== bUpper && aUpper.indexOf(bUpper) === -1) return false;
+      }
+    }
+
+    // Reason filter
+    if (reasonVal !== 'ALL' && item.reason !== reasonVal) return false;
+
+    // Status filter
+    if (statusVal !== 'ALL' && item.status !== statusVal) return false;
+
+    // Area filter
+    if (areaVal !== 'ALL' && item.area !== areaVal) return false;
+
+    // Search filter
+    if (searchVal) {
+      var matchTujuan = String(item.tujuan || '').toLowerCase().indexOf(searchVal) !== -1;
+      var matchReason = String(item.reason || '').toLowerCase().indexOf(searchVal) !== -1;
+      var matchStatus = String(item.status || '').toLowerCase().indexOf(searchVal) !== -1;
+      var matchArea = String(item.area || '').toLowerCase().indexOf(searchVal) !== -1;
+      if (!matchTujuan && !matchReason && !matchStatus && !matchArea) return false;
+    }
+
+    return true;
+  });
+
+  var totalQty = 0;
+  var qty8_14 = 0;
+  var qty15_21 = 0;
+  var qty22_up = 0;
+  var reasonCounts = {};
+
+  filtered.forEach(function(item) {
+    var q = item.qty || 1;
+    totalQty += q;
+
+    var aUpper = String(item.aging).toUpperCase().trim();
+    if (aUpper.indexOf('8-14') !== -1 || aUpper.indexOf('8') !== -1) {
+      qty8_14 += q;
+    } else if (aUpper.indexOf('15-21') !== -1 || aUpper.indexOf('15') !== -1) {
+      qty15_21 += q;
+    } else if (aUpper.indexOf('22') !== -1 || aUpper.indexOf('UP') !== -1) {
+      qty22_up += q;
+    } else {
+      qty8_14 += q;
+    }
+
+    if (item.reason) {
+      reasonCounts[item.reason] = (reasonCounts[item.reason] || 0) + q;
+    }
+  });
+
+  var topReason = '-';
+  var topCount = 0;
+  Object.keys(reasonCounts).forEach(function(r) {
+    if (reasonCounts[r] > topCount) {
+      topCount = reasonCounts[r];
+      topReason = r;
+    }
+  });
+
+  if (kpiWrap) {
+    var kpiHtml = '';
+    kpiHtml += '<div style="padding:6px 14px; border-radius:10px; background:rgba(220,38,38,0.1); border:1px solid rgba(220,38,38,0.25); font-size:12px; font-weight:700; color:#dc2626; display:flex; align-items:center; gap:6px;">📊 Total Critical Order: <span style="font-size:14px; font-weight:800; font-family:var(--font-mono);">' + totalQty.toLocaleString('id-ID') + ' Order</span></div>';
+    kpiHtml += '<div style="padding:6px 14px; border-radius:10px; background:rgba(245,158,11,0.1); border:1px solid rgba(245,158,11,0.3); font-size:12px; font-weight:700; color:#b45309; display:flex; align-items:center; gap:6px;">⚠️ 8-14 Hari: <span style="font-size:14px; font-weight:800; font-family:var(--font-mono);">' + qty8_14.toLocaleString('id-ID') + ' Order</span></div>';
+    kpiHtml += '<div style="padding:6px 14px; border-radius:10px; background:rgba(234,88,12,0.1); border:1px solid rgba(234,88,12,0.3); font-size:12px; font-weight:700; color:#c2410c; display:flex; align-items:center; gap:6px;">🔥 15-21 Hari: <span style="font-size:14px; font-weight:800; font-family:var(--font-mono);">' + qty15_21.toLocaleString('id-ID') + ' Order</span></div>';
+    kpiHtml += '<div style="padding:6px 14px; border-radius:10px; background:rgba(220,38,38,0.15); border:1px solid rgba(220,38,38,0.35); font-size:12px; font-weight:700; color:#dc2626; display:flex; align-items:center; gap:6px;">🚨 22+ Hari: <span style="font-size:14px; font-weight:800; font-family:var(--font-mono);">' + qty22_up.toLocaleString('id-ID') + ' Order</span></div>';
+    kpiHtml += '<div style="padding:6px 14px; border-radius:10px; background:var(--surface2); border:1px solid var(--border); font-size:12px; font-weight:700; color:var(--tp); display:flex; align-items:center; gap:6px;">📌 Kendala Dominan: <span style="font-size:12px; font-weight:800; color:#2563eb;">' + escapeHtml(topReason) + ' (' + topCount + ')</span></div>';
+    kpiWrap.innerHTML = kpiHtml;
+  }
+
+  if (filtered.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:32px; color:var(--ts); font-size:13px;">Tidak ada detail reason order yang sesuai dengan filter.</td></tr>';
+    if (tfoot) tfoot.innerHTML = '';
+    return;
+  }
+
+  var bodyHtml = '';
+  filtered.forEach(function(item, idx) {
+    var bgStyle = (idx % 2 === 1) ? 'background:var(--surface2);' : 'background:var(--surface);';
+    var aUpper = String(item.aging).toUpperCase().trim();
+
+    var agingBadge = '';
+    if (aUpper.indexOf('8-14') !== -1 || aUpper.indexOf('8') !== -1) {
+      agingBadge = '<span style="display:inline-flex; align-items:center; gap:4px; padding:3px 9px; border-radius:12px; background:rgba(245,158,11,0.18); color:#b45309; font-weight:800; border:1px solid rgba(245,158,11,0.4); font-size:11px; box-shadow:0 1px 3px rgba(245,158,11,0.15);">⚠️ 8-14 Hari</span>';
+    } else if (aUpper.indexOf('15-21') !== -1 || aUpper.indexOf('15') !== -1) {
+      agingBadge = '<span style="display:inline-flex; align-items:center; gap:4px; padding:3px 9px; border-radius:12px; background:rgba(234,88,12,0.2); color:#c2410c; font-weight:800; border:1px solid rgba(234,88,12,0.45); font-size:11px; box-shadow:0 1px 3px rgba(234,88,12,0.2);">🔥 15-21 Hari</span>';
+    } else {
+      agingBadge = '<span style="display:inline-flex; align-items:center; gap:4px; padding:3px 9px; border-radius:12px; background:rgba(220,38,38,0.22); color:#dc2626; font-weight:800; border:1px solid rgba(220,38,38,0.5); font-size:11px; box-shadow:0 2px 5px rgba(220,38,38,0.25);">🚨 22+ Hari</span>';
+    }
+
+    bodyHtml += '<tr style="border-bottom:1px solid var(--border); ' + bgStyle + ' transition:background 0.15s ease;" onmouseover="this.style.background=\'rgba(37,99,235,0.05)\'" onmouseout="this.style.background=\'' + ((idx % 2 === 1) ? 'var(--surface2)' : 'var(--surface)') + '\'">';
+    bodyHtml += '  <td style="padding:10px 14px; text-align:center; font-size:12px; font-weight:700; color:var(--ts);">' + (idx + 1) + '</td>';
+    bodyHtml += '  <td style="padding:10px 14px;">' + agingBadge + '</td>';
+    bodyHtml += '  <td style="padding:10px 14px; font-weight:700; color:var(--tp); font-size:12px;">' + escapeHtml(item.area || '-') + '</td>';
+    bodyHtml += '  <td style="padding:10px 14px; text-align:right; font-weight:800; color:var(--tp); font-size:12px; font-family:var(--font-mono);"><span style="background:rgba(37,99,235,0.08); color:#2563eb; padding:2px 8px; border-radius:6px; border:1px solid rgba(37,99,235,0.2);">' + (item.qty || 1) + ' Order</span></td>';
+    bodyHtml += '  <td style="padding:10px 14px; font-size:12px; font-weight:600; color:var(--tp);">' + getStatusDot(item.status) + escapeHtml(item.status || '-') + '</td>';
+    bodyHtml += '  <td style="padding:10px 14px; font-weight:800; color:var(--tp); font-size:12px;">' + escapeHtml(item.tujuan || '-') + '</td>';
+    bodyHtml += '  <td style="padding:10px 14px;"><span style="display:inline-flex; align-items:center; gap:5px; padding:4px 10px; border-radius:8px; background:rgba(245,158,11,0.12); color:#b45309; font-weight:700; border:1px solid rgba(245,158,11,0.3); font-size:12px;">🏷️ ' + escapeHtml(item.reason || '-') + '</span></td>';
+    bodyHtml += '  <td style="padding:10px 14px; font-size:12px; font-weight:600; color:var(--tp);">📅 ' + escapeHtml(item.planKirim || '-') + '</td>';
+    bodyHtml += '</tr>';
+  });
+
+  tbody.innerHTML = bodyHtml;
+
+  if (tfoot) {
+    var footHtml = '<tr style="background:var(--surface-hover); border-top:2px solid var(--border); font-weight:800;">';
+    footHtml += '  <td colspan="3" style="padding:12px 16px; font-size:13px; color:var(--tp); font-weight:800;">TOTAL FILTERED CRITICAL REASONS</td>';
+    footHtml += '  <td style="padding:12px 14px; text-align:right; font-size:13px; color:#2563eb; font-weight:800; font-family:var(--font-mono);">' + totalQty.toLocaleString('id-ID') + ' Order</td>';
+    footHtml += '  <td colspan="4" style="padding:12px 14px; text-align:right; font-size:12px; color:var(--ts); font-weight:700;">Data bersumber langsung dari Google Sheets Live</td>';
+    footHtml += '</tr>';
+    tfoot.innerHTML = footHtml;
   }
 }
 
@@ -5857,7 +6594,7 @@ function renderAgingChart(unplanned) {
 }
 
 // ── ROBUST COLUMN MAPPER FOR OUTSTANDING GRW SHEET ────────────────────
-function parseOutstandingSheetData(rows, targetRawArray) {
+function parseOutstandingSheetData(rows, targetRawArray, sourceType) {
   targetRawArray.length = 0; // Clear it
   if (!Array.isArray(rows) || rows.length === 0) return [];
 
@@ -5867,7 +6604,7 @@ function parseOutstandingSheetData(rows, targetRawArray) {
   if (is2D) {
     // Array of Arrays
     var headers = rows[0].map(function(h) { return String(h).toUpperCase().trim().replace(/[\s_]+/g, ''); });
-    var idxId = headers.findIndex(function(h) { return h.match(/^ORDERID$|^IDORDER$|^NOORDER$|^ORDERNO$|^ID$|^TRANSNO$/); });
+    var idxId = headers.findIndex(function(h) { return h.match(/^ORDERKEY$|^EXTERNORDERKEY$|^ORDERID$|^IDORDER$|^NOORDER$|^ORDERNO$|^ID$|^TRANSNO$|^NODO$|^DONO$|^DONUMBER$|^NOMORORDER$|^ORDER$|^DOCNO$|^DOCUMENTNO$|^PONO$|^NOPO$/); });
     var idxCustomer = headers.findIndex(function(h) { return h.match(/^CUSTOMER$|^NAMACUSTOMER$|^CUST$|^PEMBELI$|^NAMA$|^SHIPPINGLINE$/); });
     var idxDestination = headers.findIndex(function(h) { return h.match(/^DESTINATION$|^TUJUAN$|^KOTA$|^CITY$|^SHIPPINGLINE$/); });
     var idxCbm = headers.findIndex(function(h) { return h.match(/^CBM$|^VOLUME$|^M3$|^METERCUBIC$|^KUBIK$/); });
@@ -5879,6 +6616,7 @@ function parseOutstandingSheetData(rows, targetRawArray) {
     if (idxArea === -1) idxArea = headers.findIndex(function(h) { return h.match(/^ZONA$/); });
     var idxRoute = headers.findIndex(function(h) { return h.match(/^ROUTE$|^PLAN$|^AK$/); });
     var idxStatus = headers.findIndex(function(h) { return h.match(/^STATUS$/); });
+    var idxBooking = headers.findIndex(function(h) { return h.match(/^ORDERBOOKING$|^BOOKING$|^TYPEORDER$|^ORDERTYPE$|^JENISORDER$|^JENISBOOKING$|^TYPE$|^REGULAR\/TRANSIT$/); });
     var idxReqShip = headers.findIndex(function(h) { return h.match(/^REQSHIPDATE$/); });
     var idxPlanDelivery = headers.findIndex(function(h) { return h.match(/^PLANDELIVERYDATE$/); });
 
@@ -5893,9 +6631,9 @@ function parseOutstandingSheetData(rows, targetRawArray) {
       var cbm = idxCbm !== -1 ? parseFloat(row[idxCbm]) || 0 : 1.0;
       var cases = idxCases !== -1 ? parseInt(row[idxCases]) || 0 : 10;
       
-      var daysAgo = 1;
+      var daysAgo = 0;
       if (idxAging !== -1) {
-        daysAgo = parseInt(row[idxAging]) || 1;
+        daysAgo = !isNaN(parseInt(row[idxAging])) ? parseInt(row[idxAging]) : 0;
       } else if (idxDate !== -1 && row[idxDate]) {
         try {
           var oDate = parseDateStr(row[idxDate]);
@@ -5935,7 +6673,12 @@ function parseOutstandingSheetData(rows, targetRawArray) {
         } catch(e) {}
       }
 
-      var area = idxArea !== -1 ? String(row[idxArea]).toUpperCase().trim() : '';
+      var rawAreaStr = idxArea !== -1 ? row[idxArea] : null;
+      if (isInvalidArea(rawAreaStr)) {
+        continue;
+      }
+
+      var area = rawAreaStr ? String(rawAreaStr).toUpperCase().trim() : '';
       if (!area) {
         var localCities = ['SURABAYA', 'SIDOARJO', 'GRESIK', 'MOJOKERTO', 'PASURUAN', 'DALAM KOTA'];
         var isLocal = false;
@@ -5960,7 +6703,9 @@ function parseOutstandingSheetData(rows, targetRawArray) {
       if (!planDeliveryDate && routeVal && GLOBAL_ROUTE_DATE_MAP[routeVal]) {
         planDeliveryDate = GLOBAL_ROUTE_DATE_MAP[routeVal];
       }
-      var rawStatus = idxStatus !== -1 ? String(row[idxStatus]) : '';
+      var rawStatus = idxStatus !== -1 ? String(row[idxStatus]).trim() : '';
+      var rawBooking = idxBooking !== -1 ? String(row[idxBooking]).trim() : '';
+      var bookingType = (rawBooking.toUpperCase().indexOf('TRANSIT') !== -1) ? 'TRANSIT' : 'REGULAR';
       var sUpper = rawStatus.toUpperCase();
       var isUnplanned = (!routeVal || routeVal === 'NaN' || routeVal === 'undefined' || sUpper.indexOf('CREATED INTERNALLY') !== -1 || sUpper.indexOf('NOT STARTED') !== -1);
       if (planDeliveryDate) {
@@ -5979,12 +6724,17 @@ function parseOutstandingSheetData(rows, targetRawArray) {
         isDalamKota: isDalamKota,
         route: routeVal,
         status: isUnplanned ? 'Unplanned' : (rawStatus || 'Planned'),
+        rawStatus: rawStatus || (isUnplanned ? 'Unplanned' : 'Planned'),
+        bookingType: bookingType,
+        sourceType: sourceType || 'GRW',
         planDeliveryDate: planDeliveryDate
       };
 
       targetRawArray.push(order);
 
       if (orderMap[id]) {
+        orderMap[id].cbm += cbm;
+        orderMap[id].cases += cases;
         continue;
       }
 
@@ -6001,16 +6751,16 @@ function parseOutstandingSheetData(rows, targetRawArray) {
         return key !== undefined ? item[key] : def;
       }
 
-      var id = getVal(/^ORDERKEY$|^EXTERNORDERKEY$|^ORDERID$|^TRANSNO$/, 'ORD-' + (100 + idx));
+      var id = getVal(/^ORDERKEY$|^EXTERNORDERKEY$|^ORDERID$|^IDORDER$|^NOORDER$|^ORDERNO$|^ID$|^TRANSNO$|^NODO$|^DONO$|^DONUMBER$|^NOMORORDER$|^ORDER$|^DOCNO$|^DOCUMENTNO$|^PONO$|^NOPO$/, 'ORD-' + (100 + idx));
       var cust = getVal(/^SHIPTONAME$|^STOREBOOKINGNAME$|^CUSTOMER$|^SHIPPINGLINE$/, 'CUSTOMER');
       var dest = getVal(/^CITY$|^KOTA$|^SHIPTONAME$/, 'KOTA');
       var cbm = parseFloat(getVal(/^CUBE$|^CBM$|^VOLUME$/, 0)) || 0;
       var cases = parseInt(getVal(/^OPENQTY$|^CASES$|^KOLI$|^QTY$/, 1)) || 1;
       
-      var daysAgo = 1;
+      var daysAgo = 0;
       var rawAging = getVal(/^AGING\(DAY\)$|^AGINGDAY$|^AGING$/, null);
-      if (rawAging !== null) {
-        daysAgo = parseInt(rawAging) || 1;
+      if (rawAging !== null && rawAging !== undefined && rawAging !== '') {
+        daysAgo = !isNaN(parseInt(rawAging)) ? parseInt(rawAging) : 0;
       } else {
         var rawDate = getVal(/^DATE$|^TANGGAL$|^ORDERDATE$/, null);
         if (rawDate) {
@@ -6031,6 +6781,9 @@ function parseOutstandingSheetData(rows, targetRawArray) {
       var areaVal = getVal(/^WILAYAH$/, null);
       if (areaVal === null) areaVal = getVal(/^AREA$/, null);
       if (areaVal === null) areaVal = getVal(/^ZONA$/, '');
+      if (isInvalidArea(areaVal)) {
+        return;
+      }
       var area = '';
       if (areaVal) {
         area = String(areaVal).toUpperCase().trim();
@@ -6057,7 +6810,25 @@ function parseOutstandingSheetData(rows, targetRawArray) {
       var priorityStr = getVal(/^PRIORITY$/, '');
 
       var routeVal = getVal(/^ROUTE$|^PLAN$|^AK$/, '');
-      var rawStatus = item['STATUS'] || '';
+      var rawStatus = String(item['STATUS'] || getVal(/^STATUS$/, '') || '').trim();
+
+      var rawBooking = getVal(/^ORDERBOOKING$|^BOOKING$|^TYPEORDER$|^ORDERTYPE$|^JENISORDER$|^JENISBOOKING$|^TYPE$|^REGULAR\/TRANSIT$/, '');
+      if (!rawBooking) {
+        for (var k in item) {
+          if (item.hasOwnProperty(k)) {
+            var kUpper = k.toUpperCase();
+            if (kUpper.indexOf('BOOKING') !== -1 || kUpper.indexOf('TRANSIT') !== -1 || kUpper.indexOf('TYPE') !== -1) {
+              var v = String(item[k] || '').toUpperCase();
+              if (v.indexOf('TRANSIT') !== -1) {
+                rawBooking = 'TRANSIT';
+                break;
+              }
+            }
+          }
+        }
+      }
+      var bookingType = String(rawBooking).toUpperCase().indexOf('TRANSIT') !== -1 ? 'TRANSIT' : 'REGULAR';
+
       var sUpper = rawStatus.toUpperCase();
       var isUnplanned = (!routeVal || String(routeVal).trim() === '' || sUpper.indexOf('CREATED INTERNALLY') !== -1 || sUpper.indexOf('NOT STARTED') !== -1);
 
@@ -6107,6 +6878,9 @@ function parseOutstandingSheetData(rows, targetRawArray) {
         priorityRaw: priorityStr,
         route: routeVal,
         status: isUnplanned ? 'Unplanned' : (rawStatus || 'Planned'),
+        rawStatus: rawStatus || (isUnplanned ? 'Unplanned' : 'Planned'),
+        bookingType: bookingType,
+        sourceType: sourceType || 'GRW',
         planDeliveryDate: planDeliveryDate
       };
       
@@ -6117,6 +6891,8 @@ function parseOutstandingSheetData(rows, targetRawArray) {
       targetRawArray.push(order);
 
       if (orderMapObj[id]) {
+        orderMapObj[id].cbm += cbm;
+        orderMapObj[id].cases += cases;
         return;
       }
       
@@ -7250,78 +8026,135 @@ function renderSlaDetailPage() {
   var missBody = document.getElementById('slaMissTableBody');
   var missedList = [];
 
-  if (allSlaMissedData && allSlaMissedData.length > 1) {
-    for (var j = 1; j < allSlaMissedData.length; j++) {
-      var r = allSlaMissedData[j];
-      if (r.length < 20) continue;
+  // 1. Process GRW Missed Logs (gid=1680256105)
+  if (allSlaGrwMissedData && allSlaGrwMissedData.length > 1) {
+    for (var j = 1; j < allSlaGrwMissedData.length; j++) {
+      var r = allSlaGrwMissedData[j];
+      if (!r || r.length < 5) continue;
 
-      // Date filtering logic removed; it will be handled by applySlaMissFilters()
+      var reasonStr = r[26] || "—";
+      var katReason = (r[28] || "").trim();
+      if (!katReason && reasonStr && reasonStr !== "—") {
+        var rUpper = reasonStr.toUpperCase();
+        if (rUpper.includes("OUTBOUND")) katReason = "TIM OUTBOUND";
+        else if (rUpper.includes("PLANNER")) katReason = "PLANNER";
+        else if (rUpper.includes("VM") || rUpper.includes("ARMADA")) katReason = "TIM TRANSPORT";
+        else if (rUpper.includes("WMS") || rUpper.includes("ENTERPRISE")) katReason = "SISTEM / IT";
+        else katReason = "LAINNYA";
+      }
+      if (!katReason) katReason = "Uncategorized";
 
       missedList.push({
-        orderKey: r[1] || "—",
-        externOrderKey: r[2] || "—",
+        orderType: "GRW",
+        orderKey: r[4] || "—",
+        externOrderKey: r[5] || "—",
         shipToName: r[3] || "—",
-        type: r[4] || "—",
-        storeBooking: r[5] || "—",
-        origReqDate: r[9] || "—",
-        newReqShipDate: r[10] || "—",
-        shippedDate: r[12] || "—",
-        delayTime: (r[13] || "0") + " Hari",
-        slaCategory: r[14] || "—",
-        areaPengiriman: r[15] || "—",
-        city: r[16] || "—",
-        cbm: r[18] || "—",
-        reason: r[23] || r[19] || "—",
-        bu: r[25] || "—",
-        kategoryReason: r[26] || "—",
-        // Backward-compatible properties for filters
-        source: r[25] || "INFORMA",
-        site: r[7] || "WH SIDOARJO",
-        reqDate: r[9] || "—",
-        actDate: r[12] || "—",
-        leadTime: (r[13] || "0") + " Hari",
-        category: r[26] || "Uncategorized",
+        type: r[11] || "GRW",
+        storeBooking: r[2] || "—",
+        origReqDate: r[17] || "—",
+        newReqShipDate: r[17] || "—",
+        shippedDate: r[18] || "—",
+        delayTime: (r[22] || "0") + " Hari",
+        slaCategory: r[23] || "—",
+        areaPengiriman: r[7] || "—",
+        city: r[3] || "—",
+        cbm: r[25] || "—",
+        reason: reasonStr,
+        bu: r[27] || "INFORMA",
+        kategoryReason: katReason,
+        category: katReason,
         slaStatus: "MISSED",
-        missReason: r[23] || r[19] || "No reason specified",
-        area: r[15] || "—"
+        area: r[7] || "—"
+      });
+    }
+  }
+
+  // 2. Process CUSTOMER Missed Logs (gid=0)
+  if (allSlaCustMissedData && allSlaCustMissedData.length > 1) {
+    for (var k = 1; k < allSlaCustMissedData.length; k++) {
+      var r2 = allSlaCustMissedData[k];
+      if (!r2 || r2.length < 5) continue;
+
+      var katReasonCust = (r2[26] || r2[20] || "Uncategorized").trim();
+
+      missedList.push({
+        orderType: "CUSTOMER",
+        orderKey: r2[1] || "—",
+        externOrderKey: r2[2] || "—",
+        shipToName: r2[3] || "—",
+        type: r2[4] || "Customer",
+        storeBooking: r2[5] || "—",
+        origReqDate: r2[9] || "—",
+        newReqShipDate: r2[10] || "—",
+        shippedDate: r2[12] || "—",
+        delayTime: (r2[13] || "0") + " Hari",
+        slaCategory: r2[14] || "—",
+        areaPengiriman: r2[15] || "—",
+        city: r2[16] || "—",
+        cbm: r2[18] || "—",
+        reason: r2[23] || r2[19] || "—",
+        bu: r2[25] || "—",
+        kategoryReason: katReasonCust,
+        category: katReasonCust,
+        slaStatus: "MISSED",
+        area: r2[15] || "—"
       });
     }
   }
 
   currentSlaMissedList = missedList;
-
-  // Populate category select options dynamically from currentSlaMissedList
-  var catSelect = document.getElementById('slaMissCategorySelect');
-  if (catSelect) {
-    var previousSelection = slaMissCategoryFilter;
-    var categories = {};
-    currentSlaMissedList.forEach(function(item) {
-      if (item.category && item.category.trim() !== '') {
-        categories[item.category.trim()] = true;
-      }
-    });
-
-    var sortedCats = Object.keys(categories).sort();
-    var optionsHtml = '<option value="ALL">Semua Kategori</option>';
-    sortedCats.forEach(function(cat) {
-      optionsHtml += '<option value="' + escHtml(cat) + '">' + escHtml(cat) + '</option>';
-    });
-    catSelect.innerHTML = optionsHtml;
-
-    if (categories[previousSelection]) {
-      catSelect.value = previousSelection;
-      slaMissCategoryFilter = previousSelection;
-    } else {
-      catSelect.value = 'ALL';
-      slaMissCategoryFilter = 'ALL';
-    }
-  }
-
+  updateSlaMissCategoryDropdown();
   applySlaMissFilters();
   initSlaTrendOnPageCharts();
 }
 
+function updateSlaMissCategoryDropdown() {
+  var catSelect = document.getElementById('slaMissCategorySelect');
+  if (!catSelect) return;
+
+  var previousSelection = slaMissCategoryFilter;
+  var categories = {};
+
+  currentSlaMissedList.forEach(function(item) {
+    if (slaMissTypeFilter !== 'ALL' && item.orderType !== slaMissTypeFilter) {
+      return;
+    }
+    if (item.kategoryReason && item.kategoryReason.trim() !== '') {
+      categories[item.kategoryReason.trim()] = true;
+    }
+  });
+
+  var sortedCats = Object.keys(categories).sort();
+  var optionsHtml = '<option value="ALL">Semua Kategori</option>';
+  sortedCats.forEach(function(cat) {
+    optionsHtml += '<option value="' + escHtml(cat) + '">' + escHtml(cat) + '</option>';
+  });
+  catSelect.innerHTML = optionsHtml;
+
+  if (categories[previousSelection]) {
+    catSelect.value = previousSelection;
+    slaMissCategoryFilter = previousSelection;
+  } else {
+    catSelect.value = 'ALL';
+    slaMissCategoryFilter = 'ALL';
+  }
+}
+
+function setSlaMissType(typeValue, btn) {
+  slaMissTypeFilter = typeValue;
+  var container = document.getElementById('slaMissTypeToggle');
+  if (container) {
+    container.querySelectorAll('button').forEach(function(b) {
+      b.classList.remove('active');
+    });
+  }
+  if (btn) btn.classList.add('active');
+  updateSlaMissCategoryDropdown();
+  applySlaMissFilters();
+}
+
 function applySlaMissFilters() {
+  var typeVal = slaMissTypeFilter; // 'ALL', 'GRW', 'CUSTOMER'
   var areaVal = slaMissAreaFilter; // 'ALL', 'DK', 'LK'
   var catVal = slaMissCategoryFilter; // 'ALL' or specific category
   var q = document.getElementById('slaMissSearch') ? document.getElementById('slaMissSearch').value.toLowerCase().trim() : '';
@@ -7332,15 +8165,19 @@ function applySlaMissFilters() {
   var missEndMs = missEndStr ? parseDateStrHyphen(missEndStr).getTime() : null;
 
   var filtered = currentSlaMissedList.filter(function(m) {
-    // Date filter (by shippedDate)
+    // Order Type Filter
+    if (typeVal !== 'ALL') {
+      if (m.orderType !== typeVal) return false;
+    }
+
+    // Date filter (by shippedDate or origReqDate)
     var mDate = parseDateStrHyphen(m.shippedDate);
+    if (!mDate) mDate = parseDateStrHyphen(m.origReqDate);
     if (mDate) {
       var ms = mDate.getTime();
       if (missStartMs && ms < missStartMs) return false;
       if (missEndMs && ms > missEndMs) return false;
     } else if (missStartMs || missEndMs) {
-      // If date is empty but filter is applied, exclude it? Or include it?
-      // Usually exclude
       return false;
     }
 
@@ -7362,7 +8199,7 @@ function applySlaMissFilters() {
       var fields = [
         m.orderKey, m.externOrderKey, m.shipToName, m.type, m.storeBooking,
         m.origReqDate, m.newReqShipDate, m.shippedDate, m.delayTime,
-        m.slaCategory, m.areaPengiriman, m.city, m.cbm, m.reason, m.bu, m.kategoryReason
+        m.slaCategory, m.areaPengiriman, m.city, m.cbm, m.reason, m.bu, m.kategoryReason, m.orderType
       ];
       for (var i = 0; i < fields.length; i++) {
         if (fields[i] && String(fields[i]).toLowerCase().includes(q)) {
@@ -7380,13 +8217,18 @@ function applySlaMissFilters() {
   if (!missBody) return;
 
   if (filtered.length === 0) {
-    missBody.innerHTML = '<tr><td colspan="17" style="text-align:center; padding:20px; color:var(--muted);">Tidak ada data yang sesuai dengan filter.</td></tr>';
+    missBody.innerHTML = '<tr><td colspan="18" style="text-align:center; padding:20px; color:var(--muted);">Tidak ada data yang sesuai dengan filter.</td></tr>';
     return;
   }
 
   missBody.innerHTML = filtered.map(function(m, idx) {
+    var typeBadge = m.orderType === 'GRW' 
+      ? '<span style="background:rgba(37,99,235,0.12); color:#2563eb; padding:2px 7px; border-radius:4px; font-size:10px; font-weight:800; border:1px solid rgba(37,99,235,0.25);">GRW</span>'
+      : '<span style="background:rgba(217,119,6,0.12); color:#d97706; padding:2px 7px; border-radius:4px; font-size:10px; font-weight:800; border:1px solid rgba(217,119,6,0.25);">CUSTOMER</span>';
+
     return '<tr>' +
       '<td style="text-align:center; padding-left:14px; color:var(--muted);">' + (idx + 1) + '</td>' +
+      '<td style="text-align:center;">' + typeBadge + '</td>' +
       '<td><span style="font-family:var(--font-mono);font-weight:700;">' + escHtml(m.orderKey) + '</span></td>' +
       '<td><span style="font-family:var(--font-mono);font-size:11px;">' + escHtml(m.externOrderKey) + '</span></td>' +
       '<td><strong>' + escHtml(m.shipToName) + '</strong></td>' +
@@ -7402,7 +8244,7 @@ function applySlaMissFilters() {
       '<td>' + escHtml(m.cbm) + '</td>' +
       '<td style="font-size:11px; max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="' + escHtml(m.reason) + '">' + escHtml(m.reason) + '</td>' +
       '<td><strong>' + escHtml(m.bu) + '</strong></td>' +
-      '<td>' + escHtml(m.kategoryReason) + '</td>' +
+      '<td><span style="background:rgba(100,116,139,0.1); padding:2px 6px; border-radius:4px; font-size:11px; font-weight:600;">' + escHtml(m.kategoryReason) + '</span></td>' +
       '</tr>';
   }).join('');
 }
@@ -7426,13 +8268,13 @@ function setSlaMissCategory(catValue) {
 
 function exportSlaMissToCsv() {
   var rows = [
-    ["No", "ORDERKEY", "EXTERNORDERKEY", "SHIP TO NAME", "TYPE", "STORE BOOKING", "ORIGINAL REQUEST DATE", "NEW REQUEST SHIPDATE", "SHIPPED DATE", "DELAY TIME", "SLA CATEGORY", "AREA PENGIRIMAN", "CITY", "CBM", "REASON", "BU", "KATEGORY REASON"]
+    ["No", "TYPE ORDER", "ORDERKEY", "EXTERNORDERKEY", "SHIP TO NAME", "TYPE", "STORE BOOKING", "ORIGINAL REQUEST DATE", "NEW REQUEST SHIPDATE", "SHIPPED DATE", "DELAY TIME", "SLA CATEGORY", "AREA PENGIRIMAN", "CITY", "CBM", "REASON", "BU", "KATEGORY REASON"]
   ];
   
   var tableRows = document.querySelectorAll('.miss-tbl tbody tr');
   tableRows.forEach(function(tr, i) {
     var cols = tr.querySelectorAll('td');
-    if (cols.length >= 16) {
+    if (cols.length >= 17) {
       var row = Array.from(cols).map(function(td) {
         return '"' + td.textContent.replace(/"/g, '""').trim() + '"';
       });
@@ -7645,7 +8487,7 @@ function initSlaTrendModalChart() {
         },
         {
           type: 'line',
-          label: 'SLA GRW (Warehouse) %',
+          label: 'SLA GRW %',
           data: grwPoints,
           borderColor: '#3b95ff',
           backgroundColor: 'rgba(59, 149, 255, 0.1)',
@@ -7661,7 +8503,7 @@ function initSlaTrendModalChart() {
         },
         {
           type: 'line',
-          label: 'SLA Customer (Shipping) %',
+          label: 'SLA Customer %',
           data: custPoints,
           borderColor: '#e2573e',
           backgroundColor: 'rgba(226, 87, 62, 0.1)',
@@ -8329,7 +9171,7 @@ function buildAreaScheduleMap(rows) {
   var map = {};
   (rows || []).forEach(function(row) {
     var area = String(row['WILAYAH/DAY'] || row['WILAYAH'] || '').toUpperCase().trim();
-    if (!area) return;
+    if (!area || isInvalidArea(area)) return;
     var days = [];
     DAY_NAMES_ID.forEach(function(d) {
       if (String(row[d] || '').toUpperCase().trim() === 'PLAN') days.push(d);
@@ -8455,13 +9297,13 @@ function parsePlanningData() {
   }
 
   grwPool.forEach(function(o) {
-    if (o && o.area) {
+    if (o && o.area && !isInvalidArea(o.area)) {
       ensure(o.area).grwOrders.push(o);
     }
   });
 
   custPool.forEach(function(o) {
-    if (o && o.area) {
+    if (o && o.area && !isInvalidArea(o.area)) {
       ensure(o.area).custOrders.push(o);
     }
   });
@@ -8935,6 +9777,19 @@ var csvCaseIdReleaseLpUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/
   var csvSlaCustUrl2 = getProxyUrl('https://docs.google.com/spreadsheets/d/1q-qxELBQZr3ABhVg-mw6Kvhl-e11RGQUmCTQjsXtz9g/gviz/tq?tqx=out:csv&sheet=SLA%20CUSTOMER');
   var csvBacklogUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1ITpX4yc_VLL_qpbLZc1RHfwDzinUf2vnbQXewb_F4oM/gviz/tq?tqx=out:csv&sheet=BACKLOG');
   var csvOrgChartUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1ITpX4yc_VLL_qpbLZc1RHfwDzinUf2vnbQXewb_F4oM/gviz/tq?tqx=out:csv&gid=1501777569');
+  var csvAgingReasonUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1ITpX4yc_VLL_qpbLZc1RHfwDzinUf2vnbQXewb_F4oM/gviz/tq?tqx=out:csv&gid=532307905');
+
+  var fetchAgingReason = new Promise(function(resolve) {
+    fetchAndParseCsv(csvAgingReasonUrl, { header: true, skipEmptyLines: true }, function(data) {
+      if (data && data.length > 0) {
+        resolve(data);
+      } else {
+        fetchAndParseCsv(csvAgingReasonUrl, { header: false, skipEmptyLines: true }, function(dataRaw) {
+          resolve(dataRaw || []);
+        });
+      }
+    });
+  });
 
   var fetchOrgChart = new Promise(function(resolve) {
     fetchAndParseCsv(csvOrgChartUrl, { header: true, skipEmptyLines: true }, function(data) {
@@ -9047,7 +9902,7 @@ var fetchCaseIdReleaseLp = new Promise(function(resolve) {
     });
   });
 
-  Promise.all([fetchMonitoring, fetchAging, fetchAgingCust, fetchContDate, fetchSlaGrw, fetchSlaCust, fetchFulfillment, fetchOlf, fetchCaseIdRelease, fetchCaseIdReleaseP1, fetchCaseIdReleaseP2, fetchCaseIdReleaseHubLk, fetchCaseIdReleaseLp, fetchBacklog, fetchOrgChart])
+  Promise.all([fetchMonitoring, fetchAging, fetchAgingCust, fetchContDate, fetchSlaGrw, fetchSlaCust, fetchFulfillment, fetchOlf, fetchCaseIdRelease, fetchCaseIdReleaseP1, fetchCaseIdReleaseP2, fetchCaseIdReleaseHubLk, fetchCaseIdReleaseLp, fetchBacklog, fetchOrgChart, fetchAgingReason])
     .then(function(results) {
       allSlaGrwData = results[4] || [];
       allSlaCustData = results[5] || [];
@@ -9065,6 +9920,10 @@ var fetchCaseIdReleaseLp = new Promise(function(resolve) {
       allBacklogData = parseBacklogSheetData(allBacklogRawData);
       allOrgChartRawData = results[14] || [];
       allOrgChartData = parseOrgChartSheetData(allOrgChartRawData);
+      allAgingReasonRawData = results[15] || [];
+      allAgingReasonData = parseAgingReasonSheetData(allAgingReasonRawData);
+      populateAgingReasonFilterDropdowns();
+      renderAgingReasonSection();
       isCaseIdReleaseFetchedFromSheets = true;
 
       // Find dynamic URL in column N2 of SLA CUST
@@ -9099,10 +9958,26 @@ var fetchCaseIdReleaseLp = new Promise(function(resolve) {
         }
       }
 
-      var finalSlaMissedUrl = getProxyUrl(targetUrl || 'https://docs.google.com/spreadsheets/d/1PklbBrPhF8myX5ONshtYKzTT4WACMXsbViH1LdDXACU/gviz/tq?tqx=out:csv&gid=0');
+      var finalGrwMissedUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1PklbBrPhF8myX5ONshtYKzTT4WACMXsbViH1LdDXACU/gviz/tq?tqx=out:csv&gid=1680256105');
+      var finalCustMissedUrl = getProxyUrl(targetUrl || 'https://docs.google.com/spreadsheets/d/1PklbBrPhF8myX5ONshtYKzTT4WACMXsbViH1LdDXACU/gviz/tq?tqx=out:csv&gid=0');
 
-      fetchAndParseCsv(finalSlaMissedUrl, { header: false, skipEmptyLines: true }, function(missedData) {
-        allSlaMissedData = missedData || [];
+      Promise.all([
+        new Promise(function(resolve) {
+          fetchAndParseCsv(finalGrwMissedUrl, { header: false, skipEmptyLines: true }, function(data) {
+            resolve(data || []);
+          });
+        }),
+        new Promise(function(resolve) {
+          fetchAndParseCsv(finalCustMissedUrl, { header: false, skipEmptyLines: true }, function(data) {
+            resolve(data || []);
+          });
+        })
+      ]).then(function(missedResults) {
+        allSlaGrwMissedData = missedResults[0] || [];
+        allSlaCustMissedData = missedResults[1] || [];
+        processResults(results);
+      }).catch(function(err) {
+        console.error('[Dashboard] Error loading SLA Missed logs:', err);
         processResults(results);
       });
     })
@@ -9228,8 +10103,8 @@ function processResults(results) {
     collectRouteDates(dataAgingGrw);
     collectRouteDates(dataAgingCust);
 
-    ORDER_POOL_GRW = parseOutstandingSheetData(dataAgingGrw, RAW_ORDER_POOL_GRW);
-    ORDER_POOL_CUST = parseOutstandingSheetData(dataAgingCust, RAW_ORDER_POOL_CUST);
+    ORDER_POOL_GRW = parseOutstandingSheetData(dataAgingGrw, RAW_ORDER_POOL_GRW, 'GRW');
+    ORDER_POOL_CUST = parseOutstandingSheetData(dataAgingCust, RAW_ORDER_POOL_CUST, 'CUST');
     
     // Parse CONT DATE for GRW planning projection
     GRW_PLAN_AREAS = [];
@@ -9253,7 +10128,7 @@ function processResults(results) {
             }
           }
         }
-        if (area && targetVal) {
+        if (area && targetVal && !isInvalidArea(area)) {
           var valStr = targetVal.toString().toUpperCase().trim();
           if (valStr !== '' && valStr !== 'FALSE' && valStr !== '0' && valStr !== '-') {
              // Accept any non-empty, non-negative value as a planned area for that day
@@ -9277,7 +10152,7 @@ function fallbackData() {
   allData = EMBEDDED_DATA;
   allFulfillmentData = EMBEDDED_DATA;
   allOlfData = [];
-  ORDER_POOL_GRW = parseOutstandingSheetData(EMBEDDED_DATA, RAW_ORDER_POOL_GRW);
+  ORDER_POOL_GRW = parseOutstandingSheetData(EMBEDDED_DATA, RAW_ORDER_POOL_GRW, 'GRW');
   ORDER_POOL_CUST = [];
   RAW_ORDER_POOL_CUST = [];
   isLiveData = false;
@@ -12152,6 +13027,59 @@ esc(r.destination) +
 });
 }
 
+function vendorKetCell(r) {
+  var pct = parseFloat(r.pctOnTime) || 0;
+  var pctCol = pct >= 80 ? '#00876e' : pct < 30 ? '#c53030' : '#b7791f';
+  var barCol = pct >= 80 ? '#00b894' : pct < 30 ? '#e53e3e' : '#ed8936';
+  var barW = Math.min(100, Math.max(0, pct));
+  return '<div style="display:flex;align-items:center;gap:6px;white-space:nowrap">' +
+    '<span style="font-size:13px;font-weight:900;color:' + pctCol + ';letter-spacing:-.3px;min-width:38px;text-align:right">' + fp(pct) + '%</span>' +
+    '<div style="width:48px;height:5px;background:rgba(0,0,0,.10);border-radius:3px;overflow:hidden;flex-shrink:0">' +
+    '<div style="width:' + barW + '%;height:100%;background:' + barCol + ';border-radius:3px"></div>' +
+    '</div>' +
+    '</div>';
+}
+
+function vendorStarCell(r) {
+  var pct = parseFloat(r.pctOnTime) || 0;
+  var star = parseFloat(r.starRating) || 0;
+  var sf = Math.floor(star), sh = (star - sf) >= 0.5;
+
+  var fullGrad, halfGrad, shadow, textColor;
+  if (pct >= 80) {
+    fullGrad = 'linear-gradient(135deg, #34d399 0%, #10b981 50%, #059669 100%)';
+    halfGrad = 'linear-gradient(90deg, #10b981 50%, #cbd5e1 50%)';
+    shadow = 'drop-shadow(0 2px 4px rgba(16,185,129,0.35))';
+    textColor = '#047857';
+  } else if (pct < 30) {
+    fullGrad = 'linear-gradient(135deg, #f87171 0%, #ef4444 50%, #dc2626 100%)';
+    halfGrad = 'linear-gradient(90deg, #ef4444 50%, #cbd5e1 50%)';
+    shadow = 'drop-shadow(0 2px 4px rgba(239,68,68,0.35))';
+    textColor = '#b91c1c';
+  } else {
+    fullGrad = 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #d97706 100%)';
+    halfGrad = 'linear-gradient(90deg, #f59e0b 50%, #cbd5e1 50%)';
+    shadow = 'drop-shadow(0 2px 4px rgba(245,158,11,0.35))';
+    textColor = '#b45309';
+  }
+
+  var sHtml = '';
+  for (var i = 1; i <= 5; i++) {
+    if (i <= sf) {
+      sHtml += '<span style="background: ' + fullGrad + '; -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size:16px; line-height:1; filter: ' + shadow + '; font-weight:900; display:inline-block;">&#9733;</span>';
+    } else if (i === sf + 1 && sh) {
+      sHtml += '<span style="background: ' + halfGrad + '; -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size:16px; line-height:1; filter: ' + shadow + '; font-weight:900; display:inline-block;">&#9733;</span>';
+    } else {
+      sHtml += '<span style="color:#cbd5e1; font-size:16px; line-height:1; display:inline-block; opacity:0.5;">&#9733;</span>';
+    }
+  }
+
+  return '<div style="display:flex; align-items:center; gap:6px; white-space:nowrap; background:transparent;">' +
+    '<span style="display:inline-flex; gap:2px; align-items:center; background:transparent; padding:0; border:none;">' + sHtml + '</span>' +
+    '<span style="font-size:12px; font-weight:800; color:' + textColor + '; font-family:var(--font-mono); letter-spacing:-0.2px;">(' + star.toFixed(1) + ')</span>' +
+    '</div>';
+}
+
 function renderFFVend(rows, kpi) {
   var tb = document.getElementById('tb-vendor'), em = document.getElementById('em-vendor');
   if (!tb) return;
@@ -12178,32 +13106,11 @@ function renderFFVend(rows, kpi) {
   var h = '';
   var grandTot = 0, grandOn = 0, grandSt = 0, grandT1 = 0, grandT2 = 0;
 
-  function vendorKetCell(r) {
-    var pct = parseFloat(r.pctOnTime) || 0;
-    var star = parseFloat(r.starRating) || 0;
-    var pctCol = pct >= 80 ? '#00876e' : pct < 30 ? '#c53030' : '#b7791f';
-    var barCol = pct >= 80 ? '#00b894' : pct < 30 ? '#e53e3e' : '#ed8936';
-    var barW = Math.min(100, Math.max(0, pct));
-    var sf = Math.floor(star), sh = (star - sf) >= 0.5, sHtml = '';
-    for (var i = 1; i <= 5; i++) {
-      if (i <= sf) sHtml += '<span style="color:' + pctCol + ';font-size:13px;line-height:1">&#9733;</span>';
-      else if (i === sf + 1 && sh) sHtml += '<span style="color:' + pctCol + ';font-size:13px;line-height:1;opacity:.4">&#9733;</span>';
-      else sHtml += '<span style="color:#d1d5db;font-size:13px;line-height:1">&#9733;</span>';
-    }
-    return '<div style="display:flex;align-items:center;gap:6px;white-space:nowrap">' +
-      '<span style="font-size:14px;font-weight:900;color:' + pctCol + ';letter-spacing:-.3px;min-width:38px;text-align:right">' + fp(pct) + '%</span>' +
-      '<div style="width:42px;height:5px;background:rgba(0,0,0,.10);border-radius:3px;overflow:hidden;flex-shrink:0">' +
-      '<div style="width:' + barW + '%;height:100%;background:' + barCol + ';border-radius:3px"></div>' +
-      '</div>' +
-      '<span style="display:inline-flex;gap:0;align-items:center;flex-shrink:0">' + sHtml + '</span>' +
-      '</div>';
-  }
-
   function renderGroup(label, bgColor, textColor, icon, groupRows) {
     if (!groupRows.length) return;
     var gTot = 0, gOn = 0, gSt = 0, gT1 = 0, gT2 = 0;
     h += '<tr style="background:' + bgColor + ';border-top:2px solid ' + textColor + '">' +
-      '<td colspan="8" style="padding:8px 12px;font-size:11px;font-weight:800;text-transform:uppercase;' +
+      '<td colspan="9" style="padding:8px 12px;font-size:11px;font-weight:800;text-transform:uppercase;' +
       'letter-spacing:.6px;color:' + textColor + ';border-radius:0;white-space:nowrap">' +
       icon + ' ' + label + '</td></tr>';
     groupRows.forEach(function(r) {
@@ -12221,6 +13128,7 @@ function renderFFVend(rows, kpi) {
         '<td class="cd">' + fn(r.telat1Hari) + '</td>' +
         '<td class="cd">' + fn(r.telat2HariUp) + '</td>' +
         '<td style="padding:6px 8px;vertical-align:middle">' + vendorKetCell(r) + '</td>' +
+        '<td style="padding:6px 8px;vertical-align:middle">' + vendorStarCell(r) + '</td>' +
         '</tr>';
     });
     var gPct = gTot > 0 ? gOn / gTot * 100 : 0;
@@ -12234,6 +13142,7 @@ function renderFFVend(rows, kpi) {
       '<td class="cd" style="font-weight:800">' + fn(gT1) + '</td>' +
       '<td class="cd" style="font-weight:800">' + fn(gT2) + '</td>' +
       '<td class="nc" style="font-size:13px;font-weight:900;color:' + gCol + '">' + fp(gPct) + '%</td>' +
+      '<td></td>' +
       '</tr>';
     grandTot += gTot;
     grandOn += gOn;
@@ -12255,6 +13164,7 @@ function renderFFVend(rows, kpi) {
     '<td class="nc">' + fn(grandT1) + '</td>' +
     '<td class="nc">' + fn(grandT2) + '</td>' +
     '<td class="nc" style="font-size:15px;font-weight:900;color:' + (gPctAll >= 80 ? '#00876e' : gPctAll < 30 ? '#c53030' : '#b7791f') + '">' + fp(gPctAll) + '%</td>' +
+    '<td></td>' +
     '</tr>';
 
   tb.innerHTML = h;
