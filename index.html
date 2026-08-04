@@ -6628,7 +6628,13 @@ function parseOutstandingSheetData(rows, targetRawArray, sourceType) {
       var id = idxId !== -1 ? String(row[idxId]) : 'ORD-' + (100 + i);
       var cust = idxCustomer !== -1 ? String(row[idxCustomer]) : 'CUSTOMER';
       var dest = idxDestination !== -1 ? String(row[idxDestination]) : 'KOTA';
-      var cbm = idxCbm !== -1 ? parseFloat(row[idxCbm]) || 0 : 1.0;
+      var rawCbmVal = idxCbm !== -1 ? row[idxCbm] : 1.0;
+      var cbm = 0;
+      if (rawCbmVal !== null && rawCbmVal !== undefined && rawCbmVal !== '') {
+        var cbmStr = String(rawCbmVal).trim().replace(',', '.');
+        var parsedCbm = parseFloat(cbmStr);
+        cbm = isNaN(parsedCbm) ? 0 : parsedCbm;
+      }
       var cases = idxCases !== -1 ? parseInt(row[idxCases]) || 0 : 10;
       
       var daysAgo = 0;
@@ -6712,7 +6718,7 @@ function parseOutstandingSheetData(rows, targetRawArray, sourceType) {
         isUnplanned = false;
       }
 
-      var order = {
+      var rawItem = {
         id: id,
         customer: cust,
         destination: dest,
@@ -6730,7 +6736,7 @@ function parseOutstandingSheetData(rows, targetRawArray, sourceType) {
         planDeliveryDate: planDeliveryDate
       };
 
-      targetRawArray.push(order);
+      targetRawArray.push(rawItem);
 
       if (orderMap[id]) {
         orderMap[id].cbm += cbm;
@@ -6738,8 +6744,26 @@ function parseOutstandingSheetData(rows, targetRawArray, sourceType) {
         continue;
       }
 
-      orderMap[id] = order;
-      list.push(order);
+      var orderGroup = {
+        id: id,
+        customer: cust,
+        destination: dest,
+        cbm: cbm,
+        cases: cases,
+        daysAgo: daysAgo,
+        reqShipDaysDiff: reqShipDaysDiff,
+        area: area,
+        isDalamKota: isDalamKota,
+        route: routeVal,
+        status: isUnplanned ? 'Unplanned' : (rawStatus || 'Planned'),
+        rawStatus: rawStatus || (isUnplanned ? 'Unplanned' : 'Planned'),
+        bookingType: bookingType,
+        sourceType: sourceType || 'GRW',
+        planDeliveryDate: planDeliveryDate
+      };
+
+      orderMap[id] = orderGroup;
+      list.push(orderGroup);
     }
   } else {
     // Array of Objects (PapaParse header: true)
@@ -6754,7 +6778,13 @@ function parseOutstandingSheetData(rows, targetRawArray, sourceType) {
       var id = getVal(/^ORDERKEY$|^EXTERNORDERKEY$|^ORDERID$|^IDORDER$|^NOORDER$|^ORDERNO$|^ID$|^TRANSNO$|^NODO$|^DONO$|^DONUMBER$|^NOMORORDER$|^ORDER$|^DOCNO$|^DOCUMENTNO$|^PONO$|^NOPO$/, 'ORD-' + (100 + idx));
       var cust = getVal(/^SHIPTONAME$|^STOREBOOKINGNAME$|^CUSTOMER$|^SHIPPINGLINE$/, 'CUSTOMER');
       var dest = getVal(/^CITY$|^KOTA$|^SHIPTONAME$/, 'KOTA');
-      var cbm = parseFloat(getVal(/^CUBE$|^CBM$|^VOLUME$/, 0)) || 0;
+      var rawCbmVal = getVal(/^CUBE$|^CBM$|^VOLUME$/, 0);
+      var cbm = 0;
+      if (rawCbmVal !== null && rawCbmVal !== undefined && rawCbmVal !== '') {
+        var cbmStr = String(rawCbmVal).trim().replace(',', '.');
+        var parsedCbm = parseFloat(cbmStr);
+        cbm = isNaN(parsedCbm) ? 0 : parsedCbm;
+      }
       var cases = parseInt(getVal(/^OPENQTY$|^CASES$|^KOLI$|^QTY$/, 1)) || 1;
       
       var daysAgo = 0;
@@ -6865,7 +6895,7 @@ function parseOutstandingSheetData(rows, targetRawArray, sourceType) {
         isUnplanned = false;
       }
 
-      var order = {
+      var rawItem = {
         id: id,
         customer: cust,
         destination: dest,
@@ -6883,21 +6913,39 @@ function parseOutstandingSheetData(rows, targetRawArray, sourceType) {
         sourceType: sourceType || 'GRW',
         planDeliveryDate: planDeliveryDate
       };
-      
-      if (planDeliveryDate) {
-        order.status = 'Planned';
-      }
-      
-      targetRawArray.push(order);
+
+      targetRawArray.push(rawItem);
 
       if (orderMapObj[id]) {
         orderMapObj[id].cbm += cbm;
         orderMapObj[id].cases += cases;
         return;
       }
+
+      var orderGroup = {
+        id: id,
+        customer: cust,
+        destination: dest,
+        cbm: cbm,
+        cases: cases,
+        daysAgo: daysAgo,
+        reqShipDaysDiff: reqShipDaysDiff,
+        area: area,
+        isDalamKota: isDalamKota,
+        priorityRaw: priorityStr,
+        route: routeVal,
+        status: isUnplanned ? 'Unplanned' : (rawStatus || 'Planned'),
+        rawStatus: rawStatus || (isUnplanned ? 'Unplanned' : 'Planned'),
+        bookingType: bookingType,
+        sourceType: sourceType || 'GRW',
+        planDeliveryDate: planDeliveryDate
+      };
+      if (planDeliveryDate) {
+        orderGroup.status = 'Planned';
+      }
       
-      orderMapObj[id] = order;
-      list.push(order);
+      orderMapObj[id] = orderGroup;
+      list.push(orderGroup);
     });
   }
 
