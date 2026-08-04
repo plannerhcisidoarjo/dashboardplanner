@@ -7828,31 +7828,53 @@ function initArmadaTrendChart() {
 function parseDateStr(str) {
   if (!str) return null;
   var strClean = String(str).trim();
+  if (!strClean || strClean === '—' || strClean === '-') return null;
+
+  if (strClean.indexOf('T') !== -1) strClean = strClean.split('T')[0];
+  if (strClean.indexOf(' ') !== -1) strClean = strClean.split(' ')[0];
+
   if (strClean.indexOf('-') !== -1) {
     return parseDateStrHyphen(strClean);
   }
+
   var parts = strClean.split('/');
   if (parts.length === 3) {
     var p0 = parseInt(parts[0], 10);
     var p1 = parseInt(parts[1], 10);
     var p2 = parseInt(parts[2], 10);
-    // If the first part is > 12, it is definitely DD/MM/YYYY
+    if (isNaN(p0) || isNaN(p1) || isNaN(p2)) return null;
     if (p0 > 12) {
       return new Date(p2, p1 - 1, p0);
     } else {
-      // Default to MM/DD/YYYY, which is standard for exported Google Sheets
       return new Date(p2, p0 - 1, p1);
     }
   }
-  return null;
+
+  var d = new Date(strClean);
+  return isNaN(d.getTime()) ? null : d;
 }
 
 function parseDateStrHyphen(str) {
   if (!str) return null;
-  var parts = str.split('-');
+  var strClean = String(str).trim();
+  if (strClean.indexOf('T') !== -1) strClean = strClean.split('T')[0];
+  if (strClean.indexOf(' ') !== -1) strClean = strClean.split(' ')[0];
+
+  var parts = strClean.split('-');
   if (parts.length === 3) {
-    // YYYY-MM-DD
-    return new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+    var p0 = parseInt(parts[0], 10);
+    var p1 = parseInt(parts[1], 10);
+    var p2 = parseInt(parts[2], 10);
+    if (isNaN(p0) || isNaN(p1) || isNaN(p2)) return null;
+    if (p0 > 1000) {
+      return new Date(p0, p1 - 1, p2);
+    } else {
+      if (p0 > 12) {
+        return new Date(p2, p1 - 1, p0);
+      } else {
+        return new Date(p2, p0 - 1, p1);
+      }
+    }
   }
   return null;
 }
@@ -8161,8 +8183,24 @@ function applySlaMissFilters() {
 
   var missStartStr = document.getElementById('slaMissStartDate') ? document.getElementById('slaMissStartDate').value : '';
   var missEndStr = document.getElementById('slaMissEndDate') ? document.getElementById('slaMissEndDate').value : '';
-  var missStartMs = missStartStr ? parseDateStrHyphen(missStartStr).getTime() : null;
-  var missEndMs = missEndStr ? parseDateStrHyphen(missEndStr).getTime() : null;
+  
+  var missStartMs = null;
+  if (missStartStr) {
+    var startDateObj = parseDateStr(missStartStr);
+    if (startDateObj) {
+      startDateObj.setHours(0, 0, 0, 0);
+      missStartMs = startDateObj.getTime();
+    }
+  }
+
+  var missEndMs = null;
+  if (missEndStr) {
+    var endDateObj = parseDateStr(missEndStr);
+    if (endDateObj) {
+      endDateObj.setHours(23, 59, 59, 999);
+      missEndMs = endDateObj.getTime();
+    }
+  }
 
   var filtered = currentSlaMissedList.filter(function(m) {
     // Order Type Filter
@@ -8170,9 +8208,11 @@ function applySlaMissFilters() {
       if (m.orderType !== typeVal) return false;
     }
 
-    // Date filter (by shippedDate or origReqDate)
-    var mDate = parseDateStrHyphen(m.shippedDate);
-    if (!mDate) mDate = parseDateStrHyphen(m.origReqDate);
+    // Date filter (by shippedDate or origReqDate or newReqShipDate)
+    var mDate = parseDateStr(m.shippedDate);
+    if (!mDate) mDate = parseDateStr(m.origReqDate);
+    if (!mDate) mDate = parseDateStr(m.newReqShipDate);
+
     if (mDate) {
       var ms = mDate.getTime();
       if (missStartMs && ms < missStartMs) return false;
