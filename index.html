@@ -15049,23 +15049,23 @@ function normalizeCaseDetailSheet(rawRows, sourceTag, batchTag) {
 
   for (var c = 0; c < headers.length; c++) {
     var h = String(headers[c] || '').toUpperCase().trim().replace(/[\s_.\-/]/g, '');
-    if (h === 'CASEID') caseIdIdx = c;
-    else if (h === 'SKU') skuIdx = c;
-    else if (h === 'DESCR' || h === 'DESCRIPTION') descIdx = c;
-    else if (h === 'SHIPTO' || h === 'SHIPTOCODE') shiptoIdx = c;
-    else if (h === 'LOC' || h === 'LOCATION') locIdx = c;
-    else if (h.indexOf('ADDDATE') !== -1) addDateIdx = c;
-    else if (h === 'DEP') depIdx = c;
+    if (h === 'CASEID' && caseIdIdx === -1) caseIdIdx = c;
+    else if (h === 'SKU' && skuIdx === -1) skuIdx = c;
+    else if ((h === 'DESCR' || h === 'DESCRIPTION') && descIdx === -1) descIdx = c;
+    else if ((h === 'SHIPTO' || h === 'SHIPTOCODE') && shiptoIdx === -1) shiptoIdx = c;
+    else if ((h === 'LOC' || h === 'LOCATION') && locIdx === -1) locIdx = c;
+    else if (h.indexOf('ADDDATE') !== -1 && addDateIdx === -1) addDateIdx = c;
+    else if (h === 'DEP' && depIdx === -1) depIdx = c;
     else if (areaIdx === -1 && h.indexOf('AREA') !== -1) areaIdx = c;
     
     // Extra requested columns
-    if (h === 'ORDERKEY' || h === 'ORDERNO' || h === 'NOMORORDER') orderkeyIdx = c;
-    else if (h === 'EXTRENORDERKEY' || h === 'EXTRNORDERKEY' || h === 'EXTERNALORDERKEY') extrnorderkeyIdx = c;
-    else if (h === 'SHIPTONAME' || h === 'CUSTOMERNAME' || h === 'SHIPTONAMA' || h === 'NAMASHIPTO') shiptonameIdx = c;
-    else if (h === 'STOREBOOKING' || h === 'BOOKINGSTORE' || h === 'BOOKING') storebookingIdx = c;
-    else if (h === 'CBM' || h === 'VOLUME') cbmIdx = c;
-    else if (h === 'CUBE') cubeIdx = c;
-    else if (h === 'ROUTE' || h === 'ROUTECODE') routeIdx = c;
+    if ((h === 'ORDERKEY' || h === 'ORDERNO' || h === 'NOMORORDER') && orderkeyIdx === -1) orderkeyIdx = c;
+    else if ((h === 'EXTRENORDERKEY' || h === 'EXTRNORDERKEY' || h === 'EXTERNALORDERKEY') && extrnorderkeyIdx === -1) extrnorderkeyIdx = c;
+    else if ((h === 'SHIPTONAME' || h === 'CUSTOMERNAME' || h === 'SHIPTONAMA' || h === 'NAMASHIPTO') && shiptonameIdx === -1) shiptonameIdx = c;
+    else if ((h === 'STOREBOOKING' || h === 'BOOKINGSTORE' || h === 'BOOKING') && storebookingIdx === -1) storebookingIdx = c;
+    else if ((h === 'CBM' || h === 'VOLUME') && cbmIdx === -1) cbmIdx = c;
+    else if (h === 'CUBE' && cubeIdx === -1) cubeIdx = c;
+    else if ((h === 'ROUTE' || h === 'ROUTECODE') && routeIdx === -1) routeIdx = c;
   }
 
   if (caseIdIdx === -1) {
