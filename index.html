@@ -3351,6 +3351,15 @@ PLANNING REPORT</div>
           </div>
 
           <div style="display:flex; align-items:center; gap:6px;">
+            <label style="font-size:11px; font-weight:700; color:var(--ts); text-transform:uppercase;">Wilayah:</label>
+            <select id="agingMatrixAreaFilter" class="filter-select" onchange="renderAgingMatrixTable()" style="padding:6px 12px; border-radius:8px; font-size:12px; font-weight:600; background:var(--surface); border:1px solid var(--border); color:var(--tp);">
+              <option value="ALL">Semua Wilayah (OD DK + LK)</option>
+              <option value="DK">OD DK (Dalam Kota)</option>
+              <option value="LK">LK (Luar Kota)</option>
+            </select>
+          </div>
+
+          <div style="display:flex; align-items:center; gap:6px;">
             <label style="font-size:11px; font-weight:700; color:var(--ts); text-transform:uppercase;">Booking:</label>
             <select id="agingMatrixBookingFilter" class="filter-select" onchange="renderAgingMatrixTable()" style="padding:6px 12px; border-radius:8px; font-size:12px; font-weight:600; background:var(--surface); border:1px solid var(--border); color:var(--tp);">
               <option value="ALL">Semua Booking (Regular + Transit)</option>
@@ -3375,7 +3384,7 @@ PLANNING REPORT</div>
       <!-- Table Container -->
       <div class="table-wrap" style="overflow-x:auto; padding:0 20px 20px 20px;">
         <table class="order-table" id="agingMatrixTable" style="width:100%; border-collapse:separate; border-spacing:0; text-align:left; border-radius:10px; border:1px solid var(--border); overflow:hidden;">
-          <thead>
+          <thead id="agingMatrixTableHead">
             <tr style="background:var(--surface-hover); border-bottom:2px solid var(--border);">
               <th style="padding:12px 16px; font-size:12px; font-weight:800; color:var(--tp); text-transform:uppercase; letter-spacing:0.3px; width:210px;">Status Order</th>
               <th style="padding:12px 14px; font-size:12px; font-weight:800; color:var(--tp); text-align:right; text-transform:uppercase; letter-spacing:0.3px; min-width:85px;">Total</th>
@@ -5440,10 +5449,10 @@ var GRW_PLAN_AREAS = [];
 var agingSortCol = 'priority';
 var agingSortDir = -1;
 
-function isInvalidArea(a) {
-  if (a === null || a === undefined) return false;
-  var str = String(a).toUpperCase().trim();
-  if (!str) return false;
+function isInvalidValue(v) {
+  if (v === null || v === undefined) return true;
+  var str = String(v).toUpperCase().trim();
+  if (!str) return true;
   return (
     str.indexOf('#N/A') !== -1 ||
     str === 'N/A' ||
@@ -5451,8 +5460,76 @@ function isInvalidArea(a) {
     str.startsWith('#') ||
     str.indexOf('#REF') !== -1 ||
     str.indexOf('#VALUE') !== -1 ||
-    str.indexOf('#ERROR') !== -1
+    str.indexOf('#ERROR') !== -1 ||
+    str === 'NULL' ||
+    str === 'UNDEFINED' ||
+    str === 'UNPLANNED'
   );
+}
+
+function isInvalidArea(a) {
+  if (a === null || a === undefined) return true;
+  var str = String(a).toUpperCase().trim();
+  if (!str) return true;
+  return (
+    str.indexOf('#N/A') !== -1 ||
+    str === 'N/A' ||
+    str === 'NA' ||
+    str.startsWith('#') ||
+    str.indexOf('#REF') !== -1 ||
+    str.indexOf('#VALUE') !== -1 ||
+    str.indexOf('#ERROR') !== -1 ||
+    str === 'NULL' ||
+    str === 'UNDEFINED'
+  );
+}
+
+// Status "UNPLANNED" itu VALID (artinya belum di-plan), jangan dibuang seperti #N/A
+function isInvalidStatus_(v) {
+  if (v === null || v === undefined) return true;
+  var s = String(v).toUpperCase().trim();
+  if (!s) return true;
+  if (s === 'UNPLANNED') return false;
+  return isInvalidValue(v);
+}
+
+// Order dianggap BELUM DI-PLAN bila: status UNPLANNED, atau tidak punya ROUTE & tidak punya PLAN DELIVERY DATE
+function isUnplannedOrder_(o) {
+  if (!o) return false;
+  var st = String(o.rawStatus || o.status || '').toUpperCase().trim();
+  if (st === 'UNPLANNED') return true;
+  if (st === 'PLANNED' || st === 'LOADED' || st === 'IN LOADING') return false;
+
+  var r = String(o.route || '').trim().toUpperCase();
+  var hasRoute = r && r !== '-' && r !== 'NAN' && r !== 'NULL' &&
+                 r !== 'UNDEFINED' && r !== '0' && r.indexOf('#N/A') === -1;
+  if (hasRoute) return false;
+  if (o.planDeliveryDate) return false;
+  return true;
+}
+
+// Tanggal target proyeksi = H+2 dari hari dashboard dibuka
+function getPlanTargetDate_() {
+  var d = new Date();
+  d.setHours(0, 0, 0, 0);
+  d.setDate(d.getDate() + 2);
+  return d;
+}
+
+// Kapasitas & ambang batas konversi armada per wilayah
+function getPlanArmada_(areaName) {
+  var a = String(areaName || '').toUpperCase();
+  if (a.match(/JAKARTA|BALI|DENPASAR|BADUNG|LOMBOK|NTB|MATARAM/))
+    return { type: 'WINGBOX', capacity: 40, threshold: 0.95 };
+  if (a.match(/SULAWESI|NTT|TARAKAN|TERNATE|AMBON|KENDARI|SUMATERA|PALU|JAYAPURA|SORONG|KALIMANTAN|MAKASSAR|BANJARMASIN|BALIKPAPAN|SAMARINDA|PONTIANAK|PALANGKARAYA|MANADO|GORONTALO|KUPANG|MEDAN|PADANG|PEKANBARU|PALEMBANG|JAMBI|BENGKULU|LAMPUNG|BATAM|PAPUA|MALUKU/))
+    return { type: 'CONT-20', capacity: 25, threshold: 0.90 };
+  if (a.match(/LUAR KOTA/))
+    return { type: 'FUSO', capacity: 25, threshold: 0.95 };
+  return { type: 'CDD LONG CHASSIS', capacity: 15, threshold: 0.95 };
+}
+
+function isPerStoreArea_(areaName) {
+  return /BALI|KEDIRI|MADIUN|JEMBER|MALANG|SBY RAYA/.test(String(areaName || '').toUpperCase());
 }
 
 function sortAgingTable(col) {
@@ -5599,8 +5676,8 @@ function applyAgingFilters() {
   });
   var totalRawCBM = filteredRawOrders.reduce(function(sum, o) { return sum + o.cbm; }, 0);
 
-  var unplannedOrders = filteredOrders.filter(function(o) { return o.status === 'Unplanned'; });
-  var unplannedRawOrders = filteredRawOrders.filter(function(o) { return o.status === 'Unplanned'; });
+  var unplannedOrders    = filteredOrders.filter(isUnplannedOrder_);
+  var unplannedRawOrders = filteredRawOrders.filter(isUnplannedOrder_);
   renderAgingTable(filteredOrders);
   renderAgingKPIs(filteredOrders, totalRawCBM);
   renderFTLShortage(unplannedRawOrders);
@@ -5631,6 +5708,7 @@ function getStatusDot(st) {
 }
 
 function renderAgingMatrixTable() {
+  var thead = document.getElementById('agingMatrixTableHead');
   var tbody = document.getElementById('agingMatrixTableBody');
   var tfoot = document.getElementById('agingMatrixTableFoot');
   var kpiWrap = document.getElementById('agingMatrixKpiBadges');
@@ -5638,11 +5716,42 @@ function renderAgingMatrixTable() {
 
   var srcFilterEl = document.getElementById('agingMatrixSourceFilter');
   var bookFilterEl = document.getElementById('agingMatrixBookingFilter');
+  var areaFilterEl = document.getElementById('agingMatrixAreaFilter');
   var metricFilterEl = document.getElementById('agingMatrixMetricFilter');
   
   var srcVal = srcFilterEl ? srcFilterEl.value : 'ALL';
   var bookVal = bookFilterEl ? bookFilterEl.value : 'ALL';
+  var areaVal = areaFilterEl ? areaFilterEl.value : 'ALL';
   var metricVal = metricFilterEl ? metricFilterEl.value : 'ORDER'; // 'ORDER' or 'CBM'
+
+  var isDk = (areaVal === 'DK');
+
+  // Render Table Head dynamically based on DK area filter
+  if (thead) {
+    if (isDk) {
+      thead.innerHTML = '<tr style="background:var(--surface-hover); border-bottom:2px solid var(--border);">' +
+        '<th style="padding:12px 16px; font-size:12px; font-weight:800; color:var(--tp); text-transform:uppercase; letter-spacing:0.3px; width:210px;">Status Order</th>' +
+        '<th style="padding:12px 14px; font-size:12px; font-weight:800; color:var(--tp); text-align:right; text-transform:uppercase; letter-spacing:0.3px; min-width:85px;">Total</th>' +
+        '<th style="padding:10px 12px; text-align:right; min-width:85px;"><span style="padding:4px 8px; border-radius:12px; background:rgba(16,185,129,0.12); color:#059669; font-size:11px; font-weight:700; display:inline-block;">0 Hari</span></th>' +
+        '<th style="padding:10px 12px; text-align:right; min-width:85px;"><span style="padding:4px 8px; border-radius:12px; background:rgba(14,165,233,0.12); color:#0284c7; font-size:11px; font-weight:700; display:inline-block;">1-3 Hari</span></th>' +
+        '<th style="padding:10px 12px; text-align:right; min-width:110px; background:rgba(245,158,11,0.06); border-left:1px dashed rgba(245,158,11,0.4);"><span style="padding:4px 10px; border-radius:12px; background:rgba(245,158,11,0.22); color:#b45309; font-size:11px; font-weight:800; border:1px solid rgba(245,158,11,0.45); display:inline-flex; align-items:center; gap:4px; box-shadow:0 1px 3px rgba(245,158,11,0.15);">⚠️ 4-7 Hari</span></th>' +
+        '<th style="padding:10px 12px; text-align:right; min-width:110px; background:rgba(245,158,11,0.06);"><span style="padding:4px 10px; border-radius:12px; background:rgba(245,158,11,0.2); color:#b45309; font-size:11px; font-weight:800; border:1px solid rgba(245,158,11,0.4); display:inline-flex; align-items:center; gap:4px; box-shadow:0 1px 3px rgba(245,158,11,0.15);">⚠️ 8-14 Hari</span></th>' +
+        '<th style="padding:10px 12px; text-align:right; min-width:110px; background:rgba(234,88,12,0.06);"><span style="padding:4px 10px; border-radius:12px; background:rgba(234,88,12,0.2); color:#c2410c; font-size:11px; font-weight:800; border:1px solid rgba(234,88,12,0.4); display:inline-flex; align-items:center; gap:4px; box-shadow:0 1px 3px rgba(234,88,12,0.15);">🔥 15-21 Hari</span></th>' +
+        '<th style="padding:10px 12px; text-align:right; min-width:110px; background:rgba(220,38,38,0.06);"><span style="padding:4px 10px; border-radius:12px; background:rgba(220,38,38,0.22); color:#dc2626; font-size:11px; font-weight:800; border:1px solid rgba(220,38,38,0.45); display:inline-flex; align-items:center; gap:4px; box-shadow:0 1px 3px rgba(220,38,38,0.2);">🚨 22+ Hari</span></th>' +
+        '</tr>';
+    } else {
+      thead.innerHTML = '<tr style="background:var(--surface-hover); border-bottom:2px solid var(--border);">' +
+        '<th style="padding:12px 16px; font-size:12px; font-weight:800; color:var(--tp); text-transform:uppercase; letter-spacing:0.3px; width:210px;">Status Order</th>' +
+        '<th style="padding:12px 14px; font-size:12px; font-weight:800; color:var(--tp); text-align:right; text-transform:uppercase; letter-spacing:0.3px; min-width:85px;">Total</th>' +
+        '<th style="padding:10px 12px; text-align:right; min-width:85px;"><span style="padding:4px 8px; border-radius:12px; background:rgba(16,185,129,0.12); color:#059669; font-size:11px; font-weight:700; display:inline-block;">0 Hari</span></th>' +
+        '<th style="padding:10px 12px; text-align:right; min-width:85px;"><span style="padding:4px 8px; border-radius:12px; background:rgba(14,165,233,0.12); color:#0284c7; font-size:11px; font-weight:700; display:inline-block;">1-3 Hari</span></th>' +
+        '<th style="padding:10px 12px; text-align:right; min-width:85px;"><span style="padding:4px 8px; border-radius:12px; background:rgba(245,158,11,0.12); color:#d97706; font-size:11px; font-weight:700; display:inline-block;">4-7 Hari</span></th>' +
+        '<th style="padding:10px 12px; text-align:right; min-width:110px; background:rgba(245,158,11,0.06); border-left:1px dashed rgba(245,158,11,0.3);"><span style="padding:4px 10px; border-radius:12px; background:rgba(245,158,11,0.2); color:#b45309; font-size:11px; font-weight:800; border:1px solid rgba(245,158,11,0.4); display:inline-flex; align-items:center; gap:4px; box-shadow:0 1px 3px rgba(245,158,11,0.15);">⚠️ 8-14 Hari</span></th>' +
+        '<th style="padding:10px 12px; text-align:right; min-width:110px; background:rgba(234,88,12,0.06);"><span style="padding:4px 10px; border-radius:12px; background:rgba(234,88,12,0.2); color:#c2410c; font-size:11px; font-weight:800; border:1px solid rgba(234,88,12,0.4); display:inline-flex; align-items:center; gap:4px; box-shadow:0 1px 3px rgba(234,88,12,0.15);">🔥 15-21 Hari</span></th>' +
+        '<th style="padding:10px 12px; text-align:right; min-width:110px; background:rgba(220,38,38,0.06);"><span style="padding:4px 10px; border-radius:12px; background:rgba(220,38,38,0.22); color:#dc2626; font-size:11px; font-weight:800; border:1px solid rgba(220,38,38,0.45); display:inline-flex; align-items:center; gap:4px; box-shadow:0 1px 3px rgba(220,38,38,0.2);">🚨 22+ Hari</span></th>' +
+        '</tr>';
+    }
+  }
 
   var grwOrders = ORDER_POOL_GRW || [];
   var custOrders = ORDER_POOL_CUST || [];
@@ -5658,9 +5767,18 @@ function renderAgingMatrixTable() {
 
   var filtered = combined.filter(function(o) {
     if (!o || isInvalidArea(o.area)) return false;
+    if (isInvalidValue(o.id) || isInvalidValue(o.status) || isInvalidValue(o.rawStatus)) return false;
+    if (o.status === 'Unplanned' || o.rawStatus === 'Unplanned') return false;
     if (bookVal !== 'ALL') {
       var bType = (o.bookingType || 'REGULAR').toUpperCase();
       if (bType !== bookVal) return false;
+    }
+    if (areaVal !== 'ALL') {
+      if (areaVal === 'DK') {
+        if (!o.isDalamKota) return false;
+      } else if (areaVal === 'LK') {
+        if (o.isDalamKota) return false;
+      }
     }
     return true;
   });
@@ -5678,8 +5796,8 @@ function renderAgingMatrixTable() {
   };
 
   filtered.forEach(function(o) {
-    var rawSt = (o.rawStatus || o.status || 'Unspecified').trim();
-    if (!rawSt) rawSt = 'Unspecified';
+    var rawSt = (o.rawStatus || o.status || '').trim();
+    if (!rawSt || isInvalidValue(rawSt) || rawSt === 'Unplanned' || rawSt === 'Unspecified') return;
 
     var displayStatus = rawSt.toLowerCase().replace(/\b\w/g, function(l) { return l.toUpperCase(); });
 
@@ -5746,7 +5864,6 @@ function renderAgingMatrixTable() {
     'Picked Complete',
     'In Loading',
     'Loaded',
-    'Unplanned',
     'Planned'
   ];
 
@@ -5762,19 +5879,39 @@ function renderAgingMatrixTable() {
 
   if (kpiWrap) {
     if (metricVal === 'CBM') {
-      var critCbm = bucketTotals.b8_14_cbm + bucketTotals.b15_21_cbm + bucketTotals.b22_up_cbm;
-      kpiWrap.innerHTML = 
+      var critCbm = isDk 
+        ? (bucketTotals.b4_7_cbm + bucketTotals.b8_14_cbm + bucketTotals.b15_21_cbm + bucketTotals.b22_up_cbm)
+        : (bucketTotals.b8_14_cbm + bucketTotals.b15_21_cbm + bucketTotals.b22_up_cbm);
+      var freshCbm = isDk ? bucketTotals.b0_cbm : (bucketTotals.b0_cbm + bucketTotals.b1_3_cbm);
+      var agingCbm = isDk ? bucketTotals.b1_3_cbm : bucketTotals.b4_7_cbm;
+      var freshLabel = isDk ? 'Fresh (0 Hari)' : 'Fresh (0-3 Hari)';
+      var agingLabel = isDk ? 'Aging (1-3 Hari)' : 'Aging (4-7 Hari)';
+      var critLabel = isDk ? 'Critical Aging DK (≥4 Hari)' : 'Critical Aging (≥8 Hari)';
+      
+      var kpiHtml = 
         '<span class="badge" style="background:rgba(37,99,235,0.1); color:#2563eb; font-weight:700; padding:6px 12px; border-radius:20px; font-size:12px;">Total CBM: <strong>' + grandTotalCbm.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' CBM</strong></span>' +
-        '<span class="badge" style="background:rgba(16,185,129,0.1); color:#059669; font-weight:700; padding:6px 12px; border-radius:20px; font-size:12px;">Fresh (0-3 Hari): <strong>' + (bucketTotals.b0_cbm + bucketTotals.b1_3_cbm).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' CBM</strong></span>' +
-        '<span class="badge" style="background:rgba(245,158,11,0.1); color:#d97706; font-weight:700; padding:6px 12px; border-radius:20px; font-size:12px;">Aging (4-7 Hari): <strong>' + bucketTotals.b4_7_cbm.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' CBM</strong></span>' +
-        '<span class="badge" style="background:rgba(239,68,68,0.1); color:#dc2626; font-weight:700; padding:6px 12px; border-radius:20px; font-size:12px;">Critical Aging (≥8 Hari): <strong>' + critCbm.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' CBM</strong></span>';
+        '<span class="badge" style="background:rgba(16,185,129,0.1); color:#059669; font-weight:700; padding:6px 12px; border-radius:20px; font-size:12px;">' + freshLabel + ': <strong>' + freshCbm.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' CBM</strong></span>' +
+        '<span class="badge" style="background:rgba(245,158,11,0.1); color:#d97706; font-weight:700; padding:6px 12px; border-radius:20px; font-size:12px;">' + agingLabel + ': <strong>' + agingCbm.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' CBM</strong></span>' +
+        '<span class="badge" style="background:rgba(239,68,68,0.12); color:#dc2626; font-weight:700; padding:6px 12px; border-radius:20px; font-size:12px; border:1px solid rgba(239,68,68,0.25);">' + critLabel + ': <strong>' + critCbm.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' CBM</strong></span>';
+      
+      kpiWrap.innerHTML = kpiHtml;
     } else {
-      var critCount = bucketTotals.b8_14_count + bucketTotals.b15_21_count + bucketTotals.b22_up_count;
-      kpiWrap.innerHTML = 
+      var critCount = isDk
+        ? (bucketTotals.b4_7_count + bucketTotals.b8_14_count + bucketTotals.b15_21_count + bucketTotals.b22_up_count)
+        : (bucketTotals.b8_14_count + bucketTotals.b15_21_count + bucketTotals.b22_up_count);
+      var freshCount = isDk ? bucketTotals.b0_count : (bucketTotals.b0_count + bucketTotals.b1_3_count);
+      var agingCount = isDk ? bucketTotals.b1_3_count : bucketTotals.b4_7_count;
+      var freshLabel = isDk ? 'Fresh (0 Hari)' : 'Fresh (0-3 Hari)';
+      var agingLabel = isDk ? 'Aging (1-3 Hari)' : 'Aging (4-7 Hari)';
+      var critLabel = isDk ? 'Critical Aging DK (≥4 Hari)' : 'Critical Aging (≥8 Hari)';
+
+      var kpiHtml = 
         '<span class="badge" style="background:rgba(37,99,235,0.1); color:#2563eb; font-weight:700; padding:6px 12px; border-radius:20px; font-size:12px;">Total Order: <strong>' + grandTotalCount.toLocaleString('id-ID') + ' Order</strong></span>' +
-        '<span class="badge" style="background:rgba(16,185,129,0.1); color:#059669; font-weight:700; padding:6px 12px; border-radius:20px; font-size:12px;">Fresh (0-3 Hari): <strong>' + (bucketTotals.b0_count + bucketTotals.b1_3_count).toLocaleString('id-ID') + ' Order</strong></span>' +
-        '<span class="badge" style="background:rgba(245,158,11,0.1); color:#d97706; font-weight:700; padding:6px 12px; border-radius:20px; font-size:12px;">Aging (4-7 Hari): <strong>' + bucketTotals.b4_7_count.toLocaleString('id-ID') + ' Order</strong></span>' +
-        '<span class="badge" style="background:rgba(239,68,68,0.1); color:#dc2626; font-weight:700; padding:6px 12px; border-radius:20px; font-size:12px;">Critical Aging (≥8 Hari): <strong>' + critCount.toLocaleString('id-ID') + ' Order</strong></span>';
+        '<span class="badge" style="background:rgba(16,185,129,0.1); color:#059669; font-weight:700; padding:6px 12px; border-radius:20px; font-size:12px;">' + freshLabel + ': <strong>' + freshCount.toLocaleString('id-ID') + ' Order</strong></span>' +
+        '<span class="badge" style="background:rgba(245,158,11,0.1); color:#d97706; font-weight:700; padding:6px 12px; border-radius:20px; font-size:12px;">' + agingLabel + ': <strong>' + agingCount.toLocaleString('id-ID') + ' Order</strong></span>' +
+        '<span class="badge" style="background:rgba(239,68,68,0.12); color:#dc2626; font-weight:700; padding:6px 12px; border-radius:20px; font-size:12px; border:1px solid rgba(239,68,68,0.25);">' + critLabel + ': <strong>' + critCount.toLocaleString('id-ID') + ' Order</strong></span>';
+
+      kpiWrap.innerHTML = kpiHtml;
     }
   }
 
@@ -5801,6 +5938,9 @@ function renderAgingMatrixTable() {
       return '<span style="font-weight:700; color:#0284c7; font-size:12px;">' + rawText + '</span>';
     }
     if (bucketType === 'b4_7') {
+      if (isDk) {
+        return '<span style="display:inline-flex; align-items:center; gap:5px; padding:3px 8px; border-radius:6px; background:rgba(245,158,11,0.18); color:#b45309; font-weight:800; border:1px solid rgba(245,158,11,0.4); font-size:12px; box-shadow:0 1px 3px rgba(245,158,11,0.15);"><span style="width:6px; height:6px; border-radius:50%; background:#d97706; display:inline-block;"></span>' + rawText + '</span>';
+      }
       return '<span style="font-weight:700; color:#d97706; font-size:12px; background:rgba(245,158,11,0.1); padding:2px 6px; border-radius:4px;">' + rawText + '</span>';
     }
     if (bucketType === 'b8_14') {
@@ -5821,13 +5961,21 @@ function renderAgingMatrixTable() {
     var item = statusMap[stKey];
     var bgStyle = (idx % 2 === 1) ? 'background:var(--surface2);' : 'background:var(--surface);';
 
+    var b4_7_tdStyle = isDk 
+      ? 'padding:10px 12px; text-align:right; font-family:var(--font-mono); background:rgba(245,158,11,0.03); border-left:1px dashed rgba(245,158,11,0.3);'
+      : 'padding:10px 12px; text-align:right; font-family:var(--font-mono);';
+
+    var b8_14_tdStyle = isDk
+      ? 'padding:10px 12px; text-align:right; font-family:var(--font-mono); background:rgba(245,158,11,0.03);'
+      : 'padding:10px 12px; text-align:right; font-family:var(--font-mono); background:rgba(245,158,11,0.03); border-left:1px dashed rgba(245,158,11,0.3);';
+
     bodyHtml += '<tr style="border-bottom:1px solid var(--border); ' + bgStyle + ' transition:background 0.15s ease;" onmouseover="this.style.background=\'rgba(37,99,235,0.05)\'" onmouseout="this.style.background=\'' + ((idx % 2 === 1) ? 'var(--surface2)' : 'var(--surface)') + '\'">';
     bodyHtml += '  <td style="padding:10px 16px; font-weight:700; color:var(--tp); font-size:13px; display:flex; align-items:center;">' + getStatusDot(item.name) + item.name + '</td>';
     bodyHtml += '  <td style="padding:10px 14px; text-align:right; font-weight:800; color:var(--tp); font-size:13px; font-family:var(--font-mono);">' + formatCell(item.totalCount, item.totalCbm, 'total') + '</td>';
     bodyHtml += '  <td style="padding:10px 12px; text-align:right; font-family:var(--font-mono);">' + formatCell(item.b0_count, item.b0_cbm, 'b0') + '</td>';
     bodyHtml += '  <td style="padding:10px 12px; text-align:right; font-family:var(--font-mono);">' + formatCell(item.b1_3_count, item.b1_3_cbm, 'b1_3') + '</td>';
-    bodyHtml += '  <td style="padding:10px 12px; text-align:right; font-family:var(--font-mono);">' + formatCell(item.b4_7_count, item.b4_7_cbm, 'b4_7') + '</td>';
-    bodyHtml += '  <td style="padding:10px 12px; text-align:right; font-family:var(--font-mono); background:rgba(245,158,11,0.03); border-left:1px dashed rgba(245,158,11,0.3);">' + formatCell(item.b8_14_count, item.b8_14_cbm, 'b8_14') + '</td>';
+    bodyHtml += '  <td style="' + b4_7_tdStyle + '">' + formatCell(item.b4_7_count, item.b4_7_cbm, 'b4_7') + '</td>';
+    bodyHtml += '  <td style="' + b8_14_tdStyle + '">' + formatCell(item.b8_14_count, item.b8_14_cbm, 'b8_14') + '</td>';
     bodyHtml += '  <td style="padding:10px 12px; text-align:right; font-family:var(--font-mono); background:rgba(234,88,12,0.03);">' + formatCell(item.b15_21_count, item.b15_21_cbm, 'b15_21') + '</td>';
     bodyHtml += '  <td style="padding:10px 12px; text-align:right; font-family:var(--font-mono); background:rgba(220,38,38,0.03);">' + formatCell(item.b22_up_count, item.b22_up_cbm, 'b22_up') + '</td>';
     bodyHtml += '</tr>';
@@ -5845,6 +5993,18 @@ function renderAgingMatrixTable() {
       return '<span style="color:var(--ts); opacity:0.5; font-size:12px;">' + (metricVal === 'CBM' ? '0,00' : '0') + '</span>';
     }
 
+    if (bucketType === 'b1_3') {
+      if (isDk) {
+        return '<span style="font-weight:800; color:#d97706; font-size:12px;">' + rawText + '</span>';
+      }
+      return '<span style="font-weight:800; color:#0284c7; font-size:12px;">' + rawText + '</span>';
+    }
+    if (bucketType === 'b4_7') {
+      if (isDk) {
+        return '<span style="display:inline-flex; align-items:center; gap:4px; padding:4px 10px; border-radius:8px; background:#b45309; color:#ffffff; font-weight:800; font-size:12px; box-shadow:0 2px 4px rgba(180,83,9,0.3);">⚠️ ' + rawText + '</span>';
+      }
+      return '<span style="font-weight:800; color:#d97706; font-size:12px;">' + rawText + '</span>';
+    }
     if (bucketType === 'b8_14') {
       return '<span style="display:inline-flex; align-items:center; gap:4px; padding:4px 10px; border-radius:8px; background:#b45309; color:#ffffff; font-weight:800; font-size:12px; box-shadow:0 2px 4px rgba(180,83,9,0.3);">⚠️ ' + rawText + '</span>';
     }
@@ -5858,13 +6018,25 @@ function renderAgingMatrixTable() {
     return '<span style="font-weight:800; color:var(--tp); font-size:12px;">' + rawText + '</span>';
   };
 
+  var foot_b1_3_tdStyle = isDk
+    ? 'padding:12px 12px; text-align:right; font-size:12px; color:#d97706; font-weight:800; font-family:var(--font-mono);'
+    : 'padding:12px 12px; text-align:right; font-size:12px; color:#0284c7; font-weight:800; font-family:var(--font-mono);';
+
+  var foot_b4_7_tdStyle = isDk 
+    ? 'padding:12px 12px; text-align:right; font-size:12px; font-family:var(--font-mono); background:rgba(245,158,11,0.06); border-left:1px dashed rgba(245,158,11,0.3);'
+    : 'padding:12px 12px; text-align:right; font-size:12px; color:#d97706; font-weight:800; font-family:var(--font-mono);';
+
+  var foot_b8_14_tdStyle = isDk
+    ? 'padding:12px 12px; text-align:right; font-size:12px; font-family:var(--font-mono); background:rgba(245,158,11,0.06);'
+    : 'padding:12px 12px; text-align:right; font-size:12px; font-family:var(--font-mono); background:rgba(245,158,11,0.06); border-left:1px dashed rgba(245,158,11,0.3);';
+
   var footHtml = '<tr style="background:var(--surface-hover); border-top:2px solid var(--border); font-weight:800;">';
   footHtml += '  <td style="padding:12px 16px; font-size:13px; color:var(--tp); font-weight:800;">TOTAL ALL STATUS</td>';
   footHtml += '  <td style="padding:12px 14px; text-align:right; font-size:13px; color:var(--tp); font-weight:800; font-family:var(--font-mono);">' + (metricVal === 'CBM' ? grandTotalCbm.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' m³' : grandTotalCount.toLocaleString('id-ID') + ' Order') + '</td>';
   footHtml += '  <td style="padding:12px 12px; text-align:right; font-size:12px; color:#059669; font-weight:800; font-family:var(--font-mono);">' + formatFootCell(bucketTotals.b0_count, bucketTotals.b0_cbm, 'b0') + '</td>';
-  footHtml += '  <td style="padding:12px 12px; text-align:right; font-size:12px; color:#0284c7; font-weight:800; font-family:var(--font-mono);">' + formatFootCell(bucketTotals.b1_3_count, bucketTotals.b1_3_cbm, 'b1_3') + '</td>';
-  footHtml += '  <td style="padding:12px 12px; text-align:right; font-size:12px; color:#d97706; font-weight:800; font-family:var(--font-mono);">' + formatFootCell(bucketTotals.b4_7_count, bucketTotals.b4_7_cbm, 'b4_7') + '</td>';
-  footHtml += '  <td style="padding:12px 12px; text-align:right; font-size:12px; font-family:var(--font-mono); background:rgba(245,158,11,0.06); border-left:1px dashed rgba(245,158,11,0.3);">' + formatFootCell(bucketTotals.b8_14_count, bucketTotals.b8_14_cbm, 'b8_14') + '</td>';
+  footHtml += '  <td style="' + foot_b1_3_tdStyle + '">' + formatFootCell(bucketTotals.b1_3_count, bucketTotals.b1_3_cbm, 'b1_3') + '</td>';
+  footHtml += '  <td style="' + foot_b4_7_tdStyle + '">' + formatFootCell(bucketTotals.b4_7_count, bucketTotals.b4_7_cbm, 'b4_7') + '</td>';
+  footHtml += '  <td style="' + foot_b8_14_tdStyle + '">' + formatFootCell(bucketTotals.b8_14_count, bucketTotals.b8_14_cbm, 'b8_14') + '</td>';
   footHtml += '  <td style="padding:12px 12px; text-align:right; font-size:12px; font-family:var(--font-mono); background:rgba(234,88,12,0.06);">' + formatFootCell(bucketTotals.b15_21_count, bucketTotals.b15_21_cbm, 'b15_21') + '</td>';
   footHtml += '  <td style="padding:12px 12px; text-align:right; font-size:12px; font-family:var(--font-mono); background:rgba(220,38,38,0.06);">' + formatFootCell(bucketTotals.b22_up_count, bucketTotals.b22_up_cbm, 'b22_up') + '</td>';
   footHtml += '</tr>';
@@ -6389,147 +6561,168 @@ function renderFTLShortage(unplanned) {
 }
 
 function renderProyeksiPlanning(unplanned, sourceFilter) {
-  var proyeksiList = document.getElementById('proyeksiPlanningList');
-  if (!proyeksiList) return;
-
+  var listEl  = document.getElementById('proyeksiPlanningList');
+  if (!listEl) return;
   var titleEl = document.getElementById('proyeksiCardTitle');
-  var subEl = document.getElementById('proyeksiCardSub');
+  var subEl   = document.getElementById('proyeksiCardSub');
 
-  // Compute total CBM per area and per destination from all unplanned
-  var totalAreaMap = {};
-  var totalDestMap = {};
-  unplanned.forEach(function(o) {
-    if (!totalAreaMap[o.area]) {
-      totalAreaMap[o.area] = { cbm: 0 };
-    }
-    totalAreaMap[o.area].cbm += o.cbm;
+  var targetDate  = getPlanTargetDate_();
+  var targetLabel = targetDate.toLocaleDateString('id-ID', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
 
-    if (!totalDestMap[o.destination]) {
-      totalDestMap[o.destination] = { cbm: 0 };
+  // ── Agregasi per WILAYAH + rincian per TUJUAN di dalamnya ──
+  var areaAgg = {};
+  (unplanned || []).forEach(function(o) {
+    if (!o || isInvalidArea(o.area)) return;
+
+    // Filter khusus Customer: hanya REQ SHIP DATE yang jatuh <= H+2
+    if (sourceFilter === 'CUST') {
+      if (o.reqShipDaysDiff === null || o.reqShipDaysDiff === undefined) return;
+      if (o.reqShipDaysDiff > 2 || o.reqShipDaysDiff < 0) return;
     }
-    totalDestMap[o.destination].cbm += o.cbm;
+
+    var a = String(o.area).toUpperCase().trim();
+    if (!areaAgg[a]) areaAgg[a] = { area:a, cbm:0, orders:0, cases:0, stores:{} };
+    areaAgg[a].cbm    += (o.cbm || 0);
+    areaAgg[a].cases  += (o.cases || 0);
+    areaAgg[a].orders += 1;
+
+    var store = String(o.customer || '').trim();
+    if (!store || isInvalidValue(store)) store = '(TANPA TUJUAN)';
+    if (!areaAgg[a].stores[store]) areaAgg[a].stores[store] = { name:store, cbm:0, orders:0 };
+    areaAgg[a].stores[store].cbm    += (o.cbm || 0);
+    areaAgg[a].stores[store].orders += 1;
   });
 
-  var upcomingOrders = [];
-  if (sourceFilter === 'CUST') {
-    if (titleEl) titleEl.textContent = '📅 Proyeksi Planning H-2 (REQ SHIP DATE)';
-    if (subEl) subEl.textContent = 'Data proyeksi order yang harus direncanakan hari ini (REQ SHIP DATE H-2)';
-    
-    upcomingOrders = unplanned.filter(function(o) {
-      return o.reqShipDaysDiff !== null && o.reqShipDaysDiff === 2;
-    });
-  } else if (sourceFilter === 'GRW') {
-    if (titleEl) titleEl.textContent = '📅 Proyeksi Planning (CONT DATE / ≥90% CONT-20 / ≥95% CDD LONG)';
-    if (subEl) subEl.textContent = 'Data proyeksi wilayah jadwal CONT DATE H+2, armada CONT-20 (≥90%), atau CDD LONG (≥95%) per store area tertentu';
+  // ── Tentukan wilayah mana yang layak tampil ──
+  var entries = [];
+  Object.keys(areaAgg).forEach(function(a) {
+    var d   = areaAgg[a];
+    var arm = getPlanArmada_(a);
+    var perStore    = isPerStoreArea_(a);
+    var isScheduled = GRW_PLAN_AREAS.indexOf(a) !== -1;
 
-    upcomingOrders = unplanned.filter(function(o) {
-      var areaName = String(o.area).toUpperCase().trim();
-      if (GRW_PLAN_AREAS.indexOf(areaName) !== -1) return true;
-      if (areaName.match(/SULAWESI|NTT|TARAKAN|TERNATE|AMBON|KENDARI|SUMATERA|PALU|JAYAPURA|SORONG|KALIMANTAN|MAKASSAR|BANJARMASIN|BALIKPAPAN|SAMARINDA|PONTIANAK|PALANGKARAYA|MANADO|GORONTALO|KUPANG|MEDAN|PADANG|PEKANBARU|PALEMBANG|JAMBI|BENGKULU|LAMPUNG|BATAM|PAPUA|MALUKU/)) {
-        if (totalAreaMap[o.area] && totalAreaMap[o.area].cbm >= (25 * 0.9)) {
-          return true; // Already 90% full for CONT-20
-        }
-      } else if (areaName.match(/BALI|KEDIRI|MADIUN|JEMBER|MALANG|SBY RAYA/)) {
-        // PER STORE (destination) instead of area
-        if (totalDestMap[o.destination] && totalDestMap[o.destination].cbm >= (15 * 0.95)) {
-          return true; // 95% full for CDD LONG CHASSIS
-        }
-      }
-      return false;
+    var storeList = Object.keys(d.stores).map(function(k) { return d.stores[k]; })
+                          .sort(function(x, y) { return y.cbm - x.cbm; });
+
+    var badge = '', qualify = false;
+
+    if (sourceFilter === 'CUST') {
+      qualify = true;
+      badge   = 'REQ SHIP H+2';
+    } else if (isScheduled) {
+      qualify = true;
+      badge   = 'CONT DATE H+2';
+    } else if (perStore) {
+      var hitStores = storeList.filter(function(s) { return s.cbm >= (15 * 0.95); });
+      if (hitStores.length > 0) { qualify = true; badge = '≥95% CDD LONG (' + hitStores.length + ' tujuan)'; }
+    } else if (d.cbm >= (arm.capacity * arm.threshold)) {
+      qualify = true;
+      badge   = '≥' + Math.round(arm.threshold * 100) + '% ' + arm.type;
+    }
+
+    if (!qualify) return;
+
+    entries.push({
+      area:    a,
+      cbm:     d.cbm,
+      orders:  d.orders,
+      armada:  perStore ? { type:'CDD LONG CHASSIS', capacity:15 } : arm,
+      perStore:perStore,
+      badge:   badge,
+      stores:  storeList
     });
+  });
+
+  // ── Judul kartu ──
+  if (sourceFilter === 'CUST') {
+    if (titleEl) titleEl.textContent = '📅 Proyeksi Planning H+2 (REQ SHIP DATE) — ' + targetLabel;
+    if (subEl)   subEl.textContent   = 'Order customer belum plan dengan REQ SHIP DATE s/d ' + targetLabel + ' · klik kartu untuk rincian per tujuan';
+  } else {
+    if (titleEl) titleEl.textContent = '📅 Proyeksi Planning H+2 — ' + targetLabel;
+    if (subEl)   subEl.textContent   = 'Wilayah GRW yang wajib direncanakan hari ini (CONT DATE H+2 / ≥90% CONT-20 / ≥95% CDD LONG) · klik kartu untuk rincian per tujuan';
   }
 
-  if (upcomingOrders.length === 0 && (sourceFilter !== 'GRW' || GRW_PLAN_AREAS.length === 0)) {
-    proyeksiList.innerHTML = '<div style="text-align:center; padding:20px; color:var(--muted)">Tidak ada proyeksi planning H-2.</div>';
+  if (entries.length === 0) {
+    listEl.innerHTML =
+      '<div style="grid-column:1/-1; text-align:center; padding:22px; color:var(--muted); font-size:12px;">' +
+        'Tidak ada wilayah yang perlu diproyeksikan untuk <strong style="color:var(--text);">' + targetLabel + '</strong>.<br>' +
+        '<span style="font-size:11px;">Cek sheet CONT DATE (kolom hari ' + DAY_NAMES_ID[targetDate.getDay()] + ') atau volume belum mencapai ambang konversi armada.</span>' +
+      '</div>';
     return;
   }
 
-  var areaMap = {};
-  if (sourceFilter === 'GRW') {
-    GRW_PLAN_AREAS.forEach(function(area) {
-      areaMap[area] = {
-        area: area,
-        originalArea: area,
-        isSpecialDest: false,
-        cbm: 0,
-        cases: 0,
-        count: 0
-      };
-    });
-  }
+  entries.sort(function(x, y) { return y.cbm - x.cbm; });
 
-  upcomingOrders.forEach(function(o) {
-    var key = o.area;
-    var areaName = String(o.area).toUpperCase();
-    var isSpecialDest = false;
-    if (sourceFilter === 'GRW' && areaName.match(/BALI|KEDIRI|MADIUN|JEMBER|MALANG|SBY RAYA/)) {
-      key = o.destination;
-      isSpecialDest = true;
-    }
-    
-    if (!areaMap[key]) {
-      areaMap[key] = { area: key, cbm: 0, cases: 0, count: 0, originalArea: o.area, isSpecialDest: isSpecialDest };
-    }
-    areaMap[key].cbm += o.cbm;
-    areaMap[key].cases += o.cases;
-    areaMap[key].count += 1;
-  });
+  listEl.innerHTML = entries.map(function(e) {
+    var cap    = e.armada.capacity || 15;
+    var full   = Math.floor(e.cbm / cap);
+    var sisa   = e.cbm - (full * cap);
+    var kurang = sisa > 0 ? (cap - sisa) : 0;
+    var pctFull = sisa > 0 ? Math.min(100, (sisa / cap) * 100) : 100;
+    var barCol  = pctFull >= 95 ? 'var(--green)' : pctFull >= 90 ? 'var(--amber)' : 'var(--red)';
 
-  var areaList = Object.keys(areaMap).map(function(k) { return areaMap[k]; });
-  areaList.sort(function(a, b) { return b.cbm - a.cbm; });
+    var armadaTxt = full > 0
+      ? '<strong style="color:var(--green);">' + full + 'x ' + e.armada.type + '</strong>' +
+        (sisa > 0 ? ' + sisa <strong style="color:var(--amber);">' + sisa.toFixed(1) + ' CBM</strong>' : '')
+      : '<strong style="color:var(--amber);">Terkumpul ' + sisa.toFixed(1) + ' / ' + cap + ' CBM</strong>';
 
-  proyeksiList.innerHTML = areaList.map(function(d) {
-    var targetArmada = 'CDD LONG CHASSIS';
-    var capacity = 15;
-    var areaName = String(d.originalArea || d.area).toUpperCase();
-    
-    if (d.isSpecialDest) {
-      targetArmada = 'CDD LONG CHASSIS'; 
-      capacity = 15;
-    } else if (areaName.match(/JAKARTA|BALI|DENPASAR|BADUNG|LOMBOK|NTB|MATARAM/)) {
-      targetArmada = 'WINGBOX'; capacity = 40;
-    } else if (areaName.match(/SULAWESI|NTT|TARAKAN|TERNATE|AMBON|KENDARI|SUMATERA|PALU|JAYAPURA|SORONG|KALIMANTAN|MAKASSAR|BANJARMASIN|BALIKPAPAN|SAMARINDA|PONTIANAK|PALANGKARAYA|MANADO|GORONTALO|KUPANG|MEDAN|PADANG|PEKANBARU|PALEMBANG|JAMBI|BENGKULU|LAMPUNG|BATAM|PAPUA|MALUKU/)) {
-      targetArmada = 'CONT-20'; capacity = 25;
-    } else if (areaName.match(/LUAR KOTA/)) {
-      targetArmada = 'FUSO'; capacity = 25;
-    }
+    var kurangTxt = kurang > 0
+      ? '<span style="color:var(--red); font-weight:700;">Kurang ' + kurang.toFixed(1) + ' CBM</span> untuk 1x ' + e.armada.type
+      : '<span style="color:var(--green); font-weight:700;">Siap FTL penuh</span>';
 
-    var truckCount = Math.floor(d.cbm / capacity);
-    var remainder = d.cbm % capacity;
-    var deficit = capacity - remainder;
-    var truckStr = '';
-    
-    if (truckCount > 0 && remainder === 0) {
-      truckStr = truckCount + 'x ' + targetArmada;
-    } else if (truckCount > 0 && remainder > 0) {
-      truckStr = truckCount + 'x ' + targetArmada + ' + Sisa ' + remainder.toFixed(1) + ' CBM (Kurang ' + deficit.toFixed(1) + ' CBM untuk armada selanjutnya)';
-    } else {
-      truckStr = 'Terkumpul ' + remainder.toFixed(1) + ' CBM (Kurang ' + deficit.toFixed(1) + ' CBM untuk 1x ' + targetArmada + ')';
-    }
+    var badgeCol = e.badge.indexOf('CONT DATE') !== -1 ? 'var(--blue)'
+                 : e.badge.indexOf('CONT-20')  !== -1 ? 'var(--amber)'
+                 : e.badge.indexOf('REQ SHIP') !== -1 ? 'var(--purple)' : 'var(--green)';
 
-    var badgeText = '';
-    if (sourceFilter === 'GRW') {
-       var badgeAreaName = String(d.originalArea || d.area).toUpperCase().trim();
-       if (GRW_PLAN_AREAS.indexOf(badgeAreaName) !== -1) {
-         badgeText = '<span style="font-size:10px; background:var(--blue); color:#fff; padding:2px 6px; border-radius:4px; margin-left:8px; font-weight:600;">CONT DATE</span>';
-       } else if (targetArmada === 'CONT-20' && d.cbm >= capacity * 0.9) {
-         badgeText = '<span style="font-size:10px; background:var(--amber); color:#fff; padding:2px 6px; border-radius:4px; margin-left:8px; font-weight:600;">≥90% ' + targetArmada + '</span>';
-       } else if (d.isSpecialDest && d.cbm >= 15 * 0.95) {
-         badgeText = '<span style="font-size:10px; background:var(--green); color:#fff; padding:2px 6px; border-radius:4px; margin-left:8px; font-weight:600;">≥95% CDD LONG</span>';
-       }
-    }
+    // ── Rincian per tujuan (tersembunyi, muncul saat kartu diklik) ──
+    var storeRows = e.stores.map(function(s) {
+      var share = e.cbm > 0 ? (s.cbm / e.cbm) * 100 : 0;
+      var stat  = '';
+      if (e.perStore) {
+        if (s.cbm >= 15 * 0.95) {
+          stat = '<span style="color:var(--green); font-weight:700; font-size:10px;">✅ Siap CDD LONG</span>';
+        } else {
+          stat = '<span style="color:var(--amber); font-weight:700; font-size:10px;">Kurang ' + (15 - s.cbm).toFixed(1) + ' CBM</span>';
+        }
+      } else {
+        stat = '<span style="color:var(--muted); font-size:10px;">' + share.toFixed(1) + '% dari wilayah</span>';
+      }
 
-    return '<div class="ftl-card" style="display:flex; flex-direction:column; gap:8px;">' +
+      return '<div style="padding:6px 0; border-bottom:1px solid rgba(255,255,255,0.05);">' +
+        '  <div style="display:flex; justify-content:space-between; gap:8px; align-items:center;">' +
+        '    <span style="color:var(--text); font-weight:600; font-size:11px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:60%;" title="' + escHtml(s.name) + '">' + escHtml(s.name) + '</span>' +
+        '    <span style="font-family:var(--font-mono); font-weight:700; color:var(--cyan); font-size:11px; flex-shrink:0;">' + s.cbm.toFixed(2) + ' CBM</span>' +
+        '  </div>' +
+        '  <div style="display:flex; justify-content:space-between; align-items:center; margin-top:3px;">' +
+        '    <span style="font-size:10px; color:var(--muted);">' + s.orders + ' order</span>' + stat +
+        '  </div>' +
+        '  <div style="height:4px; background:rgba(255,255,255,0.06); border-radius:2px; overflow:hidden; margin-top:4px;">' +
+        '    <div style="width:' + Math.min(100, share).toFixed(0) + '%; height:100%; background:var(--blue);"></div>' +
+        '  </div>' +
+        '</div>';
+    }).join('');
+
+    return '<div class="ftl-card" style="display:flex; flex-direction:column; gap:8px; cursor:pointer;" ' +
+      'onclick="var d=this.querySelector(\'.proy-dests\'); var c=this.querySelector(\'.proy-caret\'); var open = d.style.display===\'none\'; d.style.display = open ? \'block\' : \'none\'; c.textContent = open ? \'▲\' : \'▼\';">' +
       '  <div class="ftl-title-row">' +
-      '    <div>' +
-      '      <strong style="color:var(--text); font-size:14px;">' + d.area + '</strong>' +
-      badgeText +
+      '    <div style="min-width:0; display:flex; align-items:center; gap:6px;">' +
+      '      <span class="proy-caret" style="font-size:9px; color:var(--blue);">▼</span>' +
+      '      <strong style="color:var(--text); font-size:13px;">' + escHtml(e.area) + '</strong>' +
+      '      <span style="font-size:10px; color:var(--muted);">(' + e.orders + ' order · ' + e.stores.length + ' tujuan)</span>' +
       '    </div>' +
-      '    <span class="ftl-badge badge-blue">Proyeksi H-2</span>' +
+      '    <span style="font-size:9px; background:' + badgeCol + '; color:#fff; padding:2px 7px; border-radius:4px; font-weight:700; white-space:nowrap;">' + escHtml(e.badge) + '</span>' +
       '  </div>' +
-      '  <div style="display:grid; grid-template-columns: 1fr; gap:6px; font-size:11px; color:var(--muted);">' +
-      '    <div>Total Proyeksi Cargo: <strong style="color:var(--cyan);">' + d.cbm.toFixed(1) + ' CBM</strong></div>' +
-      '    <div>Estimasi Armada (Planning): <strong style="color:var(--blue);">' + truckStr + '</strong></div>' +
+      '  <div style="display:grid; grid-template-columns:1fr; gap:5px; font-size:11px; color:var(--muted);">' +
+      '    <div>Volume belum plan: <strong style="color:var(--cyan); font-family:var(--font-mono);">' + e.cbm.toFixed(2) + ' CBM</strong></div>' +
+      '    <div>Estimasi armada: ' + armadaTxt + '</div>' +
+      '    <div>' + kurangTxt + '</div>' +
+      '  </div>' +
+      '  <div class="ftl-progress-bg" style="margin-top:2px;">' +
+      '    <div class="ftl-progress-bar" style="width:' + pctFull.toFixed(0) + '%; background-color:' + barCol + ';"></div>' +
+      '  </div>' +
+      '  <div class="proy-dests" style="display:none; margin-top:6px; padding-top:8px; border-top:1px dashed rgba(255,255,255,0.12);">' +
+      '    <div style="font-size:10px; font-weight:800; color:var(--text); text-transform:uppercase; letter-spacing:.4px; margin-bottom:4px;">📍 Rincian per Tujuan (' + e.stores.length + ')</div>' +
+      storeRows +
       '  </div>' +
       '</div>';
   }).join('');
@@ -6593,6 +6786,73 @@ function renderAgingChart(unplanned) {
   }
 }
 
+function checkIsDalamKota(areaStr, destStr) {
+  var areaUpper = String(areaStr || '').toUpperCase().trim();
+  if (areaUpper) {
+    // 1. Luar Kota indicators in AREA column
+    if (
+      areaUpper.indexOf('LUAR KOTA') !== -1 ||
+      areaUpper.indexOf('OD LK') !== -1 ||
+      areaUpper.indexOf('OUTTOWN') !== -1 ||
+      areaUpper.indexOf('INTERCITY') !== -1 ||
+      /\bLK\b/.test(areaUpper) ||
+      areaUpper === 'LK'
+    ) {
+      return false;
+    }
+
+    // 2. Dalam Kota indicators in AREA column
+    if (
+      areaUpper.indexOf('DALAM KOTA') !== -1 ||
+      areaUpper.indexOf('OD DK') !== -1 ||
+      areaUpper.indexOf('LOKAL') !== -1 ||
+      areaUpper.indexOf('LOCAL') !== -1 ||
+      /\bDK\b/.test(areaUpper) ||
+      areaUpper === 'DK'
+    ) {
+      return true;
+    }
+
+    // 3. Known local cities in AREA column
+    var localCities = ['SURABAYA', 'SIDOARJO', 'GRESIK', 'MOJOKERTO', 'PASURUAN'];
+    for (var i = 0; i < localCities.length; i++) {
+      if (areaUpper.indexOf(localCities[i]) !== -1) {
+        return true;
+      }
+    }
+
+    // Any other area value specified in AREA column (e.g. MALANG, JABODETABEK, BANDUNG, BALI, etc.) is Luar Kota
+    return false;
+  }
+
+  // Fallback to destination ONLY if AREA column is completely blank
+  var destUpper = String(destStr || '').toUpperCase().trim();
+  if (
+    destUpper.indexOf('LUAR KOTA') !== -1 ||
+    destUpper.indexOf('OD LK') !== -1 ||
+    /\bLK\b/.test(destUpper)
+  ) {
+    return false;
+  }
+  if (
+    destUpper.indexOf('DALAM KOTA') !== -1 ||
+    destUpper.indexOf('OD DK') !== -1 ||
+    /\bDK\b/.test(destUpper) ||
+    destUpper.indexOf('LOKAL') !== -1
+  ) {
+    return true;
+  }
+
+  var localCities = ['SURABAYA', 'SIDOARJO', 'GRESIK', 'MOJOKERTO', 'PASURUAN'];
+  for (var i = 0; i < localCities.length; i++) {
+    if (destUpper.indexOf(localCities[i]) !== -1) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 // ── ROBUST COLUMN MAPPER FOR OUTSTANDING GRW SHEET ────────────────────
 function parseOutstandingSheetData(rows, targetRawArray, sourceType) {
   targetRawArray.length = 0; // Clear it
@@ -6611,9 +6871,8 @@ function parseOutstandingSheetData(rows, targetRawArray, sourceType) {
     var idxCases = headers.findIndex(function(h) { return h.match(/^CASES$|^KOLI$|^QTY$|^ITEMS$|^CASE$|^OPENQTY$/); });
     var idxAging = headers.findIndex(function(h) { return h.match(/^AGING$|^DAYSAGO$|^AGINGDAYS$|^UMUR$|^HARI$|^SELISIH$/); });
     var idxDate = headers.findIndex(function(h) { return h.match(/^DATE$|^TANGGAL$|^ORDERDATE$/); });
-    var idxArea = headers.findIndex(function(h) { return h.match(/^WILAYAH$/); });
-    if (idxArea === -1) idxArea = headers.findIndex(function(h) { return h.match(/^AREA$/); });
-    if (idxArea === -1) idxArea = headers.findIndex(function(h) { return h.match(/^ZONA$/); });
+    var idxWilayah = headers.findIndex(function(h) { return h.match(/^WILAYAH$|^BA$/); });
+    var idxArea = headers.findIndex(function(h) { return h.match(/^WILAYAH$|^AREA$|^ZONA$|^REGIONAL$/) || h.indexOf('AREA') !== -1 || h.indexOf('WILAYAH') !== -1; });
     var idxRoute = headers.findIndex(function(h) { return h.match(/^ROUTE$|^PLAN$|^AK$/); });
     var idxStatus = headers.findIndex(function(h) { return h.match(/^STATUS$/); });
     var idxBooking = headers.findIndex(function(h) { return h.match(/^ORDERBOOKING$|^BOOKING$|^TYPEORDER$|^ORDERTYPE$|^JENISORDER$|^JENISBOOKING$|^TYPE$|^REGULAR\/TRANSIT$/); });
@@ -6623,11 +6882,33 @@ function parseOutstandingSheetData(rows, targetRawArray, sourceType) {
     var orderMap = {};
     for (var i = 1; i < rows.length; i++) {
       var row = rows[i];
-      if (!row || row.length === 0 || !row[idxId === -1 ? 0 : idxId]) continue;
+      if (!row || row.length === 0) continue;
       
-      var id = idxId !== -1 ? String(row[idxId]) : 'ORD-' + (100 + i);
-      var cust = idxCustomer !== -1 ? String(row[idxCustomer]) : 'CUSTOMER';
-      var dest = idxDestination !== -1 ? String(row[idxDestination]) : 'KOTA';
+      var id = idxId !== -1 ? String(row[idxId] || '').trim() : '';
+      if (isInvalidValue(id)) continue;
+
+      var cust = idxCustomer !== -1 ? String(row[idxCustomer] || '').trim() : 'CUSTOMER';
+      if (isInvalidValue(cust)) continue;
+
+      var dest = idxDestination !== -1 ? String(row[idxDestination] || '').trim() : 'KOTA';
+      if (isInvalidValue(dest)) continue;
+
+      var rawStatus = idxStatus !== -1 ? String(row[idxStatus] || '').trim() : '';
+      if (isInvalidStatus_(rawStatus)) continue;
+
+      // Read Wilayah from column BA (index 52) or idxWilayah or idxArea
+      var rawAreaStr = (row.length > 52 && row[52] && !isInvalidArea(row[52])) ? row[52] : (idxWilayah !== -1 ? row[idxWilayah] : (idxArea !== -1 ? row[idxArea] : null));
+      var area = (rawAreaStr && !isInvalidArea(rawAreaStr)) ? String(rawAreaStr).toUpperCase().trim() : '';
+      
+      var rawDest = idxDestination !== -1 ? String(row[idxDestination] || '').trim() : '';
+      if (isInvalidValue(rawDest)) rawDest = '';
+
+      if (!area) {
+        area = rawDest || 'KOTA';
+      }
+      // Kolom tujuan menampilkan data berdasarkan wilayah (column BA)
+      var dest = area;
+
       var rawCbmVal = idxCbm !== -1 ? row[idxCbm] : 1.0;
       var cbm = 0;
       if (rawCbmVal !== null && rawCbmVal !== undefined && rawCbmVal !== '') {
@@ -6679,44 +6960,15 @@ function parseOutstandingSheetData(rows, targetRawArray, sourceType) {
         } catch(e) {}
       }
 
-      var rawAreaStr = idxArea !== -1 ? row[idxArea] : null;
-      if (isInvalidArea(rawAreaStr)) {
-        continue;
-      }
-
-      var area = rawAreaStr ? String(rawAreaStr).toUpperCase().trim() : '';
-      if (!area) {
-        var localCities = ['SURABAYA', 'SIDOARJO', 'GRESIK', 'MOJOKERTO', 'PASURUAN', 'DALAM KOTA'];
-        var isLocal = false;
-        for (var c = 0; c < localCities.length; c++) {
-          if (dest.toUpperCase().indexOf(localCities[c]) !== -1) {
-            isLocal = true;
-            break;
-          }
-        }
-        area = isLocal ? 'DALAM KOTA' : 'LUAR KOTA';
-      }
-
-      var isDalamKota = false;
-      var checkCities = ['SURABAYA', 'SIDOARJO', 'GRESIK', 'MOJOKERTO', 'PASURUAN', 'DALAM KOTA', 'LOKAL'];
-      for (var c = 0; c < checkCities.length; c++) {
-        if (area.indexOf(checkCities[c]) !== -1 || dest.toUpperCase().indexOf(checkCities[c]) !== -1) {
-          isDalamKota = true; break;
-        }
-      }
+      var isDalamKota = checkIsDalamKota(area, dest);
 
       var routeVal = idxRoute !== -1 ? String(row[idxRoute]).trim() : '';
       if (!planDeliveryDate && routeVal && GLOBAL_ROUTE_DATE_MAP[routeVal]) {
         planDeliveryDate = GLOBAL_ROUTE_DATE_MAP[routeVal];
       }
-      var rawStatus = idxStatus !== -1 ? String(row[idxStatus]).trim() : '';
       var rawBooking = idxBooking !== -1 ? String(row[idxBooking]).trim() : '';
       var bookingType = (rawBooking.toUpperCase().indexOf('TRANSIT') !== -1) ? 'TRANSIT' : 'REGULAR';
-      var sUpper = rawStatus.toUpperCase();
-      var isUnplanned = (!routeVal || routeVal === 'NaN' || routeVal === 'undefined' || sUpper.indexOf('CREATED INTERNALLY') !== -1 || sUpper.indexOf('NOT STARTED') !== -1);
-      if (planDeliveryDate) {
-        isUnplanned = false;
-      }
+      var formattedStatus = rawStatus ? rawStatus.toLowerCase().replace(/\b\w/g, function(l) { return l.toUpperCase(); }) : 'Planned';
 
       var rawItem = {
         id: id,
@@ -6729,8 +6981,8 @@ function parseOutstandingSheetData(rows, targetRawArray, sourceType) {
         area: area,
         isDalamKota: isDalamKota,
         route: routeVal,
-        status: isUnplanned ? 'Unplanned' : (rawStatus || 'Planned'),
-        rawStatus: rawStatus || (isUnplanned ? 'Unplanned' : 'Planned'),
+        status: formattedStatus,
+        rawStatus: formattedStatus,
         bookingType: bookingType,
         sourceType: sourceType || 'GRW',
         planDeliveryDate: planDeliveryDate
@@ -6755,8 +7007,8 @@ function parseOutstandingSheetData(rows, targetRawArray, sourceType) {
         area: area,
         isDalamKota: isDalamKota,
         route: routeVal,
-        status: isUnplanned ? 'Unplanned' : (rawStatus || 'Planned'),
-        rawStatus: rawStatus || (isUnplanned ? 'Unplanned' : 'Planned'),
+        status: formattedStatus,
+        rawStatus: formattedStatus,
         bookingType: bookingType,
         sourceType: sourceType || 'GRW',
         planDeliveryDate: planDeliveryDate
@@ -6775,9 +7027,15 @@ function parseOutstandingSheetData(rows, targetRawArray, sourceType) {
         return key !== undefined ? item[key] : def;
       }
 
-      var id = getVal(/^ORDERKEY$|^EXTERNORDERKEY$|^ORDERID$|^IDORDER$|^NOORDER$|^ORDERNO$|^ID$|^TRANSNO$|^NODO$|^DONO$|^DONUMBER$|^NOMORORDER$|^ORDER$|^DOCNO$|^DOCUMENTNO$|^PONO$|^NOPO$/, 'ORD-' + (100 + idx));
+      var id = getVal(/^ORDERKEY$|^EXTERNORDERKEY$|^ORDERID$|^IDORDER$|^NOORDER$|^ORDERNO$|^ID$|^TRANSNO$|^NODO$|^DONO$|^DONUMBER$|^NOMORORDER$|^ORDER$|^DOCNO$|^DOCUMENTNO$|^PONO$|^NOPO$/, '');
+      if (isInvalidValue(id)) return;
+
       var cust = getVal(/^SHIPTONAME$|^STOREBOOKINGNAME$|^CUSTOMER$|^SHIPPINGLINE$/, 'CUSTOMER');
-      var dest = getVal(/^CITY$|^KOTA$|^SHIPTONAME$/, 'KOTA');
+      if (isInvalidValue(cust)) return;
+
+      var rawStatus = String(item['STATUS'] || getVal(/^STATUS$/, '') || '').trim();
+      if (isInvalidStatus_(rawStatus)) return;
+
       var rawCbmVal = getVal(/^CUBE$|^CBM$|^VOLUME$/, 0);
       var cbm = 0;
       if (rawCbmVal !== null && rawCbmVal !== undefined && rawCbmVal !== '') {
@@ -6808,39 +7066,30 @@ function parseOutstandingSheetData(rows, targetRawArray, sourceType) {
         }
       }
 
+      var rawDest = getVal(/^CITY$|^KOTA$|^SHIPTONAME$|^DESTINATION$|^TUJUAN$/, '');
+      if (isInvalidValue(rawDest)) rawDest = '';
+
       var areaVal = getVal(/^WILAYAH$/, null);
-      if (areaVal === null) areaVal = getVal(/^AREA$/, null);
-      if (areaVal === null) areaVal = getVal(/^ZONA$/, '');
-      if (isInvalidArea(areaVal)) {
-        return;
+      if (areaVal === null || isInvalidArea(areaVal)) {
+        areaVal = getVal(/^AREA$|^ZONA$|^REGIONAL$|^BA$/, null);
       }
-      var area = '';
-      if (areaVal) {
-        area = String(areaVal).toUpperCase().trim();
-      } else {
-        var localCities = ['SURABAYA', 'SIDOARJO', 'GRESIK', 'MOJOKERTO', 'PASURUAN', 'DALAM KOTA'];
-        var isLocal = false;
-        for (var c = 0; c < localCities.length; c++) {
-          if (dest.toUpperCase().indexOf(localCities[c]) !== -1) {
-            isLocal = true;
-            break;
-          }
-        }
-        area = isLocal ? 'DALAM KOTA' : 'LUAR KOTA';
+      if (areaVal === null || isInvalidArea(areaVal)) {
+        if (item['BA'] && !isInvalidArea(item['BA'])) areaVal = item['BA'];
+        else if (keys.length > 52 && item[keys[52]] && !isInvalidArea(item[keys[52]])) areaVal = item[keys[52]];
       }
 
-      var isDalamKota = false;
-      var checkCities = ['SURABAYA', 'SIDOARJO', 'GRESIK', 'MOJOKERTO', 'PASURUAN', 'DALAM KOTA', 'LOKAL'];
-      for (var c = 0; c < checkCities.length; c++) {
-        if (area.indexOf(checkCities[c]) !== -1 || dest.toUpperCase().indexOf(checkCities[c]) !== -1) {
-          isDalamKota = true; break;
-        }
+      var area = (areaVal && !isInvalidArea(areaVal)) ? String(areaVal).toUpperCase().trim() : '';
+      if (!area) {
+        area = rawDest || 'KOTA';
       }
+      // Kolom tujuan menampilkan data berdasarkan wilayah (column BA)
+      var dest = area;
+
+      var isDalamKota = checkIsDalamKota(area, dest);
 
       var priorityStr = getVal(/^PRIORITY$/, '');
 
       var routeVal = getVal(/^ROUTE$|^PLAN$|^AK$/, '');
-      var rawStatus = String(item['STATUS'] || getVal(/^STATUS$/, '') || '').trim();
 
       var rawBooking = getVal(/^ORDERBOOKING$|^BOOKING$|^TYPEORDER$|^ORDERTYPE$|^JENISORDER$|^JENISBOOKING$|^TYPE$|^REGULAR\/TRANSIT$/, '');
       if (!rawBooking) {
@@ -6858,9 +7107,6 @@ function parseOutstandingSheetData(rows, targetRawArray, sourceType) {
         }
       }
       var bookingType = String(rawBooking).toUpperCase().indexOf('TRANSIT') !== -1 ? 'TRANSIT' : 'REGULAR';
-
-      var sUpper = rawStatus.toUpperCase();
-      var isUnplanned = (!routeVal || String(routeVal).trim() === '' || sUpper.indexOf('CREATED INTERNALLY') !== -1 || sUpper.indexOf('NOT STARTED') !== -1);
 
       var reqShipDaysDiff = null;
       var rawReqShip = getVal(/^REQSHIPDATE$/, null);
@@ -6891,9 +7137,8 @@ function parseOutstandingSheetData(rows, targetRawArray, sourceType) {
       if (!planDeliveryDate && routeVal && GLOBAL_ROUTE_DATE_MAP[routeVal]) {
         planDeliveryDate = GLOBAL_ROUTE_DATE_MAP[routeVal];
       }
-      if (planDeliveryDate) {
-        isUnplanned = false;
-      }
+
+      var formattedStatus = rawStatus ? rawStatus.toLowerCase().replace(/\b\w/g, function(l) { return l.toUpperCase(); }) : 'Planned';
 
       var rawItem = {
         id: id,
@@ -6907,8 +7152,8 @@ function parseOutstandingSheetData(rows, targetRawArray, sourceType) {
         isDalamKota: isDalamKota,
         priorityRaw: priorityStr,
         route: routeVal,
-        status: isUnplanned ? 'Unplanned' : (rawStatus || 'Planned'),
-        rawStatus: rawStatus || (isUnplanned ? 'Unplanned' : 'Planned'),
+        status: formattedStatus,
+        rawStatus: formattedStatus,
         bookingType: bookingType,
         sourceType: sourceType || 'GRW',
         planDeliveryDate: planDeliveryDate
@@ -6934,15 +7179,12 @@ function parseOutstandingSheetData(rows, targetRawArray, sourceType) {
         isDalamKota: isDalamKota,
         priorityRaw: priorityStr,
         route: routeVal,
-        status: isUnplanned ? 'Unplanned' : (rawStatus || 'Planned'),
-        rawStatus: rawStatus || (isUnplanned ? 'Unplanned' : 'Planned'),
+        status: formattedStatus,
+        rawStatus: formattedStatus,
         bookingType: bookingType,
         sourceType: sourceType || 'GRW',
         planDeliveryDate: planDeliveryDate
       };
-      if (planDeliveryDate) {
-        orderGroup.status = 'Planned';
-      }
       
       orderMapObj[id] = orderGroup;
       list.push(orderGroup);
@@ -9432,6 +9674,8 @@ function parsePlanningData() {
         });
         if (matchedPd) {
           dayVals[matchedPd.key] += cbmVal;
+        } else {
+          notPlan += cbmVal;
         }
       }
     });
@@ -10197,33 +10441,23 @@ function processResults(results) {
     // Parse CONT DATE for GRW planning projection
     GRW_PLAN_AREAS = [];
     if (dataContDate && dataContDate.length > 0) {
-      var dayNames = ['MINGGU', 'SENIN', 'SELASA', 'RABU', 'KAMIS', 'JUMAT', 'SABTU'];
-      var todayIdx = new Date().getDay();
-      var targetIdx = (todayIdx + 2) % 7;
-      var targetDayName = dayNames[targetIdx]; console.log("Target Day Name:", targetDayName); console.log("dataContDate:", dataContDate);
-      
+      var targetDateCont = getPlanTargetDate_();
+      var targetDayName  = DAY_NAMES_ID[targetDateCont.getDay()]; // MINGGU..SABTU
+
       dataContDate.forEach(function(row) {
-        var area = null;
-        var targetVal = null;
+        var area = null, targetVal = null;
         for (var key in row) {
-          if (row.hasOwnProperty(key)) {
-            var cleanKey = key.toString().toUpperCase().trim();
-            if (cleanKey === 'WILAYAH/DAY' || cleanKey === 'WILAYAH' || cleanKey === 'AREA') {
-              area = row[key];
-            }
-            if (cleanKey === targetDayName) {
-              targetVal = row[key];
-            }
-          }
+          if (!row.hasOwnProperty(key)) continue;
+          var ck = String(key).toUpperCase().trim().replace(/[\s_]+/g, '');
+          if (ck === 'WILAYAH/DAY' || ck === 'WILAYAH' || ck === 'AREA') area = row[key];
+          if (ck === targetDayName) targetVal = row[key];
         }
-        if (area && targetVal && !isInvalidArea(area)) {
-          var valStr = targetVal.toString().toUpperCase().trim();
-          if (valStr !== '' && valStr !== 'FALSE' && valStr !== '0' && valStr !== '-') {
-             // Accept any non-empty, non-negative value as a planned area for that day
-             GRW_PLAN_AREAS.push(area.toString().toUpperCase().trim()); console.log("Added to GRW_PLAN_AREAS:", area.toString().toUpperCase().trim());
-          }
-        }
+        if (!area || isInvalidArea(area)) return;
+        var v = String(targetVal == null ? '' : targetVal).toUpperCase().trim();
+        if (v === '' || v === '-' || v === '0' || v === 'FALSE' || v === 'X' || isInvalidArea(v)) return;
+        GRW_PLAN_AREAS.push(String(area).toUpperCase().trim());
       });
+      console.log('[PROYEKSI] Target H+2 =', targetDayName, '| Wilayah terjadwal:', GRW_PLAN_AREAS);
     }
 
     isLiveData = true;
