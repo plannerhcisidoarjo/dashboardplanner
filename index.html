@@ -1005,6 +1005,142 @@
     padding-top: 16px;
     border-top: 1px dashed var(--border);
   }
+  .sla-breakdown-card {
+    position: relative;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.05) 100%);
+    backdrop-filter: blur(20px) saturate(200%);
+    -webkit-backdrop-filter: blur(20px) saturate(200%);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 16px;
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 8px;
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease;
+    overflow: hidden;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.25), inset 0 1px 1px 0 rgba(255, 255, 255, 0.4);
+  }
+  .sla-breakdown-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.8) 50%, transparent 100%);
+    pointer-events: none;
+  }
+  .sla-breakdown-card::after {
+    content: '';
+    position: absolute;
+    top: -40%;
+    left: -40%;
+    width: 180%;
+    height: 180%;
+    background: radial-gradient(circle at 50% 0%, var(--glass-glow, rgba(255, 255, 255, 0.15)), transparent 65%);
+    pointer-events: none;
+  }
+  .sla-breakdown-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 40px 0 rgba(0, 0, 0, 0.35), inset 0 1px 1px 0 rgba(255, 255, 255, 0.6);
+  }
+  .sla-breakdown-card.dk-accent {
+    --glass-glow: rgba(52, 211, 153, 0.35);
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.28) 0%, rgba(5, 150, 105, 0.15) 100%);
+    border: 1px solid rgba(52, 211, 153, 0.45);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.25), 0 0 25px rgba(16, 185, 129, 0.2), inset 0 1px 1px 0 rgba(255, 255, 255, 0.4);
+  }
+  .sla-breakdown-card.dk-accent:hover {
+    border-color: rgba(52, 211, 153, 0.7);
+    box-shadow: 0 14px 40px 0 rgba(0, 0, 0, 0.35), 0 0 35px rgba(16, 185, 129, 0.35), inset 0 1px 1px 0 rgba(255, 255, 255, 0.6);
+  }
+  .sla-breakdown-card.lk-accent {
+    --glass-glow: rgba(129, 140, 248, 0.35);
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.28) 0%, rgba(79, 70, 229, 0.15) 100%);
+    border: 1px solid rgba(129, 140, 248, 0.45);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.25), 0 0 25px rgba(99, 102, 241, 0.2), inset 0 1px 1px 0 rgba(255, 255, 255, 0.4);
+  }
+  .sla-breakdown-card.lk-accent:hover {
+    border-color: rgba(129, 140, 248, 0.7);
+    box-shadow: 0 14px 40px 0 rgba(0, 0, 0, 0.35), 0 0 35px rgba(99, 102, 241, 0.35), inset 0 1px 1px 0 rgba(255, 255, 255, 0.6);
+  }
+  .sla-breakdown-card.grw-total-accent {
+    --glass-glow: rgb(139, 232, 229);
+    background: linear-gradient(135deg, rgba(14, 165, 233, 0.32) 0%, rgba(2, 132, 199, 0.18) 100%);
+    border: 1px solid rgb(139, 232, 229);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.28), 0 0 28px rgba(56, 189, 248, 0.25), inset 0 1px 1px 0 rgba(255, 255, 255, 0.45);
+  }
+  .sla-breakdown-card.grw-total-accent:hover {
+    border-color: rgb(139, 232, 229);
+    box-shadow: 0 14px 40px 0 rgba(0, 0, 0, 0.35), 0 0 40px rgba(56, 189, 248, 0.4), inset 0 1px 1px 0 rgba(255, 255, 255, 0.65);
+  }
+  .sla-breakdown-card.cust-total-accent {
+    --glass-glow: rgba(251, 191, 36, 0.38);
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.3) 0%, rgba(217, 119, 6, 0.18) 100%);
+    border: 1px solid rgba(251, 191, 36, 0.52);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.28), 0 0 28px rgba(245, 158, 11, 0.22), inset 0 1px 1px 0 rgba(255, 255, 255, 0.45);
+  }
+  .sla-breakdown-card.cust-total-accent:hover {
+    border-color: rgba(251, 191, 36, 0.8);
+    box-shadow: 0 14px 40px 0 rgba(0, 0, 0, 0.35), 0 0 40px rgba(245, 158, 11, 0.38), inset 0 1px 1px 0 rgba(255, 255, 255, 0.65);
+  }
+  .sla-card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    position: relative;
+    z-index: 2;
+  }
+  .sla-card-label {
+    font-size: 12px;
+    font-weight: 900;
+    color: #f8fafc;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9), 0 0 10px rgba(0, 0, 0, 0.5);
+  }
+  .sla-card-badge {
+    font-size: 10px;
+    font-weight: 800;
+    padding: 3px 9px;
+    border-radius: 999px;
+    background: rgba(15, 23, 42, 0.45);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+  }
+  .sla-card-val {
+    font-size: 32px;
+    font-weight: 900;
+    color: #ffffff;
+    font-family: var(--font-display);
+    line-height: 1.1;
+    letter-spacing: -0.5px;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.95), 0 0 3px rgba(0, 0, 0, 0.9);
+    position: relative;
+    z-index: 2;
+  }
+  .sla-card-sub {
+    font-size: 12px;
+    font-weight: 700;
+    color: #f1f5f9;
+    font-family: var(--font-mono);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.95), 0 0 3px rgba(0, 0, 0, 0.9);
+    position: relative;
+    z-index: 2;
+  }
   .bu-col {
     background: var(--surface2);
     border: 1px solid var(--border);
@@ -3353,8 +3489,8 @@ PLANNING REPORT</div>
           <div style="display:flex; align-items:center; gap:6px;">
             <label style="font-size:11px; font-weight:700; color:var(--ts); text-transform:uppercase;">Wilayah:</label>
             <select id="agingMatrixAreaFilter" class="filter-select" onchange="renderAgingMatrixTable()" style="padding:6px 12px; border-radius:8px; font-size:12px; font-weight:600; background:var(--surface); border:1px solid var(--border); color:var(--tp);">
-              <option value="ALL">Semua Wilayah (OD DK + LK)</option>
-              <option value="DK">OD DK (Dalam Kota)</option>
+              <option value="ALL">Semua Wilayah (DK + LK)</option>
+              <option value="DK">DK (Dalam Kota)</option>
               <option value="LK">LK (Luar Kota)</option>
             </select>
           </div>
@@ -3674,6 +3810,46 @@ PLANNING REPORT</div>
 
 <!-- PAGE 5: SLA DETAILS -->
 <div id="pg-sla" class="pg">
+
+  <!-- ══ CENTRAL PERIOD & AREA CONTROL ══ -->
+  <div class="card" style="margin-bottom:20px; border-top:4px solid var(--blue);">
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px;">
+      <div>
+        <div class="card-title" style="font-size:15px;">🎛️ PENGATURAN PERIODE &amp; AREA SLA</div>
+        <div class="card-sub">Satu pengaturan untuk seluruh halaman: kartu, grafik trend, BU breakdown, dan tabel reason</div>
+      </div>
+      <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+        <div class="filter-group">
+          <span class="filter-label">Periode</span>
+          <input type="date" id="slaStartDate" class="filter-input" style="padding:5px 10px; font-size:12px;">
+          <span style="font-size:11px; color:var(--muted);">s/d</span>
+          <input type="date" id="slaEndDate" class="filter-input" style="padding:5px 10px; font-size:12px;">
+        </div>
+        <div class="filter-divider" style="height:26px;"></div>
+        <div class="filter-group">
+          <span class="filter-label">Area</span>
+          <div class="filter-toggle" id="slaAreaToggle">
+            <button class="active" onclick="setSlaArea('ALL',this)">ALL</button>
+            <button onclick="setSlaArea('DK',this)">DK</button>
+            <button onclick="setSlaArea('LK',this)">LK</button>
+          </div>
+        </div>
+        <div class="filter-divider" style="height:26px;"></div>
+        <div class="filter-group">
+          <span class="filter-label">Trend</span>
+          <div class="filter-toggle" id="slaTrendToggle">
+            <button class="active" onclick="setSlaTrendMode('daily',this)">Daily</button>
+            <button onclick="setSlaTrendMode('monthly',this)">Monthly</button>
+          </div>
+        </div>
+        <button class="btn-refresh" onclick="applySlaFilters()">Terapkan</button>
+      </div>
+    </div>
+    <div id="slaAreaWarn" style="display:none; margin-top:12px; background:rgba(217,119,6,.1); border:1px solid rgba(217,119,6,.3); color:var(--amber); padding:8px 12px; border-radius:var(--radius-sm); font-size:11px; font-weight:600;">
+      ⚠️ Kolom DK / LK belum terdeteksi pada sheet SLA. Breakdown area dinonaktifkan — tambahkan kolom berjudul <strong>DK</strong> dan <strong>LK</strong> (Hit &amp; Miss) pada sheet SLA GRW / SLA CUST agar aktif otomatis.
+    </div>
+  </div>
+
   <div class="overview-grid">
     <!-- SLA GRW Card -->
     <div class="card">
@@ -3682,6 +3858,7 @@ PLANNING REPORT</div>
           <div class="card-title">SLA GRW</div>
           <div class="card-sub">% ACHIEVEMENT GRW</div>
         </div>
+        <span class="badge badge-blue" id="slaGrwPeriodBadge">—</span>
       </div>
       <div class="overview-chart-row">
         <div class="speedo-wrap">
@@ -3689,22 +3866,39 @@ PLANNING REPORT</div>
           <div class="speedo-val" id="slaGrwPctVal">0%</div>
         </div>
         <div class="ov-stats-list" style="flex:1.5;">
-          <div class="ov-stat-item">
-            <span class="ov-stat-lbl">Total Orders Logged</span>
-            <span class="ov-stat-val" id="slaGrwSumTotal" style="color:var(--text);">0</span>
+          <div class="ov-stat-item"><span class="ov-stat-lbl">Total Orders Logged</span><span class="ov-stat-val" id="slaGrwSumTotal" style="color:var(--text);">0</span></div>
+          <div class="ov-stat-item"><span class="ov-stat-lbl">SLA Hits (On Time)</span><span class="ov-stat-val text-green" id="slaGrwSumHit">0</span></div>
+          <div class="ov-stat-item"><span class="ov-stat-lbl">SLA Misses (Delayed)</span><span class="ov-stat-val text-red" id="slaGrwSumMiss">0</span></div>
+        </div>
+      </div>
+      <div class="bu-sla-breakdown" style="grid-template-columns:repeat(3,1fr); gap:12px; margin-top:16px; padding-top:16px; border-top:1px solid rgba(255,255,255,0.08);">
+        <div class="sla-breakdown-card dk-accent">
+          <div class="sla-card-head">
+            <span class="sla-card-label" style="color:#6ee7b7;">DALAM KOTA</span>
+            <span class="sla-card-badge" style="background:rgba(16,185,129,0.15); color:#34d399; border-color:rgba(16,185,129,0.3);">AREA DK</span>
           </div>
-          <div class="ov-stat-item">
-            <span class="ov-stat-lbl">SLA Hits (On Time)</span>
-            <span class="ov-stat-val text-green" id="slaGrwSumHit">0</span>
+          <div class="sla-card-val" id="slaGrwDkPct">DK</div>
+          <div class="sla-card-sub" id="slaGrwDkSub">—</div>
+        </div>
+        <div class="sla-breakdown-card lk-accent">
+          <div class="sla-card-head">
+            <span class="sla-card-label" style="color:#a5b4fc;">LUAR KOTA</span>
+            <span class="sla-card-badge" style="background:rgba(99,102,241,0.15); color:#818cf8; border-color:rgba(99,102,241,0.3);">AREA LK</span>
           </div>
-          <div class="ov-stat-item">
-            <span class="ov-stat-lbl">SLA Misses (Delayed)</span>
-            <span class="ov-stat-val text-red" id="slaGrwSumMiss">0</span>
+          <div class="sla-card-val" id="slaGrwLkPct">LK</div>
+          <div class="sla-card-sub" id="slaGrwLkSub">—</div>
+        </div>
+        <div class="sla-breakdown-card grw-total-accent">
+          <div class="sla-card-head">
+            <span class="sla-card-label" style="color:#7dd3fc;">TOTAL GRW</span>
+            <span class="sla-card-badge" style="background:rgba(56,189,248,0.2); color:#38bdf8; border-color:rgba(56,189,248,0.4);">OVERALL</span>
           </div>
+          <div class="sla-card-val" style="color:#38bdf8;" id="slaGrwTotPct">TOTAL</div>
+          <div class="sla-card-sub" id="slaGrwTotSub">—</div>
         </div>
       </div>
     </div>
-    
+
     <!-- SLA Customer Card -->
     <div class="card">
       <div class="card-header">
@@ -3712,6 +3906,7 @@ PLANNING REPORT</div>
           <div class="card-title">SLA CUSTOMER</div>
           <div class="card-sub">% ACHIEVEMENT CUSTOMER</div>
         </div>
+        <span class="badge badge-amber" id="slaCustPeriodBadge">—</span>
       </div>
       <div class="overview-chart-row">
         <div class="speedo-wrap">
@@ -3719,144 +3914,159 @@ PLANNING REPORT</div>
           <div class="speedo-val" id="slaCustPctVal">0%</div>
         </div>
         <div class="ov-stats-list" style="flex:1.5;">
-          <div class="ov-stat-item">
-            <span class="ov-stat-lbl">Total Orders Logged</span>
-            <span class="ov-stat-val" id="slaCustSumTotal" style="color:var(--text);">0</span>
+          <div class="ov-stat-item"><span class="ov-stat-lbl">Total Orders Logged</span><span class="ov-stat-val" id="slaCustSumTotal" style="color:var(--text);">0</span></div>
+          <div class="ov-stat-item"><span class="ov-stat-lbl">SLA Hits (On Time)</span><span class="ov-stat-val text-green" id="slaCustSumHit">0</span></div>
+          <div class="ov-stat-item"><span class="ov-stat-lbl">SLA Misses (Delayed)</span><span class="ov-stat-val text-red" id="slaCustSumMiss">0</span></div>
+        </div>
+      </div>
+      <div class="bu-sla-breakdown" style="grid-template-columns:repeat(3,1fr); gap:12px; margin-top:16px; padding-top:16px; border-top:1px solid rgba(255,255,255,0.08);">
+        <div class="sla-breakdown-card dk-accent">
+          <div class="sla-card-head">
+            <span class="sla-card-label" style="color:#6ee7b7;">DALAM KOTA</span>
+            <span class="sla-card-badge" style="background:rgba(16,185,129,0.15); color:#34d399; border-color:rgba(16,185,129,0.3);">AREA DK</span>
           </div>
-          <div class="ov-stat-item">
-            <span class="ov-stat-lbl">SLA Hits (On Time)</span>
-            <span class="ov-stat-val text-green" id="slaCustSumHit">0</span>
+          <div class="sla-card-val" id="slaCustDkPct">DK</div>
+          <div class="sla-card-sub" id="slaCustDkSub">—</div>
+        </div>
+        <div class="sla-breakdown-card lk-accent">
+          <div class="sla-card-head">
+            <span class="sla-card-label" style="color:#a5b4fc;">LUAR KOTA</span>
+            <span class="sla-card-badge" style="background:rgba(99,102,241,0.15); color:#818cf8; border-color:rgba(99,102,241,0.3);">AREA LK</span>
           </div>
-          <div class="ov-stat-item">
-            <span class="ov-stat-lbl">SLA Misses (Delayed)</span>
-            <span class="ov-stat-val text-red" id="slaCustSumMiss">0</span>
+          <div class="sla-card-val" id="slaCustLkPct">LK</div>
+          <div class="sla-card-sub" id="slaCustLkSub">—</div>
+        </div>
+        <div class="sla-breakdown-card cust-total-accent">
+          <div class="sla-card-head">
+            <span class="sla-card-label" style="color:#fcd34d;">TOTAL CUST</span>
+            <span class="sla-card-badge" style="background:rgba(245,158,11,0.2); color:#fbbf24; border-color:rgba(245,158,11,0.4);">OVERALL</span>
           </div>
+          <div class="sla-card-val" style="color:#fbbf24;" id="slaCustTotPct">TOTAL</div>
+          <div class="sla-card-sub" id="slaCustTotSub">—</div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- SLA DAILY TRENDS -->
+  <!-- SLA DAILY / MONTHLY TRENDS -->
   <div class="overview-grid" style="margin-top:20px;">
-    <!-- SLA GRW Trend Card -->
     <div class="card">
       <div class="card-header">
         <div>
-          <div class="card-title">SLA GRW - GRAFIK TREND</div>
-          <div class="card-sub">Daily hit vs miss volume (bars) and achievement rate % (line)</div>
+          <div class="card-title">SLA GRW — GRAFIK TREND</div>
+          <div class="card-sub" id="slaGrwTrendSub">Volume hit vs miss (bar) &amp; achievement rate % (garis)</div>
         </div>
       </div>
-      <div style="height:250px; width:100%; margin-top:12px; position:relative;">
+      <div style="height:280px; width:100%; margin-top:12px; position:relative;">
         <canvas id="slaGrwTrendOnPageChart"></canvas>
       </div>
     </div>
-    
-    <!-- SLA Customer Trend Card -->
     <div class="card">
       <div class="card-header">
         <div>
-          <div class="card-title">SLA CUSTOMER - GRAFIK TREND</div>
-          <div class="card-sub">Daily hit vs miss volume (bars) and achievement rate % (line)</div>
+          <div class="card-title">SLA CUSTOMER — GRAFIK TREND</div>
+          <div class="card-sub" id="slaCustTrendSub">Volume hit vs miss (bar) &amp; achievement rate % (garis)</div>
         </div>
       </div>
-      <div style="height:250px; width:100%; margin-top:12px; position:relative;">
+      <div style="height:280px; width:100%; margin-top:12px; position:relative;">
         <canvas id="slaCustTrendOnPageChart"></canvas>
       </div>
     </div>
   </div>
-  
-  <!-- Brand Breakdown Table -->
+
+  <!-- BUSINESS UNIT BREAKDOWN -->
   <div class="card" style="margin-top:20px;">
     <div class="card-header">
       <div>
-        <div class="card-title">SLA BUSINESS UNIT BREAKDOWN</div>
-        <div class="card-sub">GRW &amp; CUSTOMER SLA performance across Informa, Electronics, and Selma</div>
+        <div class="card-title" style="font-size:17px;">SLA BUSINESS UNIT BREAKDOWN</div>
+        <div class="card-sub" style="font-size:13px;">Performa SLA GRW &amp; CUSTOMER pada Informa, Electronics, dan Selma</div>
       </div>
-      <div style="display:flex; gap:8px;">
-        <input type="date" id="slaStartDate" class="filter-input" style="padding:4px 8px; font-size:11px;" onchange="renderSlaDetailPage()">
-        <input type="date" id="slaEndDate" class="filter-input" style="padding:4px 8px; font-size:11px;" onchange="renderSlaDetailPage()">
-      </div>
+      <span class="badge badge-purple" id="slaBuScopeBadge">—</span>
     </div>
     <div style="overflow-x:auto; margin-top:12px;">
-      <table class="data-table" style="width:100%; border-collapse:collapse; text-align:left;">
+      <table class="data-table" style="width:100%; border-collapse:collapse; text-align:left; font-size:14px;">
         <thead>
-          <tr style="border-bottom:1px solid var(--border); color:var(--muted); font-size:11px;">
-            <th rowspan="2" style="padding:6px 10px; vertical-align:middle; width:120px; text-align:center;">Business Unit</th>
-            <th colspan="4" style="text-align:center; border-bottom:1px solid var(--border); border-right:3px solid var(--border); padding:6px 8px; background:rgba(37,99,235,0.06); color:var(--blue); font-weight:800;">🏭 SLA GRW</th>
-            <th colspan="4" style="text-align:center; border-bottom:1px solid var(--border); padding:6px 8px; background:rgba(217,119,6,0.06); color:var(--amber); font-weight:800;">🚚 SLA Customer</th>
+          <tr style="border-bottom:1px solid var(--border); color:var(--muted); font-size:12px;">
+            <th rowspan="2" style="padding:8px 12px; vertical-align:middle; width:230px; text-align:center;">Business Unit</th>
+            <th colspan="4" style="text-align:center; border-bottom:1px solid var(--border); border-right:3px solid var(--border); padding:8px; background:rgba(37,99,235,0.08); color:var(--blue); font-weight:900; font-size:14px;">🏭 SLA GRW</th>
+            <th colspan="4" style="text-align:center; border-bottom:1px solid var(--border); padding:8px; background:rgba(217,119,6,0.08); color:var(--amber); font-weight:900; font-size:14px;">🚚 SLA CUSTOMER</th>
           </tr>
-          <tr style="border-bottom:1px solid var(--border); color:var(--muted); font-size:10px;">
-            <th style="text-align:center; padding:4px 6px; background:rgba(37,99,235,0.03);">Hits</th>
-            <th style="text-align:center; padding:4px 6px; background:rgba(37,99,235,0.03);">Misses</th>
-            <th style="text-align:center; padding:4px 6px; background:rgba(37,99,235,0.03);">Total</th>
-            <th style="text-align:center; padding:4px 6px; border-right:3px solid var(--border); background:rgba(37,99,235,0.03);">SLA %</th>
-            <th style="text-align:center; padding:4px 6px; background:rgba(217,119,6,0.03);">Hits</th>
-            <th style="text-align:center; padding:4px 6px; background:rgba(217,119,6,0.03);">Misses</th>
-            <th style="text-align:center; padding:4px 6px; background:rgba(217,119,6,0.03);">Total</th>
-            <th style="text-align:center; padding:4px 6px; background:rgba(217,119,6,0.03);">SLA %</th>
+          <tr style="border-bottom:1px solid var(--border); color:var(--muted); font-size:12px; font-weight:800;">
+            <th style="text-align:center; padding:6px 8px; background:rgba(37,99,235,0.04);">Hits</th>
+            <th style="text-align:center; padding:6px 8px; background:rgba(37,99,235,0.04);">Misses</th>
+            <th style="text-align:center; padding:6px 8px; background:rgba(37,99,235,0.04);">Total</th>
+            <th style="text-align:center; padding:6px 8px; border-right:3px solid var(--border); background:rgba(37,99,235,0.04);">SLA %</th>
+            <th style="text-align:center; padding:6px 8px; background:rgba(217,119,6,0.04);">Hits</th>
+            <th style="text-align:center; padding:6px 8px; background:rgba(217,119,6,0.04);">Misses</th>
+            <th style="text-align:center; padding:6px 8px; background:rgba(217,119,6,0.04);">Total</th>
+            <th style="text-align:center; padding:6px 8px; background:rgba(217,119,6,0.04);">SLA %</th>
           </tr>
         </thead>
         <tbody>
-          <tr style="border-bottom:1px solid rgba(255,255,255,0.08);">
-            <td style="padding:6px 8px; width:120px; text-align:center; vertical-align:middle;">
-              <img src="https://lh3.googleusercontent.com/d/1T_T9ruGoVeGQjy4raxb7XdsEUM6tS2JU" alt="Informa" style="height:72px; width:auto; max-width:350px; object-fit:contain; display:block; margin:0 auto;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-              <span style="display:none; font-size:12px; font-weight:800; color:var(--muted); text-transform:uppercase;">INFORMA</span>
+          <tr style="border-bottom:1px solid var(--border);">
+            <td style="padding:10px; text-align:center; vertical-align:middle;">
+              <img src="https://lh3.googleusercontent.com/d/1T_T9ruGoVeGQjy4raxb7XdsEUM6tS2JU" alt="Informa" style="height:96px; width:auto; max-width:100%; object-fit:contain; display:block; margin:0 auto;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+              <span style="display:none; font-size:15px; font-weight:900; color:var(--muted);">INFORMA</span>
             </td>
-            <td style="text-align:center; font-family:var(--font-mono); font-size:12px; padding:6px 8px; background:rgba(37,99,235,0.02);" id="tblGrwHitInf">0</td>
-            <td style="text-align:center; font-family:var(--font-mono); font-size:12px; padding:6px 8px; background:rgba(37,99,235,0.02);" id="tblGrwMissInf">0</td>
-            <td style="text-align:center; font-family:var(--font-mono); font-size:12px; padding:6px 8px; background:rgba(37,99,235,0.02);" id="tblGrwTotInf">0</td>
-            <td style="text-align:center; font-family:var(--font-mono); font-size:12px; font-weight:700; color:var(--blue); padding:6px 8px; border-right:3px solid var(--border); background:rgba(37,99,235,0.02);" id="tblGrwPctInf">0%</td>
-            <td style="text-align:center; font-family:var(--font-mono); font-size:12px; padding:6px 8px; background:rgba(217,119,6,0.02);" id="tblCustHitInf">0</td>
-            <td style="text-align:center; font-family:var(--font-mono); font-size:12px; padding:6px 8px; background:rgba(217,119,6,0.02);" id="tblCustMissInf">0</td>
-            <td style="text-align:center; font-family:var(--font-mono); font-size:12px; padding:6px 8px; background:rgba(217,119,6,0.02);" id="tblCustTotInf">0</td>
-            <td style="text-align:center; font-family:var(--font-mono); font-size:12px; font-weight:700; color:var(--amber); padding:6px 8px; background:rgba(217,119,6,0.02);" id="tblCustPctInf">0%</td>
+            <td style="text-align:center; font-family:var(--font-mono); font-size:15px; padding:10px; background:rgba(37,99,235,0.02);" id="tblGrwHitInf">0</td>
+            <td style="text-align:center; font-family:var(--font-mono); font-size:15px; padding:10px; background:rgba(37,99,235,0.02);" id="tblGrwMissInf">0</td>
+            <td style="text-align:center; font-family:var(--font-mono); font-size:15px; padding:10px; background:rgba(37,99,235,0.02);" id="tblGrwTotInf">0</td>
+            <td style="text-align:center; font-family:var(--font-mono); font-size:16px; font-weight:800; color:var(--blue); padding:10px; border-right:3px solid var(--border); background:rgba(37,99,235,0.02);" id="tblGrwPctInf">0%</td>
+            <td style="text-align:center; font-family:var(--font-mono); font-size:15px; padding:10px; background:rgba(217,119,6,0.02);" id="tblCustHitInf">0</td>
+            <td style="text-align:center; font-family:var(--font-mono); font-size:15px; padding:10px; background:rgba(217,119,6,0.02);" id="tblCustMissInf">0</td>
+            <td style="text-align:center; font-family:var(--font-mono); font-size:15px; padding:10px; background:rgba(217,119,6,0.02);" id="tblCustTotInf">0</td>
+            <td style="text-align:center; font-family:var(--font-mono); font-size:16px; font-weight:800; color:var(--amber); padding:10px; background:rgba(217,119,6,0.02);" id="tblCustPctInf">0%</td>
           </tr>
-          <tr style="border-bottom:1px solid rgba(255,255,255,0.08);">
-            <td style="padding:6px 8px; width:120px; text-align:center; vertical-align:middle;">
-              <img src="https://lh3.googleusercontent.com/d/19sBMv6tjckvdw434w5-aFCjS8NDLM6S0" alt="Informa Electronics" style="height:72px; width:auto; max-width:350px; object-fit:contain; display:block; margin:0 auto;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-              <span style="display:none; font-size:12px; font-weight:800; color:var(--muted); text-transform:uppercase;">ELECTRONICS</span>
+          <tr style="border-bottom:1px solid var(--border);">
+            <td style="padding:10px; text-align:center; vertical-align:middle;">
+              <img src="https://lh3.googleusercontent.com/d/19sBMv6tjckvdw434w5-aFCjS8NDLM6S0" alt="Informa Electronics" style="height:96px; width:auto; max-width:100%; object-fit:contain; display:block; margin:0 auto;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+              <span style="display:none; font-size:15px; font-weight:900; color:var(--muted);">ELECTRONICS</span>
             </td>
-            <td style="text-align:center; font-family:var(--font-mono); font-size:12px; padding:6px 8px; background:rgba(37,99,235,0.02);" id="tblGrwHitIel">0</td>
-            <td style="text-align:center; font-family:var(--font-mono); font-size:12px; padding:6px 8px; background:rgba(37,99,235,0.02);" id="tblGrwMissIel">0</td>
-            <td style="text-align:center; font-family:var(--font-mono); font-size:12px; padding:6px 8px; background:rgba(37,99,235,0.02);" id="tblGrwTotIel">0</td>
-            <td style="text-align:center; font-family:var(--font-mono); font-size:12px; font-weight:700; color:var(--blue); padding:6px 8px; border-right:3px solid var(--border); background:rgba(37,99,235,0.02);" id="tblGrwPctIel">0%</td>
-            <td style="text-align:center; font-family:var(--font-mono); font-size:12px; padding:6px 8px; background:rgba(217,119,6,0.02);" id="tblCustHitIel">0</td>
-            <td style="text-align:center; font-family:var(--font-mono); font-size:12px; padding:6px 8px; background:rgba(217,119,6,0.02);" id="tblCustMissIel">0</td>
-            <td style="text-align:center; font-family:var(--font-mono); font-size:12px; padding:6px 8px; background:rgba(217,119,6,0.02);" id="tblCustTotIel">0</td>
-            <td style="text-align:center; font-family:var(--font-mono); font-size:12px; font-weight:700; color:var(--amber); padding:6px 8px; background:rgba(217,119,6,0.02);" id="tblCustPctIel">0%</td>
+            <td style="text-align:center; font-family:var(--font-mono); font-size:15px; padding:10px; background:rgba(37,99,235,0.02);" id="tblGrwHitIel">0</td>
+            <td style="text-align:center; font-family:var(--font-mono); font-size:15px; padding:10px; background:rgba(37,99,235,0.02);" id="tblGrwMissIel">0</td>
+            <td style="text-align:center; font-family:var(--font-mono); font-size:15px; padding:10px; background:rgba(37,99,235,0.02);" id="tblGrwTotIel">0</td>
+            <td style="text-align:center; font-family:var(--font-mono); font-size:16px; font-weight:800; color:var(--blue); padding:10px; border-right:3px solid var(--border); background:rgba(37,99,235,0.02);" id="tblGrwPctIel">0%</td>
+            <td style="text-align:center; font-family:var(--font-mono); font-size:15px; padding:10px; background:rgba(217,119,6,0.02);" id="tblCustHitIel">0</td>
+            <td style="text-align:center; font-family:var(--font-mono); font-size:15px; padding:10px; background:rgba(217,119,6,0.02);" id="tblCustMissIel">0</td>
+            <td style="text-align:center; font-family:var(--font-mono); font-size:15px; padding:10px; background:rgba(217,119,6,0.02);" id="tblCustTotIel">0</td>
+            <td style="text-align:center; font-family:var(--font-mono); font-size:16px; font-weight:800; color:var(--amber); padding:10px; background:rgba(217,119,6,0.02);" id="tblCustPctIel">0%</td>
           </tr>
-          <tr style="border-bottom:1px solid rgba(255,255,255,0.08);">
-            <td style="padding:6px 8px; width:120px; text-align:center; vertical-align:middle;">
-              <img src="https://lh3.googleusercontent.com/d/1-K9Fmdmex6tysQbdpxTGXsubY945sayH" alt="Selma" style="height:72px; width:auto; max-width:350px; object-fit:contain; display:block; margin:0 auto;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-              <span style="display:none; font-size:12px; font-weight:800; color:var(--muted); text-transform:uppercase;">SELMA</span>
+          <tr style="border-bottom:1px solid var(--border);">
+            <td style="padding:10px; text-align:center; vertical-align:middle;">
+              <img src="https://lh3.googleusercontent.com/d/1-K9Fmdmex6tysQbdpxTGXsubY945sayH" alt="Selma" style="height:96px; width:auto; max-width:100%; object-fit:contain; display:block; margin:0 auto;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+              <span style="display:none; font-size:15px; font-weight:900; color:var(--muted);">SELMA</span>
             </td>
-            <td style="text-align:center; font-family:var(--font-mono); font-size:12px; padding:6px 8px; background:rgba(37,99,235,0.02);" id="tblGrwHitSel">0</td>
-            <td style="text-align:center; font-family:var(--font-mono); font-size:12px; padding:6px 8px; background:rgba(37,99,235,0.02);" id="tblGrwMissSel">0</td>
-            <td style="text-align:center; font-family:var(--font-mono); font-size:12px; padding:6px 8px; background:rgba(37,99,235,0.02);" id="tblGrwTotSel">0</td>
-            <td style="text-align:center; font-family:var(--font-mono); font-size:12px; font-weight:700; color:var(--blue); padding:6px 8px; border-right:3px solid var(--border); background:rgba(37,99,235,0.02);" id="tblGrwPctSel">0%</td>
-            <td style="text-align:center; font-family:var(--font-mono); font-size:12px; padding:6px 8px; background:rgba(217,119,6,0.02);" id="tblCustHitSel">0</td>
-            <td style="text-align:center; font-family:var(--font-mono); font-size:12px; padding:6px 8px; background:rgba(217,119,6,0.02);" id="tblCustMissSel">0</td>
-            <td style="text-align:center; font-family:var(--font-mono); font-size:12px; padding:6px 8px; background:rgba(217,119,6,0.02);" id="tblCustTotSel">0</td>
-            <td style="text-align:center; font-family:var(--font-mono); font-size:12px; font-weight:700; color:var(--amber); padding:6px 8px; background:rgba(217,119,6,0.02);" id="tblCustPctSel">0%</td>
+            <td style="text-align:center; font-family:var(--font-mono); font-size:15px; padding:10px; background:rgba(37,99,235,0.02);" id="tblGrwHitSel">0</td>
+            <td style="text-align:center; font-family:var(--font-mono); font-size:15px; padding:10px; background:rgba(37,99,235,0.02);" id="tblGrwMissSel">0</td>
+            <td style="text-align:center; font-family:var(--font-mono); font-size:15px; padding:10px; background:rgba(37,99,235,0.02);" id="tblGrwTotSel">0</td>
+            <td style="text-align:center; font-family:var(--font-mono); font-size:16px; font-weight:800; color:var(--blue); padding:10px; border-right:3px solid var(--border); background:rgba(37,99,235,0.02);" id="tblGrwPctSel">0%</td>
+            <td style="text-align:center; font-family:var(--font-mono); font-size:15px; padding:10px; background:rgba(217,119,6,0.02);" id="tblCustHitSel">0</td>
+            <td style="text-align:center; font-family:var(--font-mono); font-size:15px; padding:10px; background:rgba(217,119,6,0.02);" id="tblCustMissSel">0</td>
+            <td style="text-align:center; font-family:var(--font-mono); font-size:15px; padding:10px; background:rgba(217,119,6,0.02);" id="tblCustTotSel">0</td>
+            <td style="text-align:center; font-family:var(--font-mono); font-size:16px; font-weight:800; color:var(--amber); padding:10px; background:rgba(217,119,6,0.02);" id="tblCustPctSel">0%</td>
           </tr>
         </tbody>
       </table>
     </div>
   </div>
-  
-  <!-- Missed Logs Table -->
+
+  <!-- MISSED LOGS / REASON TABLE -->
   <div class="card" style="margin-top:20px;">
     <div class="card-header" style="flex-wrap: wrap; gap: 12px;">
       <div>
-        <div class="card-title">SLA MISSED TRANSACTION LOGS</div>
-        <div class="card-sub">Detailed audit trail of all orders missing the 95% threshold</div>
+        <div class="card-title">SLA MISSED TRANSACTION LOGS (REASON)</div>
+        <div class="card-sub">Audit trail transaksi pesanan terlambat mengikuti periode &amp; area</div>
       </div>
       <div style="display:flex; gap:12px; align-items: center; flex-wrap: wrap; width: 100%; margin-top: 10px; border-top: 1px solid var(--border); padding-top: 12px;">
+        <span class="badge badge-blue" id="slaMissPeriodInfo">—</span>
+
+        <div class="filter-divider" style="height: 24px;"></div>
+
         <!-- Type Order Filter Toggle -->
         <div class="filter-group">
           <span class="filter-label">Type Order:</span>
           <div class="filter-toggle" id="slaMissTypeToggle">
-            <button class="active" onclick="setSlaMissType('ALL', this)">Semua</button>
+            <button class="active" onclick="setSlaMissType('ALL', this)">Gabungan</button>
             <button onclick="setSlaMissType('GRW', this)">GRW</button>
             <button onclick="setSlaMissType('CUSTOMER', this)">CUSTOMER</button>
           </div>
@@ -5408,6 +5618,9 @@ var slaCustTrendOnPageChartInstance = null;
 
 var allSlaGrwData = [];
 var allSlaCustData = [];
+var allSlaRecapDkLkData = [];
+// Isi GID sheet "RECAP DK &LK" bila fetch by-name gagal (lihat angka setelah #gid= pada URL sheet)
+var SLA_RECAP_GID = '831591956';
 var allSlaData = [];
 var allSlaGrwMissedData = [];
 var allSlaCustMissedData = [];
@@ -6960,7 +7173,8 @@ function parseOutstandingSheetData(rows, targetRawArray, sourceType) {
         } catch(e) {}
       }
 
-      var isDalamKota = checkIsDalamKota(area, dest);
+      var rawDkLkStr = idxArea !== -1 ? String(row[idxArea] || '').trim() : '';
+      var isDalamKota = checkIsDalamKota(rawDkLkStr, dest);
 
       var routeVal = idxRoute !== -1 ? String(row[idxRoute]).trim() : '';
       if (!planDeliveryDate && routeVal && GLOBAL_ROUTE_DATE_MAP[routeVal]) {
@@ -7085,7 +7299,8 @@ function parseOutstandingSheetData(rows, targetRawArray, sourceType) {
       // Kolom tujuan menampilkan data berdasarkan wilayah (column BA)
       var dest = area;
 
-      var isDalamKota = checkIsDalamKota(area, dest);
+      var rawDkLkStr = getVal(/^AREA$/, '');
+      var isDalamKota = checkIsDalamKota(rawDkLkStr, dest);
 
       var priorityStr = getVal(/^PRIORITY$/, '');
 
@@ -8191,233 +8406,583 @@ function openMissedSlaSpreadsheet() {
   window.open(url, '_blank');
 }
 
-function renderSlaDetailPage() {
-  var startStr = document.getElementById('slaStartDate').value; // YYYY-MM-DD
-  var endStr = document.getElementById('slaEndDate').value; // YYYY-MM-DD
+/* ══════════════ SLA ENGINE v2 (period + DK/LK + daily/monthly) ══════════════ */
+var SLA_STATE = { start:'', end:'', area:'ALL', trendMode:'daily', hasAreaDim:false };
+var SLA_MONTH_ID = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
 
-  var startMs = startStr ? parseDateStrHyphen(startStr).getTime() : null;
-  var endMs = endStr ? parseDateStrHyphen(endStr).getTime() : null;
+function slaNorm_(v){ return String(v==null?'':v).toUpperCase().replace(/[^A-Z0-9]+/g,' ').trim(); }
+function slaDetectBu_(t){
+  if(/ELECTRONIC|ELEKTRONIK|(^| )IEL( |$)|(^| )ELEC( |$)/.test(t)) return 'IEL';
+  if(/SELMA|(^| )SEL( |$)/.test(t)) return 'SEL';
+  if(/INFORMA|(^| )INF( |$)/.test(t)) return 'INF';
+  return '';
+}
+function slaDetectArea_(t){
+  if(/DALAM KOTA|(^| )DK( |$)/.test(t)) return 'DK';
+  if(/LUAR KOTA|(^| )LK( |$)/.test(t)) return 'LK';
+  return '';
+}
+function slaDetectMetric_(t){
+  if(/MISS|MISSED|DELAY|TELAT|GAGAL|NOT OK/.test(t)) return 'miss';
+  if(/HIT|ACHIEVE|ON TIME|ONTIME|SESUAI|TERCAPAI/.test(t)) return 'hit';
+  return '';
+}
 
-  var grwHit = 0;
-  var grwMiss = 0;
-  var custHit = 0;
-  var custMiss = 0;
+function buildSlaColMap_(rows){
+  var HEAD = Math.min(4, rows.length), maxCols = 0;
+  for (var r=0;r<HEAD;r++){ if(rows[r] && rows[r].length>maxCols) maxCols = rows[r].length; }
+  var entries=[], dateIdx=-1, lastBu='', lastArea='';
+  for (var c=0;c<maxCols;c++){
+    var txt='';
+    for (var r2=0;r2<HEAD;r2++){ if(rows[r2] && rows[r2][c]) txt += ' ' + rows[r2][c]; }
+    var t = slaNorm_(txt);
+    if(!t) continue;
+    if(dateIdx===-1 && /TGL|TANGGAL|DATE|PERIODE/.test(t)){ dateIdx=c; continue; }
+    var bu = slaDetectBu_(t); if(bu) lastBu = bu;
+    var ar = slaDetectArea_(t); if(ar) lastArea = ar;
+    var mt = slaDetectMetric_(t);
+    if(mt && lastBu) entries.push({ col:c, bu:lastBu, area:(ar || lastArea || 'NA'), metric:mt });
+  }
+  return { entries:entries, dateIdx:(dateIdx===-1?2:dateIdx) };
+}
 
-  var bks = {
-    inf: { gHit: 0, gMis: 0, cHit: 0, cMis: 0, total: 0 },
-    iel: { gHit: 0, gMis: 0, cHit: 0, cMis: 0, total: 0 },
-    sel: { gHit: 0, gMis: 0, cHit: 0, cMis: 0, total: 0 }
-  };
+function parseSlaRecords_(rows){
+  var out=[];
+  if(!rows || rows.length<2) return { records:out, hasArea:false };
+  var m = buildSlaColMap_(rows), entries = m.entries, dateIdx = m.dateIdx;
+  if(entries.length < 2){ // fallback layout lama (C=tgl, D/E, G/H, J/K)
+    dateIdx = 2;
+    entries = [
+      {col:3,bu:'INF',area:'NA',metric:'hit'},{col:4,bu:'INF',area:'NA',metric:'miss'},
+      {col:6,bu:'IEL',area:'NA',metric:'hit'},{col:7,bu:'IEL',area:'NA',metric:'miss'},
+      {col:9,bu:'SEL',area:'NA',metric:'hit'},{col:10,bu:'SEL',area:'NA',metric:'miss'}
+    ];
+  }
+  var hasArea = entries.some(function(e){ return e.area==='DK' || e.area==='LK'; });
 
-  // Process SLA GRW Data (allSlaGrwData)
-  if (allSlaGrwData && allSlaGrwData.length > 1) {
-    var maxRowGrw = allSlaGrwData.length;
-    for (var i = 1; i < maxRowGrw; i++) {
-      var row = allSlaGrwData[i];
-      if (!row || row.length < 11) continue;
+  for(var i=1;i<rows.length;i++){
+    var row = rows[i]; if(!row) continue;
+    var d = parseDateStr(row[dateIdx]);
+    if(!d || isNaN(d.getTime())) continue;
+    var bucket = {};
+    entries.forEach(function(e){
+      var raw = String(row[e.col]==null?'':row[e.col]).replace(/[^0-9\-]/g,'');
+      var v = parseInt(raw,10);
+      if(isNaN(v) || v===0) return;
+      var k = e.bu+'|'+e.area;
+      if(!bucket[k]) bucket[k] = { bu:e.bu, area:e.area, hit:0, miss:0 };
+      bucket[k][e.metric] += v;
+    });
+    Object.keys(bucket).forEach(function(k){
+      var b = bucket[k];
+      out.push({ d:new Date(d.getFullYear(),d.getMonth(),d.getDate()), bu:b.bu, area:b.area, hit:b.hit, miss:b.miss });
+    });
+  }
+  return { records:out, hasArea:hasArea };
+}
 
-      var rowDateStr = row[2]; // Column C is index 2 in whole sheet
-      var rowDate = parseDateStr(rowDateStr);
-      var inRange = true;
-      if (rowDate) {
-        var ms = rowDate.getTime();
-        if (startMs && ms < startMs) inRange = false;
-        if (endMs && ms > endMs) inRange = false;
-      } else if (startMs || endMs) {
-        inRange = false;
-      }
+function slaDetectType_(t){
+  if(/CUSTOMER|CUST\b|PELANGGAN/.test(t)) return 'CUST';
+  if(/\bGRW\b|GUDANG|STORE REQ|STO\b/.test(t)) return 'GRW';
+  return '';
+}
 
-      if (inRange && rowDateStr && rowDateStr.trim() !== '') {
-        bks.inf.gHit += parseInt(row[3]) || 0;  // Column D
-        bks.inf.gMis += parseInt(row[4]) || 0;  // Column E
-        bks.iel.gHit += parseInt(row[6]) || 0;  // Column G
-        bks.iel.gMis += parseInt(row[7]) || 0;  // Column H
-        bks.sel.gHit += parseInt(row[9]) || 0;  // Column J
-        bks.sel.gMis += parseInt(row[10]) || 0; // Column K
-      }
+/**
+ * Membaca sheet "RECAP DK &LK".
+ * Mendukung 2 layout:
+ *  A. Kolom bertingkat  → header memuat GRW/CUST + DK/LK + HIT/MISS
+ *  B. Baris ber-tipe    → ada kolom TYPE/JENIS berisi GRW / CUSTOMER per baris
+ * Return: { grw:[records], cust:[records], hasArea:bool, ok:bool }
+ */
+function parseSlaRecapDkLk_(rows){
+  var empty = { grw:[], cust:[], hasArea:false, ok:false };
+  if(!rows || rows.length < 2) return empty;
+
+  var headCount = 1;
+  for(var r=0; r<Math.min(5, rows.length); r++){
+    if(rows[r] && (parseDateStr(rows[r][2]) || parseDateStr(rows[r][0]) || parseDateStr(rows[r][11]))){
+      headCount = Math.max(1, r);
+      break;
     }
   }
 
-  // Process SLA CUSTOMER Data (allSlaCustData)
-  if (allSlaCustData && allSlaCustData.length > 1) {
-    var maxRowCust = allSlaCustData.length;
-    for (var i = 1; i < maxRowCust; i++) {
-      var row = allSlaCustData[i];
-      if (!row || row.length < 11) continue;
+  var maxCols = 0;
+  for(var r2=0; r2<headCount; r2++){ if(rows[r2] && rows[r2].length>maxCols) maxCols = rows[r2].length; }
 
-      var rowDateStr = row[2]; // Column C is index 2 in whole sheet
-      var rowDate = parseDateStr(rowDateStr);
-      var inRange = true;
-      if (rowDate) {
-        var ms = rowDate.getTime();
-        if (startMs && ms < startMs) inRange = false;
-        if (endMs && ms > endMs) inRange = false;
-      } else if (startMs || endMs) {
-        inRange = false;
-      }
-
-      if (inRange && rowDateStr && rowDateStr.trim() !== '') {
-        bks.inf.cHit += parseInt(row[3]) || 0;  // Column D
-        bks.inf.cMis += parseInt(row[4]) || 0;  // Column E
-        bks.iel.cHit += parseInt(row[6]) || 0;  // Column G
-        bks.iel.cMis += parseInt(row[7]) || 0;  // Column H
-        bks.sel.cHit += parseInt(row[9]) || 0;  // Column J
-        bks.sel.cMis += parseInt(row[10]) || 0; // Column K
-      }
-    }
+  var colText = [];
+  for(var c=0; c<maxCols; c++){
+    var t='';
+    for(var r3=0; r3<headCount; r3++){ if(rows[r3] && rows[r3][c]) t += ' ' + rows[r3][c]; }
+    colText[c] = slaNorm_(t);
   }
 
-  if ((!allSlaGrwData || allSlaGrwData.length <= 1) && (!allSlaCustData || allSlaCustData.length <= 1)) {
-    // Elegant fallback mock if sheets failed to parse
-    bks = {
-      inf: { gHit: 42, gMis: 2, cHit: 39, cMis: 5, total: 88 },
-      iel: { gHit: 18, gMis: 1, cHit: 17, cMis: 2, total: 38 },
-      sel: { gHit: 24, gMis: 3, cHit: 22, cMis: 5, total: 54 }
-    };
+  // --- indeks kolom pendukung ---
+  var grwDateIdx = -1, custDateIdx = -1, typeRowIdx = -1, areaRowIdx = -1, buRowIdx = -1;
+  for(var c3=0; c3<maxCols; c3++){
+    var t3 = colText[c3]; if(!t3) continue;
+    if(grwDateIdx===-1 && /GRW.*(TGL|TANGGAL|DATE)|(TGL|TANGGAL|DATE).*GRW/.test(t3)) grwDateIdx = c3;
+    if(custDateIdx===-1 && /CUST.*(TGL|TANGGAL|DATE)|(TGL|TANGGAL|DATE).*CUST/.test(t3)) custDateIdx = c3;
+    if(grwDateIdx===-1 && /TGL|TANGGAL|DATE|PERIODE/.test(t3)) grwDateIdx = c3;
+    if(typeRowIdx===-1 && /^(TYPE|TIPE|JENIS|KATEGORI)( ORDER)?$|TYPE ORDER|JENIS ORDER/.test(t3)) typeRowIdx = c3;
+    if(areaRowIdx===-1 && /^(AREA|WILAYAH|AREA PENGIRIMAN|DK LK|AREA KIRIM)$/.test(t3)) areaRowIdx = c3;
+    if(buRowIdx===-1   && /^(BU|BUSINESS UNIT|BRAND|UNIT BISNIS)$/.test(t3)) buRowIdx = c3;
   }
+  if(grwDateIdx===-1) grwDateIdx = 0;
+  if(custDateIdx===-1) custDateIdx = grwDateIdx;
 
-  // Calculate bks totals
-  var inf_gTotal = bks.inf.gHit + bks.inf.gMis;
-  var iel_gTotal = bks.iel.gHit + bks.iel.gMis;
-  var sel_gTotal = bks.sel.gHit + bks.sel.gMis;
-  var inf_cTotal = bks.inf.cHit + bks.inf.cMis;
-  var iel_cTotal = bks.iel.cHit + bks.iel.cMis;
-  var sel_cTotal = bks.sel.cHit + bks.sel.cMis;
+  // --- LAYOUT A: kolom bertingkat ---
+  var entries=[], lastType='', lastBu='', lastArea='';
+  for(var c4=0; c4<maxCols; c4++){
+    var t4 = colText[c4];
+    var ty = slaDetectType_(t4); if(ty) lastType = ty;
+    var bu = slaDetectBu_(t4);   if(bu) lastBu = bu;
+    var ar = slaDetectArea_(t4); if(ar) lastArea = ar;
 
-  grwHit = bks.inf.gHit + bks.iel.gHit + bks.sel.gHit;
-  grwMiss = bks.inf.gMis + bks.iel.gMis + bks.sel.gMis;
-  var grwTotal = grwHit + grwMiss;
-  var grwPct = grwTotal > 0 ? (grwHit / grwTotal) * 100 : 100;
+    if(!t4 || c4===grwDateIdx || c4===custDateIdx) continue;
 
-  custHit = bks.inf.cHit + bks.iel.cHit + bks.sel.cHit;
-  custMiss = bks.inf.cMis + bks.iel.cMis + bks.sel.cMis;
-  var custTotal = custHit + custMiss;
-  var custPct = custTotal > 0 ? (custHit / custTotal) * 100 : 100;
-
-  // Render overall summary cards
-  setText('slaGrwPctVal', formatSlaPct(grwPct));
-  setText('slaGrwSumTotal', grwTotal);
-  setText('slaGrwSumHit', grwHit);
-  setText('slaGrwSumMiss', grwMiss);
-  drawSpeedometer('speedoGrwSla', grwPct);
-
-  setText('slaCustPctVal', formatSlaPct(custPct));
-  setText('slaCustSumTotal', custTotal);
-  setText('slaCustSumHit', custHit);
-  setText('slaCustSumMiss', custMiss);
-  drawSpeedometer('speedoCustSla', custPct);
-
-  // Render business unit table
-  setText('tblGrwHitInf', bks.inf.gHit);
-  setText('tblGrwHitIel', bks.iel.gHit);
-  setText('tblGrwHitSel', bks.sel.gHit);
-  setText('tblGrwMissInf', bks.inf.gMis);
-  setText('tblGrwMissIel', bks.iel.gMis);
-  setText('tblGrwMissSel', bks.sel.gMis);
-  setText('tblGrwTotInf', inf_gTotal);
-  setText('tblGrwTotIel', iel_gTotal);
-  setText('tblGrwTotSel', sel_gTotal);
-  setText('tblGrwPctInf', inf_gTotal > 0 ? formatSlaPct((bks.inf.gHit / inf_gTotal) * 100) : '100%');
-  setText('tblGrwPctIel', iel_gTotal > 0 ? formatSlaPct((bks.iel.gHit / iel_gTotal) * 100) : '100%');
-  setText('tblGrwPctSel', sel_gTotal > 0 ? formatSlaPct((bks.sel.gHit / sel_gTotal) * 100) : '100%');
-
-  setText('tblCustHitInf', bks.inf.cHit);
-  setText('tblCustHitIel', bks.iel.cHit);
-  setText('tblCustHitSel', bks.sel.cHit);
-  setText('tblCustMissInf', bks.inf.cMis);
-  setText('tblCustMissIel', bks.iel.cMis);
-  setText('tblCustMissSel', bks.sel.cMis);
-  setText('tblCustTotInf', inf_cTotal);
-  setText('tblCustTotIel', iel_cTotal);
-  setText('tblCustTotSel', sel_cTotal);
-  setText('tblCustPctInf', inf_cTotal > 0 ? formatSlaPct((bks.inf.cHit / inf_cTotal) * 100) : '100%');
-  setText('tblCustPctIel', iel_cTotal > 0 ? formatSlaPct((bks.iel.cHit / iel_cTotal) * 100) : '100%');
-  setText('tblCustPctSel', sel_cTotal > 0 ? formatSlaPct((bks.sel.cHit / sel_cTotal) * 100) : '100%');
-
-  // Render missed logs table
-  var missBody = document.getElementById('slaMissTableBody');
-  var missedList = [];
-
-  // 1. Process GRW Missed Logs (gid=1680256105)
-  if (allSlaGrwMissedData && allSlaGrwMissedData.length > 1) {
-    for (var j = 1; j < allSlaGrwMissedData.length; j++) {
-      var r = allSlaGrwMissedData[j];
-      if (!r || r.length < 5) continue;
-
-      var reasonStr = r[26] || "—";
-      var katReason = (r[28] || "").trim();
-      if (!katReason && reasonStr && reasonStr !== "—") {
-        var rUpper = reasonStr.toUpperCase();
-        if (rUpper.includes("OUTBOUND")) katReason = "TIM OUTBOUND";
-        else if (rUpper.includes("PLANNER")) katReason = "PLANNER";
-        else if (rUpper.includes("VM") || rUpper.includes("ARMADA")) katReason = "TIM TRANSPORT";
-        else if (rUpper.includes("WMS") || rUpper.includes("ENTERPRISE")) katReason = "SISTEM / IT";
-        else katReason = "LAINNYA";
-      }
-      if (!katReason) katReason = "Uncategorized";
-
-      missedList.push({
-        orderType: "GRW",
-        orderKey: r[4] || "—",
-        externOrderKey: r[5] || "—",
-        shipToName: r[3] || "—",
-        type: r[11] || "GRW",
-        storeBooking: r[2] || "—",
-        origReqDate: r[17] || "—",
-        newReqShipDate: r[17] || "—",
-        shippedDate: r[18] || "—",
-        delayTime: (r[22] || "0") + " Hari",
-        slaCategory: r[23] || "—",
-        areaPengiriman: r[7] || "—",
-        city: r[3] || "—",
-        cbm: r[25] || "—",
-        reason: reasonStr,
-        bu: r[27] || "INFORMA",
-        kategoryReason: katReason,
-        category: katReason,
-        slaStatus: "MISSED",
-        area: r[7] || "—"
+    var mt = slaDetectMetric_(t4);
+    if(mt){
+      entries.push({
+        col: c4,
+        type: (ty || lastType || 'GRW'),
+        bu: (bu || lastBu || 'INF'),
+        area: (ar || lastArea || 'NA'),
+        metric: mt
       });
     }
   }
 
-  // 2. Process CUSTOMER Missed Logs (gid=0)
-  if (allSlaCustMissedData && allSlaCustMissedData.length > 1) {
-    for (var k = 1; k < allSlaCustMissedData.length; k++) {
-      var r2 = allSlaCustMissedData[k];
-      if (!r2 || r2.length < 5) continue;
+  var grw=[], cust=[], hasArea=false;
 
-      var katReasonCust = (r2[26] || r2[20] || "Uncategorized").trim();
-
-      missedList.push({
-        orderType: "CUSTOMER",
-        orderKey: r2[1] || "—",
-        externOrderKey: r2[2] || "—",
-        shipToName: r2[3] || "—",
-        type: r2[4] || "Customer",
-        storeBooking: r2[5] || "—",
-        origReqDate: r2[9] || "—",
-        newReqShipDate: r2[10] || "—",
-        shippedDate: r2[12] || "—",
-        delayTime: (r2[13] || "0") + " Hari",
-        slaCategory: r2[14] || "—",
-        areaPengiriman: r2[15] || "—",
-        city: r2[16] || "—",
-        cbm: r2[18] || "—",
-        reason: r2[23] || r2[19] || "—",
-        bu: r2[25] || "—",
-        kategoryReason: katReasonCust,
-        category: katReasonCust,
-        slaStatus: "MISSED",
-        area: r2[15] || "—"
+  if(entries.length >= 2 && entries.some(function(e){ return e.area==='DK' || e.area==='LK'; })){
+    hasArea = true;
+    for(var i=headCount; i<rows.length; i++){
+      var row = rows[i]; if(!row) continue;
+      var dGrw = parseDateStr(row[grwDateIdx]);
+      var dCust = parseDateStr(row[custDateIdx]) || dGrw;
+      var bucket = {};
+      entries.forEach(function(e){
+        var d = (e.type === 'CUST' ? dCust : dGrw);
+        if(!d || isNaN(d.getTime())) return;
+        var raw = String(row[e.col]==null?'':row[e.col]).replace(/[^0-9\-]/g,'');
+        var v = parseInt(raw,10);
+        if(isNaN(v) || v===0) return;
+        var k = e.type+'|'+e.bu+'|'+e.area;
+        if(!bucket[k]) bucket[k] = { type:e.type, bu:e.bu, area:e.area, date:d, hit:0, miss:0 };
+        bucket[k][e.metric] += v;
       });
+      Object.keys(bucket).forEach(function(k){
+        var b = bucket[k];
+        var rec = { d: new Date(b.date.getFullYear(), b.date.getMonth(), b.date.getDate()), bu: b.bu, area: b.area, hit: b.hit, miss: b.miss };
+        (b.type==='CUST' ? cust : grw).push(rec);
+      });
+    }
+    if(grw.length || cust.length) return { grw:grw, cust:cust, hasArea:hasArea, ok:true };
+  }
+
+  // --- LAYOUT B: baris ber-tipe (butuh kolom TYPE + AREA + HIT/MISS) ---
+  var hitIdx=-1, missIdx=-1;
+  for(var c5=0; c5<maxCols; c5++){
+    var t5 = colText[c5]; if(!t5) continue;
+    var m5 = slaDetectMetric_(t5);
+    if(m5==='hit'  && hitIdx===-1)  hitIdx = c5;
+    if(m5==='miss' && missIdx===-1) missIdx = c5;
+  }
+  if(typeRowIdx===-1 || areaRowIdx===-1 || (hitIdx===-1 && missIdx===-1)) return empty;
+
+  for(var j=headCount; j<rows.length; j++){
+    var rw = rows[j]; if(!rw) continue;
+    var dj = parseDateStr(rw[grwDateIdx]);
+    if(!dj || isNaN(dj.getTime())) continue;
+
+    var ty2 = slaDetectType_(slaNorm_(rw[typeRowIdx])) || 'GRW';
+    var ar2 = slaDetectArea_(slaNorm_(rw[areaRowIdx])) || 'NA';
+    var bu2 = (buRowIdx!==-1 ? slaDetectBu_(slaNorm_(rw[buRowIdx])) : '') || 'INF';
+    if(ar2==='DK' || ar2==='LK') hasArea = true;
+
+    var h = parseInt(String(hitIdx!==-1?rw[hitIdx]:'0').replace(/[^0-9\-]/g,''),10);  if(isNaN(h)) h=0;
+    var m = parseInt(String(missIdx!==-1?rw[missIdx]:'0').replace(/[^0-9\-]/g,''),10); if(isNaN(m)) m=0;
+    if(h===0 && m===0) continue;
+
+    var rec2 = { d:new Date(dj.getFullYear(),dj.getMonth(),dj.getDate()), bu:bu2, area:ar2, hit:h, miss:m };
+    (ty2==='CUST' ? cust : grw).push(rec2);
+  }
+
+  return { grw:grw, cust:cust, hasArea:hasArea, ok:(grw.length>0 || cust.length>0) };
+}
+
+function slaFilterRecords_(recs){
+  var sMs = SLA_STATE.start ? parseDateStrHyphen(SLA_STATE.start).getTime() : null;
+  var eMs = SLA_STATE.end   ? parseDateStrHyphen(SLA_STATE.end).getTime()   : null;
+  return (recs||[]).filter(function(r){
+    var ms = r.d.getTime();
+    if(sMs && ms < sMs) return false;
+    if(eMs && ms > eMs) return false;
+    if(SLA_STATE.area !== 'ALL' && SLA_STATE.hasAreaDim && r.area !== SLA_STATE.area) return false;
+    return true;
+  });
+}
+
+function slaSummary_(recs){
+  var s = { hit:0, miss:0,
+    DK:{hit:0,miss:0}, LK:{hit:0,miss:0}, NA:{hit:0,miss:0},
+    bu:{ INF:{hit:0,miss:0}, IEL:{hit:0,miss:0}, SEL:{hit:0,miss:0} } };
+  (recs||[]).forEach(function(r){
+    s.hit += r.hit; s.miss += r.miss;
+    var a = (r.area==='DK'||r.area==='LK') ? r.area : 'NA';
+    s[a].hit += r.hit; s[a].miss += r.miss;
+    if(s.bu[r.bu]){ s.bu[r.bu].hit += r.hit; s.bu[r.bu].miss += r.miss; }
+  });
+  return s;
+}
+function slaPct_(h,m){ var t=h+m; return t>0 ? (h/t)*100 : 100; }
+
+function slaSeries_(recs, recapRecs){
+  var mode = SLA_STATE.trendMode, map = {};
+  function keyOf(d){
+    var y=d.getFullYear(), mo=String(d.getMonth()+1).padStart(2,'0');
+    return mode==='monthly' ? (y+'-'+mo) : (y+'-'+mo+'-'+String(d.getDate()).padStart(2,'0'));
+  }
+  (recs||[]).forEach(function(r){
+    var k = keyOf(r.d);
+    if(!map[k]) map[k] = { totHit:0, totMiss:0, DK:{hit:0,miss:0}, LK:{hit:0,miss:0}, NA:{hit:0,miss:0} };
+    map[k].totHit += r.hit; map[k].totMiss += r.miss;
+    if(r.area==='DK'){ map[k].DK.hit += r.hit; map[k].DK.miss += r.miss; }
+    else if(r.area==='LK'){ map[k].LK.hit += r.hit; map[k].LK.miss += r.miss; }
+    else { map[k].NA.hit += r.hit; map[k].NA.miss += r.miss; }
+  });
+
+  if(recapRecs && recapRecs.length > 0){
+    (recapRecs||[]).forEach(function(r){
+      var k = keyOf(r.d);
+      if(!map[k]) map[k] = { totHit:0, totMiss:0, DK:{hit:0,miss:0}, LK:{hit:0,miss:0}, NA:{hit:0,miss:0} };
+      if(r.area==='DK'){ map[k].DK.hit += r.hit; map[k].DK.miss += r.miss; }
+      else if(r.area==='LK'){ map[k].LK.hit += r.hit; map[k].LK.miss += r.miss; }
+    });
+  }
+
+  Object.keys(map).forEach(function(k){
+    var v = map[k];
+    // Reconcile Hit with total Hit from main sheet
+    if(v.totHit === 0){
+      v.DK.hit = 0; v.LK.hit = 0; v.NA.hit = 0;
+    } else {
+      var hSum = v.DK.hit + v.LK.hit;
+      if(hSum > v.totHit){
+        v.DK.hit = Math.round(v.DK.hit * v.totHit / hSum);
+        v.LK.hit = v.totHit - v.DK.hit;
+        v.NA.hit = 0;
+      } else {
+        v.NA.hit = v.totHit - hSum;
+      }
+    }
+
+    // Reconcile Miss with total Miss from main sheet
+    if(v.totMiss === 0){
+      v.DK.miss = 0; v.LK.miss = 0; v.NA.miss = 0;
+    } else {
+      var mSum = v.DK.miss + v.LK.miss;
+      if(mSum > v.totMiss){
+        v.DK.miss = Math.round(v.DK.miss * v.totMiss / mSum);
+        v.LK.miss = v.totMiss - v.DK.miss;
+        v.NA.miss = 0;
+      } else {
+        v.NA.miss = v.totMiss - mSum;
+      }
+    }
+  });
+
+  var keys = [];
+  var s = SLA_STATE.start ? parseDateStrHyphen(SLA_STATE.start) : null;
+  var e = SLA_STATE.end   ? parseDateStrHyphen(SLA_STATE.end)   : null;
+  if(s && e && e >= s){
+    if(mode==='monthly'){
+      var it = new Date(s.getFullYear(), s.getMonth(), 1);
+      while(it <= e){ keys.push(it.getFullYear()+'-'+String(it.getMonth()+1).padStart(2,'0')); it.setMonth(it.getMonth()+1); }
+    } else {
+      var it2 = new Date(s.getTime());
+      var guard = 0;
+      while(it2 <= e && guard < 400){
+        keys.push(it2.getFullYear()+'-'+String(it2.getMonth()+1).padStart(2,'0')+'-'+String(it2.getDate()).padStart(2,'0'));
+        it2.setDate(it2.getDate()+1); guard++;
+      }
+    }
+  } else { keys = Object.keys(map).sort(); }
+
+  return keys.map(function(k){
+    var v = map[k] || { DK:{hit:0,miss:0}, LK:{hit:0,miss:0}, NA:{hit:0,miss:0} };
+    var p = k.split('-');
+    var label = (mode==='monthly')
+      ? (SLA_MONTH_ID[parseInt(p[1],10)-1] + ' ' + p[0])
+      : (p[2] + '/' + p[1]);
+    return { key:k, label:label, DK:v.DK, LK:v.LK, NA:v.NA };
+  });
+}
+
+function slaLineBadgePlugin_(){
+  return { id:'sla_line_badge', afterDatasetsDraw:function(chart){
+    var c = chart.ctx;
+    chart.data.datasets.forEach(function(d,di){
+      if(d.type!=='line' || !d._badge) return;
+      var meta = chart.getDatasetMeta(di); if(!meta || meta.hidden) return;
+      meta.data.forEach(function(pt,i){
+        var v = d.data[i]; if(v==null) return;
+        var n = parseFloat(v), txt = formatSlaPct(n), fs = 9;
+        c.save(); c.translate(pt.x, pt.y);
+        if(meta.data.length > 12) c.rotate(-35*Math.PI/180);
+        c.font = '800 '+fs+'px "Plus Jakarta Sans", sans-serif';
+        c.textAlign='center'; c.textBaseline='middle';
+        var bw = c.measureText(txt).width + 8, bh = fs + 4;
+        var col = n>=95 ? '#10b981' : n>=90 ? '#f59e0b' : '#ef4444';
+        c.fillStyle='rgba(255,255,255,.96)';
+        c.beginPath(); if(c.roundRect) c.roundRect(-bw/2,-bh-12,bw,bh,3); else c.rect(-bw/2,-bh-12,bw,bh); c.fill();
+        c.strokeStyle=col; c.lineWidth=1; c.stroke();
+        c.fillStyle=col; c.fillText(txt, 0, -bh/2-12);
+        c.restore();
+      });
+    });
+  }};
+}
+
+function slaRenderTrend_(canvasId, series, oldInst){
+  var cv = document.getElementById(canvasId); if(!cv) return null;
+  if(oldInst) oldInst.destroy();
+  var splitArea = (SLA_STATE.area==='ALL' && SLA_STATE.hasAreaDim);
+  var labels = series.map(function(s){ return s.label; });
+  var ds = [], totals = [], pctTotal = [], pctDk = [], pctLk = [];
+
+  series.forEach(function(s){
+    var h = s.DK.hit+s.LK.hit+s.NA.hit, m = s.DK.miss+s.LK.miss+s.NA.miss;
+    totals.push(h+m);
+    pctTotal.push(+slaPct_(h,m).toFixed(2));
+    pctDk.push(+slaPct_(s.DK.hit,s.DK.miss).toFixed(2));
+    pctLk.push(+slaPct_(s.LK.hit,s.LK.miss).toFixed(2));
+  });
+
+  function bar(label, data, color, round){
+    return { type:'bar', label:label, data:data, backgroundColor:color, stack:'v', yAxisID:'y', order:2,
+             minBarLength: 10,
+             borderRadius: round?{topLeft:4,topRight:4,bottomLeft:0,bottomRight:0}:0, borderSkipped:'bottom' };
+  }
+
+  if(splitArea){
+    ds.push(bar('Hit DK', series.map(function(s){return s.DK.hit > 0 ? s.DK.hit : null;}), '#86efac', false));
+    ds.push(bar('Hit LK', series.map(function(s){return s.LK.hit > 0 ? s.LK.hit : null;}), '#047857', false));
+    if(series.some(function(s){return s.NA.hit>0;})) ds.push(bar('Hit (n/a)', series.map(function(s){return s.NA.hit > 0 ? s.NA.hit : null;}), '#00b894', false));
+    ds.push(bar('Miss DK', series.map(function(s){return s.DK.miss > 0 ? s.DK.miss : null;}), '#f87171', false));
+    ds.push(bar('Miss LK', series.map(function(s){return s.LK.miss > 0 ? s.LK.miss : null;}), '#dc2626', false));
+    if(series.some(function(s){return s.NA.miss>0;})) ds.push(bar('Miss (n/a)', series.map(function(s){return s.NA.miss > 0 ? s.NA.miss : null;}), '#b91c1c', true));
+  } else {
+    ds.push(bar('SLA Hit', series.map(function(s){
+      var h = s.DK.hit+s.LK.hit+s.NA.hit;
+      return h > 0 ? h : null;
+    }), '#00b894', false));
+    ds.push(bar('SLA Miss', series.map(function(s){
+      var m = s.DK.miss+s.LK.miss+s.NA.miss;
+      return m > 0 ? m : null;
+    }), '#ef4444', true));
+  }
+
+  ds.push({ type:'line', label:'Achievement %', data:pctTotal, borderColor:'#3b95ff',
+            backgroundColor:'rgba(59,149,255,.1)', fill:true, tension:.35, borderWidth:2,
+            pointRadius:4, pointBackgroundColor:'#3b95ff', clip:false, yAxisID:'y1', order:1, _badge:true });
+
+  if(splitArea){
+    ds.push({ type:'line', label:'% DK', data:pctDk, borderColor:'#22c55e', borderDash:[5,4], borderWidth:2,
+              pointRadius:3, pointBackgroundColor:'#22c55e', fill:false, tension:.35, yAxisID:'y1', order:1 });
+    ds.push({ type:'line', label:'% LK', data:pctLk, borderColor:'#7c3aed', borderDash:[5,4], borderWidth:2,
+              pointRadius:3, pointBackgroundColor:'#7c3aed', fill:false, tension:.35, yAxisID:'y1', order:1 });
+  }
+
+  var bounds = splitArea ? calcSlaAxisBounds(pctTotal, pctDk, pctLk) : calcSlaAxisBounds(pctTotal);
+  var maxVol = Math.max.apply(null, totals.concat([0]));
+
+  return new Chart(cv.getContext('2d'), {
+    data:{ labels:labels, datasets:ds },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      layout:{ padding:{ top:26, right:8 } },
+      plugins:{ legend:{ labels:{ color:'#8e9fae', font:{ family:'Plus Jakarta Sans', size:10 }, boxWidth:11 } } },
+      scales:{
+        y:{ stacked:true, position:'left', beginAtZero:true, max:calcNiceVolumeMax(maxVol),
+            title:{ display:true, text:'Volume (Orders)', color:'#8e9fae', font:{ size:10, weight:'bold' } },
+            grid:{ color:'rgba(33,54,84,.2)' }, ticks:{ color:'#8e9fae', font:{ family:'Fira Code', size:10 } } },
+        y1:{ position:'right', min:bounds.min, max:bounds.max,
+            title:{ display:true, text:'Achievement (%)', color:'#8e9fae', font:{ size:10, weight:'bold' } },
+            grid:{ drawOnChartArea:false },
+            ticks:{ color:'#8e9fae', font:{ family:'Fira Code', size:10 },
+                    callback:function(v){ return v>100 ? '' : v.toFixed(1)+'%'; } } },
+        x:{ stacked:true, grid:{ display:false },
+            ticks:{ color:'#8e9fae', font:{ family:'Plus Jakarta Sans', size:10 }, maxRotation:45 } }
+      }
+    },
+    plugins:[ slaLineBadgePlugin_() ]
+  });
+}
+
+function setSlaArea(v, btn){
+  if(!SLA_STATE.hasAreaDim && v!=='ALL') return;
+  SLA_STATE.area = v;
+  var wrap = document.getElementById('slaAreaToggle');
+  if(wrap) wrap.querySelectorAll('button').forEach(function(b){ b.classList.remove('active'); });
+  if(btn) btn.classList.add('active');
+  renderSlaDetailPage();
+}
+function setSlaTrendMode(m, btn){
+  SLA_STATE.trendMode = m;
+  var wrap = document.getElementById('slaTrendToggle');
+  if(wrap) wrap.querySelectorAll('button').forEach(function(b){ b.classList.remove('active'); });
+  if(btn) btn.classList.add('active');
+  renderSlaDetailPage();
+}
+function applySlaFilters(){ renderSlaDetailPage(); }
+
+function slaFmtPeriod_(){
+  function f(s){ if(!s) return '—'; var d=parseDateStrHyphen(s); return d? d.toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'}) : s; }
+  return f(SLA_STATE.start) + ' — ' + f(SLA_STATE.end);
+}
+
+function renderSlaDetailPage(){
+  SLA_STATE.start = (document.getElementById('slaStartDate')||{}).value || '';
+  SLA_STATE.end   = (document.getElementById('slaEndDate')||{}).value || '';
+
+  var pgMain = parseSlaRecords_(allSlaGrwData);
+  var pcMain = parseSlaRecords_(allSlaCustData);
+  var recap  = parseSlaRecapDkLk_(allSlaRecapDkLkData);
+
+  SLA_STATE.hasAreaDim = recap.ok && recap.hasArea;
+
+  var warn = document.getElementById('slaAreaWarn');
+  if(warn){
+    if(SLA_STATE.hasAreaDim){
+      warn.style.display = 'none';
+    } else {
+      warn.style.display = 'block';
+      warn.innerHTML = recap.ok
+        ? '⚠️ Sheet <strong>RECAP DK &amp;LK</strong> terbaca (' + (recap.grw.length + recap.cust.length) + ' baris) namun kolom DK/LK belum terdeteksi. Pastikan header memuat kata <strong>DK</strong> / <strong>LK</strong> dan <strong>HIT</strong> / <strong>MISS</strong>.'
+        : '⚠️ Sheet <strong>RECAP DK &amp;LK</strong> belum terbaca — sementara memakai sheet lama (SLA GRW / SLA CUST). Cek nama sheet, atau isi <code>SLA_RECAP_GID</code> pada script dengan angka setelah <code>#gid=</code> di URL sheet tersebut.';
     }
   }
 
-  currentSlaMissedList = missedList;
+  var gMainRecs = slaFilterRecords_(pgMain.records);
+  var cMainRecs = slaFilterRecords_(pcMain.records);
+  var gRecapRecs = slaFilterRecords_(recap.grw);
+  var cRecapRecs = slaFilterRecords_(recap.cust);
+
+  var gMain = slaSummary_(gMainRecs);
+  var cMain = slaSummary_(cMainRecs);
+  var gRecap = slaSummary_(gRecapRecs);
+  var cRecap = slaSummary_(cRecapRecs);
+
+  var gTot = (SLA_STATE.area !== 'ALL' && recap.ok) ? gRecap : gMain;
+  var cTot = (SLA_STATE.area !== 'ALL' && recap.ok) ? cRecap : cMain;
+
+  var periodTxt = slaFmtPeriod_();
+  var srcLabel = 'Total/BU: SLA GRW & SLA CUST · DK/LK: RECAP DK &LK';
+  var scopeTxt  = periodTxt + ' · Area: ' + SLA_STATE.area + ' · Sumber: ' + srcLabel;
+  setText('slaGrwPeriodBadge', scopeTxt);
+  setText('slaCustPeriodBadge', scopeTxt);
+  setText('slaBuScopeBadge', scopeTxt);
+  setText('slaMissPeriodInfo', '📅 ' + scopeTxt);
+  var trendTxt = (SLA_STATE.trendMode==='monthly' ? 'Agregasi bulanan' : 'Agregasi harian') +
+                 (SLA_STATE.area==='ALL' && SLA_STATE.hasAreaDim ? ' · warna terpisah DK (muda) vs LK (tua)' : '');
+  setText('slaGrwTrendSub', trendTxt);
+  setText('slaCustTrendSub', trendTxt);
+
+  // ── Kartu ringkas ──
+  function paint(prefix, sTotal, sRecap, ids){
+    var pct = slaPct_(sTotal.hit, sTotal.miss);
+    setText(ids.pct, formatSlaPct(pct));
+    setText(ids.total, sTotal.hit + sTotal.miss);
+    setText(ids.hit, sTotal.hit);
+    setText(ids.miss, sTotal.miss);
+    drawSpeedometer(ids.speedo, pct);
+
+    function box(area, idPct, idSub){
+      if(!SLA_STATE.hasAreaDim){ setText(idPct, '—'); setText(idSub, 'kolom belum tersedia'); return; }
+      var a = sRecap[area], t = a.hit + a.miss;
+      setText(idPct, t>0 ? formatSlaPct(slaPct_(a.hit,a.miss)) : '—');
+      setText(idSub, t>0 ? (a.hit + ' hit · ' + a.miss + ' miss') : 'tidak ada data');
+    }
+    box('DK', ids.dkPct, ids.dkSub);
+    box('LK', ids.lkPct, ids.lkSub);
+    setText(ids.totPct, formatSlaPct(pct));
+    setText(ids.totSub, sTotal.hit + ' hit · ' + sTotal.miss + ' miss');
+  }
+  paint('grw', gTot, gRecap, { pct:'slaGrwPctVal', total:'slaGrwSumTotal', hit:'slaGrwSumHit', miss:'slaGrwSumMiss',
+    speedo:'speedoGrwSla', dkPct:'slaGrwDkPct', dkSub:'slaGrwDkSub', lkPct:'slaGrwLkPct', lkSub:'slaGrwLkSub',
+    totPct:'slaGrwTotPct', totSub:'slaGrwTotSub' });
+  paint('cust', cTot, cRecap, { pct:'slaCustPctVal', total:'slaCustSumTotal', hit:'slaCustSumHit', miss:'slaCustSumMiss',
+    speedo:'speedoCustSla', dkPct:'slaCustDkPct', dkSub:'slaCustDkSub', lkPct:'slaCustLkPct', lkSub:'slaCustLkSub',
+    totPct:'slaCustTotPct', totSub:'slaCustTotSub' });
+
+  // ── BU breakdown ──
+  var BU = [['Inf','INF'],['Iel','IEL'],['Sel','SEL']];
+  BU.forEach(function(p){
+    var sfx = p[0], k = p[1];
+    var gb = gTot.bu[k], cb = cTot.bu[k];
+    var gt = gb.hit + gb.miss, ct = cb.hit + cb.miss;
+    setText('tblGrwHit'+sfx, gb.hit);  setText('tblGrwMiss'+sfx, gb.miss);
+    setText('tblGrwTot'+sfx, gt);      setText('tblGrwPct'+sfx, gt>0 ? formatSlaPct(slaPct_(gb.hit,gb.miss)) : '—');
+    setText('tblCustHit'+sfx, cb.hit); setText('tblCustMiss'+sfx, cb.miss);
+    setText('tblCustTot'+sfx, ct);     setText('tblCustPct'+sfx, ct>0 ? formatSlaPct(slaPct_(cb.hit,cb.miss)) : '—');
+  });
+
+  // ── Trend ──
+  var isAllArea   = (SLA_STATE.area === 'ALL');
+  var gTrendRecs  = (isAllArea || !recap.ok) ? gMainRecs  : gRecapRecs;
+  var cTrendRecs  = (isAllArea || !recap.ok) ? cMainRecs  : cRecapRecs;
+  var gTrendRecap = (isAllArea && recap.ok)  ? gRecapRecs : null;
+  var cTrendRecap = (isAllArea && recap.ok)  ? cRecapRecs : null;
+
+  slaGrwTrendOnPageChartInstance  = slaRenderTrend_('slaGrwTrendOnPageChart',  slaSeries_(gTrendRecs, gTrendRecap), slaGrwTrendOnPageChartInstance);
+  slaCustTrendOnPageChartInstance = slaRenderTrend_('slaCustTrendOnPageChart', slaSeries_(cTrendRecs, cTrendRecap), slaCustTrendOnPageChartInstance);
+
+  // ── Missed logs (mengikuti periode & area di atas) ──
+  slaMissAreaFilter = SLA_STATE.hasAreaDim ? SLA_STATE.area : 'ALL';
+  buildSlaMissedList_();
   updateSlaMissCategoryDropdown();
   applySlaMissFilters();
-  initSlaTrendOnPageCharts();
+}
+
+/* Ekstraksi missed logs dipisah supaya bisa dipanggil ulang */
+function buildSlaMissedList_(){
+  var missedList = [];
+  if(allSlaGrwMissedData && allSlaGrwMissedData.length > 1){
+    for(var j=1;j<allSlaGrwMissedData.length;j++){
+      var r = allSlaGrwMissedData[j];
+      if(!r || r.length < 5) continue;
+      var reasonStr = r[26] || "—";
+      var katReason = (r[28] || "").trim();
+      if(!katReason && reasonStr && reasonStr !== "—"){
+        var u = reasonStr.toUpperCase();
+        if(u.includes("OUTBOUND")) katReason = "TIM OUTBOUND";
+        else if(u.includes("PLANNER")) katReason = "PLANNER";
+        else if(u.includes("VM") || u.includes("ARMADA")) katReason = "TIM TRANSPORT";
+        else if(u.includes("WMS") || u.includes("ENTERPRISE")) katReason = "SISTEM / IT";
+        else katReason = "LAINNYA";
+      }
+      if(!katReason) katReason = "Uncategorized";
+      missedList.push({ orderType:"GRW", orderKey:r[4]||"—", externOrderKey:r[5]||"—", shipToName:r[3]||"—",
+        type:r[11]||"GRW", storeBooking:r[2]||"—", origReqDate:r[17]||"—", newReqShipDate:r[17]||"—",
+        shippedDate:r[18]||"—", delayTime:(r[22]||"0")+" Hari", slaCategory:r[23]||"—",
+        areaPengiriman:r[7]||"—", city:r[3]||"—", cbm:r[25]||"—", reason:reasonStr, bu:r[27]||"INFORMA",
+        kategoryReason:katReason, category:katReason, slaStatus:"MISSED", area:r[7]||"—" });
+    }
+  }
+  if(allSlaCustMissedData && allSlaCustMissedData.length > 1){
+    for(var k=1;k<allSlaCustMissedData.length;k++){
+      var r2 = allSlaCustMissedData[k];
+      if(!r2 || r2.length < 5) continue;
+      var kat = (r2[26] || r2[20] || "Uncategorized").trim();
+      missedList.push({ orderType:"CUSTOMER", orderKey:r2[1]||"—", externOrderKey:r2[2]||"—", shipToName:r2[3]||"—",
+        type:r2[4]||"Customer", storeBooking:r2[5]||"—", origReqDate:r2[9]||"—", newReqShipDate:r2[10]||"—",
+        shippedDate:r2[12]||"—", delayTime:(r2[13]||"0")+" Hari", slaCategory:r2[14]||"—",
+        areaPengiriman:r2[15]||"—", city:r2[16]||"—", cbm:r2[18]||"—", reason:r2[23]||r2[19]||"—",
+        bu:r2[25]||"—", kategoryReason:kat, category:kat, slaStatus:"MISSED", area:r2[15]||"—" });
+    }
+  }
+  currentSlaMissedList = missedList;
 }
 
 function updateSlaMissCategoryDropdown() {
@@ -8471,8 +9036,8 @@ function applySlaMissFilters() {
   var catVal = slaMissCategoryFilter; // 'ALL' or specific category
   var q = document.getElementById('slaMissSearch') ? document.getElementById('slaMissSearch').value.toLowerCase().trim() : '';
 
-  var missStartStr = document.getElementById('slaMissStartDate') ? document.getElementById('slaMissStartDate').value : '';
-  var missEndStr = document.getElementById('slaMissEndDate') ? document.getElementById('slaMissEndDate').value : '';
+  var missStartStr = ((document.getElementById('slaMissStartDate')||{}).value) || SLA_STATE.start || '';
+  var missEndStr   = ((document.getElementById('slaMissEndDate')||{}).value)   || SLA_STATE.end   || '';
   
   var missStartMs = null;
   if (missStartStr) {
@@ -8798,19 +9363,22 @@ function initSlaTrendModalChart() {
         {
           type: 'bar',
           label: 'SLA Hit Volume',
-          data: hitPoints,
+          data: hitPoints.map(function(v){ return v > 0 ? v : null; }),
           backgroundColor: '#00b894',
+          borderRadius: { topLeft: 4, topRight: 4, bottomLeft: 0, bottomRight: 0 },
+          borderSkipped: 'bottom',
           stack: 'volume',
           yAxisID: 'y',
           order: 2
         },
         {
           type: 'bar',
-          label: 'SLA Miss Volume', minBarLength: 5,
-          data: misPoints,
-          backgroundColor: '#e53e3e',
-          borderRadius: { topLeft: 5, topRight: 5, bottomLeft: 0, bottomRight: 0 },
-          borderSkipped: false,
+          label: 'SLA Miss Volume',
+          minBarLength: 10,
+          data: misPoints.map(function(v){ return v > 0 ? v : null; }),
+          backgroundColor: '#ef4444',
+          borderRadius: { topLeft: 4, topRight: 4, bottomLeft: 0, bottomRight: 0 },
+          borderSkipped: 'bottom',
           stack: 'volume',
           yAxisID: 'y',
           order: 2
@@ -8969,7 +9537,7 @@ function createSlaBadgePlugin(fontSize) {
           var v = d.data[i];
           if (v == null) return;
           var n = parseFloat(v);
-          var txt = n.toFixed(1) + '%';
+          var txt = formatSlaPct(n);
           var fSize = fontSize || 9;
           
           c.save();
@@ -9213,19 +9781,22 @@ function initSlaTrendOnPageCharts() {
         {
           type: 'bar',
           label: 'SLA Hit Volume',
-          data: grwHitPoints,
+          data: grwHitPoints.map(function(v){ return v > 0 ? v : null; }),
           backgroundColor: '#00b894',
+          borderRadius: { topLeft: 4, topRight: 4, bottomLeft: 0, bottomRight: 0 },
+          borderSkipped: 'bottom',
           stack: 'volume',
           yAxisID: 'y',
           order: 2
         },
         {
           type: 'bar',
-          label: 'SLA Miss Volume', minBarLength: 5,
-          data: grwMisPoints,
-          backgroundColor: '#e53e3e',
-          borderRadius: { topLeft: 5, topRight: 5, bottomLeft: 0, bottomRight: 0 },
-          borderSkipped: false,
+          label: 'SLA Miss Volume',
+          minBarLength: 10,
+          data: grwMisPoints.map(function(v){ return v > 0 ? v : null; }),
+          backgroundColor: '#ef4444',
+          borderRadius: { topLeft: 4, topRight: 4, bottomLeft: 0, bottomRight: 0 },
+          borderSkipped: 'bottom',
           stack: 'volume',
           yAxisID: 'y',
           order: 2
@@ -9324,19 +9895,22 @@ function initSlaTrendOnPageCharts() {
         {
           type: 'bar',
           label: 'SLA Hit Volume',
-          data: custHitPoints,
+          data: custHitPoints.map(function(v){ return v > 0 ? v : null; }),
           backgroundColor: '#00b894',
+          borderRadius: { topLeft: 4, topRight: 4, bottomLeft: 0, bottomRight: 0 },
+          borderSkipped: 'bottom',
           stack: 'volume',
           yAxisID: 'y',
           order: 2
         },
         {
           type: 'bar',
-          label: 'SLA Miss Volume', minBarLength: 5,
-          data: custMisPoints,
-          backgroundColor: '#e53e3e',
-          borderRadius: { topLeft: 5, topRight: 5, bottomLeft: 0, bottomRight: 0 },
-          borderSkipped: false,
+          label: 'SLA Miss Volume',
+          minBarLength: 10,
+          data: custMisPoints.map(function(v){ return v > 0 ? v : null; }),
+          backgroundColor: '#ef4444',
+          borderRadius: { topLeft: 4, topRight: 4, bottomLeft: 0, bottomRight: 0 },
+          borderSkipped: 'bottom',
           stack: 'volume',
           yAxisID: 'y',
           order: 2
@@ -10107,6 +10681,9 @@ var csvCaseIdReleaseLpUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/
   var csvSlaGrwUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1q-qxELBQZr3ABhVg-mw6Kvhl-e11RGQUmCTQjsXtz9g/gviz/tq?tqx=out:csv&sheet=SLA%20GRW');
   var csvSlaCustUrl1 = getProxyUrl('https://docs.google.com/spreadsheets/d/1q-qxELBQZr3ABhVg-mw6Kvhl-e11RGQUmCTQjsXtz9g/gviz/tq?tqx=out:csv&sheet=SLA%20CUST');
   var csvSlaCustUrl2 = getProxyUrl('https://docs.google.com/spreadsheets/d/1q-qxELBQZr3ABhVg-mw6Kvhl-e11RGQUmCTQjsXtz9g/gviz/tq?tqx=out:csv&sheet=SLA%20CUSTOMER');
+  var csvSlaRecapUrl  = getProxyUrl('https://docs.google.com/spreadsheets/d/1q-qxELBQZr3ABhVg-mw6Kvhl-e11RGQUmCTQjsXtz9g/gviz/tq?tqx=out:csv&sheet=' + encodeURIComponent('RECAP DK &LK'));
+  var csvSlaRecapUrl2 = getProxyUrl('https://docs.google.com/spreadsheets/d/1q-qxELBQZr3ABhVg-mw6Kvhl-e11RGQUmCTQjsXtz9g/gviz/tq?tqx=out:csv&sheet=' + encodeURIComponent('RECAP DK & LK'));
+  var csvSlaRecapUrl3 = getProxyUrl('https://docs.google.com/spreadsheets/d/1q-qxELBQZr3ABhVg-mw6Kvhl-e11RGQUmCTQjsXtz9g/gviz/tq?tqx=out:csv&gid=831591956');
   var csvBacklogUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1ITpX4yc_VLL_qpbLZc1RHfwDzinUf2vnbQXewb_F4oM/gviz/tq?tqx=out:csv&sheet=BACKLOG');
   var csvOrgChartUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1ITpX4yc_VLL_qpbLZc1RHfwDzinUf2vnbQXewb_F4oM/gviz/tq?tqx=out:csv&gid=1501777569');
   var csvAgingReasonUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1ITpX4yc_VLL_qpbLZc1RHfwDzinUf2vnbQXewb_F4oM/gviz/tq?tqx=out:csv&gid=532307905');
@@ -10234,10 +10811,34 @@ var fetchCaseIdReleaseLp = new Promise(function(resolve) {
     });
   });
 
-  Promise.all([fetchMonitoring, fetchAging, fetchAgingCust, fetchContDate, fetchSlaGrw, fetchSlaCust, fetchFulfillment, fetchOlf, fetchCaseIdRelease, fetchCaseIdReleaseP1, fetchCaseIdReleaseP2, fetchCaseIdReleaseHubLk, fetchCaseIdReleaseLp, fetchBacklog, fetchOrgChart, fetchAgingReason])
+  var fetchSlaRecap = new Promise(function(resolve) {
+    function ok(d){ return d && d.length > 1 && d[0] && d[0].some(function(c){ return /DK|LK|DALAM KOTA|LUAR KOTA/i.test(String(c)); }); }
+    if (csvSlaRecapUrl3) {
+      fetchAndParseCsv(csvSlaRecapUrl3, { header:false, skipEmptyLines:true }, function(d3){
+        if (ok(d3)) { resolve(d3); return; }
+        fetchAndParseCsv(csvSlaRecapUrl, { header:false, skipEmptyLines:true }, function(d1){
+          if (ok(d1)) { resolve(d1); return; }
+          fetchAndParseCsv(csvSlaRecapUrl2, { header:false, skipEmptyLines:true }, function(d2){
+            resolve(ok(d2) ? d2 : (d3 || []));
+          });
+        });
+      });
+    } else {
+      fetchAndParseCsv(csvSlaRecapUrl, { header:false, skipEmptyLines:true }, function(d1){
+        if (ok(d1)) { resolve(d1); return; }
+        fetchAndParseCsv(csvSlaRecapUrl2, { header:false, skipEmptyLines:true }, function(d2){
+          resolve(d2 || []);
+        });
+      });
+    }
+  });
+
+  Promise.all([fetchMonitoring, fetchAging, fetchAgingCust, fetchContDate, fetchSlaGrw, fetchSlaCust, fetchFulfillment, fetchOlf, fetchCaseIdRelease, fetchCaseIdReleaseP1, fetchCaseIdReleaseP2, fetchCaseIdReleaseHubLk, fetchCaseIdReleaseLp, fetchBacklog, fetchOrgChart, fetchAgingReason, fetchSlaRecap])
     .then(function(results) {
       allSlaGrwData = results[4] || [];
       allSlaCustData = results[5] || [];
+      allSlaRecapDkLkData = results[16] || [];
+      console.log('[SLA RECAP] baris terbaca:', allSlaRecapDkLkData.length);
       allFulfillmentData = results[6] || [];
       // Less restrictive filter for OLF data
       allOlfData = (results[7] || []).filter(function(r) {
@@ -10331,47 +10932,68 @@ function processResults(results) {
   // Dynamically initialize SLA start/end date filters based on real spreadsheet dates
   var slaStart = document.getElementById('slaStartDate');
   var slaEnd = document.getElementById('slaEndDate');
-  if (slaStart && slaEnd && ((allSlaGrwData && allSlaGrwData.length > 1) || (allSlaCustData && allSlaCustData.length > 1))) {
+  var ovSlaStart = document.getElementById('ovSlaStartDate');
+  var ovSlaEnd = document.getElementById('ovSlaEndDate');
+
+  if ((allSlaRecapDkLkData && allSlaRecapDkLkData.length > 1) || (allSlaGrwData && allSlaGrwData.length > 1) || (allSlaCustData && allSlaCustData.length > 1)) {
     var dates = [];
+    if (allSlaRecapDkLkData && allSlaRecapDkLkData.length > 1) {
+      for (var i = 1; i < allSlaRecapDkLkData.length; i++) {
+        var row = allSlaRecapDkLkData[i];
+        if (!row) continue;
+        var d1 = parseDateStr(row[2]);
+        var d2 = parseDateStr(row[11]);
+        if (d1) dates.push(d1);
+        if (d2) dates.push(d2);
+      }
+    }
     if (allSlaGrwData) {
-      var maxRow = Math.min(278, allSlaGrwData.length);
-      for (var i = 1; i < maxRow; i++) {
+      for (var i = 1; i < Math.min(300, allSlaGrwData.length); i++) {
         var row = allSlaGrwData[i];
         if (!row) continue;
-        var d = parseDateStr(row[2]); // Index 2 in whole sheet
+        var d = parseDateStr(row[2]);
         if (d) dates.push(d);
       }
     }
     if (allSlaCustData) {
-      var maxRow = Math.min(278, allSlaCustData.length);
-      for (var i = 1; i < maxRow; i++) {
+      for (var i = 1; i < Math.min(300, allSlaCustData.length); i++) {
         var row = allSlaCustData[i];
         if (!row) continue;
-        var d = parseDateStr(row[2]); // Index 2 in whole sheet
+        var d = parseDateStr(row[2]);
         if (d) dates.push(d);
       }
     }
     if (dates.length > 0) {
       dates.sort(function(a, b) { return a - b; });
-      var earliest = dates[0];
-      
+      var today = new Date();
       var yesterdayVal = new Date();
       yesterdayVal.setDate(yesterdayVal.getDate() - 1);
-      
-      var firstDayVal = new Date(yesterdayVal.getFullYear(), yesterdayVal.getMonth(), 1);
-      
-      var startY = firstDayVal.getFullYear();
-      var startM = String(firstDayVal.getMonth() + 1).padStart(2, '0');
-      var startD = String(firstDayVal.getDate()).padStart(2, '0');
-      var firstDayStr = startY + '-' + startM + '-' + startD;
-      
-      var endY = yesterdayVal.getFullYear();
-      var endM = String(yesterdayVal.getMonth() + 1).padStart(2, '0');
-      var endD = String(yesterdayVal.getDate()).padStart(2, '0');
-      var yesterdayStr = endY + '-' + endM + '-' + endD;
-      
-      slaStart.value = firstDayStr;
-      slaEnd.value = yesterdayStr;
+
+      // Find the latest date in data up to today
+      var latestDataDate = dates[dates.length - 1];
+      for (var k = dates.length - 1; k >= 0; k--) {
+        if (dates[k] <= today) {
+          latestDataDate = dates[k];
+          break;
+        }
+      }
+
+      var firstDayVal = new Date(latestDataDate.getFullYear(), latestDataDate.getMonth(), 1);
+
+      function fmtDateStr(d) {
+        var y = d.getFullYear();
+        var m = String(d.getMonth() + 1).padStart(2, '0');
+        var dt = String(d.getDate()).padStart(2, '0');
+        return y + '-' + m + '-' + dt;
+      }
+
+      var firstDayStr = fmtDateStr(firstDayVal);
+      var endDayStr = fmtDateStr(latestDataDate > yesterdayVal ? yesterdayVal : latestDataDate);
+
+      if (slaStart) slaStart.value = firstDayStr;
+      if (slaEnd) slaEnd.value = endDayStr;
+      if (ovSlaStart) ovSlaStart.value = firstDayStr;
+      if (ovSlaEnd) ovSlaEnd.value = endDayStr;
     }
   }
 
