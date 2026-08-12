@@ -1007,19 +1007,17 @@
   }
   .sla-breakdown-card {
     position: relative;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.05) 100%);
-    backdrop-filter: blur(20px) saturate(200%);
-    -webkit-backdrop-filter: blur(20px) saturate(200%);
-    border: 1px solid rgba(255, 255, 255, 0.22);
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.08);
     border-radius: 16px;
     padding: 14px 16px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    gap: 8px;
-    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease;
+    gap: 10px;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     overflow: hidden;
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.25), inset 0 1px 1px 0 rgba(255, 255, 255, 0.4);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
   }
   .sla-breakdown-card::before {
     content: '';
@@ -1027,63 +1025,59 @@
     top: 0;
     left: 0;
     right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.8) 50%, transparent 100%);
+    height: 3px;
+    background: var(--card-top-glow, #3b82f6);
     pointer-events: none;
   }
   .sla-breakdown-card::after {
     content: '';
     position: absolute;
-    top: -40%;
-    left: -40%;
-    width: 180%;
-    height: 180%;
-    background: radial-gradient(circle at 50% 0%, var(--glass-glow, rgba(255, 255, 255, 0.15)), transparent 65%);
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at 70% 20%, rgba(255, 255, 255, 0.6), transparent 60%);
     pointer-events: none;
   }
   .sla-breakdown-card:hover {
     transform: translateY(-3px);
-    box-shadow: 0 14px 40px 0 rgba(0, 0, 0, 0.35), inset 0 1px 1px 0 rgba(255, 255, 255, 0.6);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
   }
   .sla-breakdown-card.dk-accent {
-    --glass-glow: rgba(52, 211, 153, 0.35);
-    background: linear-gradient(135deg, rgba(16, 185, 129, 0.28) 0%, rgba(5, 150, 105, 0.15) 100%);
-    border: 1px solid rgba(52, 211, 153, 0.45);
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.25), 0 0 25px rgba(16, 185, 129, 0.2), inset 0 1px 1px 0 rgba(255, 255, 255, 0.4);
+    --card-top-glow: linear-gradient(90deg, #10b981, #059669);
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+    border: 1px solid #86efac;
   }
   .sla-breakdown-card.dk-accent:hover {
-    border-color: rgba(52, 211, 153, 0.7);
-    box-shadow: 0 14px 40px 0 rgba(0, 0, 0, 0.35), 0 0 35px rgba(16, 185, 129, 0.35), inset 0 1px 1px 0 rgba(255, 255, 255, 0.6);
+    border-color: #4ade80;
+    box-shadow: 0 10px 28px rgba(16, 185, 129, 0.25);
   }
   .sla-breakdown-card.lk-accent {
-    --glass-glow: rgba(129, 140, 248, 0.35);
-    background: linear-gradient(135deg, rgba(99, 102, 241, 0.28) 0%, rgba(79, 70, 229, 0.15) 100%);
-    border: 1px solid rgba(129, 140, 248, 0.45);
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.25), 0 0 25px rgba(99, 102, 241, 0.2), inset 0 1px 1px 0 rgba(255, 255, 255, 0.4);
+    --card-top-glow: linear-gradient(90deg, #6366f1, #4f46e5);
+    background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%);
+    border: 1px solid #a5b4fc;
   }
   .sla-breakdown-card.lk-accent:hover {
-    border-color: rgba(129, 140, 248, 0.7);
-    box-shadow: 0 14px 40px 0 rgba(0, 0, 0, 0.35), 0 0 35px rgba(99, 102, 241, 0.35), inset 0 1px 1px 0 rgba(255, 255, 255, 0.6);
+    border-color: #818cf8;
+    box-shadow: 0 10px 28px rgba(99, 102, 241, 0.25);
   }
   .sla-breakdown-card.grw-total-accent {
-    --glass-glow: rgb(139, 232, 229);
-    background: linear-gradient(135deg, rgba(14, 165, 233, 0.32) 0%, rgba(2, 132, 199, 0.18) 100%);
-    border: 1px solid rgb(139, 232, 229);
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.28), 0 0 28px rgba(56, 189, 248, 0.25), inset 0 1px 1px 0 rgba(255, 255, 255, 0.45);
+    --card-top-glow: linear-gradient(90deg, #0ea5e9, #0284c7);
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    border: 1px solid #7dd3fc;
   }
   .sla-breakdown-card.grw-total-accent:hover {
-    border-color: rgb(139, 232, 229);
-    box-shadow: 0 14px 40px 0 rgba(0, 0, 0, 0.35), 0 0 40px rgba(56, 189, 248, 0.4), inset 0 1px 1px 0 rgba(255, 255, 255, 0.65);
+    border-color: #38bdf8;
+    box-shadow: 0 10px 28px rgba(14, 165, 233, 0.25);
   }
   .sla-breakdown-card.cust-total-accent {
-    --glass-glow: rgba(251, 191, 36, 0.38);
-    background: linear-gradient(135deg, rgba(245, 158, 11, 0.3) 0%, rgba(217, 119, 6, 0.18) 100%);
-    border: 1px solid rgba(251, 191, 36, 0.52);
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.28), 0 0 28px rgba(245, 158, 11, 0.22), inset 0 1px 1px 0 rgba(255, 255, 255, 0.45);
+    --card-top-glow: linear-gradient(90deg, #f59e0b, #d97706);
+    background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+    border: 1px solid #fcd34d;
   }
   .sla-breakdown-card.cust-total-accent:hover {
-    border-color: rgba(251, 191, 36, 0.8);
-    box-shadow: 0 14px 40px 0 rgba(0, 0, 0, 0.35), 0 0 40px rgba(245, 158, 11, 0.38), inset 0 1px 1px 0 rgba(255, 255, 255, 0.65);
+    border-color: #fbbf24;
+    box-shadow: 0 10px 28px rgba(245, 158, 11, 0.25);
   }
   .sla-card-head {
     display: flex;
@@ -1094,50 +1088,52 @@
     z-index: 2;
   }
   .sla-card-label {
-    font-size: 12px;
-    font-weight: 900;
-    color: #f8fafc;
+    font-size: 11px;
+    font-weight: 800;
+    color: #0f172a;
     letter-spacing: 0.8px;
     text-transform: uppercase;
     display: flex;
     align-items: center;
     gap: 5px;
-    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9), 0 0 10px rgba(0, 0, 0, 0.5);
   }
   .sla-card-badge {
     font-size: 10px;
     font-weight: 800;
-    padding: 3px 9px;
+    padding: 3px 8px;
     border-radius: 999px;
-    background: rgba(15, 23, 42, 0.45);
-    color: #ffffff;
-    border: 1px solid rgba(255, 255, 255, 0.25);
+    background: rgba(255, 255, 255, 0.85);
+    color: #0f172a;
+    border: 1px solid rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
-    letter-spacing: 0.6px;
+    letter-spacing: 0.5px;
     text-transform: uppercase;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
   }
   .sla-card-val {
     font-size: 32px;
     font-weight: 900;
-    color: #ffffff;
+    color: #0f172a;
     font-family: var(--font-display);
     line-height: 1.1;
     letter-spacing: -0.5px;
-    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.95), 0 0 3px rgba(0, 0, 0, 0.9);
     position: relative;
     z-index: 2;
   }
   .sla-card-sub {
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 700;
-    color: #f1f5f9;
+    color: #1e293b;
     font-family: var(--font-mono);
     display: flex;
     align-items: center;
     gap: 4px;
-    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.95), 0 0 3px rgba(0, 0, 0, 0.9);
+    background: rgba(255, 255, 255, 0.75);
+    padding: 4px 8px;
+    border-radius: 6px;
+    width: fit-content;
+    border: 1px solid rgba(0, 0, 0, 0.08);
     position: relative;
     z-index: 2;
   }
@@ -1174,11 +1170,12 @@
     color: var(--text);
   }
   .bu-logo {
-    height: 120px;
-    max-width: 100%;
+    height: 60px;
+    max-height: 65px;
+    max-width: 180px;
     object-fit: contain;
     display: block;
-    margin: 0 auto 12px;
+    margin: 0 auto 8px;
   }
 .bu-name-fallback {
   font-size: 16px;
@@ -2813,7 +2810,7 @@
   <div class="header-left">
     <button class="mobile-menu-btn" onclick="toggleSidebar()" style="display: none; background: none; border: none; color: #1e3a5f; font-size: 24px; cursor: pointer; padding: 4px; margin-right: 12px; align-self: center;">☰</button>
     <!-- Informa Logo -->
-    <img src="https://lh3.googleusercontent.com/d/1T_T9ruGoVeGQjy4raxb7XdsEUM6tS2JU" alt="Informa" style="display: inline-block; vertical-align: middle; margin-right: 12px; height: 120px; width: auto; object-fit: contain;">
+    <img src="https://lh3.googleusercontent.com/d/1V-NU5mhGbUbKO9JZQ48nTV_ZBQ-BQCCV" alt="Informa" style="display: inline-block; vertical-align: middle; margin-right: 14px; height: 68px; width: auto; max-width: 220px; object-fit: contain;">
     <div>
       <div class="header-title">ORDER FULFILLMENT &
 PLANNING REPORT</div>
@@ -2945,24 +2942,24 @@ PLANNING REPORT</div>
           </div>
           <div class="bu-sla-breakdown">
   <div class="bu-col">
-    <div class="bu-name" style="border-bottom:none; padding-bottom:0;">
-      <img class="bu-logo" src="https://lh3.googleusercontent.com/d/1T_T9ruGoVeGQjy4raxb7XdsEUM6tS2JU" alt="Informa" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+    <div class="bu-name" style="border-bottom:none; padding-bottom:0; min-height:68px; display:flex; align-items:center; justify-content:center;">
+      <img class="bu-logo" src="https://lh3.googleusercontent.com/d/1V-NU5mhGbUbKO9JZQ48nTV_ZBQ-BQCCV" alt="Informa" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
       <span class="bu-name-fallback">INFORMA</span>
     </div>
     <div class="bu-row"><span>GRW:</span><strong id="ovSlaGrwInf">0%</strong></div>
     <div class="bu-row"><span>CUST:</span><strong id="ovSlaCustInf">0%</strong></div>
   </div>
   <div class="bu-col">
-    <div class="bu-name" style="border-bottom:none; padding-bottom:0;">
-      <img class="bu-logo" src="https://lh3.googleusercontent.com/d/19sBMv6tjckvdw434w5-aFCjS8NDLM6S0" alt="Informa Electronics" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+    <div class="bu-name" style="border-bottom:none; padding-bottom:0; min-height:68px; display:flex; align-items:center; justify-content:center;">
+      <img class="bu-logo" src="https://lh3.googleusercontent.com/d/1G8QOqURnh9ebTTr6l7MLXlKvtjnrSRJv" alt="Informa Electronics" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
       <span class="bu-name-fallback">ELECTRONICS</span>
     </div>
     <div class="bu-row"><span>GRW:</span><strong id="ovSlaGrwIel">0%</strong></div>
     <div class="bu-row"><span>CUST:</span><strong id="ovSlaCustIel">0%</strong></div>
   </div>
   <div class="bu-col">
-    <div class="bu-name" style="border-bottom:none; padding-bottom:0;">
-      <img class="bu-logo" src="https://lh3.googleusercontent.com/d/1-K9Fmdmex6tysQbdpxTGXsubY945sayH" alt="Selma" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+    <div class="bu-name" style="border-bottom:none; padding-bottom:0; min-height:68px; display:flex; align-items:center; justify-content:center;">
+      <img class="bu-logo" src="https://lh3.googleusercontent.com/d/1mcXPva20oFrOkf1M6N0Dps2HtG02uiYg" alt="Selma" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
       <span class="bu-name-fallback">SELMA</span>
     </div>
     <div class="bu-row"><span>GRW:</span><strong id="ovSlaGrwSel">0%</strong></div>
@@ -3858,7 +3855,7 @@ PLANNING REPORT</div>
           <div class="card-title">SLA GRW</div>
           <div class="card-sub">% ACHIEVEMENT GRW</div>
         </div>
-        <span class="badge badge-blue" id="slaGrwPeriodBadge">—</span>
+        <span class="badge badge-blue" id="slaGrwPeriodBadge" style="display:none;">—</span>
       </div>
       <div class="overview-chart-row">
         <div class="speedo-wrap">
@@ -3874,27 +3871,27 @@ PLANNING REPORT</div>
       <div class="bu-sla-breakdown" style="grid-template-columns:repeat(3,1fr); gap:12px; margin-top:16px; padding-top:16px; border-top:1px solid rgba(255,255,255,0.08);">
         <div class="sla-breakdown-card dk-accent">
           <div class="sla-card-head">
-            <span class="sla-card-label" style="color:#6ee7b7;">DALAM KOTA</span>
-            <span class="sla-card-badge" style="background:rgba(16,185,129,0.15); color:#34d399; border-color:rgba(16,185,129,0.3);">AREA DK</span>
+            <span class="sla-card-label" style="color:#047857;">DALAM KOTA</span>
+            <span class="sla-card-badge" style="background:rgba(16,185,129,0.2); color:#065f46; border-color:rgba(16,185,129,0.4);">AREA DK</span>
           </div>
-          <div class="sla-card-val" id="slaGrwDkPct">DK</div>
-          <div class="sla-card-sub" id="slaGrwDkSub">—</div>
+          <div class="sla-card-val" style="color:#064e3b;" id="slaGrwDkPct">DK</div>
+          <div class="sla-card-sub" style="color:#047857;" id="slaGrwDkSub">—</div>
         </div>
         <div class="sla-breakdown-card lk-accent">
           <div class="sla-card-head">
-            <span class="sla-card-label" style="color:#a5b4fc;">LUAR KOTA</span>
-            <span class="sla-card-badge" style="background:rgba(99,102,241,0.15); color:#818cf8; border-color:rgba(99,102,241,0.3);">AREA LK</span>
+            <span class="sla-card-label" style="color:#3730a3;">LUAR KOTA</span>
+            <span class="sla-card-badge" style="background:rgba(99,102,241,0.2); color:#312e81; border-color:rgba(99,102,241,0.4);">AREA LK</span>
           </div>
-          <div class="sla-card-val" id="slaGrwLkPct">LK</div>
-          <div class="sla-card-sub" id="slaGrwLkSub">—</div>
+          <div class="sla-card-val" style="color:#1e1b4b;" id="slaGrwLkPct">LK</div>
+          <div class="sla-card-sub" style="color:#3730a3;" id="slaGrwLkSub">—</div>
         </div>
         <div class="sla-breakdown-card grw-total-accent">
           <div class="sla-card-head">
-            <span class="sla-card-label" style="color:#7dd3fc;">TOTAL GRW</span>
-            <span class="sla-card-badge" style="background:rgba(56,189,248,0.2); color:#38bdf8; border-color:rgba(56,189,248,0.4);">OVERALL</span>
+            <span class="sla-card-label" style="color:#0369a1;">TOTAL GRW</span>
+            <span class="sla-card-badge" style="background:rgba(14,165,233,0.2); color:#0c4a6e; border-color:rgba(14,165,233,0.4);">OVERALL</span>
           </div>
-          <div class="sla-card-val" style="color:#38bdf8;" id="slaGrwTotPct">TOTAL</div>
-          <div class="sla-card-sub" id="slaGrwTotSub">—</div>
+          <div class="sla-card-val" style="color:#0284c7;" id="slaGrwTotPct">TOTAL</div>
+          <div class="sla-card-sub" style="color:#0369a1;" id="slaGrwTotSub">—</div>
         </div>
       </div>
     </div>
@@ -3906,7 +3903,7 @@ PLANNING REPORT</div>
           <div class="card-title">SLA CUSTOMER</div>
           <div class="card-sub">% ACHIEVEMENT CUSTOMER</div>
         </div>
-        <span class="badge badge-amber" id="slaCustPeriodBadge">—</span>
+        <span class="badge badge-amber" id="slaCustPeriodBadge" style="display:none;">—</span>
       </div>
       <div class="overview-chart-row">
         <div class="speedo-wrap">
@@ -3922,27 +3919,27 @@ PLANNING REPORT</div>
       <div class="bu-sla-breakdown" style="grid-template-columns:repeat(3,1fr); gap:12px; margin-top:16px; padding-top:16px; border-top:1px solid rgba(255,255,255,0.08);">
         <div class="sla-breakdown-card dk-accent">
           <div class="sla-card-head">
-            <span class="sla-card-label" style="color:#6ee7b7;">DALAM KOTA</span>
-            <span class="sla-card-badge" style="background:rgba(16,185,129,0.15); color:#34d399; border-color:rgba(16,185,129,0.3);">AREA DK</span>
+            <span class="sla-card-label" style="color:#047857;">DALAM KOTA</span>
+            <span class="sla-card-badge" style="background:rgba(16,185,129,0.2); color:#065f46; border-color:rgba(16,185,129,0.4);">AREA DK</span>
           </div>
-          <div class="sla-card-val" id="slaCustDkPct">DK</div>
-          <div class="sla-card-sub" id="slaCustDkSub">—</div>
+          <div class="sla-card-val" style="color:#064e3b;" id="slaCustDkPct">DK</div>
+          <div class="sla-card-sub" style="color:#047857;" id="slaCustDkSub">—</div>
         </div>
         <div class="sla-breakdown-card lk-accent">
           <div class="sla-card-head">
-            <span class="sla-card-label" style="color:#a5b4fc;">LUAR KOTA</span>
-            <span class="sla-card-badge" style="background:rgba(99,102,241,0.15); color:#818cf8; border-color:rgba(99,102,241,0.3);">AREA LK</span>
+            <span class="sla-card-label" style="color:#3730a3;">LUAR KOTA</span>
+            <span class="sla-card-badge" style="background:rgba(99,102,241,0.2); color:#312e81; border-color:rgba(99,102,241,0.4);">AREA LK</span>
           </div>
-          <div class="sla-card-val" id="slaCustLkPct">LK</div>
-          <div class="sla-card-sub" id="slaCustLkSub">—</div>
+          <div class="sla-card-val" style="color:#1e1b4b;" id="slaCustLkPct">LK</div>
+          <div class="sla-card-sub" style="color:#3730a3;" id="slaCustLkSub">—</div>
         </div>
         <div class="sla-breakdown-card cust-total-accent">
           <div class="sla-card-head">
-            <span class="sla-card-label" style="color:#fcd34d;">TOTAL CUST</span>
-            <span class="sla-card-badge" style="background:rgba(245,158,11,0.2); color:#fbbf24; border-color:rgba(245,158,11,0.4);">OVERALL</span>
+            <span class="sla-card-label" style="color:#b45309;">TOTAL CUST</span>
+            <span class="sla-card-badge" style="background:rgba(245,158,11,0.2); color:#78350f; border-color:rgba(245,158,11,0.4);">OVERALL</span>
           </div>
-          <div class="sla-card-val" style="color:#fbbf24;" id="slaCustTotPct">TOTAL</div>
-          <div class="sla-card-sub" id="slaCustTotSub">—</div>
+          <div class="sla-card-val" style="color:#d97706;" id="slaCustTotPct">TOTAL</div>
+          <div class="sla-card-sub" style="color:#b45309;" id="slaCustTotSub">—</div>
         </div>
       </div>
     </div>
@@ -3981,7 +3978,7 @@ PLANNING REPORT</div>
         <div class="card-title" style="font-size:17px;">SLA BUSINESS UNIT BREAKDOWN</div>
         <div class="card-sub" style="font-size:13px;">Performa SLA GRW &amp; CUSTOMER pada Informa, Electronics, dan Selma</div>
       </div>
-      <span class="badge badge-purple" id="slaBuScopeBadge">—</span>
+      <span class="badge badge-purple" id="slaBuScopeBadge" style="display:none;">—</span>
     </div>
     <div style="overflow-x:auto; margin-top:12px;">
       <table class="data-table" style="width:100%; border-collapse:collapse; text-align:left; font-size:14px;">
@@ -4004,8 +4001,8 @@ PLANNING REPORT</div>
         </thead>
         <tbody>
           <tr style="border-bottom:1px solid var(--border);">
-            <td style="padding:10px; text-align:center; vertical-align:middle;">
-              <img src="https://lh3.googleusercontent.com/d/1T_T9ruGoVeGQjy4raxb7XdsEUM6tS2JU" alt="Informa" style="height:96px; width:auto; max-width:100%; object-fit:contain; display:block; margin:0 auto;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+            <td style="padding:12px 16px; text-align:center; vertical-align:middle; width:200px;">
+              <img src="https://lh3.googleusercontent.com/d/1V-NU5mhGbUbKO9JZQ48nTV_ZBQ-BQCCV" alt="Informa" style="height:58px; width:auto; max-width:180px; object-fit:contain; display:block; margin:0 auto;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
               <span style="display:none; font-size:15px; font-weight:900; color:var(--muted);">INFORMA</span>
             </td>
             <td style="text-align:center; font-family:var(--font-mono); font-size:15px; padding:10px; background:rgba(37,99,235,0.02);" id="tblGrwHitInf">0</td>
@@ -4018,8 +4015,8 @@ PLANNING REPORT</div>
             <td style="text-align:center; font-family:var(--font-mono); font-size:16px; font-weight:800; color:var(--amber); padding:10px; background:rgba(217,119,6,0.02);" id="tblCustPctInf">0%</td>
           </tr>
           <tr style="border-bottom:1px solid var(--border);">
-            <td style="padding:10px; text-align:center; vertical-align:middle;">
-              <img src="https://lh3.googleusercontent.com/d/19sBMv6tjckvdw434w5-aFCjS8NDLM6S0" alt="Informa Electronics" style="height:96px; width:auto; max-width:100%; object-fit:contain; display:block; margin:0 auto;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+            <td style="padding:12px 16px; text-align:center; vertical-align:middle; width:200px;">
+              <img src="https://lh3.googleusercontent.com/d/1G8QOqURnh9ebTTr6l7MLXlKvtjnrSRJv" alt="Informa Electronics" style="height:58px; width:auto; max-width:180px; object-fit:contain; display:block; margin:0 auto;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
               <span style="display:none; font-size:15px; font-weight:900; color:var(--muted);">ELECTRONICS</span>
             </td>
             <td style="text-align:center; font-family:var(--font-mono); font-size:15px; padding:10px; background:rgba(37,99,235,0.02);" id="tblGrwHitIel">0</td>
@@ -4032,8 +4029,8 @@ PLANNING REPORT</div>
             <td style="text-align:center; font-family:var(--font-mono); font-size:16px; font-weight:800; color:var(--amber); padding:10px; background:rgba(217,119,6,0.02);" id="tblCustPctIel">0%</td>
           </tr>
           <tr style="border-bottom:1px solid var(--border);">
-            <td style="padding:10px; text-align:center; vertical-align:middle;">
-              <img src="https://lh3.googleusercontent.com/d/1-K9Fmdmex6tysQbdpxTGXsubY945sayH" alt="Selma" style="height:96px; width:auto; max-width:100%; object-fit:contain; display:block; margin:0 auto;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+            <td style="padding:12px 16px; text-align:center; vertical-align:middle; width:200px;">
+              <img src="https://lh3.googleusercontent.com/d/1mcXPva20oFrOkf1M6N0Dps2HtG02uiYg" alt="Selma" style="height:58px; width:auto; max-width:180px; object-fit:contain; display:block; margin:0 auto;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
               <span style="display:none; font-size:15px; font-weight:900; color:var(--muted);">SELMA</span>
             </td>
             <td style="text-align:center; font-family:var(--font-mono); font-size:15px; padding:10px; background:rgba(37,99,235,0.02);" id="tblGrwHitSel">0</td>
@@ -4058,7 +4055,7 @@ PLANNING REPORT</div>
         <div class="card-sub">Audit trail transaksi pesanan terlambat mengikuti periode &amp; area</div>
       </div>
       <div style="display:flex; gap:12px; align-items: center; flex-wrap: wrap; width: 100%; margin-top: 10px; border-top: 1px solid var(--border); padding-top: 12px;">
-        <span class="badge badge-blue" id="slaMissPeriodInfo">—</span>
+        <span class="badge badge-blue" id="slaMissPeriodInfo" style="display:none;">—</span>
 
         <div class="filter-divider" style="height: 24px;"></div>
 
@@ -5697,6 +5694,23 @@ function isInvalidArea(a) {
   );
 }
 
+function resolveSpecificRegion(areaStr, destStr, custStr, routeStr) {
+  var a = String(areaStr || '').trim().toUpperCase();
+  var d = String(destStr || '').trim().toUpperCase();
+
+  // 1. Use Column BA (areaStr) directly
+  if (a && !isInvalidArea(a)) {
+    return a;
+  }
+
+  // 2. Fallback to Destination (destStr) if Column BA is empty
+  if (d && !isInvalidValue(d)) {
+    return d;
+  }
+
+  return 'KOTA';
+}
+
 // Status "UNPLANNED" itu VALID (artinya belum di-plan), jangan dibuang seperti #N/A
 function isInvalidStatus_(v) {
   if (v === null || v === undefined) return true;
@@ -7111,16 +7125,16 @@ function parseOutstandingSheetData(rows, targetRawArray, sourceType) {
 
       // Read Wilayah from column BA (index 52) or idxWilayah or idxArea
       var rawAreaStr = (row.length > 52 && row[52] && !isInvalidArea(row[52])) ? row[52] : (idxWilayah !== -1 ? row[idxWilayah] : (idxArea !== -1 ? row[idxArea] : null));
-      var area = (rawAreaStr && !isInvalidArea(rawAreaStr)) ? String(rawAreaStr).toUpperCase().trim() : '';
-      
       var rawDest = idxDestination !== -1 ? String(row[idxDestination] || '').trim() : '';
       if (isInvalidValue(rawDest)) rawDest = '';
 
-      if (!area) {
-        area = rawDest || 'KOTA';
-      }
-      // Kolom tujuan menampilkan data berdasarkan wilayah (column BA)
-      var dest = area;
+      var routeVal = idxRoute !== -1 ? String(row[idxRoute] || '').trim() : '';
+      var rawDkLkStr = idxArea !== -1 ? String(row[idxArea] || '').trim() : '';
+
+      var finalRegion = resolveSpecificRegion(rawAreaStr, rawDest, cust, routeVal);
+      var area = finalRegion;
+      var dest = finalRegion;
+      var isDalamKota = checkIsDalamKota(rawDkLkStr || rawAreaStr, dest);
 
       var rawCbmVal = idxCbm !== -1 ? row[idxCbm] : 1.0;
       var cbm = 0;
@@ -7292,15 +7306,13 @@ function parseOutstandingSheetData(rows, targetRawArray, sourceType) {
         else if (keys.length > 52 && item[keys[52]] && !isInvalidArea(item[keys[52]])) areaVal = item[keys[52]];
       }
 
-      var area = (areaVal && !isInvalidArea(areaVal)) ? String(areaVal).toUpperCase().trim() : '';
-      if (!area) {
-        area = rawDest || 'KOTA';
-      }
-      // Kolom tujuan menampilkan data berdasarkan wilayah (column BA)
-      var dest = area;
-
       var rawDkLkStr = getVal(/^AREA$/, '');
-      var isDalamKota = checkIsDalamKota(rawDkLkStr, dest);
+      var routeVal = getVal(/^ROUTE$|^PLAN$|^AK$/, '');
+
+      var finalRegion = resolveSpecificRegion(areaVal, rawDest, cust, routeVal);
+      var area = finalRegion;
+      var dest = finalRegion;
+      var isDalamKota = checkIsDalamKota(rawDkLkStr || areaVal, dest);
 
       var priorityStr = getVal(/^PRIORITY$/, '');
 
@@ -8878,7 +8890,7 @@ function renderSlaDetailPage(){
   var cTot = (SLA_STATE.area !== 'ALL' && recap.ok) ? cRecap : cMain;
 
   var periodTxt = slaFmtPeriod_();
-  var srcLabel = 'Total/BU: SLA GRW & SLA CUST · DK/LK: RECAP DK &LK';
+  var srcLabel = (SLA_STATE.area !== 'ALL' && recap.ok) ? 'Sheet RECAP DK &LK' : 'Sheet SLA GRW & SLA CUST';
   var scopeTxt  = periodTxt + ' · Area: ' + SLA_STATE.area + ' · Sumber: ' + srcLabel;
   setText('slaGrwPeriodBadge', scopeTxt);
   setText('slaCustPeriodBadge', scopeTxt);
@@ -10200,15 +10212,25 @@ function parsePlanningData() {
     return areaMap[area];
   }
 
+  function getEffectiveRegion(o) {
+    if (!o) return 'KOTA';
+    var reg = resolveSpecificRegion(o.area, o.destination, o.customer, o.route);
+    return reg || 'KOTA';
+  }
+
   grwPool.forEach(function(o) {
-    if (o && o.area && !isInvalidArea(o.area)) {
-      ensure(o.area).grwOrders.push(o);
+    if (!o) return;
+    var reg = getEffectiveRegion(o);
+    if (reg && !isInvalidArea(reg)) {
+      ensure(reg).grwOrders.push(o);
     }
   });
 
   custPool.forEach(function(o) {
-    if (o && o.area && !isInvalidArea(o.area)) {
-      ensure(o.area).custOrders.push(o);
+    if (!o) return;
+    var reg = getEffectiveRegion(o);
+    if (reg && !isInvalidArea(reg)) {
+      ensure(reg).custOrders.push(o);
     }
   });
 
