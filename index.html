@@ -9146,8 +9146,7 @@ function renderSlaDetailPage(){
   setText('slaCustPeriodBadge', scopeTxt);
   setText('slaBuScopeBadge', scopeTxt);
   setText('slaMissPeriodInfo', '📅 ' + scopeTxt);
-  var trendTxt = (SLA_STATE.trendMode==='monthly' ? 'Agregasi bulanan' : 'Agregasi harian') +
-                 (SLA_STATE.area==='ALL' && SLA_STATE.hasAreaDim);
+  var trendTxt = (SLA_STATE.trendMode==='monthly' ? 'Agregasi bulanan' : 'Agregasi harian');
   setText('slaGrwTrendSub', trendTxt);
   setText('slaCustTrendSub', trendTxt);
 
