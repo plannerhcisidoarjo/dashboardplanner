@@ -6363,6 +6363,9 @@ function applyAgingFilters() {
     RAW_ORDER_POOL = RAW_ORDER_POOL_GRW.concat(RAW_ORDER_POOL_CUST);
   }
   
+    ORDER_POOL = ORDER_POOL.filter(function(o) { return o.bookingType !== 'TRANSIT'; });
+  RAW_ORDER_POOL = RAW_ORDER_POOL.filter(function(o) { return o.bookingType !== 'TRANSIT'; });
+
   populateAreaFilter();
 
   var areaFilter = document.getElementById('agingFilterArea').value;
@@ -7618,7 +7621,8 @@ function parseOutstandingSheetData(rows, targetRawArray, sourceType) {
     var idxArea = headers.findIndex(function(h) { return h.match(/^WILAYAH$|^AREA$|^ZONA$|^REGIONAL$/) || h.indexOf('AREA') !== -1 || h.indexOf('WILAYAH') !== -1; });
     var idxRoute = headers.findIndex(function(h) { return h.match(/^ROUTE$|^PLAN$|^AK$/); });
     var idxStatus = headers.findIndex(function(h) { return h.match(/^STATUS$/); });
-    var idxBooking = headers.findIndex(function(h) { return h.match(/^ORDERBOOKING$|^BOOKING$|^TYPEORDER$|^ORDERTYPE$|^JENISORDER$|^JENISBOOKING$|^TYPE$|^REGULAR\/TRANSIT$/); });
+    var idxBooking = headers.findIndex(function(h) { return h.match(/^ORDERBOOKING$|^BOOKING$|^JENISORDER$|^JENISBOOKING$|^REGULAR\/TRANSIT$|^BB\/JENISORDER$/); });
+    var idxTypeStr = headers.findIndex(function(h) { return h.match(/^TYPE$|^TIPE$/); });
     var idxReqShip = headers.findIndex(function(h) { return h.match(/^REQSHIPDATE$/); });
     var idxPlanDelivery = headers.findIndex(function(h) { return h.match(/^PLANDELIVERYDATE$/); });
 
@@ -7710,6 +7714,14 @@ function parseOutstandingSheetData(rows, targetRawArray, sourceType) {
       if (!planDeliveryDate && routeVal && GLOBAL_ROUTE_DATE_MAP[routeVal]) {
         planDeliveryDate = GLOBAL_ROUTE_DATE_MAP[routeVal];
       }
+      var rawTypeStr = idxTypeStr !== -1 ? String(row[idxTypeStr]).toUpperCase().trim() : '';
+      var itemSourceType = sourceType || 'GRW';
+      if (rawTypeStr === 'GRW' || rawTypeStr.indexOf('HUB-GRW') !== -1) {
+        itemSourceType = 'GRW';
+      } else if (rawTypeStr === 'CUSTOMER' || rawTypeStr === 'CUST' || rawTypeStr.indexOf('HUB-CUSTOMER') !== -1 || rawTypeStr.indexOf('HUB-CUST') !== -1) {
+        itemSourceType = 'CUST';
+      }
+
       var rawBooking = idxBooking !== -1 ? String(row[idxBooking]).trim() : '';
       var bookingType = (rawBooking.toUpperCase().indexOf('TRANSIT') !== -1) ? 'TRANSIT' : 'REGULAR';
       var formattedStatus = rawStatus ? rawStatus.toLowerCase().replace(/\b\w/g, function(l) { return l.toUpperCase(); }) : 'Planned';
@@ -7728,7 +7740,7 @@ function parseOutstandingSheetData(rows, targetRawArray, sourceType) {
         status: formattedStatus,
         rawStatus: formattedStatus,
         bookingType: bookingType,
-        sourceType: sourceType || 'GRW',
+        sourceType: itemSourceType,
         planDeliveryDate: planDeliveryDate
       };
 
@@ -7754,7 +7766,7 @@ function parseOutstandingSheetData(rows, targetRawArray, sourceType) {
         status: formattedStatus,
         rawStatus: formattedStatus,
         bookingType: bookingType,
-        sourceType: sourceType || 'GRW',
+        sourceType: itemSourceType,
         planDeliveryDate: planDeliveryDate
       };
 
@@ -7834,7 +7846,8 @@ function parseOutstandingSheetData(rows, targetRawArray, sourceType) {
 
       var routeVal = getVal(/^ROUTE$|^PLAN$|^AK$/, '');
 
-      var rawBooking = getVal(/^ORDERBOOKING$|^BOOKING$|^TYPEORDER$|^ORDERTYPE$|^JENISORDER$|^JENISBOOKING$|^TYPE$|^REGULAR\/TRANSIT$/, '');
+      var rawBooking = getVal(/^ORDERBOOKING$|^BOOKING$|^JENISORDER$|^JENISBOOKING$|^REGULAR\/TRANSIT$|^BB\/JENISORDER$/, '');
+      var rawTypeStr = getVal(/^TYPE$|^TIPE$/, '');
       if (!rawBooking) {
         for (var k in item) {
           if (item.hasOwnProperty(k)) {
@@ -7852,6 +7865,14 @@ function parseOutstandingSheetData(rows, targetRawArray, sourceType) {
       var bookingType = String(rawBooking).toUpperCase().indexOf('TRANSIT') !== -1 ? 'TRANSIT' : 'REGULAR';
 
       var reqShipDaysDiff = null;
+      var rawTypeVal = String(rawTypeStr).toUpperCase().trim();
+      var itemSourceType = sourceType || 'GRW';
+      if (rawTypeVal === 'GRW' || rawTypeVal.indexOf('HUB-GRW') !== -1) {
+        itemSourceType = 'GRW';
+      } else if (rawTypeVal === 'CUSTOMER' || rawTypeVal === 'CUST' || rawTypeVal.indexOf('HUB-CUSTOMER') !== -1 || rawTypeVal.indexOf('HUB-CUST') !== -1) {
+        itemSourceType = 'CUST';
+      }
+      
       var rawReqShip = getVal(/^REQSHIPDATE$/, null);
       if (rawReqShip) {
         try {
@@ -7898,7 +7919,7 @@ function parseOutstandingSheetData(rows, targetRawArray, sourceType) {
         status: formattedStatus,
         rawStatus: formattedStatus,
         bookingType: bookingType,
-        sourceType: sourceType || 'GRW',
+        sourceType: itemSourceType,
         planDeliveryDate: planDeliveryDate
       };
 
@@ -7925,7 +7946,7 @@ function parseOutstandingSheetData(rows, targetRawArray, sourceType) {
         status: formattedStatus,
         rawStatus: formattedStatus,
         bookingType: bookingType,
-        sourceType: sourceType || 'GRW',
+        sourceType: itemSourceType,
         planDeliveryDate: planDeliveryDate
       };
       
@@ -10676,7 +10697,7 @@ function computePlanDays() {
     var minDate = null;
     var grwPool = RAW_ORDER_POOL_GRW || [];
     var custPool = RAW_ORDER_POOL_CUST || [];
-    var allOrders = grwPool.concat(custPool);
+    var allOrders = grwPool.concat(custPool).filter(function(o) { return o.bookingType !== 'TRANSIT'; });
     allOrders.forEach(function(o) {
       var pDate = o.planDeliveryDate || null;
       if (!pDate && o.route) pDate = parseDateFromRoute(o.route);
@@ -10718,6 +10739,9 @@ function parsePlanningData() {
   // We use all orders here to support showing planned orders on specific days
   var grwPool = RAW_ORDER_POOL_GRW || [];
   var custPool = RAW_ORDER_POOL_CUST || [];
+
+    grwPool = grwPool.filter(function(o) { return o.bookingType !== 'TRANSIT'; });
+  custPool = custPool.filter(function(o) { return o.bookingType !== 'TRANSIT'; });
 
   if (sourceFilter === 'GRW') {
     custPool = [];
@@ -11604,8 +11628,18 @@ function processResults(results) {
     collectRouteDates(dataAgingGrw);
     collectRouteDates(dataAgingCust);
 
-    ORDER_POOL_GRW = parseOutstandingSheetData(dataAgingGrw, RAW_ORDER_POOL_GRW, 'GRW');
-    ORDER_POOL_CUST = parseOutstandingSheetData(dataAgingCust, RAW_ORDER_POOL_CUST, 'CUST');
+    var tempGrwRaw = [];
+    var tempCustRaw = [];
+    var tempGrwPool = parseOutstandingSheetData(dataAgingGrw, tempGrwRaw, 'GRW');
+    var tempCustPool = parseOutstandingSheetData(dataAgingCust, tempCustRaw, 'CUST');
+    
+    var combinedRaw = tempGrwRaw.concat(tempCustRaw);
+    var combinedPool = tempGrwPool.concat(tempCustPool);
+    
+    RAW_ORDER_POOL_GRW = combinedRaw.filter(function(o) { return o.sourceType === 'GRW'; });
+    RAW_ORDER_POOL_CUST = combinedRaw.filter(function(o) { return o.sourceType === 'CUST'; });
+    ORDER_POOL_GRW = combinedPool.filter(function(o) { return o.sourceType === 'GRW'; });
+    ORDER_POOL_CUST = combinedPool.filter(function(o) { return o.sourceType === 'CUST'; });
     
     // Parse CONT DATE for GRW planning projection
     GRW_PLAN_AREAS = [];
@@ -11643,9 +11677,12 @@ function fallbackData() {
   allData = EMBEDDED_DATA;
   allFulfillmentData = EMBEDDED_DATA;
   allOlfData = [];
-  ORDER_POOL_GRW = parseOutstandingSheetData(EMBEDDED_DATA, RAW_ORDER_POOL_GRW, 'GRW');
-  ORDER_POOL_CUST = [];
-  RAW_ORDER_POOL_CUST = [];
+  var tempRaw = [];
+  var tempPool = parseOutstandingSheetData(EMBEDDED_DATA, tempRaw, 'GRW');
+  RAW_ORDER_POOL_GRW = tempRaw.filter(function(o) { return o.sourceType === 'GRW'; });
+  RAW_ORDER_POOL_CUST = tempRaw.filter(function(o) { return o.sourceType === 'CUST'; });
+  ORDER_POOL_GRW = tempPool.filter(function(o) { return o.sourceType === 'GRW'; });
+  ORDER_POOL_CUST = tempPool.filter(function(o) { return o.sourceType === 'CUST'; });
   isLiveData = false;
   onDataReady(null, false);
   applyAgingFilters();
