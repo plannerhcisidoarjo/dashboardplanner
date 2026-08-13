@@ -3031,6 +3031,269 @@ body.is-fullscreen {
 .tag-green { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); }
 .tag-amber { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); }
 .tag-blue { background: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.4); }
+
+/* --- MODERN MOBILE SCI-FI MATRIX / FUTURE LAPSE REDESIGN --- */
+@media (max-width: 768px) {
+  :root {
+    --bg: #06070a;
+    --surface: rgba(10, 12, 22, 0.75);
+    --surface2: rgba(20, 24, 40, 0.45);
+    --border: rgba(56, 189, 248, 0.18);
+    --border-glow: rgba(56, 189, 248, 0.35);
+    --text: #f1f5f9;
+    --muted: #94a3b8;
+    --blue: #00f0ff;
+    --green: #39ff14;
+    --amber: #ffb700;
+    --radius: 20px;
+    --radius-sm: 12px;
+  }
+
+  body {
+    background-color: #06070a !important;
+    background-image: 
+      radial-gradient(circle at 15% 15%, rgba(0, 240, 255, 0.12) 0%, transparent 50%),
+      radial-gradient(circle at 85% 85%, rgba(139, 92, 246, 0.12) 0%, transparent 50%),
+      linear-gradient(rgba(255, 255, 255, 0.003) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.003) 1px, transparent 1px) !important;
+    background-size: 100% 100%, 100% 100%, 15px 15px, 15px 15px !important;
+  }
+
+  /* Sticky subheader space-themed */
+  .page-subheader {
+    background: rgba(6, 7, 10, 0.65) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border-bottom: 1px solid rgba(0, 240, 255, 0.15) !important;
+    padding: 16px 20px !important;
+    margin: -16px -12px 16px -12px !important;
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 100 !important;
+  }
+  
+  .page-title {
+    font-size: 13px !important;
+    font-weight: 900 !important;
+    letter-spacing: 0.8px !important;
+    color: #fff !important;
+    text-shadow: 0 0 10px rgba(0, 240, 255, 0.5) !important;
+  }
+  
+  .page-sub {
+    font-size: 8.5px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+  }
+
+  /* Header futuristic upgrade */
+  .header {
+    background: rgba(6, 7, 10, 0.85) !important;
+    border-bottom: 1px solid rgba(0, 240, 255, 0.15) !important;
+    padding: 12px 16px !important;
+    height: auto !important;
+  }
+  
+  .header-title {
+    font-size: 11px !important;
+    font-weight: 900 !important;
+    color: #fff !important;
+    text-shadow: 0 0 10px rgba(0, 240, 255, 0.5) !important;
+  }
+
+  /* High Tech Glass Cards for Overview */
+  #pg-overview .ov-card, 
+  #pg-overview .map-card {
+    background: rgba(10, 12, 22, 0.8) !important;
+    border: 1px solid rgba(0, 240, 255, 0.15) !important;
+    border-radius: 24px !important;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5), inset 0 0 15px rgba(0, 240, 255, 0.05) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    padding: 20px !important;
+    margin-bottom: 16px !important;
+    position: relative;
+    overflow: hidden;
+  }
+
+  #pg-overview .ov-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, #00f0ff, #8b5cf6, #39ff14);
+    opacity: 0.7;
+  }
+
+  /* Speedometer wrap holographic halo */
+  #pg-overview .speedo-wrap {
+    background: rgba(255, 255, 255, 0.01) !important;
+    border: 1px dashed rgba(0, 240, 255, 0.3) !important;
+    border-radius: 50% 50% 0 0 !important;
+    padding: 20px 20px 0 20px !important;
+    box-shadow: 0 0 20px rgba(0, 240, 255, 0.1), inset 0 0 20px rgba(0, 240, 255, 0.05) !important;
+  }
+
+  #pg-overview .speedo-val {
+    color: #00f0ff !important;
+    text-shadow: 0 0 12px rgba(0, 240, 255, 0.8) !important;
+    font-size: 28px !important;
+    font-weight: 900 !important;
+    bottom: -8px !important;
+  }
+
+  /* Business Unit columns: Pill layout styled in space-lapse style */
+  #pg-overview .bu-sla-breakdown {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+    margin-top: 20px !important;
+  }
+
+  #pg-overview .bu-col {
+    background: rgba(255, 255, 255, 0.02) !important;
+    border: 1px solid rgba(255, 255, 255, 0.06) !important;
+    border-radius: 18px !important;
+    padding: 12px 16px !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 12px !important;
+    box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.01) !important;
+  }
+
+  #pg-overview .bu-name {
+    min-height: auto !important;
+    border: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    flex: 1;
+    display: flex !important;
+    align-items: center;
+    justify-content: flex-start !important;
+  }
+
+  #pg-overview .bu-logo {
+    height: 32px !important;
+    margin: 0 !important;
+    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.15));
+  }
+
+  #pg-overview .bu-row {
+    flex: 0 0 auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-end !important;
+    margin: 0 !important;
+    gap: 2px;
+  }
+
+  #pg-overview .bu-row span {
+    font-size: 9px !important;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  #pg-overview .bu-row strong {
+    font-size: 14px !important;
+    font-weight: 800 !important;
+    color: #00f0ff !important;
+    text-shadow: 0 0 8px rgba(0, 240, 255, 0.5) !important;
+  }
+
+  /* Holographic metric badges */
+  .badge {
+    background: rgba(0, 240, 255, 0.15) !important;
+    border: 1px solid rgba(0, 240, 255, 0.3) !important;
+    color: #00f0ff !important;
+    text-shadow: 0 0 5px rgba(0, 240, 255, 0.5);
+    box-shadow: 0 0 10px rgba(0, 240, 255, 0.1) !important;
+  }
+
+  /* Date selector styles matching the theme */
+  .date-input {
+    background: rgba(0, 0, 0, 0.5) !important;
+    border: 1px solid rgba(0, 240, 255, 0.2) !important;
+    color: #fff !important;
+    border-radius: 8px !important;
+    padding: 4px 8px !important;
+    outline: none;
+  }
+  
+  .filter-btn {
+    background: linear-gradient(135deg, #00f0ff, #3b82f6) !important;
+    border: none !important;
+    color: #000 !important;
+    font-weight: 800 !important;
+    border-radius: 8px !important;
+    box-shadow: 0 0 12px rgba(0, 240, 255, 0.4) !important;
+  }
+
+  /* Floating sci-fi bottom navigation */
+  .mobile-bottom-nav {
+    display: flex !important;
+    position: fixed !important;
+    bottom: 16px !important;
+    left: 16px !important;
+    right: 16px !important;
+    height: 64px !important;
+    background: rgba(8, 10, 18, 0.85) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    border: 1.5px solid rgba(0, 240, 255, 0.15) !important;
+    border-radius: 32px !important;
+    z-index: 10000 !important;
+    justify-content: space-around !important;
+    align-items: center !important;
+    padding: 0 12px !important;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6), inset 0 0 10px rgba(0, 240, 255, 0.05) !important;
+  }
+
+  .nav-item {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: #475569 !important;
+    width: 44px !important;
+    height: 44px !important;
+    border-radius: 50% !important;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    position: relative !important;
+  }
+
+  .nav-item svg {
+    width: 22px !important;
+    height: 22px !important;
+    stroke: currentColor !important;
+    transition: stroke 0.3s, transform 0.3s !important;
+  }
+
+  .nav-item.active {
+    color: #00f0ff !important;
+    background: rgba(0, 240, 255, 0.1) !important;
+    border: 1px solid rgba(0, 240, 255, 0.25) !important;
+    box-shadow: 0 0 15px rgba(0, 240, 255, 0.25) !important;
+  }
+
+  .nav-item.active svg {
+    transform: scale(1.1) !important;
+    stroke: #00f0ff !important;
+  }
+
+  /* Push down main content so it is not covered by bottom nav */
+  .main-content {
+    padding-bottom: 96px !important;
+  }
+
+  /* Sleek neon dots and grid overlays for futuristic matrix vibes */
+  .space-glow-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none;
+    z-index: 9999;
+    background-image: radial-gradient(circle at 50% 50%, transparent 60%, rgba(6, 7, 10, 0.4) 100%);
+  }
+}
 </style>
 </head>
 <body>
@@ -3269,8 +3532,13 @@ PLANNING REPORT</div>
 <!-- ═══ FILTER BAR ═══ -->
 <div class="filter-bar">
   <div class="filter-group">
-    <span class="filter-label">Tanggal</span>
+    <span class="filter-label">Tanggal Transaksi</span>
     <input type="date" class="filter-input" id="filterDate" onchange="applyFilters()">
+  </div>
+  <div class="filter-divider"></div>
+  <div class="filter-group">
+    <span class="filter-label">Stuffing Date</span>
+    <input type="date" class="filter-input" id="filterStuffingDate" onchange="applyFilters()">
   </div>
   <div class="filter-divider"></div>
   <div class="filter-group">
@@ -7717,6 +7985,13 @@ function navTo(page) {
   var ni = document.getElementById('ni-' + page);
   if (ni) ni.classList.add('ac');
   
+  // Update Active Mobile Nav Items
+  document.querySelectorAll('.mobile-bottom-nav .nav-item').forEach(function(el) {
+    el.classList.remove('active');
+  });
+  var mNav = document.getElementById('m-nav-' + page);
+  if (mNav) mNav.classList.add('active');
+  
   // Hide all pages, show active
   document.querySelectorAll('.pg').forEach(function(el) {
     el.classList.remove('vis');
@@ -9146,7 +9421,8 @@ function renderSlaDetailPage(){
   setText('slaCustPeriodBadge', scopeTxt);
   setText('slaBuScopeBadge', scopeTxt);
   setText('slaMissPeriodInfo', '📅 ' + scopeTxt);
-  var trendTxt = (SLA_STATE.trendMode==='monthly' ? 'Agregasi bulanan' : 'Agregasi harian');
+  var trendTxt = (SLA_STATE.trendMode==='monthly' ? 'Agregasi bulanan' : 'Agregasi harian') +
+                 (SLA_STATE.area==='ALL' && SLA_STATE.hasAreaDim ? ' · warna terpisah DK (muda) vs LK (tua)' : '');
   setText('slaGrwTrendSub', trendTxt);
   setText('slaCustTrendSub', trendTxt);
 
@@ -11500,6 +11776,7 @@ function getFilteredDataset() {
 function applyFilters() {
   if (!allData || !Array.isArray(allData)) return;
   var dateVal = document.getElementById('filterDate').value;   // 'YYYY-MM-DD'
+  var stuffingDateVal = document.getElementById('filterStuffingDate') ? document.getElementById('filterStuffingDate').value : '';
   var shift   = document.getElementById('filterShift').value;
   var status  = document.getElementById('filterStatus').value;
   var armada  = document.getElementById('filterArmada').value;
@@ -11511,10 +11788,33 @@ function applyFilters() {
     datePrefix = dp[0].slice(2) + dp[1] + dp[2]; 
   }
 
+  var sTarget1 = '', sTarget2 = '', sTarget3 = '', sTarget4 = '', sTarget5 = '';
+  if (stuffingDateVal) {
+    var sDp = stuffingDateVal.split('-');
+    var sDay = parseInt(sDp[2], 10);
+    var sMon = parseInt(sDp[1], 10);
+    var sYear = sDp[0];
+    
+    // M/D/YYYY
+    sTarget1 = sMon + '/' + sDay + '/' + sYear;
+    // MM/DD/YYYY
+    sTarget2 = ('0'+sMon).slice(-2) + '/' + ('0'+sDay).slice(-2) + '/' + sYear;
+    // D/M/YYYY
+    sTarget3 = sDay + '/' + sMon + '/' + sYear;
+    // DD/MM/YYYY
+    sTarget4 = ('0'+sDay).slice(-2) + '/' + ('0'+sMon).slice(-2) + '/' + sYear;
+    // YYYY-MM-DD
+    sTarget5 = sYear + '-' + ('0'+sMon).slice(-2) + '-' + ('0'+sDay).slice(-2);
+  }
+
   filteredData = allData.filter(function(r) {
     var transno = String(r['TRANSNO'] || '');
     if (datePrefix) {
       if (!transno.startsWith(datePrefix)) return false;
+    }
+    if (sTarget1) {
+      var rMuat = String(r['TANGGAL MUAT'] || '').split(' ')[0];
+      if (rMuat !== sTarget1 && rMuat !== sTarget2 && rMuat !== sTarget3 && rMuat !== sTarget4 && rMuat !== sTarget5) return false;
     }
     if (activeArea !== 'all' && r['AREA'] !== activeArea) return false;
     if (shift && r['PENYELESAIAN'] !== shift) return false;
@@ -20443,6 +20743,44 @@ function closeCxCategoryModal() {
     </div>
   </div>
   <button onclick="toggleFullscreenMode()" style="background:none; border:none; color:#94a3b8; font-size:16px; padding:0 16px; cursor:pointer; height:100%; border-left:1px solid rgba(255,255,255,0.1); transition:color 0.2s;" onmouseover="this.style.color='#f8fafc'" onmouseout="this.style.color='#94a3b8'" title="Keluar Fullscreen (ESC)">✕</button>
+</div>
+
+<!-- Mobile Bottom Navigation (Only visible on screens <= 768px via CSS) -->
+<div class="mobile-bottom-nav" style="display: none;">
+  <a href="#" class="nav-item active" id="m-nav-overview" onclick="navTo('overview'); event.preventDefault();" title="Overview">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="3" width="7" height="9"></rect>
+      <rect x="14" y="3" width="7" height="5"></rect>
+      <rect x="14" y="12" width="7" height="9"></rect>
+      <rect x="3" y="16" width="7" height="5"></rect>
+    </svg>
+  </a>
+  <a href="#" class="nav-item" id="m-nav-sla" onclick="navTo('sla'); event.preventDefault();" title="SLA">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"></circle>
+      <polyline points="12 6 12 12 16 14"></polyline>
+    </svg>
+  </a>
+  <a href="#" class="nav-item" id="m-nav-aging" onclick="navTo('aging'); event.preventDefault();" title="Aging Pool">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+    </svg>
+  </a>
+  <a href="#" class="nav-item" id="m-nav-loading" onclick="navTo('loading'); event.preventDefault();" title="Progress Loading">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="1" y="3" width="15" height="13"></rect>
+      <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+      <circle cx="5.5" cy="18.5" r="2.5"></circle>
+      <circle cx="18.5" cy="18.5" r="2.5"></circle>
+    </svg>
+  </a>
+  <a href="#" class="nav-item" id="m-nav-menu" onclick="toggleSidebar(); event.preventDefault();" title="All Panels">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </a>
 </div>
 
 </body>
