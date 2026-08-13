@@ -9147,7 +9147,7 @@ function renderSlaDetailPage(){
   setText('slaBuScopeBadge', scopeTxt);
   setText('slaMissPeriodInfo', '📅 ' + scopeTxt);
   var trendTxt = (SLA_STATE.trendMode==='monthly' ? 'Agregasi bulanan' : 'Agregasi harian') +
-                 (SLA_STATE.area==='ALL' && SLA_STATE.hasAreaDim ? ' · warna terpisah DK (muda) vs LK (tua)' : '');
+                 (SLA_STATE.area==='ALL' && SLA_STATE.hasAreaDim);
   setText('slaGrwTrendSub', trendTxt);
   setText('slaCustTrendSub', trendTxt);
 
