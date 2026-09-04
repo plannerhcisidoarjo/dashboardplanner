@@ -4551,43 +4551,8 @@ PLANNING REPORT</div>
         <div class="card-title">SLA MISSED TRANSACTION LOGS (REASON)</div>
         <div class="card-sub">Audit trail transaksi pesanan terlambat mengikuti periode &amp; area</div>
       </div>
-      <div style="display:flex; gap:12px; align-items: center; flex-wrap: wrap; width: 100%; margin-top: 10px; border-top: 1px solid var(--border); padding-top: 12px;">
+            <div style="display:flex; gap:12px; align-items: center; flex-wrap: wrap; width: 100%; margin-top: 10px; border-top: 1px solid var(--border); padding-top: 12px;">
         <span class="badge badge-blue" id="slaMissPeriodInfo" style="display:none;">—</span>
-
-        <div class="filter-divider" style="height: 24px;"></div>
-
-        <!-- Type Order Filter Toggle -->
-        <div class="filter-group">
-          <span class="filter-label">Type Order:</span>
-          <div class="filter-toggle" id="slaMissTypeToggle">
-            <button class="active" onclick="setSlaMissType('ALL', this)">Gabungan</button>
-            <button onclick="setSlaMissType('GRW', this)">GRW</button>
-            <button onclick="setSlaMissType('CUSTOMER', this)">CUSTOMER</button>
-          </div>
-        </div>
-
-        <div class="filter-divider" style="height: 24px;"></div>
-
-        <!-- Area Toggle -->
-        <div class="filter-group">
-          <span class="filter-label">Area:</span>
-          <div class="filter-toggle" id="slaMissAreaToggle">
-            <button class="active" onclick="setSlaMissArea('ALL', this)">Semua</button>
-            <button onclick="setSlaMissArea('DK', this)">Dalam Kota</button>
-            <button onclick="setSlaMissArea('LK', this)">Luar Kota</button>
-          </div>
-        </div>
-
-        <div class="filter-divider" style="height: 24px;"></div>
-
-        <!-- Date Filter -->
-        <div class="filter-group">
-          <span class="filter-label">Tanggal (Shipped Date):</span>
-          <div style="display:flex; gap:8px;">
-            <input type="date" id="slaMissStartDate" class="filter-input" style="padding:4px 8px; font-size:11px;" onchange="applySlaMissFilters()">
-            <input type="date" id="slaMissEndDate" class="filter-input" style="padding:4px 8px; font-size:11px;" onchange="applySlaMissFilters()">
-          </div>
-        </div>
 
         <div class="filter-divider" style="height: 24px;"></div>
 
