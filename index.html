@@ -4398,14 +4398,6 @@ PLANNING REPORT</div>
           <div class="sla-card-val" style="color:#1e1b4b;" id="slaGrwLkPct">LK</div>
           <div class="sla-card-sub" style="color:#3730a3;" id="slaGrwLkSub">—</div>
         </div>
-        <div class="sla-breakdown-card grw-total-accent">
-          <div class="sla-card-head">
-            <span class="sla-card-label" style="color:#0369a1;">TOTAL GRW</span>
-            <span class="sla-card-badge" style="background:rgba(14,165,233,0.2); color:#0c4a6e; border-color:rgba(14,165,233,0.4);">OVERALL</span>
-          </div>
-          <div class="sla-card-val" style="color:#0284c7;" id="slaGrwTotPct">TOTAL</div>
-          <div class="sla-card-sub" style="color:#0369a1;" id="slaGrwTotSub">—</div>
-        </div>
       </div>
     </div>
 
@@ -4445,14 +4437,6 @@ PLANNING REPORT</div>
           </div>
           <div class="sla-card-val" style="color:#1e1b4b;" id="slaCustLkPct">LK</div>
           <div class="sla-card-sub" style="color:#3730a3;" id="slaCustLkSub">—</div>
-        </div>
-        <div class="sla-breakdown-card cust-total-accent">
-          <div class="sla-card-head">
-            <span class="sla-card-label" style="color:#b45309;">TOTAL CUST</span>
-            <span class="sla-card-badge" style="background:rgba(245,158,11,0.2); color:#78350f; border-color:rgba(245,158,11,0.4);">OVERALL</span>
-          </div>
-          <div class="sla-card-val" style="color:#d97706;" id="slaCustTotPct">TOTAL</div>
-          <div class="sla-card-sub" style="color:#b45309;" id="slaCustTotSub">—</div>
         </div>
       </div>
     </div>
@@ -9443,7 +9427,7 @@ function renderSlaDetailPage(){
   setText('slaBuScopeBadge', scopeTxt);
   setText('slaMissPeriodInfo', '📅 ' + scopeTxt);
   var trendTxt = (SLA_STATE.trendMode==='monthly' ? 'Agregasi bulanan' : 'Agregasi harian') +
-                 (SLA_STATE.area==='ALL' && SLA_STATE.hasAreaDim ? ' · warna terpisah DK (muda) vs LK (tua)' : '');
+                 (SLA_STATE.area==='ALL' && SLA_STATE.hasAreaDim ? : '');
   setText('slaGrwTrendSub', trendTxt);
   setText('slaCustTrendSub', trendTxt);
 
