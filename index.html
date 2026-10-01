@@ -5027,6 +5027,218 @@ PLANNING REPORT</div>
 
 
 
+
+    <!-- ── QUALITY CONTROL (QC) INSPECTION DISTRIBUTION & PRIORITY CONTROL ── -->
+    <div class="card" style="margin-bottom: 20px; border-top: 4px solid #ef4444; background: linear-gradient(180deg, rgba(239,68,68,0.03) 0%, var(--surface) 100%);">
+      <div class="card-header" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; padding-bottom:12px; border-bottom:1px solid var(--border);">
+        <div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <div class="card-title" style="color:var(--text); font-size:16px;">🛡️ SEBARAN CASE ID WAJIB QUALITY CONTROL (QC)</div>
+            <span id="cr-qc-status-badge" class="badge" style="background:rgba(239,68,68,0.15); color:#ef4444; border:1px solid rgba(239,68,68,0.3); font-size:10px; font-weight:800;">QC MASTER ACTIVE</span>
+          </div>
+          <div class="card-sub" style="margin-top:2px;">Prioritas inspeksi Case ID berdasarkan pencocokan SKU Master QC (354 SKU), Batch Picking, dan Jenis Order (Customer vs Store)</div>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <button class="badge badge-muted" style="padding:5px 10px; border:1px solid var(--border); background:var(--surface2); cursor:pointer; font-size:11px; font-weight:700;" onclick="openTopSkuModal(); switchSkuModalTab('qc');">
+            🔍 Modal Rincian QC
+          </button>
+        </div>
+      </div>
+
+      <!-- 4 Priority Cards (Batch x Order Type Matrix) -->
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:12px; margin-top:16px;">
+        
+        <!-- P1: Customer from P1+GRW DK, P2, and HUB DAN LK ONSITE -->
+        <div id="cr-qc-card-p1" class="kpi-card" style="cursor:pointer; border:1px solid rgba(239,68,68,0.3); background:rgba(239,68,68,0.06); padding:12px 14px; border-radius:var(--radius-sm); transition:all 0.2s ease;" onclick="setCrQcFilterPrio('P1')">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+            <span style="font-size:10px; font-weight:900; background:#ef4444; color:#fff; padding:2px 6px; border-radius:4px; letter-spacing:0.5px;">PRIORITAS 1 (URGENT)</span>
+            <span style="font-size:11px; color:#ef4444; font-weight:700;">Shift 1 (Pagi)</span>
+          </div>
+          <div style="font-size:12px; font-weight:700; color:var(--text); margin-bottom:4px;">🔥 Customer (P1, P2 &amp; HUB/LK)</div>
+          <div style="font-size:10px; color:var(--muted); margin-bottom:8px; line-height:1.3;">Case ID Customer dari sheet "P1+GRW DK", "P2", &amp; "HUB DAN LK ONSITE"</div>
+          <div style="display:flex; justify-content:space-between; align-items:baseline; border-top:1px dashed rgba(239,68,68,0.2); padding-top:6px;">
+            <span id="cr-qc-p1-cases" style="font-family:var(--font-mono); font-size:18px; font-weight:900; color:#ef4444;">0 Cases</span>
+            <span id="cr-qc-p1-cbm" style="font-size:11px; color:var(--muted); font-family:var(--font-mono);">0.00 CBM</span>
+          </div>
+          <div style="font-size:10px; color:var(--muted); margin-top:3px; display:flex; justify-content:space-between;">
+            <span id="cr-qc-p1-skus">0 SKU Unik</span>
+            <span id="cr-qc-p1-pct" style="font-weight:700; color:#ef4444;">0% QC</span>
+          </div>
+        </div>
+
+        <!-- P2: GRW from P1+GRW DK, P2, and HUB DAN LK ONSITE -->
+        <div id="cr-qc-card-p2" class="kpi-card" style="cursor:pointer; border:1px solid rgba(245,158,11,0.3); background:rgba(245,158,11,0.06); padding:12px 14px; border-radius:var(--radius-sm); transition:all 0.2s ease;" onclick="setCrQcFilterPrio('P2')">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+            <span style="font-size:10px; font-weight:900; background:#f59e0b; color:#fff; padding:2px 6px; border-radius:4px; letter-spacing:0.5px;">PRIORITAS 2 (HIGH)</span>
+            <span style="font-size:11px; color:#f59e0b; font-weight:700;">Shift 1 (Siang)</span>
+          </div>
+          <div style="font-size:12px; font-weight:700; color:var(--text); margin-bottom:4px;">⚡ GRW (P1, P2 &amp; HUB/LK)</div>
+          <div style="font-size:10px; color:var(--muted); margin-bottom:8px; line-height:1.3;">Case ID GRW dari sheet "P1+GRW DK", "P2", &amp; "HUB DAN LK ONSITE"</div>
+          <div style="display:flex; justify-content:space-between; align-items:baseline; border-top:1px dashed rgba(245,158,11,0.2); padding-top:6px;">
+            <span id="cr-qc-p2-cases" style="font-family:var(--font-mono); font-size:18px; font-weight:900; color:#f59e0b;">0 Cases</span>
+            <span id="cr-qc-p2-cbm" style="font-size:11px; color:var(--muted); font-family:var(--font-mono);">0.00 CBM</span>
+          </div>
+          <div style="font-size:10px; color:var(--muted); margin-top:3px; display:flex; justify-content:space-between;">
+            <span id="cr-qc-p2-skus">0 SKU Unik</span>
+            <span id="cr-qc-p2-pct" style="font-weight:700; color:#f59e0b;">0% QC</span>
+          </div>
+        </div>
+
+        <!-- P3: Customer from sheet LP -->
+        <div id="cr-qc-card-p3" class="kpi-card" style="cursor:pointer; border:1px solid rgba(59,130,246,0.3); background:rgba(59,130,246,0.06); padding:12px 14px; border-radius:var(--radius-sm); transition:all 0.2s ease;" onclick="setCrQcFilterPrio('P3')">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+            <span style="font-size:10px; font-weight:900; background:#3b82f6; color:#fff; padding:2px 6px; border-radius:4px; letter-spacing:0.5px;">PRIORITAS 3 (MEDIUM)</span>
+            <span style="font-size:11px; color:#3b82f6; font-weight:700;">Shift 2 (Sore)</span>
+          </div>
+          <div style="font-size:12px; font-weight:700; color:var(--text); margin-bottom:4px;">📦 Customer (Sheet LP)</div>
+          <div style="font-size:10px; color:var(--muted); margin-bottom:8px; line-height:1.3;">Case ID Customer pada sheet "LP" (Buffer Luar Pulau)</div>
+          <div style="display:flex; justify-content:space-between; align-items:baseline; border-top:1px dashed rgba(59,130,246,0.2); padding-top:6px;">
+            <span id="cr-qc-p3-cases" style="font-family:var(--font-mono); font-size:18px; font-weight:900; color:#3b82f6;">0 Cases</span>
+            <span id="cr-qc-p3-cbm" style="font-size:11px; color:var(--muted); font-family:var(--font-mono);">0.00 CBM</span>
+          </div>
+          <div style="font-size:10px; color:var(--muted); margin-top:3px; display:flex; justify-content:space-between;">
+            <span id="cr-qc-p3-skus">0 SKU Unik</span>
+            <span id="cr-qc-p3-pct" style="font-weight:700; color:#3b82f6;">0% QC</span>
+          </div>
+        </div>
+
+        <!-- P4: GRW from sheet LP -->
+        <div id="cr-qc-card-p4" class="kpi-card" style="cursor:pointer; border:1px solid rgba(100,116,139,0.3); background:rgba(100,116,139,0.06); padding:12px 14px; border-radius:var(--radius-sm); transition:all 0.2s ease;" onclick="setCrQcFilterPrio('P4')">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+            <span style="font-size:10px; font-weight:900; background:#64748b; color:#fff; padding:2px 6px; border-radius:4px; letter-spacing:0.5px;">PRIORITAS 4 (SCHEDULED)</span>
+            <span style="font-size:11px; color:#64748b; font-weight:700;">Shift 2 (Malam)</span>
+          </div>
+          <div style="font-size:12px; font-weight:700; color:var(--text); margin-bottom:4px;">📋 GRW (Sheet LP)</div>
+          <div style="font-size:10px; color:var(--muted); margin-bottom:8px; line-height:1.3;">Case ID GRW pada sheet "LP" (Buffer Luar Pulau)</div>
+          <div style="display:flex; justify-content:space-between; align-items:baseline; border-top:1px dashed rgba(100,116,139,0.2); padding-top:6px;">
+            <span id="cr-qc-p4-cases" style="font-family:var(--font-mono); font-size:18px; font-weight:900; color:#64748b;">0 Cases</span>
+            <span id="cr-qc-p4-cbm" style="font-size:11px; color:var(--muted); font-family:var(--font-mono);">0.00 CBM</span>
+          </div>
+          <div style="font-size:10px; color:var(--muted); margin-top:3px; display:flex; justify-content:space-between;">
+            <span id="cr-qc-p4-skus">0 SKU Unik</span>
+            <span id="cr-qc-p4-pct" style="font-weight:700; color:#64748b;">0% QC</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Quick KPI Strip & Operational Directive -->
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-top:16px; background:var(--surface2); padding:12px 14px; border-radius:var(--radius-sm); border:1px solid var(--border);">
+        <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap; font-size:12px;">
+          <div>
+            <span style="color:var(--muted); font-size:11px; text-transform:uppercase; font-weight:700;">Total Case ID QC:</span>
+            <span id="cr-qc-total-cases" style="font-family:var(--font-mono); font-weight:800; color:#ef4444; margin-left:4px; font-size:14px;">0 Cases</span>
+            <span id="cr-qc-rate-pct" style="font-size:11px; color:var(--muted); margin-left:2px;">(0% Total Release)</span>
+          </div>
+          <div style="border-left:1px solid var(--border); padding-left:12px;">
+            <span style="color:var(--muted); font-size:11px; text-transform:uppercase; font-weight:700;">SKU Master Aktif:</span>
+            <span id="cr-qc-active-skus" style="font-family:var(--font-mono); font-weight:800; color:var(--text); margin-left:4px;">0 SKU</span>
+            <span style="font-size:11px; color:var(--muted);">/ 354 Master SKU</span>
+          </div>
+          <div style="border-left:1px solid var(--border); padding-left:12px;">
+            <span style="color:var(--muted); font-size:11px; text-transform:uppercase; font-weight:700;">Total Volume QC:</span>
+            <span id="cr-qc-total-cbm" style="font-family:var(--font-mono); font-weight:800; color:var(--text); margin-left:4px;">0.00 CBM</span>
+          </div>
+        </div>
+        <div id="cr-qc-insight" style="font-size:11px; color:var(--muted); max-width:550px; line-height:1.4;">
+          <!-- Rendered via JS -->
+        </div>
+      </div>
+
+      <!-- ── TOP SKU SECTION: TOP SKU QC vs TOP SKU OVERALL ── -->
+      <div style="display:grid; grid-template-columns: 1.1fr 1fr; gap:16px; margin-top:20px;">
+        
+        <!-- Left: TOP SKU WAJIB QC -->
+        <div style="border:1px solid var(--border); border-radius:var(--radius-sm); padding:14px; background:var(--surface);">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <div>
+              <div style="font-weight:800; font-size:13px; color:#ef4444; display:flex; align-items:center; gap:6px;">
+                <span>🛡️ TOP SKU DENGAN CASE ID QC TERBANYAK</span>
+              </div>
+              <div style="font-size:11px; color:var(--muted);">SKU wajib QC yang memiliki volume Case ID release tertinggi hari ini</div>
+            </div>
+            <span id="cr-top-qc-sku-count-badge" class="badge" style="background:rgba(239,68,68,0.1); color:#ef4444; font-size:10px;">Top 10 SKU</span>
+          </div>
+          <div id="cr-top-qc-sku-list" style="display:flex; flex-direction:column; gap:8px;">
+            <!-- Rendered via JS -->
+          </div>
+        </div>
+
+        <!-- Right: TOP SKU OVERALL RELEASE -->
+        <div style="border:1px solid var(--border); border-radius:var(--radius-sm); padding:14px; background:var(--surface);">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <div>
+              <div style="font-weight:800; font-size:13px; color:var(--blue); display:flex; align-items:center; gap:6px;">
+                <span>🏆 TOP SKU RELEASE KESELURUHAN (ALL ITEMS)</span>
+              </div>
+              <div style="font-size:11px; color:var(--muted);">Total case ID terbanyak dari seluruh item release hari ini</div>
+            </div>
+            <span id="cr-top-all-sku-count-badge" class="badge" style="background:rgba(37,99,235,0.1); color:var(--blue); font-size:10px;">Top 10 SKU</span>
+          </div>
+          <div id="cr-top-all-sku-list" style="display:flex; flex-direction:column; gap:8px;">
+            <!-- Rendered via JS -->
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ── INTERACTIVE QC INSPECTION QUEUE TABLE ── -->
+      <div style="margin-top:20px; border-top:1px solid var(--border); padding-top:16px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:12px;">
+          <div>
+            <div style="font-weight:800; font-size:13px; color:var(--text);">📋 DAFTAR DETAIL CASE ID WAJIB QC (INSPECTION QUEUE)</div>
+            <div style="font-size:11px; color:var(--muted);">Filter dan cari Case ID spesifik yang harus dialihkan ke Staging QC</div>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+            <!-- Priority Filter Buttons -->
+            <div style="display:flex; gap:4px; background:var(--surface2); padding:3px; border-radius:var(--radius-sm); border:1px solid var(--border);">
+              <button id="cr-qc-btn-all" class="badge active" style="border:none; cursor:pointer; padding:4px 8px; font-size:11px; font-weight:700;" onclick="setCrQcFilterPrio('ALL')">Semua QC</button>
+              <button id="cr-qc-btn-p1" class="badge badge-muted" style="border:none; cursor:pointer; padding:4px 8px; font-size:11px; font-weight:700;" onclick="setCrQcFilterPrio('P1')">🔥 P1 Urgent</button>
+              <button id="cr-qc-btn-p2" class="badge badge-muted" style="border:none; cursor:pointer; padding:4px 8px; font-size:11px; font-weight:700;" onclick="setCrQcFilterPrio('P2')">⚡ P2 High</button>
+              <button id="cr-qc-btn-p3" class="badge badge-muted" style="border:none; cursor:pointer; padding:4px 8px; font-size:11px; font-weight:700;" onclick="setCrQcFilterPrio('P3')">📦 P3 Medium</button>
+              <button id="cr-qc-btn-p4" class="badge badge-muted" style="border:none; cursor:pointer; padding:4px 8px; font-size:11px; font-weight:700;" onclick="setCrQcFilterPrio('P4')">📋 P4 Buffer</button>
+            </div>
+
+            <!-- Search Input -->
+            <input type="text" id="cr-qc-search-input" placeholder="🔍 Cari Case ID / SKU / Toko..." style="font-size:12px; padding:5px 10px; border-radius:var(--radius-sm); border:1px solid var(--border); background:var(--surface); color:var(--text); width:200px;" oninput="onCrQcSearchChange()">
+          </div>
+        </div>
+
+        <!-- Table Container -->
+        <div style="overflow-x:auto; border:1px solid var(--border); border-radius:var(--radius-sm);">
+          <table style="width:100%; border-collapse:collapse; font-size:12px; text-align:left;">
+            <thead>
+              <tr style="background:var(--surface2); border-bottom:1px solid var(--border); color:var(--muted); font-size:11px; text-transform:uppercase;">
+                <th style="padding:8px 10px; font-weight:800;">Prioritas</th>
+                <th style="padding:8px 10px; font-weight:800;">Case ID</th>
+                <th style="padding:8px 10px; font-weight:800;">SKU &amp; Deskripsi</th>
+                <th style="padding:8px 10px; font-weight:800;">Kategori / Dept</th>
+                <th style="padding:8px 10px; font-weight:800;">Batch &amp; Tipe</th>
+                <th style="padding:8px 10px; font-weight:800;">Lokasi (Bin)</th>
+                <th style="padding:8px 10px; font-weight:800;">Tujuan (Ship-To)</th>
+                <th style="padding:8px 10px; font-weight:800; text-align:right;">Volume</th>
+              </tr>
+            </thead>
+            <tbody id="cr-qc-table-body">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination & Counter -->
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px; font-size:11px; color:var(--muted);">
+          <div id="cr-qc-table-info">Menampilkan 0 dari 0 Case ID QC</div>
+          <div style="display:flex; gap:6px; align-items:center;">
+            <button class="btn-refresh" style="padding:3px 8px; font-size:11px;" onclick="changeCrQcPage(-1)">◀ Prev</button>
+            <span id="cr-qc-page-indicator" style="font-weight:700; color:var(--text);">Hal 1/1</span>
+            <button class="btn-refresh" style="padding:3px 8px; font-size:11px;" onclick="changeCrQcPage(1)">Next ▶</button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
     <!-- ── LEVEL RACKING DISTRIBUTION ── -->
     <div class="card" style="margin-bottom: 20px; border-top: 4px solid #0d9488;">
       <div class="card-header" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; padding-bottom:12px; border-bottom:1px solid var(--border);">
@@ -5927,6 +6139,7 @@ PLANNING REPORT</div>
       <button id="cr-sku-tab-all" class="badge active" style="padding: 6px 12px; cursor: pointer; border: none; font-weight:800; font-size:11px;" onclick="switchSkuModalTab('all')">🏆 Overall</button>
       <button id="cr-sku-tab-area" class="badge badge-muted" style="padding: 6px 12px; cursor: pointer; border: none; font-weight:800; font-size:11px;" onclick="switchSkuModalTab('area')">📍 Per Area</button>
       <button id="cr-sku-tab-batch" class="badge badge-muted" style="padding: 6px 12px; cursor: pointer; border: none; font-weight:800; font-size:11px;" onclick="switchSkuModalTab('batch')">📦 Per Batch</button>
+      <button id="cr-sku-tab-qc" class="badge badge-muted" style="padding: 6px 12px; cursor: pointer; border: none; font-weight:800; font-size:11px;" onclick="switchSkuModalTab('qc')">🛡️ Wajib QC</button>
     </div>
 
     <div id="topSkuModalList" style="display:flex; flex-direction:column; gap:12px; max-height: 400px; overflow-y: auto; padding-right: 4px;">
@@ -6096,6 +6309,17 @@ var allCaseIdReleaseP1Data = [];
 var allCaseIdReleaseP2Data = [];
 var allCaseIdReleaseHubLkData = [];
 var allCaseIdReleaseLpData = [];
+var allCaseIdReleaseQcSkusData = [];
+var CR_QC_SKU_MAP = {};
+var CR_QC_FILTER_PRIO = 'ALL';
+var CR_QC_FILTER_AREA = 'ALL';
+var CR_QC_SEARCH_QUERY = '';
+var CR_QC_PAGE = 1;
+var CR_QC_PAGE_SIZE = 10;
+var CR_QC_ALL_CASES = [];
+var CR_QC_FILTERED_CASES = [];
+var CR_TOP_QC_SKU_LIST = [];
+
 var isCaseIdReleaseFetchedFromSheets = false;
 var CR_UNIFIED_ROWS = []; // gabungan semua baris case ID dari P1, P2, HUB&LK, LP
 var olfChartInstance = null;
@@ -11196,6 +11420,8 @@ var csvFulfillmentFallbackUrl = getProxyUrl('https://docs.google.com/spreadsheet
 var csvCaseIdReleaseP2Url = getProxyUrl('https://docs.google.com/spreadsheets/d/1MpFVzgYBAT00HFZNMi_chgdTKU3rnMTBGOYFKspncwk/gviz/tq?tqx=out:csv&gid=552992544');
 var csvCaseIdReleaseHubLkUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1MpFVzgYBAT00HFZNMi_chgdTKU3rnMTBGOYFKspncwk/gviz/tq?tqx=out:csv&gid=362212909');
 var csvCaseIdReleaseLpUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1MpFVzgYBAT00HFZNMi_chgdTKU3rnMTBGOYFKspncwk/gviz/tq?tqx=out:csv&gid=1480106733');
+  var csvCaseIdReleaseQcSkusUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1MpFVzgYBAT00HFZNMi_chgdTKU3rnMTBGOYFKspncwk/gviz/tq?tqx=out:csv&gid=1387841996');
+
 
   // Reading separate sheets SLA GRW and SLA CUST from the spreadsheet
   var csvSlaGrwUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1q-qxELBQZr3ABhVg-mw6Kvhl-e11RGQUmCTQjsXtz9g/gviz/tq?tqx=out:csv&sheet=SLA%20GRW');
@@ -11272,6 +11498,17 @@ var fetchCaseIdReleaseLp = new Promise(function(resolve) {
     resolve(data);
   });
 });
+
+  var fetchCaseIdReleaseQcSkus = new Promise(function(resolve) {
+    fetchAndParseCsv(csvCaseIdReleaseQcSkusUrl, { header: false, skipEmptyLines: true }, function(data) {
+      if (data && data.length > 1) {
+        resolve(data);
+      } else {
+        // Fallback to embedded master QC SKUs
+        resolve(getCRFallbackQcSkusData());
+      }
+    });
+  });
 
   var fetchFulfillment = new Promise(function(resolve) {
   fetchAndParseCsv(csvFulfillmentUrl, { header: true, skipEmptyLines: true }, function(data) {
@@ -11353,7 +11590,7 @@ var fetchCaseIdReleaseLp = new Promise(function(resolve) {
     }
   });
 
-  Promise.all([fetchMonitoring, fetchAging, fetchAgingCust, fetchContDate, fetchSlaGrw, fetchSlaCust, fetchFulfillment, fetchOlf, fetchCaseIdRelease, fetchCaseIdReleaseP1, fetchCaseIdReleaseP2, fetchCaseIdReleaseHubLk, fetchCaseIdReleaseLp, fetchBacklog, fetchOrgChart, fetchAgingReason, fetchSlaRecap])
+  Promise.all([fetchMonitoring, fetchAging, fetchAgingCust, fetchContDate, fetchSlaGrw, fetchSlaCust, fetchFulfillment, fetchOlf, fetchCaseIdRelease, fetchCaseIdReleaseP1, fetchCaseIdReleaseP2, fetchCaseIdReleaseHubLk, fetchCaseIdReleaseLp, fetchBacklog, fetchOrgChart, fetchAgingReason, fetchSlaRecap, fetchCaseIdReleaseQcSkus])
     .then(function(results) {
       allSlaGrwData = results[4] || [];
       allSlaCustData = results[5] || [];
@@ -11369,6 +11606,8 @@ var fetchCaseIdReleaseLp = new Promise(function(resolve) {
       allCaseIdReleaseP2Data = results[10] || [];
       allCaseIdReleaseHubLkData = results[11] || [];
       allCaseIdReleaseLpData = results[12] || [];
+      allCaseIdReleaseQcSkusData = (results[17] && results[17].length > 1) ? results[17] : getCRFallbackQcSkusData();
+
       allBacklogRawData = results[13] || [];
       allBacklogData = parseBacklogSheetData(allBacklogRawData);
       allOrgChartRawData = results[14] || [];
@@ -15018,7 +15257,7 @@ function switchSkuModalTab(tab) {
   CR_TOP_SKU_CURRENT_TAB = tab;
   
   // Update tab styling
-  var tabs = ['all', 'area', 'batch'];
+  var tabs = ['all', 'area', 'batch', 'qc'];
   tabs.forEach(function(t) {
     var btn = document.getElementById('cr-sku-tab-' + t);
     if (btn) {
@@ -15111,6 +15350,37 @@ function switchSkuModalTab(tab) {
         itemsHtml +
       '</div>';
     }).join('');
+  } else if (tab === 'qc') {
+    if (!CR_TOP_QC_SKU_LIST || !CR_TOP_QC_SKU_LIST.length) {
+      html = '<div style="color:var(--muted); text-align:center; padding:20px;">Tidak ada data SKU wajib QC.</div>';
+    } else {
+      html = '<div style="margin-bottom:12px; background:rgba(239,68,68,0.06); border:1px solid rgba(239,68,68,0.2); padding:10px; border-radius:var(--radius-sm); font-size:11px; color:var(--muted);">' +
+        '🛡️ <strong>Master QC Inspection List:</strong> Seluruh SKU di bawah ini terdaftar wajib lolos uji Quality Control sebelum dilepas ke customer atau toko.' +
+      '</div>' +
+      CR_TOP_QC_SKU_LIST.map(function(item, i) {
+        var prioBadge = item.p1Count > 0 
+          ? '<span style="background:#ef4444; color:#fff; font-size:9px; padding:1px 5px; border-radius:3px; font-weight:800;">🔥 P1 Urgent (' + item.p1Count + ')</span>'
+          : item.p2Count > 0 
+          ? '<span style="background:#f59e0b; color:#fff; font-size:9px; padding:1px 5px; border-radius:3px; font-weight:800;">⚡ P2 High (' + item.p2Count + ')</span>'
+          : '<span style="background:#64748b; color:#fff; font-size:9px; padding:1px 5px; border-radius:3px; font-weight:800;">📋 Buffer (' + (item.p3Count + item.p4Count) + ')</span>';
+
+        return '<div style="display:flex; align-items:flex-start; gap:12px; border-bottom:1px solid var(--border); padding-bottom:10px; margin-bottom:10px;">' +
+          '<div style="flex-shrink:0; width:26px; height:26px; border-radius:50%; background:rgba(239,68,68,0.1); color:#ef4444; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:12px;">' + (i + 1) + '</div>' +
+          '<div style="flex:1; min-width:0; text-align:left;">' +
+            '<div style="display:flex; align-items:center; gap:6px;">' +
+              '<span style="font-family:var(--font-mono); font-weight:700; color:var(--text); font-size:13px;">' + esc(item.sku) + '</span>' +
+              '<span style="font-size:10px; background:var(--surface2); padding:1px 5px; border-radius:3px; color:var(--muted); font-weight:600;">' + esc(item.dept) + '</span>' +
+            '</div>' +
+            '<div style="font-size:12px; color:var(--muted); margin-top:2px;">' + esc(item.desc || 'Tanpa deskripsi') + '</div>' +
+            '<div style="margin-top:4px;">' + prioBadge + '</div>' +
+          '</div>' +
+          '<div style="flex-shrink:0; text-align:right;">' +
+            '<div style="font-family:var(--font-mono); font-weight:800; color:#ef4444; font-size:15px;">' + item.count.toLocaleString() + '</div>' +
+            '<div style="font-size:9px; color:var(--muted); text-transform:uppercase; font-weight:700;">Case ID QC</div>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+    }
   }
 
   listEl.innerHTML = html;
@@ -16557,7 +16827,7 @@ function normalizeCaseDetailSheet(rawRows, sourceTag, batchTag) {
 
   var headers = rawRows[0];
   var caseIdIdx = -1, skuIdx = -1, descIdx = -1, shiptoIdx = -1, areaIdx = -1, locIdx = -1, addDateIdx = -1, depIdx = -1;
-  var orderkeyIdx = -1, extrnorderkeyIdx = -1, shiptonameIdx = -1, storebookingIdx = -1, cbmIdx = -1, cubeIdx = -1, routeIdx = -1;
+  var orderkeyIdx = -1, extrnorderkeyIdx = -1, shiptonameIdx = -1, storebookingIdx = -1, cbmIdx = -1, cubeIdx = -1, routeIdx = -1, typeIdx = -1, doctypeIdx = -1;
 
   for (var c = 0; c < headers.length; c++) {
     var h = String(headers[c] || '').toUpperCase().trim().replace(/[\s_.\-/]/g, '');
@@ -16573,6 +16843,8 @@ function normalizeCaseDetailSheet(rawRows, sourceTag, batchTag) {
     // Extra requested columns
     if ((h === 'ORDERKEY' || h === 'ORDERNO' || h === 'NOMORORDER') && orderkeyIdx === -1) orderkeyIdx = c;
     else if ((h === 'EXTRENORDERKEY' || h === 'EXTRNORDERKEY' || h === 'EXTERNALORDERKEY') && extrnorderkeyIdx === -1) extrnorderkeyIdx = c;
+    else if ((h === 'TYPE' || h === 'ORDERTYPE' || h === 'JENIS' || h === 'JENISORDER') && typeIdx === -1) typeIdx = c;
+    else if ((h === 'DOCTYPE' || h === 'DOCUMENTTYPE' || h === 'TIPIKASI') && doctypeIdx === -1) doctypeIdx = c;
     else if ((h === 'SHIPTONAME' || h === 'CUSTOMERNAME' || h === 'SHIPTONAMA' || h === 'NAMASHIPTO') && shiptonameIdx === -1) shiptonameIdx = c;
     else if ((h === 'STOREBOOKING' || h === 'BOOKINGSTORE' || h === 'BOOKING') && storebookingIdx === -1) storebookingIdx = c;
     else if ((h === 'CBM' || h === 'VOLUME') && cbmIdx === -1) cbmIdx = c;
@@ -16605,7 +16877,7 @@ function normalizeCaseDetailSheet(rawRows, sourceTag, batchTag) {
       caseMap[caseIdRaw] = {
         caseId: caseIdRaw,
         sku: '', desc: '', shipto: '', dep: '', area: '', loc: '', addDateRaw: null,
-        orderkey: '', extrnorderkey: '', shiptoname: '', storebooking: '', cbm: '', route: ''
+        orderkey: '', extrnorderkey: '', shiptoname: '', storebooking: '', cbm: '', route: '', type: '', doctype: ''
       };
       caseOrder.push(caseIdRaw);
     }
@@ -16630,6 +16902,8 @@ function normalizeCaseDetailSheet(rawRows, sourceTag, batchTag) {
       else if (cubeIdx !== -1 && row[cubeIdx]) rec.cbm = String(row[cubeIdx] || '').trim();
     }
     if (!rec.route && routeIdx !== -1) rec.route = String(row[routeIdx] || '').trim();
+    if (!rec.type && typeIdx !== -1) rec.type = String(row[typeIdx] || '').trim();
+    if (!rec.doctype && doctypeIdx !== -1) rec.doctype = String(row[doctypeIdx] || '').trim();
   }
 
   caseOrder.forEach(function(cid) {
@@ -16644,6 +16918,8 @@ function normalizeCaseDetailSheet(rawRows, sourceTag, batchTag) {
       storebooking: rec.storebooking,
       cbm: rec.cbm,
       route: rec.route,
+      type: rec.type,
+      doctype: rec.doctype,
       source: sourceTag, batch: batchTag
     });
   });
@@ -16659,6 +16935,876 @@ function buildUnifiedCaseDetailRows() {
     .concat(normalizeCaseDetailSheet(allCaseIdReleaseP2Data, 'P2', 'active'))
     .concat(normalizeCaseDetailSheet(allCaseIdReleaseHubLkData, 'HUBLK', 'active'))
     .concat(normalizeCaseDetailSheet(allCaseIdReleaseLpData, 'LP', 'buffer'));
+}
+
+
+// ── QUALITY CONTROL (QC) INSPECTION ENGINE ──
+function getCRFallbackQcSkusData() {
+  return [
+    ["SKU", "DESCR", "DEPT"],
+    ["10215428", "ARTIFICIAL ORCHID 7D 11X11X56CM WHITE", "R110BK"],
+    ["10487394", "ARTIFICIAL PLANT IN POT Z4D 15X15X46CM", "R110BK"],
+    ["10215426", "ARTIFICIAL ORCHID 7B 11X11X56CM LGHT PPL", "R110BK"],
+    ["10457868", "ARTIFICIAL FLOWER LY74 17.5X17.5X50CM", "R110BK"],
+    ["10215427", "ARTIFICIAL ORCHID 7C 11X11X56CM PURPLE", "R110BK"],
+    ["10458021", "ARTIFICIAL DAHLIA SPRAY 31X115CM PURPLE", "R110BK"],
+    ["10463228", "ARTIFICIAL FLOWER L6 14.5X14.5X48CM NTRL", "R110BK"],
+    ["10375634", "ARTIFICIAL LEAVES IN POT 8G 12.7X15.24CM", "R110BK"],
+    ["10562189", "ARTIFICIAL TULIPS BF1005LY3 34CM WHITE", "R110BK"],
+    ["10568698", "ARTIFICIAL DELPHNIUM PINK 15X9X73CM", "R110BK"],
+    ["10527031", "ARTIFICIAL PAMPAS IN POT H48 71CM AUTUMN", "R110BK"],
+    ["10437787", "ARTIFICIAL ORCHID 4Y1 22X22X70CM WHITE", "R110BK"],
+    ["10215446", "ARTIFICIAL ORCHID 7A 11X11X56CM WHT PPL", "R110BK"],
+    ["10437788", "ARTIFICIAL ORCHID 4Y2 22X22X70CM PURPLE", "R110BK"],
+    ["10568709", "ARTIFICIAL LEAVES IN POT PPG57 9X50CM", "R110BK"],
+    ["10568714", "ARTIFICIAL ORCHID PF1032 30X82CM WHITE", "R110BK"],
+    ["10545975", "ARTIFICIAL STRELITZIA 150CM", "R110BK"],
+    ["10545978", "ARTIFICIAL STRELITZIA 55X65X100CM", "R110BK"],
+    ["10568707", "ARTIFICIAL LEAVES IN POT PPG36 9X50CM", "R110BK"],
+    ["10554650", "VASE DECO TEMECULA GOLD 10X10X24.5", "R110BK"],
+    ["10566087", "ARTIFICIAL MONSTERA IN POT A314 90CM", "R110BK"],
+    ["10573500", "ARTIFICIAL PLANT EREMURUS 7306 110X26CM", "R110BK"],
+    ["10187617", "ARTIFICIAL MONSTERA IN POT 60X60X60CM", "R110BK"],
+    ["10458017", "ARTIFICIAL HYDRANGEA 7W 20X63CM WHITE", "R110BK"],
+    ["10562182", "ARTIFICIAL ORCHID SF1070 73CM WHITE", "R110BK"],
+    ["10562183", "ARTIFICIAL ORCHID SF1071 73CM PURPLE", "R110BK"],
+    ["10562184", "ARTIFICIAL ORCHID SF1072 73CM HALFPURPLE", "R110BK"],
+    ["10562185", "ARTIFICIAL ORCHID PF1002 26X26X49CM GOLD", "R110BK"],
+    ["10562186", "ARTIFICIAL ORCHID PF1031 22X62CM WHITE", "R110BK"],
+    ["10562190", "ARTIFICIAL TULIPS BF1007LY1 34CM YELLOW", "R110BK"],
+    ["10562194", "ARTIFICIAL ORCHID LEAF LG1008 26CM GREEN", "R110BK"],
+    ["10568695", "ARTIFICIAL CHRYSANTHEMUM WHITE 9X54.6CM", "R110BK"],
+    ["10568699", "ARTIFICIAL DELPHNIUM CREAM 15X9X73CM", "R110BK"],
+    ["10573496", "ARTIFICIAL PLANT POM-POM IN POT 91X24CM", "R110BK"],
+    ["10580757", "FIGURINE HOME 30X5X10CM COLORFUL", "R110BK"],
+    ["10562187", "ARTIFICIAL ORCHID PF1032 30X82CM PURPLE", "R110BK"],
+    ["10485452", "ARTIFICIAL BRISTLEGRASS G37 64X64X110CM", "R110BK"],
+    ["10573499", "ARTIFICIAL AGAPANTHUS 6255 139X28CM", "R110BK"],
+    ["10467898", "VASE DECO PASADENA A1 GOLD 28X11X26.5CM", "R110BK"],
+    ["10171739", "VASE SULLY MIX TRIO 26X26X24 CM WHITE", "R110BK"],
+    ["10349949", "VASE DONATELA HOLE 18X7X17CM GOLD", "R110BK"],
+    ["10491271", "FIGURINE HOME 25X3X15CM FULL GOLD", "R110BK"],
+    ["10566088", "ARTIFICIAL MONSTERA IN POT A314 45CM", "R110BK"],
+    ["10187607", "ARTIFICIAL POTHOS IN POT 60X60X60CM", "R110BK"],
+    ["10349962", "FIGURINE PINEAPPLE 03L 11X11X27.5CM GOLD", "R110BK"],
+    ["10437240", "ARTIFICIAL RAINBOW TARO S51 101X98X134CM", "R110BK"],
+    ["10453343", "ARTIFICIAL FLOWER G35 13X13X42CM WHITE", "R110BK"],
+    ["10580752", "FIGURINE BLESSED 26X4.5X10CM FULL GOLD", "R110BK"],
+    ["10349950", "VASE DONATELA HOLE 23X10X21CM GOLD", "R110BK"],
+    ["10488658", "ARTIFICIAL FLOWER IN POT PF1 24.2X52CM", "R110BK"],
+    ["10249896", "VASE FLAMING SMALL 16.5X16.5X20CM GOLD", "R110BK"],
+    ["10349953", "VASE ORIGAMI 02KM 14X14X24.5CM GOLD", "R110BK"],
+    ["10458039", "ARTIFICIAL LILY GS36 19X59CM WHITE", "R110BK"],
+    ["10467894", "VASE DECO SAVANNAH A1 GOLD 12X12X28CM", "R110BK"],
+    ["10467899", "VASE DECO PASADENA A2 GOLD 22X9X21CM", "R110BK"],
+    ["10491815", "FIGURINE PUMPKIN SS 14X14X10CM CREAM", "R110BK"],
+    ["10491817", "FIGURINE PEAR SL 12X12X19CM CREAM", "R110BK"],
+    ["10520526", "VASE DECO SAPPORO WHITE SMALL 19X7X17", "R110BK"],
+    ["10542781", "VASE DECO IRISH SL 20X20X38CM SILVER", "R110BK"],
+    ["10562193", "ARTIFICIAL TULIPS BF1004LY1 34CM PINK", "R110BK"],
+    ["10568703", "ARTIFICIAL SNOW POMPOM 16X6X70CM CREAM", "R110BK"],
+    ["10602197", "VASE DECO LOVE SET OF 4 30X4X9.7CM", "R110BK"],
+    ["10554238", "VASE DECO KYOTO 14.5X14.5X21.5CM GOLD", "R110BK"],
+    ["10249897", "VASE FLAMING BIG 18X18X25CM GOLD", "R110BK"],
+    ["10367684", "ARTIFICIAL FIDDLE LEAF IN POT 6J 120CM", "R110BK"],
+    ["10464994", "ARTIFICIAL ORCHID 9Y43 30X30X80CM WHITE", "R110BK"],
+    ["10491808", "FIGURINE PENGUIN SXL 12X12X30CM CREAM", "R110BK"],
+    ["10491936", "ARTIFICIAL YUCCA IN POT A6B 155CM", "R110BK"],
+    ["10520538", "VASE DECO TEMECULA GOLD 11.5X11.5X28", "R110BK"],
+    ["10554246", "VASE DECO CURVY B 19X19X20CM GOLD", "R110BK"],
+    ["10491819", "VASE ISTANBUL SM 16X16X25CM MARBLE GOLD", "R110BK"],
+    ["10149823", "ARTIFICIAL MONSTERA 17X17X66CM GREEN", "R110BK"],
+    ["10242102", "VASE SULLY MIX TRIO 26X26X24CM KHAKI", "R110BK"],
+    ["10242103", "VASE SULLY MIX TRIO 26X26X24CM GRAY", "R110BK"],
+    ["10521561", "CANVAS PRINT SET(3) VASE X71 30X40X1.5CM", "R110BK"],
+    ["10349959", "FIGURINE PINEAPPLE 01S 7X7X18.5CM GOLD", "R110BK"],
+    ["10491802", "VASE DECO ANKARA CT-L 7.5X7.5X33CM CREAM", "R110BK"],
+    ["10187609", "ARTIFICIAL STRELITZIA IN POT 80X80X135CM", "R110BK"],
+    ["10467892", "VASE DECO GEORGIA A1 GOLD 12.5X12.5X31CM", "R110BK"],
+    ["10467895", "VASE DECO SAVANNAH A2 10.5X10.5X24.5CM", "R110BK"],
+    ["10467897", "VASE DECO RICHMOND A2 GOLD 12X12X25.5CM", "R110BK"],
+    ["10472053", "ARTIFICIAL SANSEVIERIA GS12 35X25X80CM", "R110BK"],
+    ["10472330", "FIGURINE BETTA FISH GOLD 39X19.5X30CM", "R110BK"],
+    ["10491816", "FIGURINE PUMPKIN SM 17.7X17.7X15CM CREAM", "R110BK"],
+    ["10554242", "VASE DECO CUPY B 13.5X13.5X25CM SILVER", "R110BK"],
+    ["10664242", "FIGURINE BEAR 10X7.5X18CM YELLOW", "R110BK"],
+    ["10472321", "FIGURINE REARING HORSE 28X11X36.5CM GOLD", "R110BK"],
+    ["10567263", "VASE DECO SET OF 3 HOLLOW MIX COLOR", "R110BK"],
+    ["10542776", "FIGURINE LOVE HAND 31X7X11CM CHAMPAGNE", "R110BK"],
+    ["10554247", "VASE DECO CURVY B 14X14X27.5CM GOLD", "R110BK"],
+    ["10573498", "ARTIFICIAL PEPYRUS GRASS 7110 183X30CM", "R110BK"],
+    ["10491801", "VASE DECO ANKARA CV-L 16X16X30CM CREAM", "R110BK"],
+    ["10491803", "VASE DECO ANKARA CT-XL 8.5X8.5X40.5CM", "R110BK"],
+    ["10151108", "FIGURINE APPLE L5 12X12X13.5CM GOLD", "R110BK"],
+    ["10151109", "FIGURINE APPLE L6 15X15X16.5CM GOLD", "R110BK"],
+    ["10151110", "FIGURINE APPLE L8 18.5X18.5X21CM GOLD", "R110BK"],
+    ["10209143", "ARTIFICIAL PLANTS LY14 20X20X160CM GREEN", "R110BK"],
+    ["10242402", "FIGURINE VIDI 24X11X51CM COOPER", "R110BK"],
+    ["10247890", "ARTIFICIAL SUCCULENT Y27 SET(3) 8X8X14CM", "R110BK"],
+    ["10260013", "ARTIFICIAL STRELITZIA GS43 30X30X180CM", "R110BK"],
+    ["10314087", "FIGURINE CAMEL EGYPT DUO 9F 21X9X29.5CM", "R110BK"],
+    ["10314088", "FIGURINE CAMEL EGYPT DUO 8F 22X9.5X29CM", "R110BK"],
+    ["10349942", "VASE DONATELA HOLE 18X7X17CM SILVER", "R110BK"],
+    ["10349943", "VASE DONATELA HOLE 23X10X21CM SILVER", "R110BK"],
+    ["10349961", "FIGURINE PINEAPPLE 02M 9X9X23CM GOLD", "R110BK"],
+    ["10430352", "VASE DECO WOVEN CERAMIC SET OF 3 BROWN", "R110BK"],
+    ["10432155", "FIGURINE KOI FISH LUCKY GOLD 65X21X58CM", "R110BK"],
+    ["10437239", "ARTIFICIAL MONSTERA TREE S17 90X65X120CM", "R110BK"],
+    ["10463226", "ARTIFICIAL FLOWER LY63 6X11X42CM NTRL", "R110BK"],
+    ["10463229", "ARTIFICIAL FLOWER LY45 14X14X45CM NTRL", "R110BK"],
+    ["10467889", "VASE DECO SET OF 3 JUNGLE ASST COLOR", "R110BK"],
+    ["10467893", "VASE DECO GEORGIA A2 GOLD 12X12X25CM", "R110BK"],
+    ["10467896", "VASE DECO RICHMOND A1 GOLD 14X14X31CM", "R110BK"],
+    ["10472050", "ARTIFICIAL STRELITZIA GS08 50X50X70CM", "R110BK"],
+    ["10478939", "VASE GLASS PRAYA ICY BROWN 15X15X25CM", "R110BK"],
+    ["10478949", "VASE GLASS ENDE 01 MIX BROWN 12X12X34CM", "R110BK"],
+    ["10483321", "VASE REACTIVE LOMBARDY SET OF 2 MIX", "R110BK"],
+    ["10485453", "ARTIFICIAL BRISTLEGRASS P36 46X45X87CM", "R110BK"],
+    ["10490272", "VASE CYLINDER CERA 12.5X12.5X25.5 WHITE", "R110BK"],
+    ["10490274", "VASE ZEN STONES 9.5X6.5X20.5CM GRAY", "R110BK"],
+    ["10490276", "VASE DECO HELSINKI SET OF 3 GRAY", "R110BK"],
+    ["10490277", "VASE DECO NORDIC SHP-O 24X8X22.5CM WHITE", "R110BK"],
+    ["10490278", "VASE DECO NORDIC SHP-J 14X5X22.5CM WHITE", "R110BK"],
+    ["10490279", "VASE DECO STOCKHOLM SET OF 3 BLACK WHITE", "R110BK"],
+    ["10491270", "FIGURINE LOVE 25X4X9CM FULL GOLD", "R110BK"],
+    ["10491272", "VASE TWOTONE SM 13.5X13.5X25CM GRAY GOLD", "R110BK"],
+    ["10491273", "VASE TWOTONE SL 15X15X30CM GRAY GOLD", "R110BK"],
+    ["10491800", "VASE DECO ANKARA CV-S 17X17X20CM CREAM", "R110BK"],
+    ["10491807", "FIGURINE PENGUIN SL 13X11.5X25.5CM CREAM", "R110BK"],
+    ["10491809", "VASE DECO ANKARA CJ-L 16.5X16.5X37CM", "R110BK"],
+    ["10491810", "VASE DECO ANKARA CJ-XL 20X20X44.5CM", "R110BK"],
+    ["10491820", "VASE ISTANBUL SL 19X19X30CM MARBLE GOLD", "R110BK"],
+    ["10520527", "VASE DECO KYOTO WHITE 17X17X23", "R110BK"],
+    ["10520529", "VASE DECO KOBE BLACK SMALL 20.5X8.5X18.5", "R110BK"],
+    ["10520534", "VASE DECO TOKYO WHITE BIG 21.5X9X22.7", "R110BK"],
+    ["10522276", "FIGURINE ABSTRACT LINE BLACK 25X16X14", "R110BK"],
+    ["10542771", "VASE DECO ANKARA CA-L 14X14X30CM CREAM", "R110BK"],
+    ["10542773", "FIGURINE BIRD SL 12.5X8X10.5CM CREAM", "R110BK"],
+    ["10542780", "VASE DECO IRISH SM 16X16X30CM SILVER", "R110BK"],
+    ["10545976", "ARTIFICIAL CIRCULAR FAN PALM 60X45X90CM", "R110BK"],
+    ["10554243", "VASE DECO CUPY B 11.5X11.5X20CM SILVER", "R110BK"],
+    ["10554245", "VASE DECO CURVY 19.5X7.5X23CM GOLD", "R110BK"],
+    ["10560802", "FIGURINE BIRD PARADISE GOLD 26.5X32CM", "R110BK"],
+    ["10560804", "FIGURINE BIRD PARADISE GOLD 36.5X36CM", "R110BK"],
+    ["10567252", "VASE CERAMIC STONY WHITE 9.5X6.5X24.5CM", "R110BK"],
+    ["10567253", "VASE CERAMIC STONY WHITE 8X6X20CM", "R110BK"],
+    ["10567256", "VASE CERAMIC SIENA PEACH 11.5X25.5CM", "R110BK"],
+    ["10567257", "VASE CERAMIC SIENA PEACH 9.5X22CM", "R110BK"],
+    ["10567259", "VASE CERAMIC NATURALLE WHITE 14X29.5CM", "R110BK"],
+    ["10567262", "VASE CERAMIC NATURALLE BROWN 14X17.7CM", "R110BK"],
+    ["10567267", "FIGURINE CERAMIC COUPLE 10X8X20CM", "R110BK"],
+    ["10568708", "ARTIFICIAL LEAVES IN POT PPG37 9X50CM", "R110BK"],
+    ["10595938", "ARTIFICIAL GRAPE HYACINTH 9X23CM WHITE", "R110BK"],
+    ["10602185", "FIGURINE HOME SET OF 4 26X3.5X11CM GREEN", "R110BK"],
+    ["10602194", "FIGURINE HELLO 18X3.5X8.5CM PINK", "R110BK"],
+    ["10603462", "FIGURINE MINI FLOWERY PEACH 7X5.5X8.5CM", "R110BK"],
+    ["10603472", "VASE FLOWERY PEACH / PINK 10X10X20CM", "R110BK"],
+    ["10604480", "VASE REACTIVE WHITE VERSE TRIO 26X30CM", "R110BK"],
+    ["10604481", "VASE REACTIVE PINK VERSE TRIO 26X26X30CM", "R110BK"],
+    ["10604494", "FIGURINE PHOENIX N2 32X14X20.5CM", "R110BK"],
+    ["10615169", "FIGURINE CAMEL 1 CREAM 13.5X5X16CM", "R110BK"],
+    ["10631381", "VASE DECO COPENHAGEN SET OF 3 WHITE BLUE", "R110BK"],
+    ["10631382", "VASE DECO SOLNA SET OF 3 MIX COLOR", "R110BK"],
+    ["10631383", "VASE DECO MALMO SET OF 3 MIX COLOR", "R110BK"],
+    ["10631384", "VASE DECO DANISH SET OF 3 MIX COLOR", "R110BK"],
+    ["10636515", "FIGURINE SET OF 3 FACE 27X9X15CM", "R110BK"],
+    ["10636516", "FIGURINE SET OF 2 READING 21.5X9X16.5CM", "R110BK"],
+    ["10637014", "ARTIFICIAL BIG TARO IN POT 90X90X145CM", "R110BK"],
+    ["10637015", "ARTIFICIAL STRELITZIA 170CM", "R110BK"],
+    ["10646333", "ARTIFICIAL TARO IN POT PL06 9X9X22CM", "R110BK"],
+    ["10656084", "ARTIFICIAL POT DAISY WHITE 20X20X25CM", "R110BK"],
+    ["10656086", "ARTIFICIAL POT DAISY YELLOW 20X20X25CM", "R110BK"],
+    ["10664237", "FIGURINE HELLO 20X4.5X10CM GREEN", "R110BK"],
+    ["10664240", "FIGURINE CHERRY 16X8.5X16CM RED", "R110BK"],
+    ["10664243", "FIGURINE BEAR 10X7.5X18CM RED", "R110BK"],
+    ["10664244", "FIGURINE BEAR 14X11X26CM GREEN", "R110BK"],
+    ["10665077", "ARTIFICIAL DANDELION GRASS 7063 H.132CM", "R110BK"],
+    ["10668109", "ARTIFICIAL LEMON TREE IN POT GS69 150CM", "R110BK"],
+    ["10669974", "ARTIFICIAL PINE TREE BONSAI CH25 36CM", "R110BK"],
+    ["10554840", "BOWL SHINE WHITE 15.2CM", "R110BN"],
+    ["10554839", "BOWL SHINE WHITE 11.5CM", "R110BN"],
+    ["10204701", "PITCHER RENATA RECT 1800ML", "R110BN"],
+    ["10552686", "PITCHER FLORY 2.3L", "R110BN"],
+    ["10566440", "PITCHER SET HALLI 1L  W/4 GLASS 220ML(5)", "R110BN"],
+    ["10565042", "LILY GLASS JAR SET OF 3 450ML", "R110BN"],
+    ["10551823", "DINNER SET GORIN WHITE (12)", "R110BN"],
+    ["10544861", "HANNY GLASS JAR SET OF 3 WHITE", "R110BN"],
+    ["10546905", "CAREA PETITE GLASS JAR SET OF 3 400ML", "R110BN"],
+    ["10587677", "PITCHER TAVIA WHITE 1L", "R110BN"],
+    ["10587678", "PITCHER TAVIA GRAY 1L", "R110BN"],
+    ["10472553", "BOWL W/ CHOPSTICKS FOOD 16.8CM YELLOW", "R110BN"],
+    ["10515627", "TABITHA GLASS JAR SET OF 3", "R110BN"],
+    ["10472550", "BOWL W/ CHOPSTICKS FEED ME 16.8CM WHITE", "R110BN"],
+    ["10472551", "BOWL W/ CHOPSTICKS LOVE 16.8CM GREEN", "R110BN"],
+    ["10424214", "BOWL PALLETE FELICIA YELLOW (6)", "R110BN"],
+    ["10594659", "PITCHER BONIE 2200ML W/4 CUPS 350ML (5)", "R110BN"],
+    ["10131579", "SERENO PITCHER SET W/GLASS WHITE (5)", "R110BN"],
+    ["10429434", "CORY RICE BIN 6 KG GREY", "R110BN"],
+    ["10567959", "SERVING SET SQR ROLA WHT W/ RACK 40CM(4)", "R110BN"],
+    ["10519116", "WILMA GLASS JAR SET OF 3", "R110BN"],
+    ["10065122", "CEREAL BOWL 15CM APPEAL GOLD", "R110BN"],
+    ["10349987", "SERVING SET ALBY WHITE W/ RACK 1.7L (16)", "R110BN"],
+    ["10452124", "SERVING SET W/RACK HELON 3 TIERS (4)", "R110BN"],
+    ["10523460", "BOWL MULTIPURPOSE TETSU FLWR W/SPOONBLUE", "R110BN"],
+    ["10523461", "BOWL MULTIPURPOSE TETSU FLWR W/SPOON ORG", "R110BN"],
+    ["10555573", "SERVING BOWL SET SOLEN WHT GOLD RIM (17)", "R110BN"],
+    ["10681993", "POLLA RICE BIN 5KG BEIGE", "R110BN"],
+    ["10627562", "POLLA RICE BIN 5KG WHITE", "R110BN"],
+    ["10546309", "TAMARA GLASS JAR 3800ML", "R110BN"],
+    ["10627565", "POLLA RICE BIN 10KG WHITE", "R110BN"],
+    ["10470032", "SERVING SET W/RACK STACK WHITE  (3)", "R110BN"],
+    ["10490403", "HYACINTH GLASS JAR SET OF 2 WITH TRAY", "R110BN"],
+    ["10566729", "PEARL RICE BIN 10KG WHITE", "R110BN"],
+    ["10602832", "COVA GLASS JAR 500ML", "R110BN"],
+    ["10602833", "COVA GLASS JAR 700ML", "R110BN"],
+    ["10629131", "HEIDY GLASS JAR SET OF 3 WITH TRAY 650ML", "R110BN"],
+    ["10657002", "SOUP PLATE N BOWL SET HITOMI (4)", "R110BN"],
+    ["10675109", "SERVING SET TYLA W TRAY (5)", "R110BN"],
+    ["10570652", "SERVING BOWL JURIN WHT W/TRAY 30.5 (10)", "R110BN"],
+    ["10629905", "HAVYN GLASS JAR SET OF 3 WITH TRAY 900ML", "R110BN"],
+    ["10452141", "SERVING SET W/RACK HELMY 2 TIERS (5)", "R110BN"],
+    ["10519115", "WINONA GLASS JAR SET OF 3", "R110BN"],
+    ["10558677", "LANNY DIAMOND GLASS JAR SET OF 3 W/ TRAY", "R110BN"],
+    ["10497062", "WHITNEY GLASS JAR SET OF 3 WITH TRAY", "R110BN"],
+    ["10430616", "SERVING GLASS TWO RACK CABIO 36X18X6.5CM", "R110BN"],
+    ["10430617", "SERVING GLASS TWO RACK CABIN 29X29X7CM", "R110BN"],
+    ["10443180", "SERVING BOWL W/ HANDLE + LID MILAN 1.4L", "R110BN"],
+    ["10452137", "SERVING SET W/RACK HALSEY 3 TIERS (4)", "R110BN"],
+    ["10454650", "MACAROON GLASS JAR SET OF 3 900ML", "R110BN"],
+    ["10470029", "SERVING SET W/RACK OCTAGON MARBLE (4)", "R110BN"],
+    ["10470030", "SERVING SET RND DETACHABLE MARBLE (2)", "R110BN"],
+    ["10470031", "SERVING SET W/RACK SQR MARBLE BLACK (3)", "R110BN"],
+    ["10470033", "SERVING SET W/RACK CIRCLE BLACK (3)", "R110BN"],
+    ["10470034", "SERVING SET W/ROUND RACK WHITE (3)", "R110BN"],
+    ["10470079", "LEWIS MIXING BOWL SET WITH GRATER", "R110BN"],
+    ["10476588", "SERVING GLASS WITH RACK TREE (3)", "R110BN"],
+    ["10480384", "SERVING PLATTER OVAL THEIA 35.6CM", "R110BN"],
+    ["10490128", "KRYSTAL SQUARE GLASS JAR SET OF 3", "R110BN"],
+    ["10497063", "WANDA GLASS JAR SET OF 3", "R110BN"],
+    ["10522417", "BOWL SET YAKO 21X15X14CM (2)", "R110BN"],
+    ["10522431", "BOWL SET YONG ANGLED 12.8CM (2)", "R110BN"],
+    ["10546306", "TATUM GLASS JAR 3000ML", "R110BN"],
+    ["10550489", "BLANC MIXING BOWL SET OF 3 WHITE", "R110BN"],
+    ["10558679", "LARK GLASS JAR SET OF 3 700ML BLACK", "R110BN"],
+    ["10562498", "SERVING BOWL SET HWASA MATTE WHITE (8)", "R110BN"],
+    ["10565041", "LILY GLASS JAR 3L", "R110BN"],
+    ["10570659", "SALAD BOWL JUHEE WHITE W/ RACK 25CM", "R110BN"],
+    ["10593592", "HOLO DEER GLASS JAR SET OF 3 W/ RACK 1L", "R110BN"],
+    ["10597752", "KAREN GLASS JAR SET OF 3 600ML", "R110BN"],
+    ["10657001", "BOWL SET HITOMI 11CM (4)", "R110BN"],
+    ["10657003", "PLATE N BOWL SET HITOMI (4)", "R110BN"],
+    ["10661481", "PITCHER TRITAN PAXTON WHITE 1.5L", "R110BN"],
+    ["10661482", "PITCHER TRITAN PAXTON BLUE 1.5L", "R110BN"],
+    ["10661483", "PITCHER TRITAN PAXTON WHITE 2L", "R110BN"],
+    ["10661484", "PITCHER TRITAN PAXTON BLACK 2L", "R110BN"],
+    ["10662797", "SERVING GLASS POT ALENA ROUND 1.6L", "R110BN"],
+    ["10663002", "SERVING GLASS POT ALENA ROUND 2.4L", "R110BN"],
+    ["10664247", "HAZZEL GLASS JAR S/4 WITH TURNABLE TRAY", "R110BN"],
+    ["10666235", "SERVING BOWL SET SANA W RACK (15)", "R110BN"],
+    ["10666236", "SERVING BOWL SET SARA W RACK (15)", "R110BN"],
+    ["10675110", "SERVING SET TIANA W ROTARY TRAY (5)", "R110BN"],
+    ["10675111", "SERVING SET TERRY W ROTARY TRAY (6)", "R110BN"],
+    ["10571952", "MILO PEDAL BIN PINK 8L", "R110BM"],
+    ["10579810", "FLO OPEN BIN PURPLE PINK 12.5L", "R110BM"],
+    ["10161036", "TRASH BIN FINGERPRINT SLOW CLOSE 5LT", "R110BM"],
+    ["10161037", "TRASH BIN FINGERPRINT SLOW CLOSE 12LT", "R110BM"],
+    ["10552064", "CLEO OPEN BIN  10L BLACK", "R110BM"],
+    ["10571953", "MILO PEDAL BIN BLUE 8L", "R110BM"],
+    ["10593569", "JET PRISM PEDAL BIN SLOW CLOSE BLACK 12L", "R110BM"],
+    ["10593567", "JET PRISM PEDAL BIN SLOW CLOSE BLACK 5L", "R110BM"],
+    ["10571954", "MILO PEDAL BIN GREEN 8L", "R110BM"],
+    ["10476500", "PUSH TRASH BIN WOODEN LID 7L WHITE", "R110BM"],
+    ["10552063", "CLEO OPEN BIN  10L WHITE", "R110BM"],
+    ["10622919", "FORD PUSH AND PEDAL BIN GREY 10L", "R110BM"],
+    ["10566958", "RILEY PEDAL BIN BEIGE 12L", "R110BM"],
+    ["10599299", "JADE PEDAL TRASH BIN FINGERPRINT 5L", "R110BM"],
+    ["10568181", "MILAN PEDAL BIN SFT CLOSE 12L KHAKI", "R110BM"],
+    ["10161038", "TRASH BIN FINGERPRINT SLOW CLOSE 20LT", "R110BM"],
+    ["10555021", "SWING DUST BIN RECTANGULAR M GREY 11.5L", "R110BM"],
+    ["10593568", "JET PRISM PEDAL BIN SLOW CLOSE WHITE 12L", "R110BM"],
+    ["10593566", "JET PRISM PEDAL BIN SLOW CLOSE WHITE 5L", "R110BM"],
+    ["10568177", "MILAN PEDAL BIN SFT CLOSE 5L KHAKI", "R110BM"],
+    ["10594886", "FORD PEDAL BIN WITH WHEELS GREY 35L", "R110BM"],
+    ["10622918", "FORD PUSH AND PEDAL BIN WHITE 10L", "R110BM"],
+    ["10657101", "MILAN PEDAL BIN SOFT CLOSE 5L BLACK", "R110BM"],
+    ["10657102", "MILAN PEDAL BIN SOFT CLOSE 5L WHITE", "R110BM"],
+    ["10594888", "FORD PEDAL BIN WITH WHEELS GREY 45L", "R110BM"],
+    ["10161035", "TRASH BIN FINGERPRINT SLOW CLOSE 3LT", "R110BM"],
+    ["10421835", "SWING DUST BIN RECTANGULAR (S) GREY 6.5L", "R110BM"],
+    ["10599300", "JADE PEDAL TRASH BIN FINGERPRINT 12L", "R110BM"],
+    ["10411051", "OPEN TOP TRASH BIN 9L MATT STEEL", "R110BM"],
+    ["10593570", "JET PEDAL BIN SLOW CLOSE BLACK 20L", "R110BM"],
+    ["10663445", "FELICA PUSH AND PEDAL BIN IVORY15L", "R110BM"],
+    ["10594887", "FORD PEDAL BIN WITH WHEELS WHITE 35L", "R110BM"],
+    ["10657103", "MILAN PEDAL BIN SOFT CLOSE 12L BLACK", "R110BM"],
+    ["10657104", "MILAN PEDAL BIN SOFT CLOSE 12L WHITE", "R110BM"],
+    ["10178314", "TRASH BIN FINGERPRINT SLOW CLOSE 30LT", "R110BM"],
+    ["10552065", "CLEO PUSH BIN 10L WHITE", "R110BM"],
+    ["10566959", "RILEY PEDAL BIN LIGHT PURPLE 12L", "R110BM"],
+    ["10622921", "FORD PUSH AND PEDAL BIN GREY 15L", "R110BM"],
+    ["10663446", "FELICA PUSH AND PEDAL BIN DRK GREY15L", "R110BM"],
+    ["10566960", "ELSON PEDAL BIN GREY 12L", "R110BM"],
+    ["10594885", "FINNEGAN PUSH AND PEDAL BIN WHITE 12L", "R110BM"],
+    ["10622920", "FORD PUSH AND PEDAL BIN WHITE 15L", "R110BM"],
+    ["10613394", "MARINA PEDAL BIN 30L SILVER", "R110BM"],
+    ["10593571", "JET PEDAL BIN SLOW CLOSE BLACK 30L", "R110BM"],
+    ["10613392", "MARINA PEDAL BIN 11L SILVER", "R110BM"],
+    ["10421836", "PEDAL DUST BIN RECT GREY 16.3L", "R110BM"],
+    ["10599298", "JADE PUSH TRASH BIN FINGERPRINT FEET 33L", "R110BM"],
+    ["10332140", "SWING TOP TRASH BIN FINGER PRINT 40LT", "R110BM"],
+    ["10421975", "DELUXE MIRAGE SENSOR BIN 20L SILVER", "R110BM"],
+    ["10421976", "DELUXE MIRAGE SENSOR BIN 30L SILVER", "R110BM"],
+    ["10553170", "NEO PEDAL BIN SLOW CLOSE BLK MATT 40L", "R110BM"],
+    ["10569747", "NEO BIN REGENT SOFT CLOSE 6L GOLD", "R110BM"],
+    ["10579808", "FLO OPEN BIN PURPLE PINK 9L", "R110BM"],
+    ["10579809", "FLO OPEN BIN GREEN 12.5L", "R110BM"],
+    ["10594889", "FORD PEDAL BIN WITH WHEELS WHITE 45L", "R110BM"],
+    ["10595787", "YUKI SENSOR TRASH BIN WHITE 17L", "R110BM"],
+    ["10595788", "YUKI SENSOR TRASH BIN BLACK 17L", "R110BM"],
+    ["10613393", "MARINA PEDAL BIN 20L SILVER", "R110BM"],
+    ["10663443", "FERREL OPEN TRASH BIN LIGHT BLUE 10L", "R110BM"],
+    ["10702722", "STELLA X PEDAL BIN 6L SILVER", "R110BM"],
+    ["10702723", "STELLA X PEDAL BIN 12L SILVER", "R110BM"],
+    ["10475166", "JORDI GLASS WATER PITCHER 1L", "R110CF"],
+    ["10408559", "JUG JENNA WITH LID 1L", "R110CF"],
+    ["10475165", "JULIO GLASS WATER PITCHER 1L", "R110CF"],
+    ["10423575", "JUG JULIA WITH LID 1.4L", "R110CF"],
+    ["10569540", "SHANIA 7.5 INCH BOWL WHITE", "R110CF"],
+    ["10692039", "ZIVANA GLASS JAR 3L", "R110CF"],
+    ["10692040", "ZIVANA GLASS JAR 4L", "R110CF"],
+    ["10685448", "ZELLEA GLASS JAR 3L", "R110CF"],
+    ["10685449", "ZELLEA GLASS JAR 4L", "R110CF"],
+    ["10458740", "CORA SET 2 SOUP LADLE + SERVING SPOON", "R110CF"],
+    ["10475164", "JERRY GLASS WATER PITCHER 1L", "R110CF"],
+    ["10686847", "SHARINE 7.5 INCH BOWL SET OF 4", "R110CF"],
+    ["10686848", "SHARINE 12 INCH SERVING PLATE", "R110CF"],
+    ["10686849", "SHARINE 11 INCH SERVING BOWL", "R110CF"],
+    ["10707958", "HOOP FOOD CONTAINER BOWL 600ML GREY", "R110CF"],
+    ["10707964", "HILLY SERVING PLATE 250ML SET OF 4", "R110CF"],
+    ["10707965", "HILLY PLASTIC BOWL 450ML SET OF 4", "R110CF"],
+    ["10707967", "HILLY PLASTIC BOWL 1550ML SET OF 2", "R110CF"],
+    ["10464726", "LUNA MUTE PEDAL TRASH BIN 11L GREY", "R110CH"],
+    ["10464767", "ALICIA MUTE PEDAL TRASH BIN 8L GREY", "R110CH"],
+    ["10633519", "TOMA PEDAL TRASH BIN 6.5L", "R110CH"],
+    ["10712772", "THISA PEDAL TRASH BIN 20L", "R110CH"],
+    ["10712775", "TIFFY OPEN TRASH BIN 5L BEIGE", "R110CH"],
+    ["10712776", "TIFFY OPEN TRASH BIN 5L GREY", "R110CH"],
+    ["10712777", "TIFFY OPEN TRASH BIN 12L BEIGE", "R110CH"],
+    ["10712778", "TIFFY OPEN TRASH BIN 12L GREY", "R110CH"],
+    ["10691363", "ARTIFICIAL ANTHURIUM WITH WHITE VASE", "R110CH"],
+    ["10592526", "ELLIO CHAIR BROWN", "R110BD"],
+    ["10592525", "ELLIO CHAIR LIGHT GREEN", "R110BD"],
+    ["10592527", "ELLIO CHAIR GREY", "R110BD"],
+    ["10592524", "ELLIO CHAIR WHITE", "R110BD"],
+  ];
+}
+
+function initCrQcSkuMap() {
+  CR_QC_SKU_MAP = {};
+  var rawList = (allCaseIdReleaseQcSkusData && allCaseIdReleaseQcSkusData.length > 1) 
+    ? allCaseIdReleaseQcSkusData 
+    : getCRFallbackQcSkusData();
+
+  for (var i = 1; i < rawList.length; i++) {
+    var r = rawList[i];
+    if (!r) continue;
+    var sku = String(r[0] || '').trim().toUpperCase();
+    if (!sku || sku === 'SKU') continue;
+    var descr = String(r[1] || '').trim();
+    var dept = String(r[2] || '').trim();
+    CR_QC_SKU_MAP[sku] = {
+      sku: sku,
+      descr: descr,
+      dept: dept
+    };
+  }
+}
+
+function classifyCrOrderType(item) {
+  var source = String(item.source || '').toUpperCase().trim();
+  var typeStr = String(item.type || '').toUpperCase().trim();
+  var doctypeStr = String(item.doctype || '').toUpperCase().trim();
+  var shiptoStr = String(item.shipto || '').toUpperCase().trim();
+  var shiptoNameStr = String(item.shiptoName || '').toUpperCase().trim();
+  var storeBookingStr = String(item.storebooking || '').toUpperCase().trim();
+
+  // 1. Explicit type / doctype indicators
+  if (typeStr.indexOf('CUST') !== -1 || doctypeStr.indexOf('CUST') !== -1 || doctypeStr === 'SO') return 'CUSTOMER';
+  if (typeStr.indexOf('GRW') !== -1 || doctypeStr.indexOf('GRW') !== -1 || doctypeStr === 'STO' || doctypeStr === 'DO') return 'GRW';
+
+  // 2. Customer keyword checks
+  if (shiptoStr.indexOf('CUST') !== -1 || shiptoNameStr.indexOf('CUST') !== -1 || shiptoNameStr.indexOf('CUSTOMER') !== -1 || shiptoStr.indexOf('TUGU') !== -1 || shiptoNameStr.indexOf('TUGU') !== -1) {
+    return 'CUSTOMER';
+  }
+
+  // 3. Store / GRW keyword checks
+  if (shiptoStr.indexOf('GRW') !== -1 || shiptoNameStr.indexOf('GRW') !== -1 || storeBookingStr.indexOf('GRW') !== -1) return 'GRW';
+  if (shiptoStr.indexOf('HUB') !== -1 || shiptoNameStr.indexOf('HUB') !== -1 || shiptoStr.indexOf('STORE') !== -1 || shiptoNameStr.indexOf('STORE') !== -1) return 'GRW';
+  if (shiptoStr.indexOf('DC') !== -1 || shiptoNameStr.indexOf('DC') !== -1 || shiptoStr.indexOf('LK') !== -1 || shiptoNameStr.indexOf('LK') !== -1) return 'GRW';
+
+  // 4. 4-digit code (standard store ID, e.g. 1010, 1021, etc.)
+  if (/^\d{4}$/.test(shiptoStr)) return 'GRW';
+
+  // 5. Customer ID (numeric >= 6 digits)
+  if (/^\d{6,}$/.test(shiptoStr)) return 'CUSTOMER';
+
+  // 6. Sheet specific defaults
+  if (source === 'P2') {
+    // Sheet "P2" is "CUSTOMER DK (PRIORITY 2) & TUGU" -> Customer by default
+    return 'CUSTOMER';
+  }
+  if (source === 'P1') {
+    // Sheet "P1+GRW DK" -> if not identified as store, default Customer
+    return 'CUSTOMER';
+  }
+  if (source === 'HUBLK') {
+    // Sheet "HUB DAN LK ONSITE" -> default GRW unless marked Customer
+    return 'GRW';
+  }
+
+  // Default fallback
+  return 'GRW';
+}
+
+function buildCrQcAnalytics() {
+  initCrQcSkuMap();
+  
+  var qcCases = [];
+  var skuQcMap = {};
+  var prioCounts = {
+    P1: { cases: 0, cbm: 0, skus: {}, label: '🔥 P1 - Urgent (Customer: P1, P2, HUB/LK)' },
+    P2: { cases: 0, cbm: 0, skus: {}, label: '⚡ P2 - High (GRW: P1, P2, HUB/LK)' },
+    P3: { cases: 0, cbm: 0, skus: {}, label: '📦 P3 - Medium (Customer: Sheet LP)' },
+    P4: { cases: 0, cbm: 0, skus: {}, label: '📋 P4 - Scheduled (GRW: Sheet LP)' }
+  };
+
+  (CR_UNIFIED_ROWS || []).forEach(function(item) {
+    if (!item || !item.sku) return;
+    var cleanSku = String(item.sku).trim().toUpperCase();
+    
+    // Check against Master QC SKU list
+    var isQc = Boolean(CR_QC_SKU_MAP[cleanSku]);
+    item.isQcMandatory = isQc;
+
+    if (!isQc) return;
+
+    // Determine Priority Tier strictly as defined:
+    // P1 (URGENT): Customer order from sheet "P1+GRW DK", "P2", and "HUB DAN LK ONSITE"
+    // P2 (HIGH): GRW order from sheet "P1+GRW DK", "P2", and "HUB DAN LK ONSITE"
+    // P3 (MEDIUM): Customer order from sheet "LP"
+    // P4 (SCHEDULED): GRW order from sheet "LP"
+    var source = String(item.source || '').toUpperCase().trim();
+    var orderCategory = classifyCrOrderType(item); // 'CUSTOMER' or 'GRW'
+    var isCustomer = (orderCategory === 'CUSTOMER');
+
+    var prioCode = 'P4';
+    var prioRank = 4;
+    var prioLabel = 'Prioritas 4 (Scheduled - GRW LP)';
+    var prioColor = '#64748b';
+
+    if (source === 'P1' || source === 'P2' || source === 'HUBLK') {
+      if (isCustomer) {
+        prioCode = 'P1';
+        prioRank = 1;
+        prioLabel = '🔥 P1 - Urgent (Customer DK & Hub)';
+        prioColor = '#ef4444';
+      } else {
+        prioCode = 'P2';
+        prioRank = 2;
+        prioLabel = '⚡ P2 - High (GRW DK & Hub)';
+        prioColor = '#f59e0b';
+      }
+    } else if (source === 'LP') {
+      if (isCustomer) {
+        prioCode = 'P3';
+        prioRank = 3;
+        prioLabel = '📦 P3 - Medium (Customer LP)';
+        prioColor = '#3b82f6';
+      } else {
+        prioCode = 'P4';
+        prioRank = 4;
+        prioLabel = '📋 P4 - Scheduled (GRW LP)';
+        prioColor = '#64748b';
+      }
+    } else {
+      // Fallback if unexpected source tag
+      if (isCustomer) {
+        prioCode = 'P1';
+        prioRank = 1;
+        prioLabel = '🔥 P1 - Urgent (Customer)';
+        prioColor = '#ef4444';
+      } else {
+        prioCode = 'P2';
+        prioRank = 2;
+        prioLabel = '⚡ P2 - High (GRW)';
+        prioColor = '#f59e0b';
+      }
+    }
+
+    var batchKey = item.batch || ((source === 'LP') ? 'buffer' : 'active');
+    var batchLabel = (batchKey === 'active') ? 'Batch 3' : 'Batch 1 & 2';
+    var cbmVal = parseFloat(String(item.cbm || '0').replace(/,/g, '')) || 0;
+    var masterInfo = CR_QC_SKU_MAP[cleanSku] || {};
+
+    var qcRecord = {
+      caseId: item.caseId,
+      sku: cleanSku,
+      desc: item.desc || masterInfo.descr || 'Tanpa Deskripsi',
+      dept: masterInfo.dept || item.dep || 'GENERAL',
+      batch: batchLabel,
+      batchKey: batchKey,
+      source: item.source,
+      orderType: isCustomer ? 'Customer Delivery' : 'Store Replenishment (GRW)',
+      isCustomer: isCustomer,
+      prioCode: prioCode,
+      prioRank: prioRank,
+      prioLabel: prioLabel,
+      prioColor: prioColor,
+      loc: item.loc || '-',
+      area: item.area || 'Area 1',
+      shipto: item.shipto || '-',
+      shiptoName: item.shiptoName || '',
+      cbm: cbmVal
+    };
+
+    qcCases.push(qcRecord);
+
+    // Aggregate by Priority
+    prioCounts[prioCode].cases += 1;
+    prioCounts[prioCode].cbm += cbmVal;
+    prioCounts[prioCode].skus[cleanSku] = true;
+
+    // Aggregate by SKU
+    if (!skuQcMap[cleanSku]) {
+      skuQcMap[cleanSku] = {
+        sku: cleanSku,
+        desc: qcRecord.desc,
+        dept: qcRecord.dept,
+        count: 0,
+        cbm: 0,
+        p1Count: 0,
+        p2Count: 0,
+        p3Count: 0,
+        p4Count: 0,
+        highestPrio: prioCode
+      };
+    }
+    skuQcMap[cleanSku].count += 1;
+    skuQcMap[cleanSku].cbm += cbmVal;
+    if (prioCode === 'P1') skuQcMap[cleanSku].p1Count += 1;
+    else if (prioCode === 'P2') skuQcMap[cleanSku].p2Count += 1;
+    else if (prioCode === 'P3') skuQcMap[cleanSku].p3Count += 1;
+    else if (prioCode === 'P4') skuQcMap[cleanSku].p4Count += 1;
+  });
+
+  // Sort QC cases by priority rank first, then by Case ID
+  qcCases.sort(function(a, b) {
+    if (a.prioRank !== b.prioRank) return a.prioRank - b.prioRank;
+    return a.caseId.localeCompare(b.caseId);
+  });
+
+  // Top QC SKUs array
+  var topQcSkus = Object.keys(skuQcMap).map(function(k) { return skuQcMap[k]; });
+  topQcSkus.sort(function(a, b) { return b.count - a.count; });
+  CR_TOP_QC_SKU_LIST = topQcSkus;
+
+  CR_QC_ALL_CASES = qcCases;
+  return {
+    cases: qcCases,
+    prio: prioCounts,
+    topSkus: topQcSkus,
+    totalCases: qcCases.length,
+    totalCbm: qcCases.reduce(function(s, r) { return s + r.cbm; }, 0),
+    activeSkuCount: Object.keys(skuQcMap).length
+  };
+}
+
+function renderCaseIdReleaseQcSection() {
+  var analytics = buildCrQcAnalytics();
+
+  // 1. Update Matrix Priority KPI Cards
+  var p1 = analytics.prio.P1;
+  var p2 = analytics.prio.P2;
+  var p3 = analytics.prio.P3;
+  var p4 = analytics.prio.P4;
+
+  var totalCases = analytics.totalCases;
+  var grandTotalRelease = (CR_UNIFIED_ROWS && CR_UNIFIED_ROWS.length) ? CR_UNIFIED_ROWS.length : 1;
+  var qcRatePct = grandTotalRelease > 0 ? ((totalCases / grandTotalRelease) * 100).toFixed(1) : '0.0';
+
+  setText('cr-qc-p1-cases', p1.cases.toLocaleString() + ' Cases');
+  setText('cr-qc-p1-cbm', p1.cbm.toFixed(2) + ' CBM');
+  setText('cr-qc-p1-skus', Object.keys(p1.skus).length + ' SKU Unik');
+  setText('cr-qc-p1-pct', (totalCases > 0 ? ((p1.cases / totalCases) * 100).toFixed(0) : 0) + '% dari QC');
+
+  setText('cr-qc-p2-cases', p2.cases.toLocaleString() + ' Cases');
+  setText('cr-qc-p2-cbm', p2.cbm.toFixed(2) + ' CBM');
+  setText('cr-qc-p2-skus', Object.keys(p2.skus).length + ' SKU Unik');
+  setText('cr-qc-p2-pct', (totalCases > 0 ? ((p2.cases / totalCases) * 100).toFixed(0) : 0) + '% dari QC');
+
+  setText('cr-qc-p3-cases', p3.cases.toLocaleString() + ' Cases');
+  setText('cr-qc-p3-cbm', p3.cbm.toFixed(2) + ' CBM');
+  setText('cr-qc-p3-skus', Object.keys(p3.skus).length + ' SKU Unik');
+  setText('cr-qc-p3-pct', (totalCases > 0 ? ((p3.cases / totalCases) * 100).toFixed(0) : 0) + '% dari QC');
+
+  setText('cr-qc-p4-cases', p4.cases.toLocaleString() + ' Cases');
+  setText('cr-qc-p4-cbm', p4.cbm.toFixed(2) + ' CBM');
+  setText('cr-qc-p4-skus', Object.keys(p4.skus).length + ' SKU Unik');
+  setText('cr-qc-p4-pct', (totalCases > 0 ? ((p4.cases / totalCases) * 100).toFixed(0) : 0) + '% dari QC');
+
+  // Summary Strip
+  setText('cr-qc-total-cases', totalCases.toLocaleString() + ' Cases');
+  setText('cr-qc-rate-pct', '(' + qcRatePct + '% dari Total Release)');
+  setText('cr-qc-active-skus', analytics.activeSkuCount.toLocaleString() + ' SKU');
+  setText('cr-qc-total-cbm', analytics.totalCbm.toFixed(2) + ' CBM');
+
+  var insightEl = document.getElementById('cr-qc-insight');
+  if (insightEl) {
+    if (p1.cases > 0) {
+      insightEl.innerHTML = '💡 <strong>Rekomendasi QC:</strong> Terdapat <strong>' + p1.cases + ' Case ID P1 (Customer P1/P2/HUB)</strong> yang wajib diproses pertama di Staging QC untuk menjaga SLA pengiriman langsung ke konsumen.';
+    } else if (p2.cases > 0) {
+      insightEl.innerHTML = '💡 <strong>Rekomendasi QC:</strong> Order Customer aman. Fokus inspeksi <strong>' + p2.cases + ' Case ID P2 (GRW P1/P2/HUB)</strong> untuk jadwal pengiriman toko & hub dalam kota.';
+    } else if (p3.cases > 0) {
+      insightEl.innerHTML = '💡 <strong>Rekomendasi QC:</strong> Prioritaskan <strong>' + p3.cases + ' Case ID P3 (Customer LP)</strong> mendahului konsolidasi toko luar pulau.';
+    } else {
+      insightEl.innerHTML = '💡 <strong>Rekomendasi QC:</strong> Seluruh item QC aktif adalah <strong>P4 (GRW LP)</strong> sebanyak ' + p4.cases + ' case yang dapat diinspeksi terjadwal pada Shift 2.';
+    }
+  }
+
+  // 2. Render Left: Top 10 SKU Wajib QC
+  var topQcContainer = document.getElementById('cr-top-qc-sku-list');
+  if (topQcContainer) {
+    if (!analytics.topSkus.length) {
+      topQcContainer.innerHTML = '<div style="color:var(--muted); font-size:12px; padding:20px; text-align:center;">Tidak ada SKU wajib QC pada release hari ini.</div>';
+    } else {
+      var top10Qc = analytics.topSkus.slice(0, 10);
+      var maxQcCount = top10Qc[0] ? top10Qc[0].count : 1;
+      topQcContainer.innerHTML = top10Qc.map(function(item, idx) {
+        var pctBar = Math.round((item.count / maxQcCount) * 100);
+        var prioBadge = '';
+        if (item.p1Count > 0) {
+          prioBadge = '<span style="background:rgba(239,68,68,0.15); color:#ef4444; padding:2px 6px; border-radius:4px; font-size:10px; font-weight:800;">🔥 P1 (' + item.p1Count + ')</span>';
+        } else if (item.p2Count > 0) {
+          prioBadge = '<span style="background:rgba(245,158,11,0.15); color:#f59e0b; padding:2px 6px; border-radius:4px; font-size:10px; font-weight:800;">⚡ P2 (' + item.p2Count + ')</span>';
+        } else if (item.p3Count > 0) {
+          prioBadge = '<span style="background:rgba(59,130,246,0.15); color:#3b82f6; padding:2px 6px; border-radius:4px; font-size:10px; font-weight:800;">📦 P3 (' + item.p3Count + ')</span>';
+        } else {
+          prioBadge = '<span style="background:rgba(100,116,139,0.15); color:#64748b; padding:2px 6px; border-radius:4px; font-size:10px; font-weight:800;">📋 P4 (' + item.p4Count + ')</span>';
+        }
+
+        return '<div style="border-bottom:1px solid var(--border); padding-bottom:8px; cursor:pointer;" onclick="filterCrQcBySku(\'' + item.sku + '\')">' +
+          '<div style="display:flex; justify-content:space-between; align-items:center; font-size:12px; margin-bottom:3px;">' +
+            '<div style="display:flex; align-items:center; gap:6px; min-width:0; flex:1;">' +
+              '<span style="width:20px; height:20px; border-radius:50%; background:rgba(239,68,68,0.1); color:#ef4444; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:11px; flex-shrink:0;">' + (idx + 1) + '</span>' +
+              '<span style="font-family:var(--font-mono); font-weight:700; color:var(--text);">' + esc(item.sku) + '</span>' +
+              '<span style="font-size:10px; color:var(--muted); background:var(--surface2); padding:1px 4px; border-radius:3px;">' + esc(item.dept) + '</span>' +
+            '</div>' +
+            '<div style="display:flex; align-items:center; gap:8px; flex-shrink:0;">' +
+              prioBadge +
+              '<span style="font-family:var(--font-mono); font-weight:900; color:#ef4444; font-size:13px;">' + item.count + ' Case</span>' +
+            '</div>' +
+          '</div>' +
+          '<div style="font-size:11px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-left:26px; margin-bottom:4px;">' + esc(item.desc) + '</div>' +
+          '<div style="margin-left:26px; width:calc(100% - 26px); height:4px; background:var(--border); border-radius:2px; overflow:hidden;">' +
+            '<div style="width:' + pctBar + '%; height:100%; background:#ef4444; border-radius:2px;"></div>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+    }
+  }
+
+  // 3. Render Right: Top 10 SKU Overall Release
+  var topAllContainer = document.getElementById('cr-top-all-sku-list');
+  if (topAllContainer) {
+    var allSkus = (CR_TOP_SKU_LIST && CR_TOP_SKU_LIST.length) ? CR_TOP_SKU_LIST : [];
+    // If we have full sku map, use Top 10
+    var fullSkuMap = {};
+    (CR_UNIFIED_ROWS || []).forEach(function(r) {
+      if (!r || !r.sku) return;
+      var s = String(r.sku).trim().toUpperCase();
+      if (!s || s === '-' || s === '#N/A') return;
+      if (!fullSkuMap[s]) {
+        fullSkuMap[s] = {
+          sku: s,
+          desc: r.desc || '',
+          dep: r.dep || '',
+          count: 0,
+          isQc: Boolean(CR_QC_SKU_MAP[s])
+        };
+      }
+      fullSkuMap[s].count += 1;
+    });
+    var sortedAllSkus = Object.keys(fullSkuMap).map(function(k) { return fullSkuMap[k]; });
+    sortedAllSkus.sort(function(a, b) { return b.count - a.count; });
+    var top10All = sortedAllSkus.slice(0, 10);
+    var maxAllCount = top10All[0] ? top10All[0].count : 1;
+
+    topAllContainer.innerHTML = top10All.map(function(item, idx) {
+      var pctBar = Math.round((item.count / maxAllCount) * 100);
+      var qcTag = item.isQc 
+        ? '<span style="background:rgba(239,68,68,0.15); color:#ef4444; padding:1px 5px; border-radius:3px; font-size:9px; font-weight:800;">🛡️ QC</span>'
+        : '<span style="background:rgba(100,116,139,0.1); color:var(--muted); padding:1px 5px; border-radius:3px; font-size:9px;">Reguler</span>';
+
+      return '<div style="border-bottom:1px solid var(--border); padding-bottom:8px;">' +
+        '<div style="display:flex; justify-content:space-between; align-items:center; font-size:12px; margin-bottom:3px;">' +
+          '<div style="display:flex; align-items:center; gap:6px; min-width:0; flex:1;">' +
+            '<span style="width:20px; height:20px; border-radius:50%; background:rgba(37,99,235,0.1); color:var(--blue); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:11px; flex-shrink:0;">' + (idx + 1) + '</span>' +
+            '<span style="font-family:var(--font-mono); font-weight:700; color:var(--text);">' + esc(item.sku) + '</span>' +
+            qcTag +
+          '</div>' +
+          '<div style="flex-shrink:0;">' +
+            '<span style="font-family:var(--font-mono); font-weight:900; color:var(--blue); font-size:13px;">' + item.count + ' Case</span>' +
+          '</div>' +
+        '</div>' +
+        '<div style="font-size:11px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-left:26px; margin-bottom:4px;">' + esc(item.desc || '—') + '</div>' +
+        '<div style="margin-left:26px; width:calc(100% - 26px); height:4px; background:var(--border); border-radius:2px; overflow:hidden;">' +
+          '<div style="width:' + pctBar + '%; height:100%; background:var(--blue); border-radius:2px;"></div>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+  }
+
+  // 4. Render Table
+  applyCrQcFilters();
+}
+
+function setCrQcFilterPrio(prio) {
+  CR_QC_FILTER_PRIO = prio;
+  CR_QC_PAGE = 1;
+
+  // Update button active styles
+  var btns = ['all', 'p1', 'p2', 'p3', 'p4'];
+  btns.forEach(function(b) {
+    var btn = document.getElementById('cr-qc-btn-' + b);
+    if (btn) {
+      if (b.toUpperCase() === prio.toUpperCase() || (b === 'all' && prio === 'ALL')) {
+        btn.classList.add('active');
+        btn.classList.remove('badge-muted');
+      } else {
+        btn.classList.remove('active');
+        btn.classList.add('badge-muted');
+      }
+    }
+  });
+
+  // Highlight selected card
+  ['p1', 'p2', 'p3', 'p4'].forEach(function(p) {
+    var card = document.getElementById('cr-qc-card-' + p);
+    if (card) {
+      if (prio === 'ALL' || prio.toLowerCase() === p) {
+        card.style.opacity = '1';
+        card.style.transform = 'translateY(0)';
+      } else {
+        card.style.opacity = '0.5';
+      }
+    }
+  });
+
+  applyCrQcFilters();
+}
+
+function filterCrQcBySku(sku) {
+  var input = document.getElementById('cr-qc-search-input');
+  if (input) {
+    input.value = sku;
+    onCrQcSearchChange();
+    // Smooth scroll to table
+    var tableEl = document.getElementById('cr-qc-table-body');
+    if (tableEl) tableEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
+function onCrQcSearchChange() {
+  var input = document.getElementById('cr-qc-search-input');
+  CR_QC_SEARCH_QUERY = input ? input.value.trim().toLowerCase() : '';
+  CR_QC_PAGE = 1;
+  applyCrQcFilters();
+}
+
+function applyCrQcFilters() {
+  var filtered = (CR_QC_ALL_CASES || []).filter(function(item) {
+    // Priority filter
+    if (CR_QC_FILTER_PRIO !== 'ALL' && item.prioCode !== CR_QC_FILTER_PRIO) return false;
+
+    // Search query filter
+    if (CR_QC_SEARCH_QUERY) {
+      var q = CR_QC_SEARCH_QUERY;
+      var matchCase = item.caseId.toLowerCase().indexOf(q) !== -1;
+      var matchSku = item.sku.toLowerCase().indexOf(q) !== -1;
+      var matchDesc = item.desc.toLowerCase().indexOf(q) !== -1;
+      var matchDept = item.dept.toLowerCase().indexOf(q) !== -1;
+      var matchShipto = (item.shipto + ' ' + item.shiptoName).toLowerCase().indexOf(q) !== -1;
+      var matchLoc = item.loc.toLowerCase().indexOf(q) !== -1;
+      if (!matchCase && !matchSku && !matchDesc && !matchDept && !matchShipto && !matchLoc) return false;
+    }
+    return true;
+  });
+
+  CR_QC_FILTERED_CASES = filtered;
+  renderCrQcTable();
+}
+
+function changeCrQcPage(delta) {
+  var maxPage = Math.max(1, Math.ceil(CR_QC_FILTERED_CASES.length / CR_QC_PAGE_SIZE));
+  CR_QC_PAGE = Math.min(maxPage, Math.max(1, CR_QC_PAGE + delta));
+  renderCrQcTable();
+}
+
+function renderCrQcTable() {
+  var tbody = document.getElementById('cr-qc-table-body');
+  var infoEl = document.getElementById('cr-qc-table-info');
+  var pageEl = document.getElementById('cr-qc-page-indicator');
+  if (!tbody) return;
+
+  var total = CR_QC_FILTERED_CASES.length;
+  var maxPage = Math.max(1, Math.ceil(total / CR_QC_PAGE_SIZE));
+  if (CR_QC_PAGE > maxPage) CR_QC_PAGE = maxPage;
+
+  var startIdx = (CR_QC_PAGE - 1) * CR_QC_PAGE_SIZE;
+  var pageRows = CR_QC_FILTERED_CASES.slice(startIdx, startIdx + CR_QC_PAGE_SIZE);
+
+  if (infoEl) {
+    infoEl.textContent = 'Menampilkan ' + (total > 0 ? (startIdx + 1) : 0) + ' - ' + Math.min(startIdx + CR_QC_PAGE_SIZE, total) + ' dari ' + total.toLocaleString() + ' Case ID QC';
+  }
+  if (pageEl) {
+    pageEl.textContent = 'Hal ' + CR_QC_PAGE + ' / ' + maxPage;
+  }
+
+  if (pageRows.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:30px; color:var(--muted); font-style:italic;">Tidak ditemukan Case ID QC yang sesuai dengan kriteria filter.</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = pageRows.map(function(r) {
+    var prioTag = '';
+    if (r.prioCode === 'P1') prioTag = '<span class="badge" style="background:#ef4444; color:#fff; font-size:10px; font-weight:800;">🔥 P1 URGENT</span>';
+    else if (r.prioCode === 'P2') prioTag = '<span class="badge" style="background:#f59e0b; color:#fff; font-size:10px; font-weight:800;">⚡ P2 HIGH</span>';
+    else if (r.prioCode === 'P3') prioTag = '<span class="badge" style="background:#3b82f6; color:#fff; font-size:10px; font-weight:800;">📦 P3 MEDIUM</span>';
+    else prioTag = '<span class="badge" style="background:#64748b; color:#fff; font-size:10px; font-weight:800;">📋 P4 SCHEDULED</span>';
+
+    return '<tr style="border-bottom:1px solid var(--border); transition:background 0.15s ease;" onmouseover="this.style.background=\'var(--surface2)\'" onmouseout="this.style.background=\'transparent\'">' +
+      '<td style="padding:8px 10px;">' + prioTag + '</td>' +
+      '<td style="padding:8px 10px; font-family:var(--font-mono); font-weight:700; color:var(--text);">' + esc(r.caseId) + '</td>' +
+      '<td style="padding:8px 10px;">' +
+        '<div style="font-family:var(--font-mono); font-weight:700; color:var(--blue);">' + esc(r.sku) + '</div>' +
+        '<div style="font-size:11px; color:var(--muted);">' + esc(r.desc) + '</div>' +
+      '</td>' +
+      '<td style="padding:8px 10px;"><span style="font-size:11px; background:var(--surface2); padding:2px 6px; border-radius:3px; font-weight:600;">' + esc(r.dept) + '</span></td>' +
+      '<td style="padding:8px 10px;">' +
+        '<div style="font-weight:700; font-size:11px; color:var(--text);">' + esc(r.batch) + '</div>' +
+        '<div style="font-size:10px; color:var(--muted);">' + esc(r.orderType) + '</div>' +
+      '</td>' +
+      '<td style="padding:8px 10px;">' +
+        '<div style="font-family:var(--font-mono); font-weight:700; color:var(--text); font-size:11px;">' + esc(r.loc) + '</div>' +
+        '<div style="font-size:10px; color:var(--muted);">' + esc(r.area) + '</div>' +
+      '</td>' +
+      '<td style="padding:8px 10px;">' +
+        '<div style="font-weight:700; font-size:11px; color:var(--text);">' + esc(r.shipto) + '</div>' +
+        (r.shiptoName ? '<div style="font-size:10px; color:var(--muted);">' + esc(r.shiptoName) + '</div>' : '') +
+      '</td>' +
+      '<td style="padding:8px 10px; text-align:right; font-family:var(--font-mono); font-weight:700; color:var(--text);">' + (r.cbm > 0 ? r.cbm.toFixed(3) : '-') + '</td>' +
+    '</tr>';
+  }).join('');
 }
 
 function renderCaseIdReleasePage() {
@@ -17188,6 +18334,9 @@ function renderCaseIdReleasePage() {
 
   // ── Sebaran per Lorong ──
   renderAisleDistribution();
+
+  // ── Render QC Inspection Analytics & Priority Matrix ──
+  renderCaseIdReleaseQcSection();
 }
 
 function getCRFallbackRawData() {
