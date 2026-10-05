@@ -4770,53 +4770,52 @@ PLANNING REPORT</div>
   <!-- ══ DIAGRAM KPI & SPEEDOMETER GRID (LIKE SLA MENU) ══ -->
   <div class="overview-grid" style="margin-bottom:20px;">
     <!-- LEFT CARD: SPEEDOMETER & BREAKDOWN (SLA-STYLE) -->
-    <div class="card">
+    <div class="card" style="display:flex; flex-direction:column; justify-content:space-between;">
       <div class="card-header">
         <div>
           <div class="card-title">DIAGRAM KPI &amp; RASIO OD SUSPEND</div>
           <div class="card-sub">% SUSPEND RATIO &amp; RISK LEVEL SPEEDOMETER</div>
         </div>
-        <span class="badge badge-red" id="odSpeedoBadge">Tingkat Suspend</span>
+        <span class="badge badge-amber" id="odSpeedoBadge">Tingkat Suspend</span>
       </div>
-      <div class="overview-chart-row">
-        <div class="speedo-wrap" style="position:relative;">
-          <canvas id="speedoOdSuspend" width="180" height="100"></canvas>
-          <div class="speedo-val" id="odSpeedoVal" style="color:#ef4444; font-size:22px; font-weight:800; bottom:4px;">0.00%</div>
-          <div style="font-size:10px; font-weight:700; color:var(--muted); text-align:center; margin-top:2px;">RASIO SUSPEND</div>
+      <div class="overview-chart-row" style="margin-top:10px;">
+        <div class="speedo-wrap">
+          <canvas id="speedoOdSuspend" width="160" height="90"></canvas>
+          <div class="speedo-val" id="odSpeedoVal" style="color:#d97706; font-size:24px; font-weight:800;">0.00%</div>
         </div>
         <div class="ov-stats-list" style="flex:1.5;">
           <div class="ov-stat-item">
-            <span class="ov-stat-lbl">Total Base Orders (Reg+Tr)</span>
-            <span class="ov-stat-val" id="odStatBaseOrders" style="color:var(--text);">0</span>
+            <span class="ov-stat-lbl">Total Base Orders</span>
+            <span class="ov-stat-val" id="odStatBaseOrders" style="color:var(--text); font-weight:700;">0</span>
           </div>
           <div class="ov-stat-item">
-            <span class="ov-stat-lbl">Order Reguler (Proses Langsung)</span>
-            <span class="ov-stat-val text-blue" id="odStatReguler">0</span>
+            <span class="ov-stat-lbl">Order Reguler</span>
+            <span class="ov-stat-val text-blue" id="odStatReguler" style="font-weight:700;">0</span>
           </div>
           <div class="ov-stat-item">
-            <span class="ov-stat-lbl">Order Transit (Crossdock / Hub)</span>
-            <span class="ov-stat-val" id="odStatTransit" style="color:#7c3aed;">0</span>
+            <span class="ov-stat-lbl">Order Transit</span>
+            <span class="ov-stat-val" id="odStatTransit" style="color:#7c3aed; font-weight:700;">0</span>
           </div>
           <div class="ov-stat-item">
             <span class="ov-stat-lbl">Total Pesanan Suspend</span>
-            <span class="ov-stat-val text-red" id="odStatSuspend">0</span>
+            <span class="ov-stat-val text-red" id="odStatSuspend" style="font-weight:700;">0</span>
           </div>
           <div class="ov-stat-item">
-            <span class="ov-stat-lbl">Fulfillment Bersih (Non-Suspend)</span>
-            <span class="ov-stat-val text-green" id="odStatCleanTotal">0 (100%)</span>
+            <span class="ov-stat-lbl">Fulfillment Bersih</span>
+            <span class="ov-stat-val text-green" id="odStatCleanTotal" style="font-weight:700;">0 (100%)</span>
           </div>
         </div>
       </div>
 
       <!-- Area Breakdown Subcards (Exact SLA style dk-accent & lk-accent) -->
-      <div class="bu-sla-breakdown" style="display:grid; grid-template-columns:repeat(2, minmax(200px, 1fr)); justify-content:center; gap:16px; margin-top:16px; padding-top:16px; border-top:1px solid rgba(0,0,0,0.06);">
+      <div class="bu-sla-breakdown" style="display:grid; grid-template-columns:repeat(2, minmax(180px, 1fr)); justify-content:center; gap:14px; margin-top:16px; padding-top:16px; border-top:1px solid rgba(0,0,0,0.06);">
         <div class="sla-breakdown-card dk-accent">
           <div class="sla-card-head">
             <span class="sla-card-label" style="color:#047857; font-weight:800;">DALAM KOTA (DK)</span>
             <span class="sla-card-badge" style="background:rgba(16,185,129,0.2); color:#065f46; border-color:rgba(16,185,129,0.4);">AREA DK</span>
           </div>
           <div class="sla-card-val" style="color:#064e3b; font-size:24px; font-weight:900;" id="odBoxDkPct">0.00%</div>
-          <div class="sla-card-sub" style="color:#047857;" id="odBoxDkSub">0 suspend · 0 base</div>
+          <div class="sla-card-sub" style="color:#047857; font-size:11px;" id="odBoxDkSub">0 suspend · 0 base</div>
         </div>
         <div class="sla-breakdown-card lk-accent">
           <div class="sla-card-head">
@@ -4824,49 +4823,49 @@ PLANNING REPORT</div>
             <span class="sla-card-badge" style="background:rgba(99,102,241,0.2); color:#312e81; border-color:rgba(99,102,241,0.4);">AREA LK</span>
           </div>
           <div class="sla-card-val" style="color:#1e1b4b; font-size:24px; font-weight:900;" id="odBoxLkPct">0.00%</div>
-          <div class="sla-card-sub" style="color:#3730a3;" id="odBoxLkSub">0 suspend · 0 base</div>
+          <div class="sla-card-sub" style="color:#3730a3; font-size:11px;" id="odBoxLkSub">0 suspend · 0 base</div>
         </div>
       </div>
     </div>
 
     <!-- RIGHT CARD: KOMPOSISI & INSIGHT OPERASIONAL -->
-    <div class="card">
+    <div class="card" style="display:flex; flex-direction:column; justify-content:space-between;">
       <div class="card-header">
         <div>
-          <div class="card-title">KOMPOSISI ORDER &amp; INSIGHT OD SUSPEND</div>
-          <div class="card-sub">Distribusi Pesanan &amp; Catatan Penting Operasional</div>
+          <div class="card-title">KOMPOSISI ORDER &amp; INSIGHT OPERASIONAL</div>
+          <div class="card-sub">Distribusi Volume Pesanan &amp; Catatan Kinerja</div>
         </div>
         <span class="badge badge-purple">Breakdown</span>
       </div>
       <div style="display:flex; flex-direction:column; gap:16px;">
-        <div style="display:flex; align-items:center; gap:20px; flex-wrap:wrap;">
-          <div style="width:160px; height:160px; position:relative; margin:0 auto;">
-            <canvas id="chartOdSuspendComposition" width="160" height="160"></canvas>
+        <div style="display:flex; align-items:center; gap:20px; flex-wrap:wrap; margin:8px 0;">
+          <div style="width:140px; height:140px; position:relative; margin:0 auto; flex-shrink:0;">
+            <canvas id="chartOdSuspendComposition" width="140" height="140"></canvas>
             <div style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); text-align:center; pointer-events:none;">
-              <div style="font-size:10px; color:var(--muted); font-weight:700;">TOTAL BASE</div>
+              <div style="font-size:9px; color:var(--muted); font-weight:700; letter-spacing:0.4px;">TOTAL BASE</div>
               <div style="font-size:16px; font-weight:900; color:var(--text); font-family:var(--font-mono);" id="odDonutCenterVal">0</div>
             </div>
           </div>
           <div style="flex:1; min-width:180px;">
             <div style="display:flex; flex-direction:column; gap:8px;">
-              <div style="display:flex; align-items:center; justify-content:space-between; font-size:12px; padding:6px 10px; background:rgba(37,99,235,0.06); border-radius:6px;">
-                <span style="display:flex; align-items:center; gap:6px;">
+              <div style="display:flex; align-items:center; justify-content:space-between; font-size:12px; padding:7px 12px; background:rgba(37,99,235,0.06); border-radius:8px;">
+                <span style="display:flex; align-items:center; gap:8px;">
                   <span style="width:10px; height:10px; border-radius:50%; background:#2563eb; display:inline-block;"></span>
-                  <strong>Reguler</strong>
+                  <strong style="color:#1e3a5f;">Order Reguler</strong>
                 </span>
-                <span id="odCompRegVal" style="font-family:var(--font-mono); font-weight:700;">0 (0%)</span>
+                <span id="odCompRegVal" style="font-family:var(--font-mono); font-weight:700; color:#2563eb;">0 (0%)</span>
               </div>
-              <div style="display:flex; align-items:center; justify-content:space-between; font-size:12px; padding:6px 10px; background:rgba(124,58,237,0.06); border-radius:6px;">
-                <span style="display:flex; align-items:center; gap:6px;">
+              <div style="display:flex; align-items:center; justify-content:space-between; font-size:12px; padding:7px 12px; background:rgba(124,58,237,0.06); border-radius:8px;">
+                <span style="display:flex; align-items:center; gap:8px;">
                   <span style="width:10px; height:10px; border-radius:50%; background:#7c3aed; display:inline-block;"></span>
-                  <strong>Transit</strong>
+                  <strong style="color:#4c1d95;">Order Transit</strong>
                 </span>
-                <span id="odCompTransitVal" style="font-family:var(--font-mono); font-weight:700;">0 (0%)</span>
+                <span id="odCompTransitVal" style="font-family:var(--font-mono); font-weight:700; color:#7c3aed;">0 (0%)</span>
               </div>
-              <div style="display:flex; align-items:center; justify-content:space-between; font-size:12px; padding:6px 10px; background:rgba(239,68,68,0.08); border-radius:6px; border:1px solid rgba(239,68,68,0.2);">
-                <span style="display:flex; align-items:center; gap:6px;">
+              <div style="display:flex; align-items:center; justify-content:space-between; font-size:12px; padding:7px 12px; background:rgba(239,68,68,0.06); border-radius:8px; border:1px solid rgba(239,68,68,0.2);">
+                <span style="display:flex; align-items:center; gap:8px;">
                   <span style="width:10px; height:10px; border-radius:50%; background:#ef4444; display:inline-block;"></span>
-                  <strong style="color:#ef4444;">Suspend</strong>
+                  <strong style="color:#b91c1c;">Order Suspend</strong>
                 </span>
                 <span id="odCompSuspVal" style="font-family:var(--font-mono); font-weight:700; color:#ef4444;">0 (0%)</span>
               </div>
@@ -4875,20 +4874,20 @@ PLANNING REPORT</div>
         </div>
 
         <!-- Quick Operational Highlights -->
-        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:10px; margin-top:4px;">
-          <div style="background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:10px;">
+        <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; margin-top:4px; padding-top:14px; border-top:1px solid var(--border);">
+          <div style="background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:10px; text-align:center;">
             <div style="font-size:10px; font-weight:800; color:var(--muted); text-transform:uppercase;">Hari Bebas Suspend</div>
-            <div style="font-size:18px; font-weight:800; color:var(--green); margin-top:2px;" id="odInsightZeroDays">0 Hari</div>
+            <div style="font-size:17px; font-weight:800; color:var(--green); margin-top:2px;" id="odInsightZeroDays">0 Hari</div>
             <div style="font-size:10px; color:var(--muted);">Tingkat suspend 0%</div>
           </div>
-          <div style="background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:10px;">
+          <div style="background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:10px; text-align:center;">
             <div style="font-size:10px; font-weight:800; color:var(--muted); text-transform:uppercase;">Puncak Suspend</div>
-            <div style="font-size:18px; font-weight:800; color:var(--red); margin-top:2px;" id="odInsightPeakDay">—</div>
+            <div style="font-size:17px; font-weight:800; color:var(--red); margin-top:2px;" id="odInsightPeakDay">—</div>
             <div style="font-size:10px; color:var(--muted);" id="odInsightPeakCount">0 pesanan</div>
           </div>
-          <div style="background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:10px;">
+          <div style="background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:10px; text-align:center;">
             <div style="font-size:10px; font-weight:800; color:var(--muted); text-transform:uppercase;">Rata-Rata Suspend</div>
-            <div style="font-size:18px; font-weight:800; color:var(--amber); margin-top:2px;" id="odInsightAvgDaily">0</div>
+            <div style="font-size:17px; font-weight:800; color:var(--amber); margin-top:2px;" id="odInsightAvgDaily">0</div>
             <div style="font-size:10px; color:var(--muted);">pesanan / hari aktif</div>
           </div>
         </div>
@@ -4989,7 +4988,7 @@ PLANNING REPORT</div>
             <th style="padding:6px 8px; text-align:right; color:#ef4444; font-weight:700;">Suspend</th>
             <th style="padding:6px 8px; text-align:right; border-right:2px solid var(--border); font-weight:700;">% Susp</th>
             <!-- Total sub-cols -->
-            <th style="padding:6px 8px; text-align:right;">Base (Reg+Tr)</th>
+            <th style="padding:6px 8px; text-align:right;">Total Base</th>
             <th style="padding:6px 8px; text-align:right; color:#ef4444; font-weight:700;">Suspend</th>
             <th style="padding:6px 8px; text-align:right; border-right:1px solid var(--border); font-weight:800;">% Susp</th>
           </tr>
@@ -22492,24 +22491,49 @@ function applyOdSuspendFilters() {
 }
 
 // ── SPEEDOMETER CANVAS FOR OD SUSPEND ──────────────────────────────────────
-function drawOdSuspendSpeedometer(canvasId, pctValue) {
+function drawOdSuspendSpeedometer(canvasId, targetValue) {
+  var canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  var startTime = performance.now();
+  var duration = 900;
+  var initialValue = parseFloat(canvas.dataset.currentVal) || 0;
+  var target = parseFloat(targetValue) || 0;
+
+  function step(timestamp) {
+    var elapsed = timestamp - startTime;
+    var progress = Math.min(elapsed / duration, 1);
+    var easedProgress = 1 - Math.pow(1 - progress, 3); // Cubic ease-out
+    var displayValue = initialValue + (target - initialValue) * easedProgress;
+
+    drawOdSuspendSpeedometerStatic(canvasId, displayValue);
+
+    if (progress < 1) {
+      requestAnimationFrame(step);
+    } else {
+      canvas.dataset.currentVal = target;
+    }
+  }
+  requestAnimationFrame(step);
+}
+
+function drawOdSuspendSpeedometerStatic(canvasId, value) {
   var canvas = document.getElementById(canvasId);
   if (!canvas) return;
   var ctx = canvas.getContext('2d');
-  var val = parseFloat(pctValue) || 0;
+  var val = parseFloat(value) || 0;
   if (val < 0) val = 0;
-  if (val > 25) val = 25; // max scale 25%
+  if (val > 20) val = 20;
 
   var w = canvas.width;
   var h = canvas.height;
   ctx.clearRect(0, 0, w, h);
 
   var cx = w / 2;
-  var cy = h - 14;
-  var r = Math.min(cx, cy) - 10;
-  var thickness = 16;
+  var cy = h - 10;
+  var r = Math.min(cx, cy) - 8;
+  var thickness = 14;
 
-  // Background track
+  // 1. Background track
   ctx.save();
   ctx.beginPath();
   ctx.arc(cx, cy, r, Math.PI, 2 * Math.PI, false);
@@ -22518,26 +22542,26 @@ function drawOdSuspendSpeedometer(canvasId, pctValue) {
   ctx.stroke();
   ctx.restore();
 
-  // Color Arc: Green (<2%) -> Lime (2-4%) -> Yellow/Amber (4-6%) -> Red (>6%)
+  // 2. Multi-color gradient Arc: Green (0%) -> Lime/Yellow (2-4%) -> Orange (4-6%) -> Red (>6%)
   ctx.save();
   ctx.beginPath();
   ctx.arc(cx, cy, r, Math.PI, 2 * Math.PI, false);
   ctx.lineWidth = thickness;
   var grad = ctx.createLinearGradient(cx - r, cy, cx + r, cy);
-  grad.addColorStop(0.0, '#10b981'); // Safe / Green
-  grad.addColorStop(0.2, '#22c55e'); // Green
-  grad.addColorStop(0.4, '#eab308'); // Warning Yellow
-  grad.addColorStop(0.7, '#f97316'); // Orange
-  grad.addColorStop(1.0, '#ef4444'); // Critical Red
+  grad.addColorStop(0.0, '#10b981');  // Green Safe (< 2%)
+  grad.addColorStop(0.25, '#22c55e'); // Lime
+  grad.addColorStop(0.5, '#f59e0b');  // Amber Warning (2-5%)
+  grad.addColorStop(0.75, '#ea580c'); // Orange
+  grad.addColorStop(1.0, '#dc2626');  // Red Critical (> 5%)
   ctx.strokeStyle = grad;
   ctx.stroke();
   ctx.restore();
 
-  // White Divider Ticks
+  // 3. Elegant white divider ticks
   ctx.save();
-  var numTicks = 20;
+  var numTicks = 24;
   ctx.strokeStyle = '#ffffff';
-  ctx.lineWidth = 1.5;
+  ctx.lineWidth = 1.2;
   for (var i = 0; i <= numTicks; i++) {
     var angle = Math.PI + (Math.PI * i / numTicks);
     var rIn = r - (thickness / 2) - 1;
@@ -22553,9 +22577,8 @@ function drawOdSuspendSpeedometer(canvasId, pctValue) {
   }
   ctx.restore();
 
-  // Needle angle: Map 0% - 15% to PI - 2*PI
-  // 0% -> PI, 5% -> PI + (5/15)*PI, 15%+ -> 2*PI
-  var normalizedVal = Math.min(val, 15) / 15;
+  // 4. Needle angle: Map 0% - 12% to PI - 2*PI (so normal range 0-6% occupies full visible top half)
+  var normalizedVal = Math.min(val, 12) / 12;
   var needleAngle = Math.PI + (normalizedVal * Math.PI);
 
   ctx.save();
@@ -22563,26 +22586,26 @@ function drawOdSuspendSpeedometer(canvasId, pctValue) {
   ctx.rotate(needleAngle);
 
   // Needle Shadow
-  ctx.shadowColor = 'rgba(0,0,0,0.25)';
-  ctx.shadowBlur = 6;
+  ctx.shadowColor = 'rgba(0,0,0,0.2)';
+  ctx.shadowBlur = 4;
   ctx.shadowOffsetX = 1;
-  ctx.shadowOffsetY = 2;
+  ctx.shadowOffsetY = 1;
 
   // Needle Body
   ctx.beginPath();
-  ctx.moveTo(0, -4);
-  ctx.lineTo(r - 4, 0);
-  ctx.lineTo(0, 4);
-  ctx.fillStyle = val > 5 ? '#ef4444' : (val > 2 ? '#f59e0b' : '#10b981');
+  ctx.moveTo(0, -3.5);
+  ctx.lineTo(r - 5, 0);
+  ctx.lineTo(0, 3.5);
+  ctx.fillStyle = val > 5 ? '#dc2626' : (val > 2 ? '#d97706' : '#10b981');
   ctx.fill();
 
   // Center pivot pin
   ctx.beginPath();
-  ctx.arc(0, 0, 7, 0, 2 * Math.PI);
+  ctx.arc(0, 0, 6.5, 0, 2 * Math.PI);
   ctx.fillStyle = '#1e293b';
   ctx.fill();
   ctx.beginPath();
-  ctx.arc(0, 0, 3, 0, 2 * Math.PI);
+  ctx.arc(0, 0, 2.5, 0, 2 * Math.PI);
   ctx.fillStyle = '#ffffff';
   ctx.fill();
 
@@ -22692,8 +22715,21 @@ function renderOdSuspendPage() {
   // 3. Update Speedometer Card
   setT('odSpeedoVal', activePct.toFixed(2) + '%');
   var speedoValEl = document.getElementById('odSpeedoVal');
+  var speedoBadge = document.getElementById('odSpeedoBadge');
   if (speedoValEl) {
-    speedoValEl.style.color = activePct > 5.0 ? '#ef4444' : (activePct > 2.0 ? '#f59e0b' : '#10b981');
+    speedoValEl.style.color = activePct > 5.0 ? '#dc2626' : (activePct > 2.0 ? '#d97706' : '#10b981');
+  }
+  if (speedoBadge) {
+    if (activePct < 2.0) {
+      speedoBadge.className = 'badge badge-green';
+      speedoBadge.textContent = 'Aman (< 2%)';
+    } else if (activePct <= 5.0) {
+      speedoBadge.className = 'badge badge-amber';
+      speedoBadge.textContent = 'Waspada (2% - 5%)';
+    } else {
+      speedoBadge.className = 'badge badge-red';
+      speedoBadge.textContent = 'Kritis (> 5%)';
+    }
   }
   drawOdSuspendSpeedometer('speedoOdSuspend', activePct);
 
@@ -22793,8 +22829,9 @@ function renderOdSuspendCharts(data, area) {
             type: 'bar',
             label: 'Order Reguler',
             data: regPoints,
-            backgroundColor: '#3b82f6',
+            backgroundColor: '#2563eb',
             borderRadius: 4,
+            maxBarThickness: 34,
             stack: 'volume',
             yAxisID: 'y',
             order: 2
@@ -22803,8 +22840,9 @@ function renderOdSuspendCharts(data, area) {
             type: 'bar',
             label: 'Order Transit',
             data: transitPoints,
-            backgroundColor: '#8b5cf6',
+            backgroundColor: '#7c3aed',
             borderRadius: 4,
+            maxBarThickness: 34,
             stack: 'volume',
             yAxisID: 'y',
             order: 2
@@ -22815,6 +22853,7 @@ function renderOdSuspendCharts(data, area) {
             data: suspPoints,
             backgroundColor: '#ef4444',
             borderRadius: 4,
+            maxBarThickness: 34,
             stack: 'volume',
             yAxisID: 'y',
             order: 2
@@ -22823,14 +22862,16 @@ function renderOdSuspendCharts(data, area) {
             type: 'line',
             label: '% Suspend (' + area + ')',
             data: pctPoints,
-            borderColor: '#f59e0b',
-            backgroundColor: 'rgba(245, 158, 11, 0.12)',
+            borderColor: '#d97706',
+            backgroundColor: 'rgba(217, 119, 6, 0.08)',
             fill: true,
-            tension: 0.3,
+            tension: 0.35,
             borderWidth: 2.5,
             pointRadius: 4,
             pointHoverRadius: 7,
-            pointBackgroundColor: '#f59e0b',
+            pointBackgroundColor: '#ffffff',
+            pointBorderColor: '#d97706',
+            pointBorderWidth: 2,
             yAxisID: 'y1',
             order: 1
           }
@@ -22839,6 +22880,9 @@ function renderOdSuspendCharts(data, area) {
       options: {
         responsive: true,
         maintainAspectRatio: false,
+        layout: {
+          padding: { top: 16, right: 10, left: 6, bottom: 6 }
+        },
         interaction: {
           mode: 'index',
           intersect: false
@@ -22848,18 +22892,24 @@ function renderOdSuspendCharts(data, area) {
             position: 'top',
             labels: {
               boxWidth: 12,
-              font: { family: 'Plus Jakarta Sans', size: 11, weight: '600' }
+              padding: 14,
+              font: { family: 'Plus Jakarta Sans', size: 11, weight: '700' }
             }
           },
           tooltip: {
+            backgroundColor: 'rgba(15, 23, 42, 0.92)',
+            titleFont: { family: 'Plus Jakarta Sans', size: 12, weight: '700' },
+            bodyFont: { family: 'Plus Jakarta Sans', size: 11 },
+            padding: 10,
+            cornerRadius: 8,
             callbacks: {
               label: function(context) {
                 var label = context.dataset.label || '';
                 var val = context.raw;
                 if (context.dataset.yAxisID === 'y1') {
-                  return label + ': ' + val + '%';
+                  return '  ' + label + ': ' + val + '%';
                 }
-                return label + ': ' + (val ? val.toLocaleString('id-ID') : 0) + ' orders';
+                return '  ' + label + ': ' + (val ? val.toLocaleString('id-ID') : 0) + ' orders';
               }
             }
           }
@@ -22868,7 +22918,8 @@ function renderOdSuspendCharts(data, area) {
           x: {
             grid: { display: false },
             ticks: {
-              font: { family: 'Plus Jakarta Sans', size: 10 },
+              font: { family: 'Plus Jakarta Sans', size: 10, weight: '600' },
+              color: '#64748b',
               maxRotation: 45
             }
           },
@@ -22880,21 +22931,31 @@ function renderOdSuspendCharts(data, area) {
             title: {
               display: true,
               text: 'Volume Pesanan',
-              font: { size: 11, weight: '700' }
+              font: { family: 'Plus Jakarta Sans', size: 11, weight: '700' },
+              color: '#334155'
             },
-            grid: { color: 'rgba(0,0,0,0.06)' }
+            ticks: {
+              font: { family: 'Plus Jakarta Sans', size: 10 },
+              color: '#64748b',
+              callback: function(v) { return v.toLocaleString('id-ID'); }
+            },
+            grid: { color: 'rgba(0,0,0,0.05)' }
           },
           y1: {
             type: 'linear',
             display: true,
             position: 'right',
+            suggestedMin: 0,
             grid: { drawOnChartArea: false },
             title: {
               display: true,
               text: '% Suspend Rate',
-              font: { size: 11, weight: '700' }
+              font: { family: 'Plus Jakarta Sans', size: 11, weight: '700' },
+              color: '#d97706'
             },
             ticks: {
+              font: { family: 'Plus Jakarta Sans', size: 10, weight: '600' },
+              color: '#d97706',
               callback: function(v) { return v + '%'; }
             }
           }
@@ -23217,7 +23278,7 @@ function exportOdSuspendCsv() {
   }
 
   var csvRows = [
-    ['No', 'Tanggal', 'DK Order Reguler', 'DK Order Transit', 'DK Order Suspend', 'DK Persen Suspend', 'LK Order Reguler', 'LK Order Transit', 'LK Order Suspend', 'LK Persen Suspend', 'Total Base (Reg+Tr)', 'Total Suspend', 'Persen Suspend Harian', 'Status']
+    ['No', 'Tanggal', 'DK Order Reguler', 'DK Order Transit', 'DK Order Suspend', 'DK Persen Suspend', 'LK Order Reguler', 'LK Order Transit', 'LK Order Suspend', 'LK Persen Suspend', 'Total Total Base', 'Total Suspend', 'Persen Suspend Harian', 'Status']
   ];
 
   filtered.forEach(function(r, idx) {
