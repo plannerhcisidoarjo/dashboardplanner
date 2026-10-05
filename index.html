@@ -3337,7 +3337,7 @@ PLANNING REPORT</div>
       </div>
       <div id="ni-sla" class="ni" onclick="navTo('sla')">
         <span class="ni-icon">⏱</span>
-        <span class="ni-text">SLA</span>
+        <span class="ni-text">SLA &amp; OD Suspend</span>
       </div>
       <div id="ni-fulfillment-armada" class="ni" onclick="navTo('fulfillment-armada')">
         <span class="ni-icon">🚚</span>
@@ -4318,8 +4318,38 @@ PLANNING REPORT</div>
   </div>
 </div>
 
-<!-- PAGE 5: SLA DETAILS -->
+<!-- PAGE 5: SLA & OD SUSPEND DETAILS -->
 <div id="pg-sla" class="pg">
+
+  <!-- ══ SLA MODULE SUB-VIEW TOGGLE (SLA vs OD SUSPEND) ══ -->
+  <div class="card" style="margin-bottom:20px; padding:12px 18px; border:1px solid var(--border); background:linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); box-shadow:0 4px 12px rgba(0,0,0,0.03);">
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px;">
+      <div style="display:flex; align-items:center; gap:12px;">
+        <div style="width:40px; height:40px; border-radius:10px; background:linear-gradient(135deg, #2563eb, #7c3aed); display:flex; align-items:center; justify-content:center; color:#ffffff; font-size:20px; box-shadow:0 4px 10px rgba(37,99,235,0.25);">
+          📊
+        </div>
+        <div>
+          <div style="font-size:14px; font-weight:800; color:var(--text); letter-spacing:-0.2px;">PILIHAN MODUL LAPORAN SLA &amp; OD SUSPEND</div>
+          <div style="font-size:11px; color:var(--muted); margin-top:1px;">Pilih tampilan antara Analisis SLA (GRW &amp; Customer) atau Monitoring OD Suspend (DK &amp; LK)</div>
+        </div>
+      </div>
+
+      <!-- Segmented Toggle Switch Buttons -->
+      <div class="sla-subview-toggle" id="slaSubViewToggle" style="display:inline-flex; background:#e2e8f0; padding:4px; border-radius:10px; border:1px solid #cbd5e1; gap:4px;">
+        <button id="btnSubViewSla" class="active" onclick="switchSlaSubView('sla')" style="display:inline-flex; align-items:center; gap:8px; padding:8px 18px; border:none; border-radius:8px; font-size:12px; font-weight:800; cursor:pointer; transition:all 0.2s cubic-bezier(0.16,1,0.3,1); background:#ffffff; color:#2563eb; box-shadow:0 2px 8px rgba(0,0,0,0.1);">
+          <span>⏱️ SLA ACHIEVEMENT</span>
+          <span class="badge badge-blue" style="font-size:10px; padding:2px 6px;">GRW &amp; CUST</span>
+        </button>
+        <button id="btnSubViewOdSuspend" onclick="switchSlaSubView('od-suspend')" style="display:inline-flex; align-items:center; gap:8px; padding:8px 18px; border:none; border-radius:8px; font-size:12px; font-weight:800; cursor:pointer; transition:all 0.2s cubic-bezier(0.16,1,0.3,1); background:transparent; color:#64748b;">
+          <span>🛑 MONITORING OD SUSPEND</span>
+          <span class="badge badge-red" style="font-size:10px; padding:2px 6px;">DK &amp; LK</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SUB-VIEW PANEL 1: SLA ACHIEVEMENT ── -->
+  <div id="sla-subview-panel-sla" class="sla-subview-panel">
 
   <!-- ══ CENTRAL PERIOD & AREA CONTROL ══ -->
   <div class="card" style="margin-bottom:20px; border-top:4px solid var(--blue);">
@@ -4599,7 +4629,384 @@ PLANNING REPORT</div>
       </table>
     </div>
   </div>
-</div>
+  </div> <!-- ── END SUB-VIEW PANEL 1: SLA ── -->
+
+  <!-- ── SUB-VIEW PANEL 2: MONITORING OD SUSPEND ── -->
+  <div id="sla-subview-panel-od-suspend" class="sla-subview-panel" style="display:none;">
+  <!-- ══ CENTRAL PERIOD & AREA CONTROL ══ -->
+  <div class="card" style="margin-bottom:20px; border-top:4px solid #ef4444; box-shadow: 0 4px 14px rgba(239, 68, 68, 0.08);">
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px;">
+      <div>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span style="font-size:20px;">🛑</span>
+          <div class="card-title" style="font-size:16px; font-weight:800; color:var(--text);">MONITORING ORDER DELIVERY (OD) SUSPEND</div>
+          <span class="badge badge-red" style="font-size:10px; padding:2px 8px; font-weight:700;">LIVE GOOGLE SHEET</span>
+        </div>
+        <div class="card-sub" style="margin-top:2px;">Analisis komprehensif volume, tren, dan rasio pesanan tertunda (suspend) area Dalam Kota (DK) vs Luar Kota (LK)</div>
+      </div>
+      <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+        <div class="filter-group">
+          <span class="filter-label">Periode</span>
+          <input type="date" id="odSuspendStartDate" class="filter-input" style="padding:5px 10px; font-size:12px;" onchange="applyOdSuspendFilters()">
+          <span style="font-size:11px; color:var(--muted);">s/d</span>
+          <input type="date" id="odSuspendEndDate" class="filter-input" style="padding:5px 10px; font-size:12px;" onchange="applyOdSuspendFilters()">
+        </div>
+        <div class="filter-divider" style="height:26px;"></div>
+        <div class="filter-group">
+          <span class="filter-label">Area</span>
+          <div class="filter-toggle" id="odSuspendAreaToggle">
+            <button class="active" onclick="setOdSuspendArea('ALL',this)">ALL</button>
+            <button onclick="setOdSuspendArea('DK',this)">DK</button>
+            <button onclick="setOdSuspendArea('LK',this)">LK</button>
+          </div>
+        </div>
+        <div class="filter-divider" style="height:26px;"></div>
+        <div class="filter-group">
+          <span class="filter-label">Preset</span>
+          <div class="filter-toggle" id="odSuspendPresetToggle">
+            <button class="active" onclick="setOdSuspendPreset('all',this)">Semua</button>
+            <button onclick="setOdSuspendPreset('30',this)">30H</button>
+            <button onclick="setOdSuspendPreset('14',this)">14H</button>
+            <button onclick="setOdSuspendPreset('7',this)">7H</button>
+          </div>
+        </div>
+        <button class="btn-refresh" onclick="applyOdSuspendFilters()" style="background:#ef4444; border-color:#ef4444;">
+          <span>Terapkan</span>
+        </button>
+        <a href="https://docs.google.com/spreadsheets/d/1BbfYhsVU2khVjv6-jzrlHPiTYMga92RZKgl-stkpA-8/edit?gid=284586222#gid=284586222" target="_blank" rel="noopener noreferrer" class="btn-refresh" style="background:#0f766e; border-color:#0f766e; text-decoration:none;" title="Buka Spreadsheet Sumber di Tab Baru">
+          <span>📊 Buka Sheet</span>
+        </a>
+      </div>
+    </div>
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:14px; padding-top:12px; border-top:1px dashed var(--border); font-size:12px; color:var(--muted); flex-wrap:wrap; gap:8px;">
+      <div style="display:flex; align-items:center; gap:8px;">
+        <span class="badge badge-blue" id="odSuspendInfoScope">📅 Periode: Memuat...</span>
+        <span class="badge badge-amber" id="odSuspendInfoArea">Area: ALL</span>
+        <span class="badge badge-muted" id="odSuspendInfoRows">0 Hari Aktif</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:16px;">
+        <span><strong style="color:var(--green);">● Normal:</strong> &lt; 2.0%</span>
+        <span><strong style="color:var(--amber);">● Waspada:</strong> 2.0% - 5.0%</span>
+        <span><strong style="color:var(--red);">● Kritis:</strong> &gt; 5.0%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ 4 TOP METRIC CARDS ══ -->
+  <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap:14px; margin-bottom:20px;">
+    <!-- Card 1: Total Volume Suspend -->
+    <div class="card" style="position:relative; overflow:hidden; border-left:4px solid #ef4444;">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+        <div>
+          <div style="font-size:11px; font-weight:800; text-transform:uppercase; color:var(--muted); letter-spacing:.5px;">TOTAL VOLUME SUSPEND</div>
+          <div style="font-size:26px; font-weight:800; color:#ef4444; margin:6px 0 2px; font-family:var(--font-mono);" id="odKpiTotalSuspend">0</div>
+          <div style="font-size:12px; color:var(--muted);" id="odKpiTotalSuspendSub">0% dari total base order</div>
+        </div>
+        <div style="width:42px; height:42px; border-radius:10px; background:rgba(239,68,68,0.1); display:flex; align-items:center; justify-content:center; font-size:20px; color:#ef4444;">
+          ⛔
+        </div>
+      </div>
+      <div style="margin-top:10px; padding-top:8px; border-top:1px solid rgba(0,0,0,0.05); font-size:11px; display:flex; justify-content:space-between;">
+        <span style="color:var(--muted);">Total Outbound Selesai</span>
+        <strong id="odKpiTotalOrders">0 Orders</strong>
+      </div>
+    </div>
+
+    <!-- Card 2: Rata-Rata % Suspend -->
+    <div class="card" style="position:relative; overflow:hidden; border-left:4px solid #f59e0b;">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+        <div>
+          <div style="font-size:11px; font-weight:800; text-transform:uppercase; color:var(--muted); letter-spacing:.5px;">PERSENTASE OD SUSPEND</div>
+          <div style="font-size:26px; font-weight:800; color:#f59e0b; margin:6px 0 2px; font-family:var(--font-mono);" id="odKpiAvgPct">0.00%</div>
+          <div style="font-size:12px; color:var(--muted);" id="odKpiStatusText">Status: Memuat...</div>
+        </div>
+        <div style="width:42px; height:42px; border-radius:10px; background:rgba(245,158,11,0.1); display:flex; align-items:center; justify-content:center; font-size:20px; color:#f59e0b;">
+          📊
+        </div>
+      </div>
+      <div style="margin-top:10px; padding-top:8px; border-top:1px solid rgba(0,0,0,0.05); font-size:11px; display:flex; justify-content:space-between;">
+        <span style="color:var(--muted);">Fulfillment Rate Bebas Suspend</span>
+        <strong style="color:var(--green);" id="odKpiCleanRate">0.00%</strong>
+      </div>
+    </div>
+
+    <!-- Card 3: Area Dalam Kota (DK) -->
+    <div class="card" style="position:relative; overflow:hidden; border-left:4px solid #10b981;">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+        <div>
+          <div style="font-size:11px; font-weight:800; text-transform:uppercase; color:#047857; letter-spacing:.5px;">DALAM KOTA (DK) SUSPEND</div>
+          <div style="font-size:26px; font-weight:800; color:#047857; margin:6px 0 2px; font-family:var(--font-mono);" id="odKpiDkVal">0 <span style="font-size:16px; font-weight:700;">(0%)</span></div>
+          <div style="font-size:12px; color:var(--muted);" id="odKpiDkSub">Reguler: 0 | Transit: 0</div>
+        </div>
+        <div style="width:42px; height:42px; border-radius:10px; background:rgba(16,185,129,0.1); display:flex; align-items:center; justify-content:center; font-size:20px; color:#10b981;">
+          🏙️
+        </div>
+      </div>
+      <div style="margin-top:10px; padding-top:8px; border-top:1px solid rgba(0,0,0,0.05); font-size:11px; display:flex; justify-content:space-between;">
+        <span style="color:var(--muted);">Total Base Order DK</span>
+        <strong id="odKpiDkBase">0 Orders</strong>
+      </div>
+    </div>
+
+    <!-- Card 4: Area Luar Kota (LK) -->
+    <div class="card" style="position:relative; overflow:hidden; border-left:4px solid #6366f1;">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+        <div>
+          <div style="font-size:11px; font-weight:800; text-transform:uppercase; color:#3730a3; letter-spacing:.5px;">LUAR KOTA (LK) SUSPEND</div>
+          <div style="font-size:26px; font-weight:800; color:#3730a3; margin:6px 0 2px; font-family:var(--font-mono);" id="odKpiLkVal">0 <span style="font-size:16px; font-weight:700;">(0%)</span></div>
+          <div style="font-size:12px; color:var(--muted);" id="odKpiLkSub">Reguler: 0 | Transit: 0</div>
+        </div>
+        <div style="width:42px; height:42px; border-radius:10px; background:rgba(99,102,241,0.1); display:flex; align-items:center; justify-content:center; font-size:20px; color:#6366f1;">
+          🚚
+        </div>
+      </div>
+      <div style="margin-top:10px; padding-top:8px; border-top:1px solid rgba(0,0,0,0.05); font-size:11px; display:flex; justify-content:space-between;">
+        <span style="color:var(--muted);">Total Base Order LK</span>
+        <strong id="odKpiLkBase">0 Orders</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ DIAGRAM KPI & SPEEDOMETER GRID (LIKE SLA MENU) ══ -->
+  <div class="overview-grid" style="margin-bottom:20px;">
+    <!-- LEFT CARD: SPEEDOMETER & BREAKDOWN (SLA-STYLE) -->
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">DIAGRAM KPI &amp; RASIO OD SUSPEND</div>
+          <div class="card-sub">% SUSPEND RATIO &amp; RISK LEVEL SPEEDOMETER</div>
+        </div>
+        <span class="badge badge-red" id="odSpeedoBadge">Tingkat Suspend</span>
+      </div>
+      <div class="overview-chart-row">
+        <div class="speedo-wrap" style="position:relative;">
+          <canvas id="speedoOdSuspend" width="180" height="100"></canvas>
+          <div class="speedo-val" id="odSpeedoVal" style="color:#ef4444; font-size:22px; font-weight:800; bottom:4px;">0.00%</div>
+          <div style="font-size:10px; font-weight:700; color:var(--muted); text-align:center; margin-top:2px;">RASIO SUSPEND</div>
+        </div>
+        <div class="ov-stats-list" style="flex:1.5;">
+          <div class="ov-stat-item">
+            <span class="ov-stat-lbl">Total Base Orders (Reg+Tr)</span>
+            <span class="ov-stat-val" id="odStatBaseOrders" style="color:var(--text);">0</span>
+          </div>
+          <div class="ov-stat-item">
+            <span class="ov-stat-lbl">Order Reguler (Proses Langsung)</span>
+            <span class="ov-stat-val text-blue" id="odStatReguler">0</span>
+          </div>
+          <div class="ov-stat-item">
+            <span class="ov-stat-lbl">Order Transit (Crossdock / Hub)</span>
+            <span class="ov-stat-val" id="odStatTransit" style="color:#7c3aed;">0</span>
+          </div>
+          <div class="ov-stat-item">
+            <span class="ov-stat-lbl">Total Pesanan Suspend</span>
+            <span class="ov-stat-val text-red" id="odStatSuspend">0</span>
+          </div>
+          <div class="ov-stat-item">
+            <span class="ov-stat-lbl">Fulfillment Bersih (Non-Suspend)</span>
+            <span class="ov-stat-val text-green" id="odStatCleanTotal">0 (100%)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Area Breakdown Subcards (Exact SLA style dk-accent & lk-accent) -->
+      <div class="bu-sla-breakdown" style="display:grid; grid-template-columns:repeat(2, minmax(200px, 1fr)); justify-content:center; gap:16px; margin-top:16px; padding-top:16px; border-top:1px solid rgba(0,0,0,0.06);">
+        <div class="sla-breakdown-card dk-accent">
+          <div class="sla-card-head">
+            <span class="sla-card-label" style="color:#047857; font-weight:800;">DALAM KOTA (DK)</span>
+            <span class="sla-card-badge" style="background:rgba(16,185,129,0.2); color:#065f46; border-color:rgba(16,185,129,0.4);">AREA DK</span>
+          </div>
+          <div class="sla-card-val" style="color:#064e3b; font-size:24px; font-weight:900;" id="odBoxDkPct">0.00%</div>
+          <div class="sla-card-sub" style="color:#047857;" id="odBoxDkSub">0 suspend · 0 base</div>
+        </div>
+        <div class="sla-breakdown-card lk-accent">
+          <div class="sla-card-head">
+            <span class="sla-card-label" style="color:#3730a3; font-weight:800;">LUAR KOTA (LK)</span>
+            <span class="sla-card-badge" style="background:rgba(99,102,241,0.2); color:#312e81; border-color:rgba(99,102,241,0.4);">AREA LK</span>
+          </div>
+          <div class="sla-card-val" style="color:#1e1b4b; font-size:24px; font-weight:900;" id="odBoxLkPct">0.00%</div>
+          <div class="sla-card-sub" style="color:#3730a3;" id="odBoxLkSub">0 suspend · 0 base</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT CARD: KOMPOSISI & INSIGHT OPERASIONAL -->
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">KOMPOSISI ORDER &amp; INSIGHT OD SUSPEND</div>
+          <div class="card-sub">Distribusi Pesanan &amp; Catatan Penting Operasional</div>
+        </div>
+        <span class="badge badge-purple">Breakdown</span>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:16px;">
+        <div style="display:flex; align-items:center; gap:20px; flex-wrap:wrap;">
+          <div style="width:160px; height:160px; position:relative; margin:0 auto;">
+            <canvas id="chartOdSuspendComposition" width="160" height="160"></canvas>
+            <div style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); text-align:center; pointer-events:none;">
+              <div style="font-size:10px; color:var(--muted); font-weight:700;">TOTAL BASE</div>
+              <div style="font-size:16px; font-weight:900; color:var(--text); font-family:var(--font-mono);" id="odDonutCenterVal">0</div>
+            </div>
+          </div>
+          <div style="flex:1; min-width:180px;">
+            <div style="display:flex; flex-direction:column; gap:8px;">
+              <div style="display:flex; align-items:center; justify-content:space-between; font-size:12px; padding:6px 10px; background:rgba(37,99,235,0.06); border-radius:6px;">
+                <span style="display:flex; align-items:center; gap:6px;">
+                  <span style="width:10px; height:10px; border-radius:50%; background:#2563eb; display:inline-block;"></span>
+                  <strong>Reguler</strong>
+                </span>
+                <span id="odCompRegVal" style="font-family:var(--font-mono); font-weight:700;">0 (0%)</span>
+              </div>
+              <div style="display:flex; align-items:center; justify-content:space-between; font-size:12px; padding:6px 10px; background:rgba(124,58,237,0.06); border-radius:6px;">
+                <span style="display:flex; align-items:center; gap:6px;">
+                  <span style="width:10px; height:10px; border-radius:50%; background:#7c3aed; display:inline-block;"></span>
+                  <strong>Transit</strong>
+                </span>
+                <span id="odCompTransitVal" style="font-family:var(--font-mono); font-weight:700;">0 (0%)</span>
+              </div>
+              <div style="display:flex; align-items:center; justify-content:space-between; font-size:12px; padding:6px 10px; background:rgba(239,68,68,0.08); border-radius:6px; border:1px solid rgba(239,68,68,0.2);">
+                <span style="display:flex; align-items:center; gap:6px;">
+                  <span style="width:10px; height:10px; border-radius:50%; background:#ef4444; display:inline-block;"></span>
+                  <strong style="color:#ef4444;">Suspend</strong>
+                </span>
+                <span id="odCompSuspVal" style="font-family:var(--font-mono); font-weight:700; color:#ef4444;">0 (0%)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Operational Highlights -->
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:10px; margin-top:4px;">
+          <div style="background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:10px;">
+            <div style="font-size:10px; font-weight:800; color:var(--muted); text-transform:uppercase;">Hari Bebas Suspend</div>
+            <div style="font-size:18px; font-weight:800; color:var(--green); margin-top:2px;" id="odInsightZeroDays">0 Hari</div>
+            <div style="font-size:10px; color:var(--muted);">Tingkat suspend 0%</div>
+          </div>
+          <div style="background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:10px;">
+            <div style="font-size:10px; font-weight:800; color:var(--muted); text-transform:uppercase;">Puncak Suspend</div>
+            <div style="font-size:18px; font-weight:800; color:var(--red); margin-top:2px;" id="odInsightPeakDay">—</div>
+            <div style="font-size:10px; color:var(--muted);" id="odInsightPeakCount">0 pesanan</div>
+          </div>
+          <div style="background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:10px;">
+            <div style="font-size:10px; font-weight:800; color:var(--muted); text-transform:uppercase;">Rata-Rata Suspend</div>
+            <div style="font-size:18px; font-weight:800; color:var(--amber); margin-top:2px;" id="odInsightAvgDaily">0</div>
+            <div style="font-size:10px; color:var(--muted);">pesanan / hari aktif</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ GRAFIK TREN VISUAL MENARIK ══ -->
+  <div style="display:grid; grid-template-columns: 1fr; gap:20px; margin-bottom:20px;">
+    <!-- Chart 1: Combo Chart Tren Volume vs % Suspend -->
+    <div class="card">
+      <div class="card-header" style="flex-wrap:wrap; gap:10px;">
+        <div>
+          <div class="card-title">TREN HARIAN VOLUME ORDER &amp; PERSENTASE OD SUSPEND</div>
+          <div class="card-sub">Kombinasi Batang Volume (Reguler, Transit, Suspend di Y-Kiri) vs Garis % Suspend (Y-Kanan)</div>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span class="badge badge-blue">Dual Axis Analytics</span>
+        </div>
+      </div>
+      <div style="position:relative; width:100%; height:360px;">
+        <canvas id="chartOdSuspendTrend"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chart 2: Perbandingan Area DK vs LK Tren Suspend -->
+  <div class="overview-grid" style="margin-bottom:20px;">
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">PERBANDINGAN % SUSPEND: DALAM KOTA (DK) VS LUAR KOTA (LK)</div>
+          <div class="card-sub">Monitoring tren fluktuasi rasio suspend per wilayah operasional</div>
+        </div>
+        <span class="badge badge-purple">DK vs LK Rate</span>
+      </div>
+      <div style="position:relative; width:100%; height:300px;">
+        <canvas id="chartOdSuspendAreaCompare"></canvas>
+      </div>
+    </div>
+
+    <!-- Chart 3: Volume Suspend Mingguan / Distribusi -->
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">DISTRIBUSI VOLUME SUSPEND PER AREA</div>
+          <div class="card-sub">Perbandingan total insiden suspend yang terjadi di Dalam Kota vs Luar Kota</div>
+        </div>
+        <span class="badge badge-amber">Area Share</span>
+      </div>
+      <div style="position:relative; width:100%; height:300px;">
+        <canvas id="chartOdSuspendAreaBar"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ DATA TABLE REKAPITULASI HARIAN OD SUSPEND ══ -->
+  <div class="card">
+    <div class="card-header" style="flex-wrap:wrap; gap:12px;">
+      <div>
+        <div class="card-title">REKAPITULASI HARIAN DATA OD SUSPEND</div>
+        <div class="card-sub">Audit trail data harian lengkap dari Google Spreadsheet per area (DK &amp; LK)</div>
+      </div>
+      <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-left:auto;">
+        <input type="text" id="odTableSearch" class="search-box" style="margin-bottom:0; width:190px; padding:6px 12px; font-size:12px;" placeholder="Cari tanggal..." oninput="filterOdSuspendTable()">
+        <select id="odTableStatusFilter" class="filter-select" style="font-size:12px; padding:6px 10px;" onchange="filterOdSuspendTable()">
+          <option value="ALL">Semua Status</option>
+          <option value="NORMAL">Normal (&lt; 2%)</option>
+          <option value="WARNING">Waspada (2% - 5%)</option>
+          <option value="CRITICAL">Kritis (&gt; 5%)</option>
+        </select>
+        <button class="btn-refresh" style="font-size:12px; padding:6px 12px; background:#1e3a5f; border-color:#1e3a5f;" onclick="exportOdSuspendCsv()">
+          <span>📥 Export CSV</span>
+        </button>
+      </div>
+    </div>
+
+    <div style="overflow-x:auto; margin-top:14px; border:1px solid var(--border); border-radius:var(--radius-sm);">
+      <table class="data-table" style="width:100%; border-collapse:collapse; text-align:left; font-size:12px;">
+        <thead>
+          <tr style="background:var(--surface2); border-bottom:2px solid var(--border); color:var(--muted); font-size:11px; text-transform:uppercase; letter-spacing:0.4px;">
+            <th rowspan="2" style="padding:10px 8px; text-align:center; border-right:1px solid var(--border);">No</th>
+            <th rowspan="2" style="padding:10px 10px; border-right:2px solid var(--border); cursor:pointer;" onclick="sortOdSuspendTable('date')">Tanggal ⬍</th>
+            <th colspan="4" style="padding:8px 10px; text-align:center; background:rgba(16,185,129,0.08); border-right:2px solid var(--border); color:#047857; font-weight:800;">DALAM KOTA (DK)</th>
+            <th colspan="4" style="padding:8px 10px; text-align:center; background:rgba(99,102,241,0.08); border-right:2px solid var(--border); color:#3730a3; font-weight:800;">LUAR KOTA (LK)</th>
+            <th colspan="3" style="padding:8px 10px; text-align:center; background:rgba(239,68,68,0.08); border-right:1px solid var(--border); color:#b91c1c; font-weight:800;">TOTAL KESELURUHAN</th>
+            <th rowspan="2" style="padding:10px 10px; text-align:center;">Status</th>
+          </tr>
+          <tr style="background:var(--surface2); border-bottom:1px solid var(--border); color:var(--muted); font-size:10px; text-transform:uppercase;">
+            <!-- DK sub-cols -->
+            <th style="padding:6px 8px; text-align:right;">Reguler</th>
+            <th style="padding:6px 8px; text-align:right;">Transit</th>
+            <th style="padding:6px 8px; text-align:right; color:#ef4444; font-weight:700;">Suspend</th>
+            <th style="padding:6px 8px; text-align:right; border-right:2px solid var(--border); font-weight:700;">% Susp</th>
+            <!-- LK sub-cols -->
+            <th style="padding:6px 8px; text-align:right;">Reguler</th>
+            <th style="padding:6px 8px; text-align:right;">Transit</th>
+            <th style="padding:6px 8px; text-align:right; color:#ef4444; font-weight:700;">Suspend</th>
+            <th style="padding:6px 8px; text-align:right; border-right:2px solid var(--border); font-weight:700;">% Susp</th>
+            <!-- Total sub-cols -->
+            <th style="padding:6px 8px; text-align:right;">Base (Reg+Tr)</th>
+            <th style="padding:6px 8px; text-align:right; color:#ef4444; font-weight:700;">Suspend</th>
+            <th style="padding:6px 8px; text-align:right; border-right:1px solid var(--border); font-weight:800;">% Susp</th>
+          </tr>
+        </thead>
+        <tbody id="odSuspendTableBody">
+          <tr>
+            <td colspan="14" style="text-align:center; padding:30px; color:var(--muted);">Memuat data OD Suspend...</td>
+          </tr>
+        </tbody>
+        <tfoot id="odSuspendTableFoot" style="background:var(--text); color:#ffffff; font-family:var(--font-mono); font-weight:700;">
+        </tfoot>
+      </table>
+    </div>
+  </div>
+  </div> <!-- ── END SUB-VIEW PANEL 2: OD SUSPEND ── -->
+
+</div> <!-- ── END PAGE: SLA CONTAINER ── -->
 
 <!-- PAGE: FULFILLMENT ARMADA -->
 <div id="pg-fulfillment-armada" class="pg">
@@ -8207,7 +8614,8 @@ function navTo(page) {
     'risk-control': { title: "QUALITY CONTROL & OUTBOUND RISK ASSURANCE", sub: "Sistem mitigasi preventif potensi BARUS, TUGU, Kurang/Lebih Kirim, dan Discrepancy" },
     'org-chart': { title: "STRUKTUR ORGANISASI", sub: "ORDER PROCESSING HCI NDC SIDOARJO" },
     'interface-order': { title: "INTERFACE ORDER CONTROL PANEL", sub: "Breakdown Type Order, Top CBM STO & Sebaran Area Storing" },
-    'monitoring-portal': { title: "MONITORING PORTAL CX", sub: "Monitoring SLA & Hasil Proses Tim NDC Sidoarjo" }
+    'monitoring-portal': { title: "MONITORING PORTAL CX", sub: "Monitoring SLA & Hasil Proses Tim NDC Sidoarjo" },
+    'od-suspend': { title: "MONITORING OD SUSPEND", sub: "Analisis Volume, Rasio & Tren Order Suspend Area Dalam Kota (DK) vs Luar Kota (LK)" }
   };
   
   var hdrTitle = document.getElementById('pageHeaderTitle');
@@ -8237,7 +8645,15 @@ function navTo(page) {
   } else if (page === 'armada') {
     renderPerformanceArmada();
   } else if (page === 'sla') {
-    renderSlaDetailPage();
+    if (currentSlaSubView === 'od-suspend') {
+      switchSlaSubView('od-suspend');
+    } else {
+      switchSlaSubView('sla');
+    }
+  } else if (page === 'od-suspend') {
+    navTo('sla');
+    switchSlaSubView('od-suspend');
+    return;
   } else if (page === 'fulfillment-armada') {
     renderFulfillmentArmadaPage();
   } else if (page === 'olf') {
@@ -8252,6 +8668,8 @@ function navTo(page) {
     renderInterfaceOrderPage();
   } else if (page === 'monitoring-portal') {
     renderMonitoringPortalPage();
+  } else if (page === 'od-suspend') {
+    renderOdSuspendPage();
   }
 
   // Close sidebar on mobile after navigating
@@ -11424,6 +11842,21 @@ var csvCaseIdReleaseLpUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/
 
 
   // Reading separate sheets SLA GRW and SLA CUST from the spreadsheet
+  // OD Suspend Spreadsheet URL
+  var csvOdSuspendUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1BbfYhsVU2khVjv6-jzrlHPiTYMga92RZKgl-stkpA-8/gviz/tq?tqx=out:csv&gid=284586222');
+  var csvOdSuspendFallbackUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1BbfYhsVU2khVjv6-jzrlHPiTYMga92RZKgl-stkpA-8/export?format=csv&gid=284586222');
+  var fetchOdSuspend = new Promise(function(resolve) {
+    fetchAndParseCsv(csvOdSuspendUrl, { header: false, skipEmptyLines: true }, function(data) {
+      if (data && data.length > 0) {
+        resolve(data);
+      } else {
+        fetchAndParseCsv(csvOdSuspendFallbackUrl, { header: false, skipEmptyLines: true }, function(dFb) {
+          resolve(dFb || []);
+        });
+      }
+    });
+  });
+
   var csvSlaGrwUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1q-qxELBQZr3ABhVg-mw6Kvhl-e11RGQUmCTQjsXtz9g/gviz/tq?tqx=out:csv&sheet=SLA%20GRW');
   var csvSlaCustUrl1 = getProxyUrl('https://docs.google.com/spreadsheets/d/1q-qxELBQZr3ABhVg-mw6Kvhl-e11RGQUmCTQjsXtz9g/gviz/tq?tqx=out:csv&sheet=SLA%20CUST');
   var csvSlaCustUrl2 = getProxyUrl('https://docs.google.com/spreadsheets/d/1q-qxELBQZr3ABhVg-mw6Kvhl-e11RGQUmCTQjsXtz9g/gviz/tq?tqx=out:csv&sheet=SLA%20CUSTOMER');
@@ -11590,7 +12023,7 @@ var fetchCaseIdReleaseLp = new Promise(function(resolve) {
     }
   });
 
-  Promise.all([fetchMonitoring, fetchAging, fetchAgingCust, fetchContDate, fetchSlaGrw, fetchSlaCust, fetchFulfillment, fetchOlf, fetchCaseIdRelease, fetchCaseIdReleaseP1, fetchCaseIdReleaseP2, fetchCaseIdReleaseHubLk, fetchCaseIdReleaseLp, fetchBacklog, fetchOrgChart, fetchAgingReason, fetchSlaRecap, fetchCaseIdReleaseQcSkus])
+  Promise.all([fetchMonitoring, fetchAging, fetchAgingCust, fetchContDate, fetchSlaGrw, fetchSlaCust, fetchFulfillment, fetchOlf, fetchCaseIdRelease, fetchCaseIdReleaseP1, fetchCaseIdReleaseP2, fetchCaseIdReleaseHubLk, fetchCaseIdReleaseLp, fetchBacklog, fetchOrgChart, fetchAgingReason, fetchSlaRecap, fetchCaseIdReleaseQcSkus, fetchOdSuspend])
     .then(function(results) {
       allSlaGrwData = results[4] || [];
       allSlaCustData = results[5] || [];
@@ -11613,6 +12046,9 @@ var fetchCaseIdReleaseLp = new Promise(function(resolve) {
       allOrgChartRawData = results[14] || [];
       allOrgChartData = parseOrgChartSheetData(allOrgChartRawData);
       allAgingReasonRawData = results[15] || [];
+      allOdSuspendRawData = results[18] || [];
+      allOdSuspendData = parseOdSuspendSheetData(allOdSuspendRawData);
+      console.log('[OD SUSPEND] Berhasil memuat baris data:', allOdSuspendData.length);
       allAgingReasonData = parseAgingReasonSheetData(allAgingReasonRawData);
       populateAgingReasonFilterDropdowns();
       renderAgingReasonSection();
@@ -11944,11 +12380,18 @@ function onDataReady(updatedTime, isLive) {
   } else if (activePage === 'armada') {
     renderPerformanceArmada();
   } else if (activePage === 'sla') {
-    renderSlaDetailPage();
+    if (typeof currentSlaSubView !== 'undefined' && currentSlaSubView === 'od-suspend') {
+      renderOdSuspendPage();
+    } else {
+      renderSlaDetailPage();
+    }
   } else if (activePage === 'olf') {
     renderOlfPage();
   } else if (activePage === 'org-chart') {
     renderOrgChartPage();
+  } else if (activePage === 'od-suspend') {
+    navTo('sla');
+    if (typeof switchSlaSubView === 'function') switchSlaSubView('od-suspend');
   }
 
   // Calculate OLF metrics from loaded external data and update dashboard
@@ -21775,6 +22218,1038 @@ function closeCxCategoryModal() {
   if (modal) modal.classList.remove('active');
 }
 
+
+// ══════════════════════════════════════════════════════════════════════════
+
+// ── SLA SUB-VIEW TOGGLE CONTROLLER (SLA vs OD SUSPEND) ────────────────────
+var currentSlaSubView = 'sla';
+
+function switchSlaSubView(mode) {
+  currentSlaSubView = mode;
+
+  var panelSla = document.getElementById('sla-subview-panel-sla');
+  var panelOd = document.getElementById('sla-subview-panel-od-suspend');
+  var btnSla = document.getElementById('btnSubViewSla');
+  var btnOd = document.getElementById('btnSubViewOdSuspend');
+  var hdrTitle = document.getElementById('pageHeaderTitle');
+  var hdrSub = document.getElementById('pageHeaderSub');
+
+  if (mode === 'od-suspend') {
+    if (panelSla) panelSla.style.display = 'none';
+    if (panelOd) panelOd.style.display = 'block';
+
+    if (btnSla) {
+      btnSla.classList.remove('active');
+      btnSla.style.background = 'transparent';
+      btnSla.style.color = '#64748b';
+      btnSla.style.boxShadow = 'none';
+    }
+    if (btnOd) {
+      btnOd.classList.add('active');
+      btnOd.style.background = '#ffffff';
+      btnOd.style.color = '#ef4444';
+      btnOd.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.1)';
+    }
+
+    if (hdrTitle) hdrTitle.textContent = "SERVICES LEVEL AGREEMENT (SLA) · OD SUSPEND";
+    if (hdrSub) hdrSub.textContent = "Analisis Volume, Rasio & Tren Order Suspend Area Dalam Kota (DK) vs Luar Kota (LK)";
+
+    setTimeout(function() {
+      renderOdSuspendPage();
+    }, 60);
+  } else {
+    // Mode 'sla'
+    if (panelSla) panelSla.style.display = 'block';
+    if (panelOd) panelOd.style.display = 'none';
+
+    if (btnOd) {
+      btnOd.classList.remove('active');
+      btnOd.style.background = 'transparent';
+      btnOd.style.color = '#64748b';
+      btnOd.style.boxShadow = 'none';
+    }
+    if (btnSla) {
+      btnSla.classList.add('active');
+      btnSla.style.background = '#ffffff';
+      btnSla.style.color = '#2563eb';
+      btnSla.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.1)';
+    }
+
+    if (hdrTitle) hdrTitle.textContent = "SERVICES LEVEL AGREEMENT (SLA)";
+    if (hdrSub) hdrSub.textContent = "Monitoring SLA GRW dan SLA Customer per periode";
+
+    setTimeout(function() {
+      renderSlaDetailPage();
+    }, 60);
+  }
+}
+
+// ── OD SUSPEND MONITORING MODULE ──────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════════════
+var allOdSuspendRawData = [];
+var allOdSuspendData = [];
+var OD_SUSPEND_STATE = {
+  start: '',
+  end: '',
+  area: 'ALL', // 'ALL', 'DK', 'LK'
+  preset: 'all',
+  searchQuery: '',
+  statusFilter: 'ALL',
+  sortCol: 'date',
+  sortAsc: true
+};
+
+var odSuspendTrendChartInstance = null;
+var odSuspendCompChartInstance = null;
+var odSuspendAreaCompareChartInstance = null;
+var odSuspendAreaBarChartInstance = null;
+
+function parseOdSuspendSheetData(rows) {
+  if (!rows || !Array.isArray(rows) || rows.length < 2) return [];
+  var result = [];
+
+  for (var i = 0; i < rows.length; i++) {
+    var r = rows[i];
+    if (!r || !Array.isArray(r)) continue;
+
+    // Search for a date in the row
+    var dateCell = '';
+    var dateColIdx = -1;
+    for (var c = 0; c < Math.min(6, r.length); c++) {
+      var val = String(r[c] || '').trim();
+      if (val.match(/^\d{1,2}\/\d{1,2}\/\d{2,4}$/) || val.match(/^\d{4}-\d{2}-\d{2}$/)) {
+        dateCell = val;
+        dateColIdx = c;
+        break;
+      }
+    }
+
+    if (dateColIdx === -1) continue;
+
+    var dObj = parseDateStr(dateCell);
+    if (!dObj || isNaN(dObj.getTime())) continue;
+
+    function parseNum(val) {
+      if (!val) return 0;
+      var clean = String(val).replace(/,/g, '').trim();
+      var n = parseInt(clean, 10);
+      return isNaN(n) ? 0 : n;
+    }
+
+    var dkReg = parseNum(r[dateColIdx + 1]);
+    var dkTransit = parseNum(r[dateColIdx + 2]);
+    var dkSusp = parseNum(r[dateColIdx + 3]);
+    var dkPctRaw = String(r[dateColIdx + 4] || '').trim();
+
+    var lkReg = parseNum(r[dateColIdx + 5]);
+    var lkTransit = parseNum(r[dateColIdx + 6]);
+    var lkSusp = parseNum(r[dateColIdx + 7]);
+    var lkPctRaw = String(r[dateColIdx + 8] || '').trim();
+
+    var totPctRaw = String(r[dateColIdx + 9] || '').trim();
+
+    var dkBase = dkReg + dkTransit;
+    var dkTotal = dkBase + dkSusp;
+    var dkPct = dkBase > 0 ? (dkSusp / dkBase) * 100 : 0;
+
+    var lkBase = lkReg + lkTransit;
+    var lkTotal = lkBase + lkSusp;
+    var lkPct = lkBase > 0 ? (lkSusp / lkBase) * 100 : 0;
+
+    var totReg = dkReg + lkReg;
+    var totTransit = dkTransit + lkTransit;
+    var totSusp = dkSusp + lkSusp;
+    var totBase = totReg + totTransit;
+    var totOrders = totBase + totSusp;
+    var totPct = totBase > 0 ? (totSusp / totBase) * 100 : 0;
+
+    var hasValidData = (totOrders > 0) && (dkPctRaw.indexOf('#DIV/0') === -1 || totPctRaw.indexOf('#DIV/0') === -1);
+
+    var y = dObj.getFullYear();
+    var m = String(dObj.getMonth() + 1).padStart(2, '0');
+    var dt = String(dObj.getDate()).padStart(2, '0');
+    var isoStr = y + '-' + m + '-' + dt;
+
+    result.push({
+      dateStr: dateCell,
+      dateObj: dObj,
+      isoDate: isoStr,
+      dkReg: dkReg,
+      dkTransit: dkTransit,
+      dkSusp: dkSusp,
+      dkBase: dkBase,
+      dkTotal: dkTotal,
+      dkPct: dkPct,
+      dkPctRaw: dkPctRaw.indexOf('#DIV/0') !== -1 ? '0.00%' : dkPctRaw,
+      lkReg: lkReg,
+      lkTransit: lkTransit,
+      lkSusp: lkSusp,
+      lkBase: lkBase,
+      lkTotal: lkTotal,
+      lkPct: lkPct,
+      lkPctRaw: lkPctRaw.indexOf('#DIV/0') !== -1 ? '0.00%' : lkPctRaw,
+      totReg: totReg,
+      totTransit: totTransit,
+      totSusp: totSusp,
+      totBase: totBase,
+      totOrders: totOrders,
+      totPct: totPct,
+      totPctRaw: totPctRaw.indexOf('#DIV/0') !== -1 ? '0.00%' : totPctRaw,
+      hasValidData: hasValidData
+    });
+  }
+
+  result.sort(function(a, b) {
+    return a.dateObj.getTime() - b.dateObj.getTime();
+  });
+
+  return result;
+}
+
+function initOdSuspendDates() {
+  if (!allOdSuspendData || allOdSuspendData.length === 0) return;
+  var validData = allOdSuspendData.filter(function(r) { return r.hasValidData; });
+  if (validData.length === 0) validData = allOdSuspendData;
+
+  var minDate = validData[0].isoDate;
+  var maxDate = validData[validData.length - 1].isoDate;
+
+  var startInput = document.getElementById('odSuspendStartDate');
+  var endInput = document.getElementById('odSuspendEndDate');
+
+  if (startInput && !startInput.value) {
+    startInput.value = minDate;
+    OD_SUSPEND_STATE.start = minDate;
+  }
+  if (endInput && !endInput.value) {
+    endInput.value = maxDate;
+    OD_SUSPEND_STATE.end = maxDate;
+  }
+}
+
+function setOdSuspendArea(area, btn) {
+  OD_SUSPEND_STATE.area = area;
+  var parent = btn.parentElement;
+  if (parent) {
+    parent.querySelectorAll('button').forEach(function(b) { b.classList.remove('active'); });
+    btn.classList.add('active');
+  }
+  renderOdSuspendPage();
+}
+
+function setOdSuspendPreset(preset, btn) {
+  OD_SUSPEND_STATE.preset = preset;
+  var parent = btn.parentElement;
+  if (parent) {
+    parent.querySelectorAll('button').forEach(function(b) { b.classList.remove('active'); });
+    btn.classList.add('active');
+  }
+
+  var validData = allOdSuspendData.filter(function(r) { return r.hasValidData; });
+  if (validData.length === 0) validData = allOdSuspendData;
+  if (validData.length === 0) return;
+
+  var lastItem = validData[validData.length - 1];
+  var endObj = new Date(lastItem.dateObj.getTime());
+  var startObj = new Date(endObj.getTime());
+
+  if (preset === '7') {
+    startObj.setDate(endObj.getDate() - 6);
+  } else if (preset === '14') {
+    startObj.setDate(endObj.getDate() - 13);
+  } else if (preset === '30') {
+    startObj.setDate(endObj.getDate() - 29);
+  } else {
+    // all
+    startObj = new Date(validData[0].dateObj.getTime());
+  }
+
+  function toIso(d) {
+    var y = d.getFullYear();
+    var m = String(d.getMonth() + 1).padStart(2, '0');
+    var dt = String(d.getDate()).padStart(2, '0');
+    return y + '-' + m + '-' + dt;
+  }
+
+  var startInput = document.getElementById('odSuspendStartDate');
+  var endInput = document.getElementById('odSuspendEndDate');
+  if (startInput) startInput.value = toIso(startObj);
+  if (endInput) endInput.value = toIso(endObj);
+
+  OD_SUSPEND_STATE.start = toIso(startObj);
+  OD_SUSPEND_STATE.end = toIso(endObj);
+
+  renderOdSuspendPage();
+}
+
+function applyOdSuspendFilters() {
+  var startInput = document.getElementById('odSuspendStartDate');
+  var endInput = document.getElementById('odSuspendEndDate');
+  if (startInput) OD_SUSPEND_STATE.start = startInput.value;
+  if (endInput) OD_SUSPEND_STATE.end = endInput.value;
+
+  renderOdSuspendPage();
+}
+
+// ── SPEEDOMETER CANVAS FOR OD SUSPEND ──────────────────────────────────────
+function drawOdSuspendSpeedometer(canvasId, pctValue) {
+  var canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  var ctx = canvas.getContext('2d');
+  var val = parseFloat(pctValue) || 0;
+  if (val < 0) val = 0;
+  if (val > 25) val = 25; // max scale 25%
+
+  var w = canvas.width;
+  var h = canvas.height;
+  ctx.clearRect(0, 0, w, h);
+
+  var cx = w / 2;
+  var cy = h - 14;
+  var r = Math.min(cx, cy) - 10;
+  var thickness = 16;
+
+  // Background track
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, Math.PI, 2 * Math.PI, false);
+  ctx.lineWidth = thickness;
+  ctx.strokeStyle = '#e2e8f0';
+  ctx.stroke();
+  ctx.restore();
+
+  // Color Arc: Green (<2%) -> Lime (2-4%) -> Yellow/Amber (4-6%) -> Red (>6%)
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, Math.PI, 2 * Math.PI, false);
+  ctx.lineWidth = thickness;
+  var grad = ctx.createLinearGradient(cx - r, cy, cx + r, cy);
+  grad.addColorStop(0.0, '#10b981'); // Safe / Green
+  grad.addColorStop(0.2, '#22c55e'); // Green
+  grad.addColorStop(0.4, '#eab308'); // Warning Yellow
+  grad.addColorStop(0.7, '#f97316'); // Orange
+  grad.addColorStop(1.0, '#ef4444'); // Critical Red
+  ctx.strokeStyle = grad;
+  ctx.stroke();
+  ctx.restore();
+
+  // White Divider Ticks
+  ctx.save();
+  var numTicks = 20;
+  ctx.strokeStyle = '#ffffff';
+  ctx.lineWidth = 1.5;
+  for (var i = 0; i <= numTicks; i++) {
+    var angle = Math.PI + (Math.PI * i / numTicks);
+    var rIn = r - (thickness / 2) - 1;
+    var rOut = r + (thickness / 2) + 1;
+    var x1 = cx + rIn * Math.cos(angle);
+    var y1 = cy + rIn * Math.sin(angle);
+    var x2 = cx + rOut * Math.cos(angle);
+    var y2 = cy + rOut * Math.sin(angle);
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.stroke();
+  }
+  ctx.restore();
+
+  // Needle angle: Map 0% - 15% to PI - 2*PI
+  // 0% -> PI, 5% -> PI + (5/15)*PI, 15%+ -> 2*PI
+  var normalizedVal = Math.min(val, 15) / 15;
+  var needleAngle = Math.PI + (normalizedVal * Math.PI);
+
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.rotate(needleAngle);
+
+  // Needle Shadow
+  ctx.shadowColor = 'rgba(0,0,0,0.25)';
+  ctx.shadowBlur = 6;
+  ctx.shadowOffsetX = 1;
+  ctx.shadowOffsetY = 2;
+
+  // Needle Body
+  ctx.beginPath();
+  ctx.moveTo(0, -4);
+  ctx.lineTo(r - 4, 0);
+  ctx.lineTo(0, 4);
+  ctx.fillStyle = val > 5 ? '#ef4444' : (val > 2 ? '#f59e0b' : '#10b981');
+  ctx.fill();
+
+  // Center pivot pin
+  ctx.beginPath();
+  ctx.arc(0, 0, 7, 0, 2 * Math.PI);
+  ctx.fillStyle = '#1e293b';
+  ctx.fill();
+  ctx.beginPath();
+  ctx.arc(0, 0, 3, 0, 2 * Math.PI);
+  ctx.fillStyle = '#ffffff';
+  ctx.fill();
+
+  ctx.restore();
+}
+
+// ── MAIN RENDER OD SUSPEND PAGE ───────────────────────────────────────────
+function renderOdSuspendPage() {
+  if (!allOdSuspendData || allOdSuspendData.length === 0) {
+    if (allOdSuspendRawData && allOdSuspendRawData.length > 0) {
+      allOdSuspendData = parseOdSuspendSheetData(allOdSuspendRawData);
+    }
+  }
+
+  initOdSuspendDates();
+
+  var sStr = OD_SUSPEND_STATE.start;
+  var eStr = OD_SUSPEND_STATE.end;
+  var area = OD_SUSPEND_STATE.area;
+
+  // Filter records by date range
+  var filtered = allOdSuspendData.filter(function(item) {
+    if (!item.hasValidData) return false;
+    if (sStr && item.isoDate < sStr) return false;
+    if (eStr && item.isoDate > eStr) return false;
+    return true;
+  });
+
+  // Calculate aggregates
+  var sumDkReg = 0, sumDkTransit = 0, sumDkSusp = 0;
+  var sumLkReg = 0, sumLkTransit = 0, sumLkSusp = 0;
+  var zeroDaysCount = 0;
+  var peakDayItem = null;
+  var maxSuspInDay = -1;
+
+  filtered.forEach(function(row) {
+    sumDkReg += row.dkReg;
+    sumDkTransit += row.dkTransit;
+    sumDkSusp += row.dkSusp;
+
+    sumLkReg += row.lkReg;
+    sumLkTransit += row.lkTransit;
+    sumLkSusp += row.lkSusp;
+
+    var curDaySusp = (area === 'DK') ? row.dkSusp : ((area === 'LK') ? row.lkSusp : row.totSusp);
+    if (curDaySusp === 0) {
+      zeroDaysCount++;
+    }
+    if (curDaySusp > maxSuspInDay) {
+      maxSuspInDay = curDaySusp;
+      peakDayItem = row;
+    }
+  });
+
+  var sumDkBase = sumDkReg + sumDkTransit;
+  var sumLkBase = sumLkReg + sumLkTransit;
+  var dkPct = sumDkBase > 0 ? (sumDkSusp / sumDkBase) * 100 : 0;
+  var lkPct = sumLkBase > 0 ? (sumLkSusp / sumLkBase) * 100 : 0;
+
+  var totalReg = sumDkReg + sumLkReg;
+  var totalTransit = sumDkTransit + sumLkTransit;
+  var totalSusp = sumDkSusp + sumLkSusp;
+  var totalBase = totalReg + totalTransit;
+  var totalOrders = totalBase + totalSusp;
+  var totalPct = totalBase > 0 ? (totalSusp / totalBase) * 100 : 0;
+
+  // Active view values according to selected area
+  var activeReg = (area === 'DK') ? sumDkReg : ((area === 'LK') ? sumLkReg : totalReg);
+  var activeTransit = (area === 'DK') ? sumDkTransit : ((area === 'LK') ? sumLkTransit : totalTransit);
+  var activeSusp = (area === 'DK') ? sumDkSusp : ((area === 'LK') ? sumLkSusp : totalSusp);
+  var activeBase = (area === 'DK') ? sumDkBase : ((area === 'LK') ? sumLkBase : totalBase);
+  var activePct = (area === 'DK') ? dkPct : ((area === 'LK') ? lkPct : totalPct);
+  var activeOrders = activeBase + activeSusp;
+  var cleanRate = activeBase > 0 ? ((activeBase - activeSusp) / activeBase) * 100 : 100;
+  if (cleanRate < 0) cleanRate = 0;
+
+  // Helper setText
+  function setT(id, val) {
+    var el = document.getElementById(id);
+    if (el) el.textContent = val;
+  }
+
+  // 1. Update Info Scope & Badges
+  var dateRangeLabel = (sStr && eStr) ? (sStr + ' s/d ' + eStr) : 'Seluruh Data';
+  setT('odSuspendInfoScope', '📅 Periode: ' + dateRangeLabel);
+  setT('odSuspendInfoArea', 'Area: ' + area + (area === 'ALL' ? ' (DK & LK)' : ''));
+  setT('odSuspendInfoRows', filtered.length + ' Hari Aktif Terbaca');
+
+  // 2. Update Top Metric Cards
+  setT('odKpiTotalSuspend', activeSusp.toLocaleString('id-ID'));
+  setT('odKpiTotalSuspendSub', activePct.toFixed(2) + '% dari total ' + activeBase.toLocaleString('id-ID') + ' base order');
+  setT('odKpiTotalOrders', activeOrders.toLocaleString('id-ID') + ' Orders');
+
+  setT('odKpiAvgPct', activePct.toFixed(2) + '%');
+  var statusBadgeText = activePct < 2.0 ? '🟢 Normal / Terkendali (< 2%)' : (activePct <= 5.0 ? '🟡 Waspada / Perhatian (2% - 5%)' : '🔴 Kritis / Suspend Tinggi (> 5%)');
+  setT('odKpiStatusText', 'Status: ' + statusBadgeText);
+  setT('odKpiCleanRate', cleanRate.toFixed(2) + '%');
+
+  setT('odKpiDkVal', sumDkSusp.toLocaleString('id-ID') + ' (' + dkPct.toFixed(2) + '%)');
+  setT('odKpiDkSub', 'Reg: ' + sumDkReg.toLocaleString('id-ID') + ' | Transit: ' + sumDkTransit.toLocaleString('id-ID'));
+  setT('odKpiDkBase', sumDkBase.toLocaleString('id-ID') + ' Orders');
+
+  setT('odKpiLkVal', sumLkSusp.toLocaleString('id-ID') + ' (' + lkPct.toFixed(2) + '%)');
+  setT('odKpiLkSub', 'Reg: ' + sumLkReg.toLocaleString('id-ID') + ' | Transit: ' + sumLkTransit.toLocaleString('id-ID'));
+  setT('odKpiLkBase', sumLkBase.toLocaleString('id-ID') + ' Orders');
+
+  // 3. Update Speedometer Card
+  setT('odSpeedoVal', activePct.toFixed(2) + '%');
+  var speedoValEl = document.getElementById('odSpeedoVal');
+  if (speedoValEl) {
+    speedoValEl.style.color = activePct > 5.0 ? '#ef4444' : (activePct > 2.0 ? '#f59e0b' : '#10b981');
+  }
+  drawOdSuspendSpeedometer('speedoOdSuspend', activePct);
+
+  setT('odStatBaseOrders', activeBase.toLocaleString('id-ID'));
+  setT('odStatReguler', activeReg.toLocaleString('id-ID'));
+  setT('odStatTransit', activeTransit.toLocaleString('id-ID'));
+  setT('odStatSuspend', activeSusp.toLocaleString('id-ID'));
+  setT('odStatCleanTotal', (activeBase - activeSusp).toLocaleString('id-ID') + ' (' + cleanRate.toFixed(2) + '%)');
+
+  // SLA-style breakdown sub-cards
+  setT('odBoxDkPct', dkPct.toFixed(2) + '%');
+  setT('odBoxDkSub', sumDkSusp.toLocaleString('id-ID') + ' susp · ' + sumDkBase.toLocaleString('id-ID') + ' base');
+  setT('odBoxLkPct', lkPct.toFixed(2) + '%');
+  setT('odBoxLkSub', sumLkSusp.toLocaleString('id-ID') + ' susp · ' + sumLkBase.toLocaleString('id-ID') + ' base');
+
+  // 4. Update Donut Composition & Operational Highlights
+  setT('odDonutCenterVal', activeBase.toLocaleString('id-ID'));
+  var regShare = activeBase > 0 ? ((activeReg / activeBase) * 100).toFixed(1) : '0';
+  var trShare = activeBase > 0 ? ((activeTransit / activeBase) * 100).toFixed(1) : '0';
+  var suspShare = activeBase > 0 ? ((activeSusp / activeBase) * 100).toFixed(1) : '0';
+
+  setT('odCompRegVal', activeReg.toLocaleString('id-ID') + ' (' + regShare + '%)');
+  setT('odCompTransitVal', activeTransit.toLocaleString('id-ID') + ' (' + trShare + '%)');
+  setT('odCompSuspVal', activeSusp.toLocaleString('id-ID') + ' (' + suspShare + '%)');
+
+  setT('odInsightZeroDays', zeroDaysCount + ' Hari');
+  if (peakDayItem) {
+    setT('odInsightPeakDay', peakDayItem.dateStr);
+    setT('odInsightPeakCount', maxSuspInDay + ' pesanan suspend');
+  } else {
+    setT('odInsightPeakDay', '—');
+    setT('odInsightPeakCount', '0 pesanan');
+  }
+  var avgDailySusp = filtered.length > 0 ? (activeSusp / filtered.length).toFixed(1) : '0';
+  setT('odInsightAvgDaily', avgDailySusp);
+
+  // 5. Render Charts
+  renderOdSuspendCharts(filtered, area);
+
+  // 6. Render Data Table
+  renderOdSuspendTable(filtered);
+}
+
+// ── RENDER CHARTS ─────────────────────────────────────────────────────────
+function renderOdSuspendCharts(data, area) {
+  var labels = [];
+  var regPoints = [];
+  var transitPoints = [];
+  var suspPoints = [];
+  var pctPoints = [];
+  var dkPctPoints = [];
+  var lkPctPoints = [];
+
+  data.forEach(function(item) {
+    // Format label: e.g. "09/01"
+    var d = item.dateObj;
+    var dayLabel = item.dateStr;
+    if (d) {
+      dayLabel = String(d.getDate()).padStart(2, '0') + '/' + String(d.getMonth() + 1).padStart(2, '0');
+    }
+    labels.push(dayLabel);
+
+    if (area === 'DK') {
+      regPoints.push(item.dkReg);
+      transitPoints.push(item.dkTransit);
+      suspPoints.push(item.dkSusp);
+      pctPoints.push(parseFloat(item.dkPct.toFixed(2)));
+    } else if (area === 'LK') {
+      regPoints.push(item.lkReg);
+      transitPoints.push(item.lkTransit);
+      suspPoints.push(item.lkSusp);
+      pctPoints.push(parseFloat(item.lkPct.toFixed(2)));
+    } else {
+      regPoints.push(item.totReg);
+      transitPoints.push(item.totTransit);
+      suspPoints.push(item.totSusp);
+      pctPoints.push(parseFloat(item.totPct.toFixed(2)));
+    }
+
+    dkPctPoints.push(parseFloat(item.dkPct.toFixed(2)));
+    lkPctPoints.push(parseFloat(item.lkPct.toFixed(2)));
+  });
+
+  // Chart 1: Dual-Axis Combo Chart (Trend)
+  var trendCanvas = document.getElementById('chartOdSuspendTrend');
+  if (trendCanvas) {
+    var ctxTrend = trendCanvas.getContext('2d');
+    if (odSuspendTrendChartInstance) {
+      odSuspendTrendChartInstance.destroy();
+    }
+
+    odSuspendTrendChartInstance = new Chart(ctxTrend, {
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            type: 'bar',
+            label: 'Order Reguler',
+            data: regPoints,
+            backgroundColor: '#3b82f6',
+            borderRadius: 4,
+            stack: 'volume',
+            yAxisID: 'y',
+            order: 2
+          },
+          {
+            type: 'bar',
+            label: 'Order Transit',
+            data: transitPoints,
+            backgroundColor: '#8b5cf6',
+            borderRadius: 4,
+            stack: 'volume',
+            yAxisID: 'y',
+            order: 2
+          },
+          {
+            type: 'bar',
+            label: 'Order Suspend',
+            data: suspPoints,
+            backgroundColor: '#ef4444',
+            borderRadius: 4,
+            stack: 'volume',
+            yAxisID: 'y',
+            order: 2
+          },
+          {
+            type: 'line',
+            label: '% Suspend (' + area + ')',
+            data: pctPoints,
+            borderColor: '#f59e0b',
+            backgroundColor: 'rgba(245, 158, 11, 0.12)',
+            fill: true,
+            tension: 0.3,
+            borderWidth: 2.5,
+            pointRadius: 4,
+            pointHoverRadius: 7,
+            pointBackgroundColor: '#f59e0b',
+            yAxisID: 'y1',
+            order: 1
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: {
+          mode: 'index',
+          intersect: false
+        },
+        plugins: {
+          legend: {
+            position: 'top',
+            labels: {
+              boxWidth: 12,
+              font: { family: 'Plus Jakarta Sans', size: 11, weight: '600' }
+            }
+          },
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                var label = context.dataset.label || '';
+                var val = context.raw;
+                if (context.dataset.yAxisID === 'y1') {
+                  return label + ': ' + val + '%';
+                }
+                return label + ': ' + (val ? val.toLocaleString('id-ID') : 0) + ' orders';
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            grid: { display: false },
+            ticks: {
+              font: { family: 'Plus Jakarta Sans', size: 10 },
+              maxRotation: 45
+            }
+          },
+          y: {
+            type: 'linear',
+            display: true,
+            position: 'left',
+            stacked: true,
+            title: {
+              display: true,
+              text: 'Volume Pesanan',
+              font: { size: 11, weight: '700' }
+            },
+            grid: { color: 'rgba(0,0,0,0.06)' }
+          },
+          y1: {
+            type: 'linear',
+            display: true,
+            position: 'right',
+            grid: { drawOnChartArea: false },
+            title: {
+              display: true,
+              text: '% Suspend Rate',
+              font: { size: 11, weight: '700' }
+            },
+            ticks: {
+              callback: function(v) { return v + '%'; }
+            }
+          }
+        }
+      }
+    });
+  }
+
+  // Chart 2: Donut Composition
+  var compCanvas = document.getElementById('chartOdSuspendComposition');
+  if (compCanvas) {
+    var ctxComp = compCanvas.getContext('2d');
+    if (odSuspendCompChartInstance) {
+      odSuspendCompChartInstance.destroy();
+    }
+
+    var totalRegSum = regPoints.reduce(function(a, b) { return a + b; }, 0);
+    var totalTrSum = transitPoints.reduce(function(a, b) { return a + b; }, 0);
+    var totalSuspSum = suspPoints.reduce(function(a, b) { return a + b; }, 0);
+
+    odSuspendCompChartInstance = new Chart(ctxComp, {
+      type: 'doughnut',
+      data: {
+        labels: ['Reguler', 'Transit', 'Suspend'],
+        datasets: [{
+          data: [totalRegSum, totalTrSum, totalSuspSum],
+          backgroundColor: ['#2563eb', '#7c3aed', '#ef4444'],
+          hoverOffset: 6,
+          borderWidth: 2,
+          borderColor: '#ffffff'
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: '72%',
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: function(ctx) {
+                var v = ctx.raw || 0;
+                var total = totalRegSum + totalTrSum + totalSuspSum;
+                var p = total > 0 ? ((v / total) * 100).toFixed(1) : 0;
+                return ' ' + ctx.label + ': ' + v.toLocaleString('id-ID') + ' (' + p + '%)';
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+
+  // Chart 3: Area Comparison (% Suspend DK vs LK)
+  var areaCompareCanvas = document.getElementById('chartOdSuspendAreaCompare');
+  if (areaCompareCanvas) {
+    var ctxArea = areaCompareCanvas.getContext('2d');
+    if (odSuspendAreaCompareChartInstance) {
+      odSuspendAreaCompareChartInstance.destroy();
+    }
+
+    odSuspendAreaCompareChartInstance = new Chart(ctxArea, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            label: '% Suspend Dalam Kota (DK)',
+            data: dkPctPoints,
+            borderColor: '#10b981',
+            backgroundColor: 'rgba(16, 185, 129, 0.08)',
+            fill: true,
+            tension: 0.35,
+            borderWidth: 2.5,
+            pointRadius: 3.5,
+            pointBackgroundColor: '#10b981'
+          },
+          {
+            label: '% Suspend Luar Kota (LK)',
+            data: lkPctPoints,
+            borderColor: '#6366f1',
+            backgroundColor: 'rgba(99, 102, 241, 0.08)',
+            fill: true,
+            tension: 0.35,
+            borderWidth: 2.5,
+            pointRadius: 3.5,
+            pointBackgroundColor: '#6366f1'
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: {
+            position: 'top',
+            labels: { font: { family: 'Plus Jakarta Sans', size: 11, weight: '600' } }
+          },
+          tooltip: {
+            callbacks: {
+              label: function(ctx) {
+                return ctx.dataset.label + ': ' + ctx.raw + '%';
+              }
+            }
+          }
+        },
+        scales: {
+          x: { grid: { display: false } },
+          y: {
+            ticks: { callback: function(v) { return v + '%'; } },
+            title: { display: true, text: 'Rasio Suspend (%)' }
+          }
+        }
+      }
+    });
+  }
+
+  // Chart 4: Area Bar Share
+  var areaBarCanvas = document.getElementById('chartOdSuspendAreaBar');
+  if (areaBarCanvas) {
+    var ctxAreaBar = areaBarCanvas.getContext('2d');
+    if (odSuspendAreaBarChartInstance) {
+      odSuspendAreaBarChartInstance.destroy();
+    }
+
+    var dkSuspTotal = data.reduce(function(a, b) { return a + b.dkSusp; }, 0);
+    var lkSuspTotal = data.reduce(function(a, b) { return a + b.lkSusp; }, 0);
+    var dkBaseTotal = data.reduce(function(a, b) { return a + b.dkBase; }, 0);
+    var lkBaseTotal = data.reduce(function(a, b) { return a + b.lkBase; }, 0);
+
+    odSuspendAreaBarChartInstance = new Chart(ctxAreaBar, {
+      type: 'bar',
+      data: {
+        labels: ['Dalam Kota (DK)', 'Luar Kota (LK)'],
+        datasets: [
+          {
+            label: 'Volume Order Suspend',
+            data: [dkSuspTotal, lkSuspTotal],
+            backgroundColor: ['#10b981', '#6366f1'],
+            borderRadius: 6
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: function(ctx) {
+                var isDk = ctx.dataIndex === 0;
+                var base = isDk ? dkBaseTotal : lkBaseTotal;
+                var p = base > 0 ? ((ctx.raw / base) * 100).toFixed(2) : 0;
+                return ' ' + ctx.raw.toLocaleString('id-ID') + ' pesanan (' + p + '% dari base)';
+              }
+            }
+          }
+        },
+        scales: {
+          x: { grid: { display: false } },
+          y: {
+            beginAtZero: true,
+            title: { display: true, text: 'Jumlah Pesanan Suspend' }
+          }
+        }
+      }
+    });
+  }
+}
+
+// ── RENDER DATA TABLE ─────────────────────────────────────────────────────
+function renderOdSuspendTable(data) {
+  var tbody = document.getElementById('odSuspendTableBody');
+  var tfoot = document.getElementById('odSuspendTableFoot');
+  if (!tbody) return;
+
+  var q = (OD_SUSPEND_STATE.searchQuery || '').toLowerCase().trim();
+  var stFilter = OD_SUSPEND_STATE.statusFilter;
+
+  var rowsToDisplay = data.filter(function(r) {
+    if (q) {
+      var dMatch = r.dateStr.toLowerCase().indexOf(q) !== -1 || r.isoDate.indexOf(q) !== -1;
+      if (!dMatch) return false;
+    }
+    if (stFilter === 'NORMAL') {
+      return r.totPct < 2.0;
+    } else if (stFilter === 'WARNING') {
+      return r.totPct >= 2.0 && r.totPct <= 5.0;
+    } else if (stFilter === 'CRITICAL') {
+      return r.totPct > 5.0;
+    }
+    return true;
+  });
+
+  if (rowsToDisplay.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="14" style="text-align:center; padding:30px; color:var(--muted);">Tidak ada baris data yang cocok dengan filter tanggal/pencarian.</td></tr>';
+    if (tfoot) tfoot.innerHTML = '';
+    return;
+  }
+
+  var html = '';
+  var sumDkReg = 0, sumDkTransit = 0, sumDkSusp = 0;
+  var sumLkReg = 0, sumLkTransit = 0, sumLkSusp = 0;
+  var sumTotBase = 0, sumTotSusp = 0;
+
+  rowsToDisplay.forEach(function(row, idx) {
+    sumDkReg += row.dkReg;
+    sumDkTransit += row.dkTransit;
+    sumDkSusp += row.dkSusp;
+    sumLkReg += row.lkReg;
+    sumLkTransit += row.lkTransit;
+    sumLkSusp += row.lkSusp;
+    sumTotBase += row.totBase;
+    sumTotSusp += row.totSusp;
+
+    var statusBadge = '';
+    if (row.totPct < 2.0) {
+      statusBadge = '<span class="badge badge-green" style="font-size:10px; padding:2px 8px;">Aman</span>';
+    } else if (row.totPct <= 5.0) {
+      statusBadge = '<span class="badge badge-amber" style="font-size:10px; padding:2px 8px;">Waspada</span>';
+    } else {
+      statusBadge = '<span class="badge badge-red" style="font-size:10px; padding:2px 8px;">Kritis</span>';
+    }
+
+    var dkPctBadge = row.dkPct > 5.0 ? 'color:#ef4444; font-weight:800;' : (row.dkPct > 2.0 ? 'color:#d97706; font-weight:700;' : 'color:#16a34a;');
+    var lkPctBadge = row.lkPct > 5.0 ? 'color:#ef4444; font-weight:800;' : (row.lkPct > 2.0 ? 'color:#d97706; font-weight:700;' : 'color:#16a34a;');
+    var totPctBadge = row.totPct > 5.0 ? 'color:#ef4444; font-weight:800;' : (row.totPct > 2.0 ? 'color:#d97706; font-weight:700;' : 'color:#16a34a;');
+
+    html += '<tr style="border-bottom:1px solid var(--border); transition:background .15s;" onmouseover="this.style.background=\'rgba(37,99,235,0.04)\'" onmouseout="this.style.background=\'transparent\'">';
+    html += '<td style="padding:8px 8px; text-align:center; font-family:var(--font-mono); color:var(--muted); border-right:1px solid var(--border);">' + (idx + 1) + '</td>';
+    html += '<td style="padding:8px 10px; font-weight:700; border-right:2px solid var(--border);">' + row.dateStr + '</td>';
+
+    // DK
+    html += '<td style="padding:8px 8px; text-align:right; font-family:var(--font-mono);">' + row.dkReg.toLocaleString('id-ID') + '</td>';
+    html += '<td style="padding:8px 8px; text-align:right; font-family:var(--font-mono);">' + row.dkTransit.toLocaleString('id-ID') + '</td>';
+    html += '<td style="padding:8px 8px; text-align:right; font-family:var(--font-mono); font-weight:700; color:' + (row.dkSusp > 0 ? '#ef4444' : 'var(--muted)') + ';">' + row.dkSusp.toLocaleString('id-ID') + '</td>';
+    html += '<td style="padding:8px 8px; text-align:right; font-family:var(--font-mono); border-right:2px solid var(--border); ' + dkPctBadge + '">' + row.dkPct.toFixed(2) + '%</td>';
+
+    // LK
+    html += '<td style="padding:8px 8px; text-align:right; font-family:var(--font-mono);">' + row.lkReg.toLocaleString('id-ID') + '</td>';
+    html += '<td style="padding:8px 8px; text-align:right; font-family:var(--font-mono);">' + row.lkTransit.toLocaleString('id-ID') + '</td>';
+    html += '<td style="padding:8px 8px; text-align:right; font-family:var(--font-mono); font-weight:700; color:' + (row.lkSusp > 0 ? '#ef4444' : 'var(--muted)') + ';">' + row.lkSusp.toLocaleString('id-ID') + '</td>';
+    html += '<td style="padding:8px 8px; text-align:right; font-family:var(--font-mono); border-right:2px solid var(--border); ' + lkPctBadge + '">' + row.lkPct.toFixed(2) + '%</td>';
+
+    // Total
+    html += '<td style="padding:8px 8px; text-align:right; font-family:var(--font-mono); font-weight:700;">' + row.totBase.toLocaleString('id-ID') + '</td>';
+    html += '<td style="padding:8px 8px; text-align:right; font-family:var(--font-mono); font-weight:800; color:' + (row.totSusp > 0 ? '#ef4444' : 'var(--muted)') + ';">' + row.totSusp.toLocaleString('id-ID') + '</td>';
+    html += '<td style="padding:8px 8px; text-align:right; font-family:var(--font-mono); border-right:1px solid var(--border); ' + totPctBadge + '">' + row.totPct.toFixed(2) + '%</td>';
+
+    // Status
+    html += '<td style="padding:8px 10px; text-align:center;">' + statusBadge + '</td>';
+    html += '</tr>';
+  });
+
+  tbody.innerHTML = html;
+
+  // Table Footer
+  if (tfoot) {
+    var sumDkBase = sumDkReg + sumDkTransit;
+    var sumLkBase = sumLkReg + sumLkTransit;
+    var avgDkPct = sumDkBase > 0 ? (sumDkSusp / sumDkBase) * 100 : 0;
+    var avgLkPct = sumLkBase > 0 ? (sumLkSusp / sumLkBase) * 100 : 0;
+    var avgTotPct = sumTotBase > 0 ? (sumTotSusp / sumTotBase) * 100 : 0;
+
+    var footHtml = '<tr style="border-top:2px solid #334155;">';
+    footHtml += '<td colspan="2" style="padding:10px; text-align:left; border-right:2px solid #475569;">TOTAL &amp; RATA-RATA:</td>';
+    footHtml += '<td style="padding:10px 8px; text-align:right;">' + sumDkReg.toLocaleString('id-ID') + '</td>';
+    footHtml += '<td style="padding:10px 8px; text-align:right;">' + sumDkTransit.toLocaleString('id-ID') + '</td>';
+    footHtml += '<td style="padding:10px 8px; text-align:right; color:#fca5a5;">' + sumDkSusp.toLocaleString('id-ID') + '</td>';
+    footHtml += '<td style="padding:10px 8px; text-align:right; border-right:2px solid #475569; color:#86efac;">' + avgDkPct.toFixed(2) + '%</td>';
+
+    footHtml += '<td style="padding:10px 8px; text-align:right;">' + sumLkReg.toLocaleString('id-ID') + '</td>';
+    footHtml += '<td style="padding:10px 8px; text-align:right;">' + sumLkTransit.toLocaleString('id-ID') + '</td>';
+    footHtml += '<td style="padding:10px 8px; text-align:right; color:#fca5a5;">' + sumLkSusp.toLocaleString('id-ID') + '</td>';
+    footHtml += '<td style="padding:10px 8px; text-align:right; border-right:2px solid #475569; color:#86efac;">' + avgLkPct.toFixed(2) + '%</td>';
+
+    footHtml += '<td style="padding:10px 8px; text-align:right;">' + sumTotBase.toLocaleString('id-ID') + '</td>';
+    footHtml += '<td style="padding:10px 8px; text-align:right; color:#fca5a5;">' + sumTotSusp.toLocaleString('id-ID') + '</td>';
+    footHtml += '<td style="padding:10px 8px; text-align:right; border-right:1px solid #475569; color:#fde047;">' + avgTotPct.toFixed(2) + '%</td>';
+    footHtml += '<td style="padding:10px; text-align:center;">' + (avgTotPct < 2.0 ? 'AMAN' : (avgTotPct <= 5.0 ? 'WASPADA' : 'KRITIS')) + '</td>';
+    footHtml += '</tr>';
+
+    tfoot.innerHTML = footHtml;
+  }
+}
+
+function filterOdSuspendTable() {
+  var sInput = document.getElementById('odTableSearch');
+  var fSelect = document.getElementById('odTableStatusFilter');
+  OD_SUSPEND_STATE.searchQuery = sInput ? sInput.value : '';
+  OD_SUSPEND_STATE.statusFilter = fSelect ? fSelect.value : 'ALL';
+
+  var sStr = OD_SUSPEND_STATE.start;
+  var eStr = OD_SUSPEND_STATE.end;
+  var filtered = allOdSuspendData.filter(function(item) {
+    if (!item.hasValidData) return false;
+    if (sStr && item.isoDate < sStr) return false;
+    if (eStr && item.isoDate > eStr) return false;
+    return true;
+  });
+
+  renderOdSuspendTable(filtered);
+}
+
+function exportOdSuspendCsv() {
+  var sStr = OD_SUSPEND_STATE.start;
+  var eStr = OD_SUSPEND_STATE.end;
+  var filtered = allOdSuspendData.filter(function(item) {
+    if (!item.hasValidData) return false;
+    if (sStr && item.isoDate < sStr) return false;
+    if (eStr && item.isoDate > eStr) return false;
+    return true;
+  });
+
+  if (filtered.length === 0) {
+    alert('Tidak ada data untuk diekspor!');
+    return;
+  }
+
+  var csvRows = [
+    ['No', 'Tanggal', 'DK Order Reguler', 'DK Order Transit', 'DK Order Suspend', 'DK Persen Suspend', 'LK Order Reguler', 'LK Order Transit', 'LK Order Suspend', 'LK Persen Suspend', 'Total Base (Reg+Tr)', 'Total Suspend', 'Persen Suspend Harian', 'Status']
+  ];
+
+  filtered.forEach(function(r, idx) {
+    var status = r.totPct < 2.0 ? 'Aman' : (r.totPct <= 5.0 ? 'Waspada' : 'Kritis');
+    csvRows.push([
+      idx + 1,
+      r.dateStr,
+      r.dkReg,
+      r.dkTransit,
+      r.dkSusp,
+      r.dkPct.toFixed(2) + '%',
+      r.lkReg,
+      r.lkTransit,
+      r.lkSusp,
+      r.lkPct.toFixed(2) + '%',
+      r.totBase,
+      r.totSusp,
+      r.totPct.toFixed(2) + '%',
+      status
+    ]);
+  });
+
+  var csvContent = 'data:text/csv;charset=utf-8,' + csvRows.map(function(e) { return e.join(','); }).join('\n');
+  var encodedUri = encodeURI(csvContent);
+  var link = document.createElement('a');
+  link.setAttribute('href', encodedUri);
+  link.setAttribute('download', 'Laporan_Monitoring_OD_Suspend.csv');
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
 </script>
 
 <div id="ffDrillModal" class="ff-modal">
@@ -21890,7 +23365,7 @@ function closeCxCategoryModal() {
       <rect x="3" y="16" width="7" height="5"></rect>
     </svg>
   </a>
-  <a href="#" class="nav-item" id="m-nav-sla" onclick="navTo('sla'); event.preventDefault();" title="SLA">
+  <a href="#" class="nav-item" id="m-nav-sla" onclick="navTo('sla'); event.preventDefault();" title="SLA & OD Suspend">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
       <circle cx="12" cy="12" r="10"></circle>
       <polyline points="12 6 12 12 16 14"></polyline>
