@@ -4662,6 +4662,16 @@ PLANNING REPORT</div>
         </div>
         <div class="filter-divider" style="height:26px;"></div>
         <div class="filter-group">
+          <span class="filter-label">Business Unit</span>
+          <div class="filter-toggle" id="odSuspendBuToggle">
+            <button class="active" data-bu="ALL" onclick="setOdSuspendBu('ALL',this)" title="Konsolidasi Seluruh Unit Bisnis">SEMUA BU</button>
+            <button data-bu="INFORMA" onclick="setOdSuspendBu('INFORMA',this)" title="Informa Furniture & Accessories">INFORMA</button>
+            <button data-bu="IE" onclick="setOdSuspendBu('IE',this)" title="Informa Electronics">IE</button>
+            <button data-bu="SELMA" onclick="setOdSuspendBu('SELMA',this)" title="Selma Modern Living">SELMA</button>
+          </div>
+        </div>
+        <div class="filter-divider" style="height:26px;"></div>
+        <div class="filter-group">
           <span class="filter-label">Preset</span>
           <div class="filter-toggle" id="odSuspendPresetToggle">
             <button class="active" onclick="setOdSuspendPreset('all',this)">Semua</button>
@@ -4679,9 +4689,10 @@ PLANNING REPORT</div>
       </div>
     </div>
     <div style="display:flex; justify-content:space-between; align-items:center; margin-top:14px; padding-top:12px; border-top:1px dashed var(--border); font-size:12px; color:var(--muted); flex-wrap:wrap; gap:8px;">
-      <div style="display:flex; align-items:center; gap:8px;">
+      <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
         <span class="badge badge-blue" id="odSuspendInfoScope">📅 Periode: Memuat...</span>
         <span class="badge badge-amber" id="odSuspendInfoArea">Area: ALL</span>
+        <span class="badge badge-purple" id="odSuspendInfoBu">🏢 BU: SEMUA UNIT</span>
         <span class="badge badge-muted" id="odSuspendInfoRows">0 Hari Aktif</span>
       </div>
       <div style="display:flex; align-items:center; gap:16px;">
@@ -4797,11 +4808,11 @@ PLANNING REPORT</div>
             <span class="ov-stat-val" id="odStatTransit" style="color:#7c3aed; font-weight:700;">0</span>
           </div>
           <div class="ov-stat-item">
-            <span class="ov-stat-lbl">Total Order Suspend</span>
+            <span class="ov-stat-lbl">Total Pesanan Suspend</span>
             <span class="ov-stat-val text-red" id="odStatSuspend" style="font-weight:700;">0</span>
           </div>
           <div class="ov-stat-item">
-            <span class="ov-stat-lbl">Fulfillment Order Not Suspend</span>
+            <span class="ov-stat-lbl">Fulfillment Bersih</span>
             <span class="ov-stat-val text-green" id="odStatCleanTotal" style="font-weight:700;">0 (100%)</span>
           </div>
         </div>
@@ -4891,6 +4902,247 @@ PLANNING REPORT</div>
             <div style="font-size:10px; color:var(--muted);">pesanan / hari aktif</div>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ BREAKDOWN OD SUSPEND PER BUSINESS UNIT ══ -->
+  <div class="card" style="margin-bottom:20px; border-top:4px solid #7c3aed; box-shadow:0 4px 14px rgba(124, 58, 237, 0.08);">
+    <div class="card-header" style="flex-wrap:wrap; gap:12px;">
+      <div>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span style="font-size:20px;">🏢</span>
+          <div class="card-title" style="font-size:16px; font-weight:800; color:var(--text);">BREAKDOWN OD SUSPEND PER BUSINESS UNIT</div>
+          <span class="badge badge-purple" style="font-size:10px; font-weight:700;">INFORMA · IE · SELMA</span>
+        </div>
+        <div class="card-sub" style="margin-top:2px;">Monitoring volume, rasio suspend, mitigasi risiko &amp; rekomendasi operasional per divisi bisnis (DK vs LK)</div>
+      </div>
+      <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+        <span class="badge badge-blue" id="odBuPeriodBadge">📅 Periode Sinkron</span>
+        <div class="dropdown-sheets" style="display:inline-flex; gap:6px;">
+          <a href="https://docs.google.com/spreadsheets/d/1BbfYhsVU2khVjv6-jzrlHPiTYMga92RZKgl-stkpA-8/edit?gid=61959361#gid=61959361" target="_blank" rel="noopener noreferrer" class="btn-refresh" style="font-size:11px; padding:4px 8px; background:rgba(37,99,235,0.08); border:1px solid #3b82f6; color:#2563eb; text-decoration:none;" title="Buka Sheet INFORMA">
+            📄 Sheet Informa
+          </a>
+          <a href="https://docs.google.com/spreadsheets/d/1BbfYhsVU2khVjv6-jzrlHPiTYMga92RZKgl-stkpA-8/edit?gid=2008893209#gid=2008893209" target="_blank" rel="noopener noreferrer" class="btn-refresh" style="font-size:11px; padding:4px 8px; background:rgba(124,58,237,0.08); border:1px solid #7c3aed; color:#7c3aed; text-decoration:none;" title="Buka Sheet IE">
+            📄 Sheet IE
+          </a>
+          <a href="https://docs.google.com/spreadsheets/d/1BbfYhsVU2khVjv6-jzrlHPiTYMga92RZKgl-stkpA-8/edit?gid=561706811#gid=561706811" target="_blank" rel="noopener noreferrer" class="btn-refresh" style="font-size:11px; padding:4px 8px; background:rgba(239,68,68,0.08); border:1px solid #ef4444; color:#ef4444; text-decoration:none;" title="Buka Sheet SELMA">
+            📄 Sheet Selma
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3 Executive BU Cards Grid -->
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(310px, 1fr)); gap:16px; margin-top:14px;">
+      
+      <!-- Card 1: INFORMA -->
+      <div class="card" style="position:relative; overflow:hidden; border-top:4px solid #2563eb; background:linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; padding-bottom:10px; border-bottom:1px solid var(--border);">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <img src="https://lh3.googleusercontent.com/d/1V-NU5mhGbUbKO9JZQ48nTV_ZBQ-BQCCV" alt="Informa" style="height:32px; max-width:120px; object-fit:contain;" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';">
+            <strong style="display:none; font-size:15px; color:#1e3a5f;">INFORMA</strong>
+            <span class="badge badge-blue" style="font-size:10px;">Furniture &amp; Home</span>
+          </div>
+          <span class="badge" id="odBuInfBadge" style="font-size:11px; font-weight:800;">Memuat...</span>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px;">
+          <div>
+            <div style="font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase;">Volume Order Suspend</div>
+            <div style="font-size:26px; font-weight:900; color:#ef4444; font-family:var(--font-mono);" id="odBuInfSusp">0</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase;">Persentase Suspend</div>
+            <div style="font-size:24px; font-weight:900; color:#d97706; font-family:var(--font-mono);" id="odBuInfPct">0.00%</div>
+          </div>
+        </div>
+
+        <!-- Metric details -->
+        <div style="background:var(--surface2); border-radius:8px; padding:10px; font-size:11px; display:flex; flex-direction:column; gap:6px; border:1px solid var(--border);">
+          <div style="display:flex; justify-content:space-between;">
+            <span style="color:var(--muted);">Total Base Order</span>
+            <strong id="odBuInfBase" style="font-family:var(--font-mono);">0</strong>
+          </div>
+          <div style="display:flex; justify-content:space-between;">
+            <span style="color:var(--muted);">Dalam Kota (DK)</span>
+            <strong id="odBuInfDk" style="font-family:var(--font-mono); color:#047857;">0 susp (0%)</strong>
+          </div>
+          <div style="display:flex; justify-content:space-between;">
+            <span style="color:var(--muted);">Luar Kota (LK)</span>
+            <strong id="odBuInfLk" style="font-family:var(--font-mono); color:#3730a3;">0 susp (0%)</strong>
+          </div>
+          <div style="display:flex; justify-content:space-between; border-top:1px dashed var(--border); padding-top:4px;">
+            <span style="color:var(--muted);">Fulfillment Bersih</span>
+            <strong id="odBuInfClean" style="color:var(--green); font-family:var(--font-mono);">0%</strong>
+          </div>
+        </div>
+
+        <!-- Operational Continuity Recommendation -->
+        <div style="margin-top:10px; padding:8px 10px; background:rgba(37,99,235,0.06); border-left:3px solid #2563eb; border-radius:6px; font-size:11px; line-height:1.4; color:#1e3a5f;">
+          <strong>💡 Catatan Operasional:</strong> Area DK sangat prima (&lt; 0.2%). 99% suspend terkonsentrasi pada rute Luar Kota. Perketat koordinasi armada ekspedisi &amp; transit hub LK.
+        </div>
+
+        <button onclick="setOdSuspendBu('INFORMA')" style="margin-top:12px; width:100%; padding:6px 10px; font-size:11px; font-weight:700; background:#ffffff; border:1px solid #2563eb; color:#2563eb; border-radius:6px; cursor:pointer; transition:all .2s;" onmouseover="this.style.background='#2563eb'; this.style.color='#fff';" onmouseout="this.style.background='#fff'; this.style.color='#2563eb';">
+          🔍 Filter &amp; Analisis Detail INFORMA
+        </button>
+      </div>
+
+      <!-- Card 2: INFORMA ELECTRONICS (IE) -->
+      <div class="card" style="position:relative; overflow:hidden; border-top:4px solid #7c3aed; background:linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; padding-bottom:10px; border-bottom:1px solid var(--border);">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <img src="https://lh3.googleusercontent.com/d/1G8QOqURnh9ebTTr6l7MLXlKvtjnrSRJv" alt="IE" style="height:28px; max-width:130px; object-fit:contain;" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';">
+            <strong style="display:none; font-size:15px; color:#4c1d95;">INFORMA ELECTRONICS</strong>
+            <span class="badge badge-purple" style="font-size:10px;">Electronics</span>
+          </div>
+          <span class="badge" id="odBuIeBadge" style="font-size:11px; font-weight:800;">Memuat...</span>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px;">
+          <div>
+            <div style="font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase;">Volume Order Suspend</div>
+            <div style="font-size:26px; font-weight:900; color:#ef4444; font-family:var(--font-mono);" id="odBuIeSusp">0</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase;">Persentase Suspend</div>
+            <div style="font-size:24px; font-weight:900; color:#d97706; font-family:var(--font-mono);" id="odBuIePct">0.00%</div>
+          </div>
+        </div>
+
+        <!-- Metric details -->
+        <div style="background:var(--surface2); border-radius:8px; padding:10px; font-size:11px; display:flex; flex-direction:column; gap:6px; border:1px solid var(--border);">
+          <div style="display:flex; justify-content:space-between;">
+            <span style="color:var(--muted);">Total Base Order</span>
+            <strong id="odBuIeBase" style="font-family:var(--font-mono);">0</strong>
+          </div>
+          <div style="display:flex; justify-content:space-between;">
+            <span style="color:var(--muted);">Dalam Kota (DK)</span>
+            <strong id="odBuIeDk" style="font-family:var(--font-mono); color:#047857;">0 susp (0%)</strong>
+          </div>
+          <div style="display:flex; justify-content:space-between;">
+            <span style="color:var(--muted);">Luar Kota (LK)</span>
+            <strong id="odBuIeLk" style="font-family:var(--font-mono); color:#3730a3;">0 susp (0%)</strong>
+          </div>
+          <div style="display:flex; justify-content:space-between; border-top:1px dashed var(--border); padding-top:4px;">
+            <span style="color:var(--muted);">Fulfillment Bersih</span>
+            <strong id="odBuIeClean" style="color:var(--green); font-family:var(--font-mono);">0%</strong>
+          </div>
+        </div>
+
+        <!-- Operational Continuity Recommendation -->
+        <div style="margin-top:10px; padding:8px 10px; background:rgba(124,58,237,0.06); border-left:3px solid #7c3aed; border-radius:6px; font-size:11px; line-height:1.4; color:#4c1d95;">
+          <strong>✨ Catatan Operasional:</strong> Nol insiden suspend di Dalam Kota (100% prima). Seluruh suspend terjadi pada pengiriman elektronik LK. Perhatikan proteksi kemasan barang fragile.
+        </div>
+
+        <button onclick="setOdSuspendBu('IE')" style="margin-top:12px; width:100%; padding:6px 10px; font-size:11px; font-weight:700; background:#ffffff; border:1px solid #7c3aed; color:#7c3aed; border-radius:6px; cursor:pointer; transition:all .2s;" onmouseover="this.style.background='#7c3aed'; this.style.color='#fff';" onmouseout="this.style.background='#fff'; this.style.color='#7c3aed';">
+          🔍 Filter &amp; Analisis Detail IE
+        </button>
+      </div>
+
+      <!-- Card 3: SELMA -->
+      <div class="card" style="position:relative; overflow:hidden; border-top:4px solid #ef4444; background:linear-gradient(180deg, #fef2f2 0%, #ffffff 100%);">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; padding-bottom:10px; border-bottom:1px solid var(--border);">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <img src="https://lh3.googleusercontent.com/d/1mcXPva20oFrOkf1M6N0Dps2HtG02uiYg" alt="Selma" style="height:30px; max-width:120px; object-fit:contain;" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';">
+            <strong style="display:none; font-size:15px; color:#b91c1c;">SELMA</strong>
+            <span class="badge badge-red" style="font-size:10px;">Modern Living</span>
+          </div>
+          <span class="badge" id="odBuSelBadge" style="font-size:11px; font-weight:800;">Memuat...</span>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px;">
+          <div>
+            <div style="font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase;">Volume Order Suspend</div>
+            <div style="font-size:26px; font-weight:900; color:#ef4444; font-family:var(--font-mono);" id="odBuSelSusp">0</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase;">Persentase Suspend</div>
+            <div style="font-size:24px; font-weight:900; color:#ef4444; font-family:var(--font-mono);" id="odBuSelPct">0.00%</div>
+          </div>
+        </div>
+
+        <!-- Metric details -->
+        <div style="background:var(--surface2); border-radius:8px; padding:10px; font-size:11px; display:flex; flex-direction:column; gap:6px; border:1px solid var(--border);">
+          <div style="display:flex; justify-content:space-between;">
+            <span style="color:var(--muted);">Total Base Order</span>
+            <strong id="odBuSelBase" style="font-family:var(--font-mono);">0</strong>
+          </div>
+          <div style="display:flex; justify-content:space-between;">
+            <span style="color:var(--muted);">Dalam Kota (DK)</span>
+            <strong id="odBuSelDk" style="font-family:var(--font-mono); color:#dc2626; font-weight:800;">0 susp (0%)</strong>
+          </div>
+          <div style="display:flex; justify-content:space-between;">
+            <span style="color:var(--muted);">Luar Kota (LK)</span>
+            <strong id="odBuSelLk" style="font-family:var(--font-mono); color:#3730a3;">0 susp (0%)</strong>
+          </div>
+          <div style="display:flex; justify-content:space-between; border-top:1px dashed var(--border); padding-top:4px;">
+            <span style="color:var(--muted);">Fulfillment Bersih</span>
+            <strong id="odBuSelClean" style="color:var(--amber); font-family:var(--font-mono);">0%</strong>
+          </div>
+        </div>
+
+        <!-- Operational Continuity Recommendation -->
+        <div style="margin-top:10px; padding:8px 10px; background:rgba(239,68,68,0.08); border-left:3px solid #ef4444; border-radius:6px; font-size:11px; line-height:1.4; color:#991b1b;">
+          <strong>🚨 PERHATIAN OPERASIONAL:</strong> Suspend Dalam Kota sangat tinggi (&gt; 15%). Segera lakukan audit staging stok fisik Selma, periksa antrean picking ritel, dan optimalkan armada DK.
+        </div>
+
+        <button onclick="setOdSuspendBu('SELMA')" style="margin-top:12px; width:100%; padding:6px 10px; font-size:11px; font-weight:700; background:#ffffff; border:1px solid #ef4444; color:#ef4444; border-radius:6px; cursor:pointer; transition:all .2s;" onmouseover="this.style.background='#ef4444'; this.style.color='#fff';" onmouseout="this.style.background='#fff'; this.style.color='#ef4444';">
+          🔍 Filter &amp; Analisis Detail SELMA
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Executive BU Performance Comparison Table (SLA Style) -->
+    <div style="margin-top:20px; overflow-x:auto; border:1px solid var(--border); border-radius:var(--radius-sm);">
+      <table class="data-table" style="width:100%; border-collapse:collapse; text-align:left; font-size:12px;">
+        <thead>
+          <tr style="background:var(--surface2); border-bottom:2px solid var(--border); color:var(--muted); font-size:11px; text-transform:uppercase; letter-spacing:0.4px;">
+            <th rowspan="2" style="padding:10px 14px; width:180px; border-right:1px solid var(--border);">Business Unit</th>
+            <th colspan="3" style="padding:8px 10px; text-align:center; background:rgba(16,185,129,0.08); border-right:2px solid var(--border); color:#047857; font-weight:800;">DALAM KOTA (DK)</th>
+            <th colspan="3" style="padding:8px 10px; text-align:center; background:rgba(99,102,241,0.08); border-right:2px solid var(--border); color:#3730a3; font-weight:800;">LUAR KOTA (LK)</th>
+            <th colspan="3" style="padding:8px 10px; text-align:center; background:rgba(239,68,68,0.08); border-right:1px solid var(--border); color:#b91c1c; font-weight:800;">TOTAL PERFORMANCE</th>
+            <th rowspan="2" style="padding:10px 10px; text-align:center; border-right:1px solid var(--border); width:90px;">Pangsa Suspend</th>
+            <th rowspan="2" style="padding:10px 10px; text-align:center; border-right:1px solid var(--border); width:110px;">Status Risiko</th>
+            <th rowspan="2" style="padding:10px 12px;">Rekomendasi Tindakan Operasional</th>
+            <th rowspan="2" style="padding:10px 8px; text-align:center; width:80px;">Aksi</th>
+          </tr>
+          <tr style="background:var(--surface2); border-bottom:1px solid var(--border); color:var(--muted); font-size:10px; text-transform:uppercase;">
+            <!-- DK -->
+            <th style="padding:6px 8px; text-align:right;">Base Order</th>
+            <th style="padding:6px 8px; text-align:right; color:#ef4444; font-weight:700;">Suspend</th>
+            <th style="padding:6px 8px; text-align:right; border-right:2px solid var(--border); font-weight:700;">% Susp</th>
+            <!-- LK -->
+            <th style="padding:6px 8px; text-align:right;">Base Order</th>
+            <th style="padding:6px 8px; text-align:right; color:#ef4444; font-weight:700;">Suspend</th>
+            <th style="padding:6px 8px; text-align:right; border-right:2px solid var(--border); font-weight:700;">% Susp</th>
+            <!-- Total -->
+            <th style="padding:6px 8px; text-align:right;">Total Base</th>
+            <th style="padding:6px 8px; text-align:right; color:#ef4444; font-weight:700;">Total Susp</th>
+            <th style="padding:6px 8px; text-align:right; border-right:1px solid var(--border); font-weight:800;">% Susp</th>
+          </tr>
+        </thead>
+        <tbody id="odBuTableBody">
+          <!-- Populated by JS -->
+        </tbody>
+        <tfoot id="odBuTableFoot" style="background:var(--text); color:#ffffff; font-family:var(--font-mono); font-weight:700;">
+          <!-- Populated by JS -->
+        </tfoot>
+      </table>
+    </div>
+
+    <!-- Visual Comparison Bar Chart for Business Units -->
+    <div style="margin-top:20px; padding-top:16px; border-top:1px dashed var(--border);">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+        <div>
+          <div style="font-size:13px; font-weight:800; color:var(--text);">KOMPARASI VOLUME BASE VS SUSPEND PER BUSINESS UNIT</div>
+          <div style="font-size:11px; color:var(--muted);">Visualisasi perbandingan beban volume base dan tingkat suspend masing-masing unit bisnis</div>
+        </div>
+        <span class="badge badge-amber">Visualisasi Analitik BU</span>
+      </div>
+      <div style="position:relative; width:100%; height:280px;">
+        <canvas id="chartOdSuspendBuCompare"></canvas>
       </div>
     </div>
   </div>
@@ -11841,7 +12093,7 @@ var csvCaseIdReleaseLpUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/
 
 
   // Reading separate sheets SLA GRW and SLA CUST from the spreadsheet
-  // OD Suspend Spreadsheet URL
+  // OD Suspend Spreadsheet URLs (Overall & BU Sheets)
   var csvOdSuspendUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1BbfYhsVU2khVjv6-jzrlHPiTYMga92RZKgl-stkpA-8/gviz/tq?tqx=out:csv&gid=284586222');
   var csvOdSuspendFallbackUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1BbfYhsVU2khVjv6-jzrlHPiTYMga92RZKgl-stkpA-8/export?format=csv&gid=284586222');
   var fetchOdSuspend = new Promise(function(resolve) {
@@ -11853,6 +12105,28 @@ var csvCaseIdReleaseLpUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/
           resolve(dFb || []);
         });
       }
+    });
+  });
+
+  // Business Units: INFORMA (gid=61959361), IE (gid=2008893209), SELMA (gid=561706811)
+  var csvOdSuspendInformaUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1BbfYhsVU2khVjv6-jzrlHPiTYMga92RZKgl-stkpA-8/gviz/tq?tqx=out:csv&gid=61959361');
+  var fetchOdSuspendInforma = new Promise(function(resolve) {
+    fetchAndParseCsv(csvOdSuspendInformaUrl, { header: false, skipEmptyLines: true }, function(data) {
+      resolve(data || []);
+    });
+  });
+
+  var csvOdSuspendIeUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1BbfYhsVU2khVjv6-jzrlHPiTYMga92RZKgl-stkpA-8/gviz/tq?tqx=out:csv&gid=2008893209');
+  var fetchOdSuspendIe = new Promise(function(resolve) {
+    fetchAndParseCsv(csvOdSuspendIeUrl, { header: false, skipEmptyLines: true }, function(data) {
+      resolve(data || []);
+    });
+  });
+
+  var csvOdSuspendSelmaUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1BbfYhsVU2khVjv6-jzrlHPiTYMga92RZKgl-stkpA-8/gviz/tq?tqx=out:csv&gid=561706811');
+  var fetchOdSuspendSelma = new Promise(function(resolve) {
+    fetchAndParseCsv(csvOdSuspendSelmaUrl, { header: false, skipEmptyLines: true }, function(data) {
+      resolve(data || []);
     });
   });
 
@@ -12022,7 +12296,7 @@ var fetchCaseIdReleaseLp = new Promise(function(resolve) {
     }
   });
 
-  Promise.all([fetchMonitoring, fetchAging, fetchAgingCust, fetchContDate, fetchSlaGrw, fetchSlaCust, fetchFulfillment, fetchOlf, fetchCaseIdRelease, fetchCaseIdReleaseP1, fetchCaseIdReleaseP2, fetchCaseIdReleaseHubLk, fetchCaseIdReleaseLp, fetchBacklog, fetchOrgChart, fetchAgingReason, fetchSlaRecap, fetchCaseIdReleaseQcSkus, fetchOdSuspend])
+  Promise.all([fetchMonitoring, fetchAging, fetchAgingCust, fetchContDate, fetchSlaGrw, fetchSlaCust, fetchFulfillment, fetchOlf, fetchCaseIdRelease, fetchCaseIdReleaseP1, fetchCaseIdReleaseP2, fetchCaseIdReleaseHubLk, fetchCaseIdReleaseLp, fetchBacklog, fetchOrgChart, fetchAgingReason, fetchSlaRecap, fetchCaseIdReleaseQcSkus, fetchOdSuspend, fetchOdSuspendInforma, fetchOdSuspendIe, fetchOdSuspendSelma])
     .then(function(results) {
       allSlaGrwData = results[4] || [];
       allSlaCustData = results[5] || [];
@@ -12047,7 +12321,13 @@ var fetchCaseIdReleaseLp = new Promise(function(resolve) {
       allAgingReasonRawData = results[15] || [];
       allOdSuspendRawData = results[18] || [];
       allOdSuspendData = parseOdSuspendSheetData(allOdSuspendRawData);
-      console.log('[OD SUSPEND] Berhasil memuat baris data:', allOdSuspendData.length);
+      allOdSuspendInformaRawData = results[19] || [];
+      allOdSuspendInformaData = parseOdSuspendSheetData(allOdSuspendInformaRawData);
+      allOdSuspendIeRawData = results[20] || [];
+      allOdSuspendIeData = parseOdSuspendSheetData(allOdSuspendIeRawData);
+      allOdSuspendSelmaRawData = results[21] || [];
+      allOdSuspendSelmaData = parseOdSuspendSheetData(allOdSuspendSelmaRawData);
+      console.log('[OD SUSPEND] Baris data terbaca - Overall:', allOdSuspendData.length, 'Informa:', allOdSuspendInformaData.length, 'IE:', allOdSuspendIeData.length, 'Selma:', allOdSuspendSelmaData.length);
       allAgingReasonData = parseAgingReasonSheetData(allAgingReasonRawData);
       populateAgingReasonFilterDropdowns();
       renderAgingReasonSection();
@@ -22287,16 +22567,26 @@ function switchSlaSubView(mode) {
 // ══════════════════════════════════════════════════════════════════════════
 var allOdSuspendRawData = [];
 var allOdSuspendData = [];
+var allOdSuspendInformaRawData = [];
+var allOdSuspendInformaData = [];
+var allOdSuspendIeRawData = [];
+var allOdSuspendIeData = [];
+var allOdSuspendSelmaRawData = [];
+var allOdSuspendSelmaData = [];
+
 var OD_SUSPEND_STATE = {
   start: '',
   end: '',
   area: 'ALL', // 'ALL', 'DK', 'LK'
+  bu: 'ALL',   // 'ALL', 'INFORMA', 'IE', 'SELMA'
   preset: 'all',
   searchQuery: '',
   statusFilter: 'ALL',
   sortCol: 'date',
   sortAsc: true
 };
+
+var odSuspendBuCompareChartInstance = null;
 
 var odSuspendTrendChartInstance = null;
 var odSuspendCompChartInstance = null;
@@ -22432,6 +22722,17 @@ function setOdSuspendArea(area, btn) {
   if (parent) {
     parent.querySelectorAll('button').forEach(function(b) { b.classList.remove('active'); });
     btn.classList.add('active');
+  }
+  renderOdSuspendPage();
+}
+
+function setOdSuspendBu(bu, btn) {
+  OD_SUSPEND_STATE.bu = bu;
+  var parent = document.getElementById('odSuspendBuToggle');
+  if (parent) {
+    parent.querySelectorAll('button').forEach(function(b) { b.classList.remove('active'); });
+    var activeBtn = btn || parent.querySelector('button[data-bu="' + bu + '"]');
+    if (activeBtn) activeBtn.classList.add('active');
   }
   renderOdSuspendPage();
 }
@@ -22613,10 +22914,65 @@ function drawOdSuspendSpeedometerStatic(canvasId, value) {
 }
 
 // ── MAIN RENDER OD SUSPEND PAGE ───────────────────────────────────────────
+function calculateBuSummary(dataset, sStr, eStr) {
+  if (!dataset || !Array.isArray(dataset)) return { dkReg:0, dkTr:0, dkSusp:0, dkBase:0, dkPct:0, lkReg:0, lkTr:0, lkSusp:0, lkBase:0, lkPct:0, totReg:0, totTr:0, totSusp:0, totBase:0, totOrders:0, totPct:0, cleanRate:100, daysCount:0 };
+  var filtered = dataset.filter(function(item) {
+    if (!item.hasValidData) return false;
+    if (sStr && item.isoDate < sStr) return false;
+    if (eStr && item.isoDate > eStr) return false;
+    return true;
+  });
+
+  var dkReg = 0, dkTr = 0, dkSusp = 0;
+  var lkReg = 0, lkTr = 0, lkSusp = 0;
+
+  filtered.forEach(function(row) {
+    dkReg += row.dkReg;
+    dkTr += row.dkTransit;
+    dkSusp += row.dkSusp;
+    lkReg += row.lkReg;
+    lkTr += row.lkTransit;
+    lkSusp += row.lkSusp;
+  });
+
+  var dkBase = dkReg + dkTr;
+  var lkBase = lkReg + lkTr;
+  var totBase = dkBase + lkBase;
+  var totSusp = dkSusp + lkSusp;
+  var totOrders = totBase + totSusp;
+  var dkPct = dkBase > 0 ? (dkSusp / dkBase) * 100 : 0;
+  var lkPct = lkBase > 0 ? (lkSusp / lkBase) * 100 : 0;
+  var totPct = totBase > 0 ? (totSusp / totBase) * 100 : 0;
+  var cleanRate = totBase > 0 ? ((totBase - totSusp) / totBase) * 100 : 100;
+
+  return {
+    dkReg: dkReg, dkTr: dkTr, dkSusp: dkSusp, dkBase: dkBase, dkPct: dkPct,
+    lkReg: lkReg, lkTr: lkTr, lkSusp: lkSusp, lkBase: lkBase, lkPct: lkPct,
+    totReg: dkReg + lkReg, totTr: dkTr + lkTr, totSusp: totSusp,
+    totBase: totBase, totOrders: totOrders, totPct: totPct, cleanRate: cleanRate,
+    daysCount: filtered.length
+  };
+}
+
 function renderOdSuspendPage() {
   if (!allOdSuspendData || allOdSuspendData.length === 0) {
     if (allOdSuspendRawData && allOdSuspendRawData.length > 0) {
       allOdSuspendData = parseOdSuspendSheetData(allOdSuspendRawData);
+    }
+  }
+  if (!allOdSuspendInformaData || allOdSuspendInformaData.length === 0) {
+    if (allOdSuspendInformaRawData && allOdSuspendInformaRawData.length > 0) {
+      allOdSuspendInformaData = parseOdSuspendSheetData(allOdSuspendInformaRawData);
+    }
+  }
+  if (!allOdSuspendIeData || allOdSuspendIeData.length === 0) {
+    if (allOdSuspendIeRawData && allOdSuspendIeRawData.length > 0) {
+      allOdSuspendIeData = parseOdSuspendSheetData(allOdSuspendIeRawData);
+    }
+  }
+  if (!allOdSuspendSelmaData || allOdSuspendSelmaData.length === 0) {
+    if (allOdSuspendSelmaRawData && allOdSuspendSelmaRawData.length > 0) {
+      allOdSuspendSelmaData = parseOdSuspendSheetData(allOdSuspendSelmaRawData);
     }
   }
 
@@ -22625,16 +22981,48 @@ function renderOdSuspendPage() {
   var sStr = OD_SUSPEND_STATE.start;
   var eStr = OD_SUSPEND_STATE.end;
   var area = OD_SUSPEND_STATE.area;
+  var bu = OD_SUSPEND_STATE.bu || 'ALL';
 
-  // Filter records by date range
-  var filtered = allOdSuspendData.filter(function(item) {
+  // Helper setText
+  function setT(id, val) {
+    var el = document.getElementById(id);
+    if (el) el.textContent = val;
+  }
+
+  // Update BU buttons active state
+  var buToggle = document.getElementById('odSuspendBuToggle');
+  if (buToggle) {
+    buToggle.querySelectorAll('button').forEach(function(b) {
+      var bBu = b.getAttribute('data-bu');
+      if (bBu === bu) b.classList.add('active');
+      else b.classList.remove('active');
+    });
+  }
+
+  // 1. Select active dataset based on selected Business Unit
+  var activeDataset = allOdSuspendData;
+  var buLabel = '🏢 BU: SEMUA UNIT (Konsolidasi)';
+  if (bu === 'INFORMA') {
+    activeDataset = allOdSuspendInformaData.length > 0 ? allOdSuspendInformaData : allOdSuspendData;
+    buLabel = '🏢 BU: INFORMA';
+  } else if (bu === 'IE') {
+    activeDataset = allOdSuspendIeData.length > 0 ? allOdSuspendIeData : allOdSuspendData;
+    buLabel = '🏢 BU: INFORMA ELECTRONICS (IE)';
+  } else if (bu === 'SELMA') {
+    activeDataset = allOdSuspendSelmaData.length > 0 ? allOdSuspendSelmaData : allOdSuspendData;
+    buLabel = '🏢 BU: SELMA';
+  }
+  setT('odSuspendInfoBu', buLabel);
+
+  // Filter records by date range for the active dataset
+  var filtered = activeDataset.filter(function(item) {
     if (!item.hasValidData) return false;
     if (sStr && item.isoDate < sStr) return false;
     if (eStr && item.isoDate > eStr) return false;
     return true;
   });
 
-  // Calculate aggregates
+  // Calculate aggregates for current active dataset
   var sumDkReg = 0, sumDkTransit = 0, sumDkSusp = 0;
   var sumLkReg = 0, sumLkTransit = 0, sumLkSusp = 0;
   var zeroDaysCount = 0;
@@ -22682,19 +23070,14 @@ function renderOdSuspendPage() {
   var cleanRate = activeBase > 0 ? ((activeBase - activeSusp) / activeBase) * 100 : 100;
   if (cleanRate < 0) cleanRate = 0;
 
-  // Helper setText
-  function setT(id, val) {
-    var el = document.getElementById(id);
-    if (el) el.textContent = val;
-  }
-
-  // 1. Update Info Scope & Badges
+  // 2. Update Info Scope & Badges
   var dateRangeLabel = (sStr && eStr) ? (sStr + ' s/d ' + eStr) : 'Seluruh Data';
   setT('odSuspendInfoScope', '📅 Periode: ' + dateRangeLabel);
   setT('odSuspendInfoArea', 'Area: ' + area + (area === 'ALL' ? ' (DK & LK)' : ''));
   setT('odSuspendInfoRows', filtered.length + ' Hari Aktif Terbaca');
+  setT('odBuPeriodBadge', '📅 Periode: ' + dateRangeLabel);
 
-  // 2. Update Top Metric Cards
+  // 3. Update Top Metric Cards
   setT('odKpiTotalSuspend', activeSusp.toLocaleString('id-ID'));
   setT('odKpiTotalSuspendSub', activePct.toFixed(2) + '% dari total ' + activeBase.toLocaleString('id-ID') + ' base order');
   setT('odKpiTotalOrders', activeOrders.toLocaleString('id-ID') + ' Orders');
@@ -22712,7 +23095,7 @@ function renderOdSuspendPage() {
   setT('odKpiLkSub', 'Reg: ' + sumLkReg.toLocaleString('id-ID') + ' | Transit: ' + sumLkTransit.toLocaleString('id-ID'));
   setT('odKpiLkBase', sumLkBase.toLocaleString('id-ID') + ' Orders');
 
-  // 3. Update Speedometer Card
+  // 4. Update Speedometer Card
   setT('odSpeedoVal', activePct.toFixed(2) + '%');
   var speedoValEl = document.getElementById('odSpeedoVal');
   var speedoBadge = document.getElementById('odSpeedoBadge');
@@ -22745,7 +23128,7 @@ function renderOdSuspendPage() {
   setT('odBoxLkPct', lkPct.toFixed(2) + '%');
   setT('odBoxLkSub', sumLkSusp.toLocaleString('id-ID') + ' susp · ' + sumLkBase.toLocaleString('id-ID') + ' base');
 
-  // 4. Update Donut Composition & Operational Highlights
+  // 5. Update Donut Composition & Operational Highlights
   setT('odDonutCenterVal', activeBase.toLocaleString('id-ID'));
   var regShare = activeBase > 0 ? ((activeReg / activeBase) * 100).toFixed(1) : '0';
   var trShare = activeBase > 0 ? ((activeTransit / activeBase) * 100).toFixed(1) : '0';
@@ -22766,14 +23149,291 @@ function renderOdSuspendPage() {
   var avgDailySusp = filtered.length > 0 ? (activeSusp / filtered.length).toFixed(1) : '0';
   setT('odInsightAvgDaily', avgDailySusp);
 
-  // 5. Render Charts
+  // 6. Calculate & Render Business Unit Breakdown Cards & Table
+  var infSum = calculateBuSummary(allOdSuspendInformaData, sStr, eStr);
+  var ieSum = calculateBuSummary(allOdSuspendIeData, sStr, eStr);
+  var selSum = calculateBuSummary(allOdSuspendSelmaData, sStr, eStr);
+  var totAllSum = calculateBuSummary(allOdSuspendData, sStr, eStr);
+
+  // Paint BU Card 1: INFORMA
+  setT('odBuInfSusp', infSum.totSusp.toLocaleString('id-ID'));
+  setT('odBuInfPct', infSum.totPct.toFixed(2) + '%');
+  setT('odBuInfBase', infSum.totBase.toLocaleString('id-ID') + ' (Reg: ' + infSum.totReg.toLocaleString('id-ID') + ' | Tr: ' + infSum.totTr.toLocaleString('id-ID') + ')');
+  setT('odBuInfDk', infSum.dkSusp.toLocaleString('id-ID') + ' susp (' + infSum.dkPct.toFixed(2) + '%) · ' + infSum.dkBase.toLocaleString('id-ID') + ' base');
+  setT('odBuInfLk', infSum.lkSusp.toLocaleString('id-ID') + ' susp (' + infSum.lkPct.toFixed(2) + '%) · ' + infSum.lkBase.toLocaleString('id-ID') + ' base');
+  setT('odBuInfClean', infSum.cleanRate.toFixed(2) + '% Bersih');
+  var bInf = document.getElementById('odBuInfBadge');
+  if (bInf) {
+    bInf.className = infSum.totPct < 2.0 ? 'badge badge-green' : (infSum.totPct <= 5.0 ? 'badge badge-amber' : 'badge badge-red');
+    bInf.textContent = infSum.totPct < 2.0 ? 'Aman (< 2%)' : (infSum.totPct <= 5.0 ? 'Waspada (2%-5%)' : 'Kritis (> 5%)');
+  }
+
+  // Paint BU Card 2: IE
+  setT('odBuIeSusp', ieSum.totSusp.toLocaleString('id-ID'));
+  setT('odBuIePct', ieSum.totPct.toFixed(2) + '%');
+  setT('odBuIeBase', ieSum.totBase.toLocaleString('id-ID') + ' (Reg: ' + ieSum.totReg.toLocaleString('id-ID') + ' | Tr: ' + ieSum.totTr.toLocaleString('id-ID') + ')');
+  setT('odBuIeDk', ieSum.dkSusp.toLocaleString('id-ID') + ' susp (' + ieSum.dkPct.toFixed(2) + '%) · ' + ieSum.dkBase.toLocaleString('id-ID') + ' base');
+  setT('odBuIeLk', ieSum.lkSusp.toLocaleString('id-ID') + ' susp (' + ieSum.lkPct.toFixed(2) + '%) · ' + ieSum.lkBase.toLocaleString('id-ID') + ' base');
+  setT('odBuIeClean', ieSum.cleanRate.toFixed(2) + '% Bersih');
+  var bIe = document.getElementById('odBuIeBadge');
+  if (bIe) {
+    bIe.className = ieSum.totPct < 2.0 ? 'badge badge-green' : (ieSum.totPct <= 5.0 ? 'badge badge-amber' : 'badge badge-red');
+    bIe.textContent = ieSum.totPct < 2.0 ? 'Aman (< 2%)' : (ieSum.totPct <= 5.0 ? 'Waspada (2%-5%)' : 'Kritis (> 5%)');
+  }
+
+  // Paint BU Card 3: SELMA
+  setT('odBuSelSusp', selSum.totSusp.toLocaleString('id-ID'));
+  setT('odBuSelPct', selSum.totPct.toFixed(2) + '%');
+  setT('odBuSelBase', selSum.totBase.toLocaleString('id-ID') + ' (Reg: ' + selSum.totReg.toLocaleString('id-ID') + ' | Tr: ' + selSum.totTr.toLocaleString('id-ID') + ')');
+  setT('odBuSelDk', selSum.dkSusp.toLocaleString('id-ID') + ' susp (' + selSum.dkPct.toFixed(2) + '%) · ' + selSum.dkBase.toLocaleString('id-ID') + ' base');
+  setT('odBuSelLk', selSum.lkSusp.toLocaleString('id-ID') + ' susp (' + selSum.lkPct.toFixed(2) + '%) · ' + selSum.lkBase.toLocaleString('id-ID') + ' base');
+  setT('odBuSelClean', selSum.cleanRate.toFixed(2) + '% Bersih');
+  var bSel = document.getElementById('odBuSelBadge');
+  if (bSel) {
+    bSel.className = selSum.totPct < 2.0 ? 'badge badge-green' : (selSum.totPct <= 5.0 ? 'badge badge-amber' : 'badge badge-red');
+    bSel.textContent = selSum.totPct < 2.0 ? 'Aman (< 2%)' : (selSum.totPct <= 5.0 ? 'Waspada (2%-5%)' : 'Kritis (> 5%)');
+  }
+
+  // Render BU Comparison Table
+  renderOdBuTable(infSum, ieSum, selSum, totAllSum);
+
+  // Render BU Comparison Bar Chart
+  renderOdSuspendBuChart(infSum, ieSum, selSum);
+
+  // 7. Render Charts for active view
   renderOdSuspendCharts(filtered, area);
 
-  // 6. Render Data Table
+  // 8. Render Data Table
   renderOdSuspendTable(filtered);
 }
 
-// ── RENDER CHARTS ─────────────────────────────────────────────────────────
+// ── RENDER BU AUDIT & COMPARISON TABLE ─────────────────────────────────────
+function renderOdBuTable(inf, ie, sel, tot) {
+  var tbody = document.getElementById('odBuTableBody');
+  var tfoot = document.getElementById('odBuTableFoot');
+  if (!tbody) return;
+
+  var buList = [
+    {
+      key: 'INFORMA',
+      name: 'INFORMA',
+      sub: 'Furniture & Home Décor',
+      logo: 'https://lh3.googleusercontent.com/d/1V-NU5mhGbUbKO9JZQ48nTV_ZBQ-BQCCV',
+      data: inf,
+      note: '99% suspend terjadi di area Luar Kota (LK). Area DK sangat stabil (0.11%). Tingkatkan koordinasi jadwal ekspedisi LK.'
+    },
+    {
+      key: 'IE',
+      name: 'INFORMA ELECTRONICS (IE)',
+      sub: 'Electronics & Appliances',
+      logo: 'https://lh3.googleusercontent.com/d/1G8QOqURnh9ebTTr6l7MLXlKvtjnrSRJv',
+      data: ie,
+      note: 'Nol insiden suspend di Dalam Kota (DK 0.00%). Pastikan proteksi handling barang fragile rute transfer Luar Kota.'
+    },
+    {
+      key: 'SELMA',
+      name: 'SELMA',
+      sub: 'Modern & Affordable Living',
+      logo: 'https://lh3.googleusercontent.com/d/1mcXPva20oFrOkf1M6N0Dps2HtG02uiYg',
+      data: sel,
+      note: '🚨 TINGKAT SUSPEND TINGGI DI DALAM KOTA (16.38%). Segera audit staging ketersediaan stok ritel & optimalkan ritase armada DK!'
+    }
+  ];
+
+  var html = '';
+  var grandSusp = tot.totSusp > 0 ? tot.totSusp : (inf.totSusp + ie.totSusp + sel.totSusp);
+
+  buList.forEach(function(item) {
+    var d = item.data;
+    var sharePct = grandSusp > 0 ? ((d.totSusp / grandSusp) * 100).toFixed(1) : '0';
+    var statusBadge = '';
+    if (d.totPct < 2.0) {
+      statusBadge = '<span class="badge badge-green" style="font-size:10px; padding:3px 8px;">🟢 Aman</span>';
+    } else if (d.totPct <= 5.0) {
+      statusBadge = '<span class="badge badge-amber" style="font-size:10px; padding:3px 8px;">🟡 Waspada</span>';
+    } else {
+      statusBadge = '<span class="badge badge-red" style="font-size:10px; padding:3px 8px; font-weight:800;">🔴 Kritis</span>';
+    }
+
+    var dkColor = d.dkPct > 5.0 ? 'color:#ef4444; font-weight:800;' : (d.dkPct > 2.0 ? 'color:#d97706; font-weight:700;' : 'color:#16a34a;');
+    var lkColor = d.lkPct > 5.0 ? 'color:#ef4444; font-weight:800;' : (d.lkPct > 2.0 ? 'color:#d97706; font-weight:700;' : 'color:#16a34a;');
+    var totColor = d.totPct > 5.0 ? 'color:#ef4444; font-weight:900;' : (d.totPct > 2.0 ? 'color:#d97706; font-weight:800;' : 'color:#16a34a; font-weight:800;');
+
+    var isSelected = (OD_SUSPEND_STATE.bu === item.key);
+    var rowBg = isSelected ? 'background:rgba(37,99,235,0.06);' : '';
+
+    html += '<tr style="border-bottom:1px solid var(--border); ' + rowBg + '">';
+    // BU Brand Col
+    html += '<td style="padding:10px 14px; border-right:1px solid var(--border); vertical-align:middle;">';
+    html += '<div style="display:flex; align-items:center; gap:10px;">';
+    html += '<img src="' + item.logo + '" alt="' + item.name + '" style="height:26px; max-width:85px; object-fit:contain;" onerror="this.style.display=\'none\';">';
+    html += '<div><strong style="font-size:12px; color:var(--text);">' + item.name + '</strong><div style="font-size:10px; color:var(--muted);">' + item.sub + '</div></div>';
+    html += '</div></td>';
+
+    // DK Cols
+    html += '<td style="padding:8px 8px; text-align:right; font-family:var(--font-mono);">' + d.dkBase.toLocaleString('id-ID') + '</td>';
+    html += '<td style="padding:8px 8px; text-align:right; font-family:var(--font-mono); font-weight:700; color:' + (d.dkSusp > 0 ? '#ef4444' : 'var(--muted)') + ';">' + d.dkSusp.toLocaleString('id-ID') + '</td>';
+    html += '<td style="padding:8px 8px; text-align:right; font-family:var(--font-mono); border-right:2px solid var(--border); ' + dkColor + '">' + d.dkPct.toFixed(2) + '%</td>';
+
+    // LK Cols
+    html += '<td style="padding:8px 8px; text-align:right; font-family:var(--font-mono);">' + d.lkBase.toLocaleString('id-ID') + '</td>';
+    html += '<td style="padding:8px 8px; text-align:right; font-family:var(--font-mono); font-weight:700; color:' + (d.lkSusp > 0 ? '#ef4444' : 'var(--muted)') + ';">' + d.lkSusp.toLocaleString('id-ID') + '</td>';
+    html += '<td style="padding:8px 8px; text-align:right; font-family:var(--font-mono); border-right:2px solid var(--border); ' + lkColor + '">' + d.lkPct.toFixed(2) + '%</td>';
+
+    // Total Cols
+    html += '<td style="padding:8px 8px; text-align:right; font-family:var(--font-mono); font-weight:700;">' + d.totBase.toLocaleString('id-ID') + '</td>';
+    html += '<td style="padding:8px 8px; text-align:right; font-family:var(--font-mono); font-weight:800; color:#ef4444;">' + d.totSusp.toLocaleString('id-ID') + '</td>';
+    html += '<td style="padding:8px 8px; text-align:right; font-family:var(--font-mono); border-right:1px solid var(--border); ' + totColor + '">' + d.totPct.toFixed(2) + '%</td>';
+
+    // Share & Status
+    html += '<td style="padding:8px 10px; text-align:center; font-family:var(--font-mono); border-right:1px solid var(--border); font-weight:700;">' + sharePct + '%</td>';
+    html += '<td style="padding:8px 10px; text-align:center; border-right:1px solid var(--border);">' + statusBadge + '</td>';
+    html += '<td style="padding:8px 12px; font-size:11px; color:var(--text); line-height:1.35;">' + item.note + '</td>';
+    html += '<td style="padding:8px 8px; text-align:center;">';
+    html += '<button onclick="setOdSuspendBu(\'' + item.key + '\')" class="btn-refresh" style="font-size:10px; padding:3px 8px; background:' + (isSelected ? '#2563eb' : '#f1f5f9') + '; color:' + (isSelected ? '#ffffff' : '#334155') + '; border:1px solid #cbd5e1;">' + (isSelected ? 'Aktif' : 'Pilih') + '</button>';
+    html += '</td>';
+
+    html += '</tr>';
+  });
+
+  tbody.innerHTML = html;
+
+  // Table Footer
+  if (tfoot) {
+    var cDkBase = inf.dkBase + ie.dkBase + sel.dkBase;
+    var cDkSusp = inf.dkSusp + ie.dkSusp + sel.dkSusp;
+    var cDkPct = cDkBase > 0 ? (cDkSusp / cDkBase) * 100 : 0;
+
+    var cLkBase = inf.lkBase + ie.lkBase + sel.lkBase;
+    var cLkSusp = inf.lkSusp + ie.lkSusp + sel.lkSusp;
+    var cLkPct = cLkBase > 0 ? (cLkSusp / cLkBase) * 100 : 0;
+
+    var cTotBase = cDkBase + cLkBase;
+    var cTotSusp = cDkSusp + cLkSusp;
+    var cTotPct = cTotBase > 0 ? (cTotSusp / cTotBase) * 100 : 0;
+
+    var footHtml = '<tr style="border-top:2px solid #334155; font-size:11px;">';
+    footHtml += '<td style="padding:10px 14px; text-align:left; border-right:1px solid #475569;">TOTAL KONSOLIDASI BU:</td>';
+    footHtml += '<td style="padding:10px 8px; text-align:right;">' + cDkBase.toLocaleString('id-ID') + '</td>';
+    footHtml += '<td style="padding:10px 8px; text-align:right; color:#fca5a5;">' + cDkSusp.toLocaleString('id-ID') + '</td>';
+    footHtml += '<td style="padding:10px 8px; text-align:right; border-right:2px solid #475569; color:#86efac;">' + cDkPct.toFixed(2) + '%</td>';
+
+    footHtml += '<td style="padding:10px 8px; text-align:right;">' + cLkBase.toLocaleString('id-ID') + '</td>';
+    footHtml += '<td style="padding:10px 8px; text-align:right; color:#fca5a5;">' + cLkSusp.toLocaleString('id-ID') + '</td>';
+    footHtml += '<td style="padding:10px 8px; text-align:right; border-right:2px solid #475569; color:#86efac;">' + cLkPct.toFixed(2) + '%</td>';
+
+    footHtml += '<td style="padding:10px 8px; text-align:right;">' + cTotBase.toLocaleString('id-ID') + '</td>';
+    footHtml += '<td style="padding:10px 8px; text-align:right; color:#fca5a5;">' + cTotSusp.toLocaleString('id-ID') + '</td>';
+    footHtml += '<td style="padding:10px 8px; text-align:right; border-right:1px solid #475569; color:#fde047;">' + cTotPct.toFixed(2) + '%</td>';
+
+    footHtml += '<td style="padding:10px; text-align:center;">100%</td>';
+    footHtml += '<td style="padding:10px; text-align:center;">' + (cTotPct < 2.0 ? 'AMAN' : (cTotPct <= 5.0 ? 'WASPADA' : 'KRITIS')) + '</td>';
+    footHtml += '<td style="padding:10px 12px; font-weight:normal; font-size:10px; color:#cbd5e1;">Evaluasi menyeluruh performa lintas unit bisnis dengan fokus mitigasi pada Selma DK dan Informa LK.</td>';
+    footHtml += '<td style="padding:10px; text-align:center;"><button onclick="setOdSuspendBu(\'' + 'ALL' + '\')" class="btn-refresh" style="font-size:10px; padding:2px 6px; background:#3b82f6; color:#ffffff; border:none;">Semua</button></td>';
+    footHtml += '</tr>';
+
+    tfoot.innerHTML = footHtml;
+  }
+}
+
+// ── RENDER BU VISUAL COMPARISON CHART ──────────────────────────────────────
+function renderOdSuspendBuChart(inf, ie, sel) {
+  var canvas = document.getElementById('chartOdSuspendBuCompare');
+  if (!canvas) return;
+  var ctx = canvas.getContext('2d');
+  if (odSuspendBuCompareChartInstance) {
+    odSuspendBuCompareChartInstance.destroy();
+  }
+
+  odSuspendBuCompareChartInstance = new Chart(ctx, {
+    data: {
+      labels: ['INFORMA', 'INFORMA ELECTRONICS (IE)', 'SELMA'],
+      datasets: [
+        {
+          type: 'bar',
+          label: 'Total Base Order',
+          data: [inf.totBase, ie.totBase, sel.totBase],
+          backgroundColor: '#3b82f6',
+          borderRadius: 6,
+          maxBarThickness: 46,
+          yAxisID: 'y',
+          order: 2
+        },
+        {
+          type: 'bar',
+          label: 'Volume Order Suspend',
+          data: [inf.totSusp, ie.totSusp, sel.totSusp],
+          backgroundColor: '#ef4444',
+          borderRadius: 6,
+          maxBarThickness: 46,
+          yAxisID: 'y',
+          order: 2
+        },
+        {
+          type: 'line',
+          label: '% Suspend Rate',
+          data: [parseFloat(inf.totPct.toFixed(2)), parseFloat(ie.totPct.toFixed(2)), parseFloat(sel.totPct.toFixed(2))],
+          borderColor: '#d97706',
+          backgroundColor: '#d97706',
+          borderWidth: 3,
+          pointRadius: 6,
+          pointHoverRadius: 9,
+          pointBackgroundColor: '#ffffff',
+          pointBorderColor: '#d97706',
+          pointBorderWidth: 2.5,
+          yAxisID: 'y1',
+          order: 1
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      layout: { padding: { top: 16, right: 12, left: 8, bottom: 6 } },
+      plugins: {
+        legend: {
+          position: 'top',
+          labels: { boxWidth: 12, padding: 14, font: { family: 'Plus Jakarta Sans', size: 11, weight: '700' } }
+        },
+        tooltip: {
+          backgroundColor: 'rgba(15, 23, 42, 0.92)',
+          titleFont: { family: 'Plus Jakarta Sans', size: 12, weight: '700' },
+          bodyFont: { family: 'Plus Jakarta Sans', size: 11 },
+          padding: 10,
+          cornerRadius: 8,
+          callbacks: {
+            label: function(ctx) {
+              if (ctx.dataset.yAxisID === 'y1') return ' ' + ctx.dataset.label + ': ' + ctx.raw + '%';
+              return ' ' + ctx.dataset.label + ': ' + ctx.raw.toLocaleString('id-ID') + ' orders';
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { display: false },
+          ticks: { font: { family: 'Plus Jakarta Sans', size: 11, weight: '700' }, color: '#334155' }
+        },
+        y: {
+          type: 'linear',
+          position: 'left',
+          title: { display: true, text: 'Volume Pesanan', font: { family: 'Plus Jakarta Sans', size: 11, weight: '700' }, color: '#334155' },
+          ticks: { font: { family: 'Plus Jakarta Sans', size: 10 }, color: '#64748b', callback: function(v) { return v.toLocaleString('id-ID'); } },
+          grid: { color: 'rgba(0,0,0,0.05)' }
+        },
+        y1: {
+          type: 'linear',
+          position: 'right',
+          suggestedMin: 0,
+          grid: { drawOnChartArea: false },
+          title: { display: true, text: '% Suspend Rate', font: { family: 'Plus Jakarta Sans', size: 11, weight: '700' }, color: '#d97706' },
+          ticks: { font: { family: 'Plus Jakarta Sans', size: 10, weight: '700' }, color: '#d97706', callback: function(v) { return v + '%'; } }
+        }
+      }
+    }
+  });
+}
+
 function renderOdSuspendCharts(data, area) {
   var labels = [];
   var regPoints = [];
@@ -23252,7 +23912,13 @@ function filterOdSuspendTable() {
 
   var sStr = OD_SUSPEND_STATE.start;
   var eStr = OD_SUSPEND_STATE.end;
-  var filtered = allOdSuspendData.filter(function(item) {
+  var bu = OD_SUSPEND_STATE.bu || 'ALL';
+  var activeDataset = allOdSuspendData;
+  if (bu === 'INFORMA') activeDataset = allOdSuspendInformaData.length > 0 ? allOdSuspendInformaData : allOdSuspendData;
+  else if (bu === 'IE') activeDataset = allOdSuspendIeData.length > 0 ? allOdSuspendIeData : allOdSuspendData;
+  else if (bu === 'SELMA') activeDataset = allOdSuspendSelmaData.length > 0 ? allOdSuspendSelmaData : allOdSuspendData;
+
+  var filtered = activeDataset.filter(function(item) {
     if (!item.hasValidData) return false;
     if (sStr && item.isoDate < sStr) return false;
     if (eStr && item.isoDate > eStr) return false;
@@ -23265,7 +23931,13 @@ function filterOdSuspendTable() {
 function exportOdSuspendCsv() {
   var sStr = OD_SUSPEND_STATE.start;
   var eStr = OD_SUSPEND_STATE.end;
-  var filtered = allOdSuspendData.filter(function(item) {
+  var bu = OD_SUSPEND_STATE.bu || 'ALL';
+  var activeDataset = allOdSuspendData;
+  if (bu === 'INFORMA') activeDataset = allOdSuspendInformaData.length > 0 ? allOdSuspendInformaData : allOdSuspendData;
+  else if (bu === 'IE') activeDataset = allOdSuspendIeData.length > 0 ? allOdSuspendIeData : allOdSuspendData;
+  else if (bu === 'SELMA') activeDataset = allOdSuspendSelmaData.length > 0 ? allOdSuspendSelmaData : allOdSuspendData;
+
+  var filtered = activeDataset.filter(function(item) {
     if (!item.hasValidData) return false;
     if (sStr && item.isoDate < sStr) return false;
     if (eStr && item.isoDate > eStr) return false;
@@ -23278,7 +23950,7 @@ function exportOdSuspendCsv() {
   }
 
   var csvRows = [
-    ['No', 'Tanggal', 'DK Order Reguler', 'DK Order Transit', 'DK Order Suspend', 'DK Persen Suspend', 'LK Order Reguler', 'LK Order Transit', 'LK Order Suspend', 'LK Persen Suspend', 'Total Total Base', 'Total Suspend', 'Persen Suspend Harian', 'Status']
+    ['No', 'Tanggal', 'Unit Bisnis', 'DK Order Reguler', 'DK Order Transit', 'DK Order Suspend', 'DK Persen Suspend', 'LK Order Reguler', 'LK Order Transit', 'LK Order Suspend', 'LK Persen Suspend', 'Total Base Order', 'Total Suspend', 'Persen Suspend Harian', 'Status']
   ];
 
   filtered.forEach(function(r, idx) {
@@ -23286,6 +23958,7 @@ function exportOdSuspendCsv() {
     csvRows.push([
       idx + 1,
       r.dateStr,
+      bu,
       r.dkReg,
       r.dkTransit,
       r.dkSusp,
@@ -23305,7 +23978,7 @@ function exportOdSuspendCsv() {
   var encodedUri = encodeURI(csvContent);
   var link = document.createElement('a');
   link.setAttribute('href', encodedUri);
-  link.setAttribute('download', 'Laporan_Monitoring_OD_Suspend.csv');
+  link.setAttribute('download', 'Laporan_Monitoring_OD_Suspend_' + bu + '.csv');
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
