@@ -1227,6 +1227,43 @@
     margin: 0 auto;
   }
 
+  /* Monitoring OD Suspend BU Table Logos tuned scaling & visual balance */
+  .od-bu-logo-inf {
+    height: 54px;
+    max-width: 165px;
+    padding: 2px 4px;
+    box-sizing: border-box;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto;
+    transition: transform 0.2s ease;
+  }
+  .od-bu-logo-iel {
+    height: 44px;
+    max-width: 175px;
+    padding: 4px 2px;
+    box-sizing: border-box;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto;
+    transition: transform 0.2s ease;
+  }
+  .od-bu-logo-sel {
+    height: 48px;
+    max-width: 155px;
+    padding: 3px 3px;
+    box-sizing: border-box;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto;
+    transition: transform 0.2s ease;
+  }
+  .od-bu-logo-inf:hover,
+  .od-bu-logo-iel:hover,
+  .od-bu-logo-sel:hover {
+    transform: scale(1.05);
+  }
+
   /* Header Logo tuned padding */
   .header-logo-img {
     display: inline-block;
@@ -4915,7 +4952,7 @@ PLANNING REPORT</div>
           <div class="card-title" style="font-size:16px; font-weight:800; color:var(--text);">BREAKDOWN OD SUSPEND PER BUSINESS UNIT</div>
           <span class="badge badge-purple" style="font-size:10px; font-weight:700;">INFORMA · IE · SELMA</span>
         </div>
-        <div class="card-sub" style="margin-top:2px;">Monitoring volume, rasio suspend, mitigasi risiko &amp; rekomendasi operasional per divisi bisnis (DK vs LK)</div>
+        <div class="card-sub" style="margin-top:2px;">Monitoring volume, rasio suspend &amp; performa fulfillment per divisi bisnis (DK vs LK)</div>
       </div>
       <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
         <span class="badge badge-blue" id="odBuPeriodBadge">📅 Periode Sinkron</span>
@@ -4978,11 +5015,6 @@ PLANNING REPORT</div>
           </div>
         </div>
 
-        <!-- Operational Continuity Recommendation -->
-        <div style="margin-top:10px; padding:8px 10px; background:rgba(37,99,235,0.06); border-left:3px solid #2563eb; border-radius:6px; font-size:11px; line-height:1.4; color:#1e3a5f;">
-          <strong>💡 Catatan Operasional:</strong> Area DK sangat prima (&lt; 0.2%). 99% suspend terkonsentrasi pada rute Luar Kota. Perketat koordinasi armada ekspedisi &amp; transit hub LK.
-        </div>
-
         <button onclick="setOdSuspendBu('INFORMA')" style="margin-top:12px; width:100%; padding:6px 10px; font-size:11px; font-weight:700; background:#ffffff; border:1px solid #2563eb; color:#2563eb; border-radius:6px; cursor:pointer; transition:all .2s;" onmouseover="this.style.background='#2563eb'; this.style.color='#fff';" onmouseout="this.style.background='#fff'; this.style.color='#2563eb';">
           🔍 Filter &amp; Analisis Detail INFORMA
         </button>
@@ -5028,11 +5060,6 @@ PLANNING REPORT</div>
             <span style="color:var(--muted);">Fulfillment Bersih</span>
             <strong id="odBuIeClean" style="color:var(--green); font-family:var(--font-mono);">0%</strong>
           </div>
-        </div>
-
-        <!-- Operational Continuity Recommendation -->
-        <div style="margin-top:10px; padding:8px 10px; background:rgba(124,58,237,0.06); border-left:3px solid #7c3aed; border-radius:6px; font-size:11px; line-height:1.4; color:#4c1d95;">
-          <strong>✨ Catatan Operasional:</strong> Nol insiden suspend di Dalam Kota (100% prima). Seluruh suspend terjadi pada pengiriman elektronik LK. Perhatikan proteksi kemasan barang fragile.
         </div>
 
         <button onclick="setOdSuspendBu('IE')" style="margin-top:12px; width:100%; padding:6px 10px; font-size:11px; font-weight:700; background:#ffffff; border:1px solid #7c3aed; color:#7c3aed; border-radius:6px; cursor:pointer; transition:all .2s;" onmouseover="this.style.background='#7c3aed'; this.style.color='#fff';" onmouseout="this.style.background='#fff'; this.style.color='#7c3aed';">
@@ -5082,11 +5109,6 @@ PLANNING REPORT</div>
           </div>
         </div>
 
-        <!-- Operational Continuity Recommendation -->
-        <div style="margin-top:10px; padding:8px 10px; background:rgba(239,68,68,0.08); border-left:3px solid #ef4444; border-radius:6px; font-size:11px; line-height:1.4; color:#991b1b;">
-          <strong>🚨 PERHATIAN OPERASIONAL:</strong> Suspend Dalam Kota sangat tinggi (&gt; 15%). Segera lakukan audit staging stok fisik Selma, periksa antrean picking ritel, dan optimalkan armada DK.
-        </div>
-
         <button onclick="setOdSuspendBu('SELMA')" style="margin-top:12px; width:100%; padding:6px 10px; font-size:11px; font-weight:700; background:#ffffff; border:1px solid #ef4444; color:#ef4444; border-radius:6px; cursor:pointer; transition:all .2s;" onmouseover="this.style.background='#ef4444'; this.style.color='#fff';" onmouseout="this.style.background='#fff'; this.style.color='#ef4444';">
           🔍 Filter &amp; Analisis Detail SELMA
         </button>
@@ -5099,13 +5121,12 @@ PLANNING REPORT</div>
       <table class="data-table" style="width:100%; border-collapse:collapse; text-align:left; font-size:12px;">
         <thead>
           <tr style="background:var(--surface2); border-bottom:2px solid var(--border); color:var(--muted); font-size:11px; text-transform:uppercase; letter-spacing:0.4px;">
-            <th rowspan="2" style="padding:10px 14px; width:180px; border-right:1px solid var(--border);">Business Unit</th>
+            <th rowspan="2" style="padding:10px 14px; width:200px; text-align:center; border-right:1px solid var(--border);">Business Unit</th>
             <th colspan="3" style="padding:8px 10px; text-align:center; background:rgba(16,185,129,0.08); border-right:2px solid var(--border); color:#047857; font-weight:800;">DALAM KOTA (DK)</th>
             <th colspan="3" style="padding:8px 10px; text-align:center; background:rgba(99,102,241,0.08); border-right:2px solid var(--border); color:#3730a3; font-weight:800;">LUAR KOTA (LK)</th>
             <th colspan="3" style="padding:8px 10px; text-align:center; background:rgba(239,68,68,0.08); border-right:1px solid var(--border); color:#b91c1c; font-weight:800;">TOTAL PERFORMANCE</th>
             <th rowspan="2" style="padding:10px 10px; text-align:center; border-right:1px solid var(--border); width:90px;">Pangsa Suspend</th>
             <th rowspan="2" style="padding:10px 10px; text-align:center; border-right:1px solid var(--border); width:110px;">Status Risiko</th>
-            <th rowspan="2" style="padding:10px 12px;">Rekomendasi Tindakan Operasional</th>
             <th rowspan="2" style="padding:10px 8px; text-align:center; width:80px;">Aksi</th>
           </tr>
           <tr style="background:var(--surface2); border-bottom:1px solid var(--border); color:var(--muted); font-size:10px; text-transform:uppercase;">
@@ -23217,26 +23238,26 @@ function renderOdBuTable(inf, ie, sel, tot) {
     {
       key: 'INFORMA',
       name: 'INFORMA',
+      logoClass: 'od-bu-logo-inf',
       sub: 'Furniture & Home Décor',
       logo: 'https://lh3.googleusercontent.com/d/1V-NU5mhGbUbKO9JZQ48nTV_ZBQ-BQCCV',
-      data: inf,
-      note: '99% suspend terjadi di area Luar Kota (LK). Area DK sangat stabil (0.11%). Tingkatkan koordinasi jadwal ekspedisi LK.'
+      data: inf
     },
     {
       key: 'IE',
       name: 'INFORMA ELECTRONICS (IE)',
+      logoClass: 'od-bu-logo-iel',
       sub: 'Electronics & Appliances',
       logo: 'https://lh3.googleusercontent.com/d/1G8QOqURnh9ebTTr6l7MLXlKvtjnrSRJv',
-      data: ie,
-      note: 'Nol insiden suspend di Dalam Kota (DK 0.00%). Pastikan proteksi handling barang fragile rute transfer Luar Kota.'
+      data: ie
     },
     {
       key: 'SELMA',
       name: 'SELMA',
+      logoClass: 'od-bu-logo-sel',
       sub: 'Modern & Affordable Living',
       logo: 'https://lh3.googleusercontent.com/d/1mcXPva20oFrOkf1M6N0Dps2HtG02uiYg',
-      data: sel,
-      note: '🚨 TINGKAT SUSPEND TINGGI DI DALAM KOTA (16.38%). Segera audit staging ketersediaan stok ritel & optimalkan ritase armada DK!'
+      data: sel
     }
   ];
 
@@ -23263,11 +23284,11 @@ function renderOdBuTable(inf, ie, sel, tot) {
     var rowBg = isSelected ? 'background:rgba(37,99,235,0.06);' : '';
 
     html += '<tr style="border-bottom:1px solid var(--border); ' + rowBg + '">';
-    // BU Brand Col
-    html += '<td style="padding:10px 14px; border-right:1px solid var(--border); vertical-align:middle;">';
-    html += '<div style="display:flex; align-items:center; gap:10px;">';
-    html += '<img src="' + item.logo + '" alt="' + item.name + '" style="height:26px; max-width:85px; object-fit:contain;" onerror="this.style.display=\'none\';">';
-    html += '<div><strong style="font-size:12px; color:var(--text);">' + item.name + '</strong><div style="font-size:10px; color:var(--muted);">' + item.sub + '</div></div>';
+    // BU Brand Col (Hanya menampilkan logo, seragam dan selaras)
+    html += '<td style="padding:10px 14px; text-align:center; vertical-align:middle; border-right:1px solid var(--border); width:200px;">';
+    html += '<div style="display:flex; align-items:center; justify-content:center; height:60px; width:100%;">';
+    html += '<img class="' + item.logoClass + '" src="' + item.logo + '" alt="' + item.name + '" title="' + item.name + '" onerror="this.style.display=\'none\'; this.nextElementSibling.style.display=\'block\';">';
+    html += '<span style="display:none; font-size:13px; font-weight:800; color:var(--text);">' + item.name + '</span>';
     html += '</div></td>';
 
     // DK Cols
@@ -23288,11 +23309,10 @@ function renderOdBuTable(inf, ie, sel, tot) {
     // Share & Status
     html += '<td style="padding:8px 10px; text-align:center; font-family:var(--font-mono); border-right:1px solid var(--border); font-weight:700;">' + sharePct + '%</td>';
     html += '<td style="padding:8px 10px; text-align:center; border-right:1px solid var(--border);">' + statusBadge + '</td>';
-    html += '<td style="padding:8px 12px; font-size:11px; color:var(--text); line-height:1.35;">' + item.note + '</td>';
+
     html += '<td style="padding:8px 8px; text-align:center;">';
     html += '<button onclick="setOdSuspendBu(\'' + item.key + '\')" class="btn-refresh" style="font-size:10px; padding:3px 8px; background:' + (isSelected ? '#2563eb' : '#f1f5f9') + '; color:' + (isSelected ? '#ffffff' : '#334155') + '; border:1px solid #cbd5e1;">' + (isSelected ? 'Aktif' : 'Pilih') + '</button>';
     html += '</td>';
-
     html += '</tr>';
   });
 
@@ -23313,7 +23333,7 @@ function renderOdBuTable(inf, ie, sel, tot) {
     var cTotPct = cTotBase > 0 ? (cTotSusp / cTotBase) * 100 : 0;
 
     var footHtml = '<tr style="border-top:2px solid #334155; font-size:11px;">';
-    footHtml += '<td style="padding:10px 14px; text-align:left; border-right:1px solid #475569;">TOTAL KONSOLIDASI BU:</td>';
+    footHtml += '<td style="padding:10px 14px; text-align:center; font-weight:800; border-right:1px solid #475569;">TOTAL KONSOLIDASI BU:</td>';
     footHtml += '<td style="padding:10px 8px; text-align:right;">' + cDkBase.toLocaleString('id-ID') + '</td>';
     footHtml += '<td style="padding:10px 8px; text-align:right; color:#fca5a5;">' + cDkSusp.toLocaleString('id-ID') + '</td>';
     footHtml += '<td style="padding:10px 8px; text-align:right; border-right:2px solid #475569; color:#86efac;">' + cDkPct.toFixed(2) + '%</td>';
@@ -23328,7 +23348,6 @@ function renderOdBuTable(inf, ie, sel, tot) {
 
     footHtml += '<td style="padding:10px; text-align:center;">100%</td>';
     footHtml += '<td style="padding:10px; text-align:center;">' + (cTotPct < 2.0 ? 'AMAN' : (cTotPct <= 5.0 ? 'WASPADA' : 'KRITIS')) + '</td>';
-    footHtml += '<td style="padding:10px 12px; font-weight:normal; font-size:10px; color:#cbd5e1;">Evaluasi menyeluruh performa lintas unit bisnis dengan fokus mitigasi pada Selma DK dan Informa LK.</td>';
     footHtml += '<td style="padding:10px; text-align:center;"><button onclick="setOdSuspendBu(\'' + 'ALL' + '\')" class="btn-refresh" style="font-size:10px; padding:2px 6px; background:#3b82f6; color:#ffffff; border:none;">Semua</button></td>';
     footHtml += '</tr>';
 
