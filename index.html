@@ -1228,30 +1228,10 @@
   }
 
   /* Monitoring OD Suspend BU Table Logos tuned scaling & visual balance */
-  .od-bu-logo-inf {
-    height: 54px;
-    max-width: 165px;
-    padding: 2px 4px;
-    box-sizing: border-box;
-    object-fit: contain;
-    display: block;
-    margin: 0 auto;
-    transition: transform 0.2s ease;
-  }
-  .od-bu-logo-iel {
-    height: 44px;
-    max-width: 175px;
-    padding: 4px 2px;
-    box-sizing: border-box;
-    object-fit: contain;
-    display: block;
-    margin: 0 auto;
-    transition: transform 0.2s ease;
-  }
-  .od-bu-logo-sel {
-    height: 48px;
-    max-width: 155px;
-    padding: 3px 3px;
+  .od-bu-logo-inf, .od-bu-logo-iel, .od-bu-logo-sel {
+    height: 40px;
+    max-width: 150px;
+    padding: 2px;
     box-sizing: border-box;
     object-fit: contain;
     display: block;
@@ -4709,6 +4689,14 @@ PLANNING REPORT</div>
         </div>
         <div class="filter-divider" style="height:26px;"></div>
         <div class="filter-group">
+          <span class="filter-label">Tipe Order</span>
+          <div class="filter-toggle" id="odSuspendOrderTypeToggle">
+            <button class="active" data-ordertype="ALL" onclick="setOdSuspendOrderType('ALL',this)" title="Hitung persentase dari Total Base Order (Reguler + Transit)">ALL</button>
+            <button data-ordertype="REGULER" onclick="setOdSuspendOrderType('REGULER',this)" title="Hitung persentase dari Order Reguler saja">REGULER</button>
+          </div>
+        </div>
+        <div class="filter-divider" style="height:26px;"></div>
+        <div class="filter-group">
           <span class="filter-label">Preset</span>
           <div class="filter-toggle" id="odSuspendPresetToggle">
             <button class="active" onclick="setOdSuspendPreset('all',this)">Semua</button>
@@ -4730,6 +4718,7 @@ PLANNING REPORT</div>
         <span class="badge badge-blue" id="odSuspendInfoScope">📅 Periode: Memuat...</span>
         <span class="badge badge-amber" id="odSuspendInfoArea">Area: ALL</span>
         <span class="badge badge-purple" id="odSuspendInfoBu">🏢 BU: SEMUA UNIT</span>
+        <span class="badge badge-blue" id="odSuspendInfoOrderType" style="background:#f0fdf4; border-color:#86efac; color:#166534; font-weight:700;">📦 Basis: ALL (Reg+Tr)</span>
         <span class="badge badge-muted" id="odSuspendInfoRows">0 Hari Aktif</span>
       </div>
       <div style="display:flex; align-items:center; gap:16px;">
@@ -5131,17 +5120,17 @@ PLANNING REPORT</div>
           </tr>
           <tr style="background:var(--surface2); border-bottom:1px solid var(--border); color:var(--muted); font-size:10px; text-transform:uppercase;">
             <!-- DK -->
-            <th style="padding:6px 8px; text-align:right;">Base Order</th>
+            <th style="padding:6px 8px; text-align:right;" id="odBuThDkBase">Base Order</th>
             <th style="padding:6px 8px; text-align:right; color:#ef4444; font-weight:700;">Suspend</th>
-            <th style="padding:6px 8px; text-align:right; border-right:2px solid var(--border); font-weight:700;">% Susp</th>
+            <th style="padding:6px 8px; text-align:right; border-right:2px solid var(--border); font-weight:700;" id="odBuThDkPct">% Susp</th>
             <!-- LK -->
-            <th style="padding:6px 8px; text-align:right;">Base Order</th>
+            <th style="padding:6px 8px; text-align:right;" id="odBuThLkBase">Base Order</th>
             <th style="padding:6px 8px; text-align:right; color:#ef4444; font-weight:700;">Suspend</th>
-            <th style="padding:6px 8px; text-align:right; border-right:2px solid var(--border); font-weight:700;">% Susp</th>
+            <th style="padding:6px 8px; text-align:right; border-right:2px solid var(--border); font-weight:700;" id="odBuThLkPct">% Susp</th>
             <!-- Total -->
-            <th style="padding:6px 8px; text-align:right;">Total Base</th>
+            <th style="padding:6px 8px; text-align:right;" id="odBuThTotBase">Total Base</th>
             <th style="padding:6px 8px; text-align:right; color:#ef4444; font-weight:700;">Total Susp</th>
-            <th style="padding:6px 8px; text-align:right; border-right:1px solid var(--border); font-weight:800;">% Susp</th>
+            <th style="padding:6px 8px; text-align:right; border-right:1px solid var(--border); font-weight:800;" id="odBuThTotPct">% Susp</th>
           </tr>
         </thead>
         <tbody id="odBuTableBody">
@@ -5254,16 +5243,16 @@ PLANNING REPORT</div>
             <th style="padding:6px 8px; text-align:right;">Reguler</th>
             <th style="padding:6px 8px; text-align:right;">Transit</th>
             <th style="padding:6px 8px; text-align:right; color:#ef4444; font-weight:700;">Suspend</th>
-            <th style="padding:6px 8px; text-align:right; border-right:2px solid var(--border); font-weight:700;">% Susp</th>
+            <th style="padding:6px 8px; text-align:right; border-right:2px solid var(--border); font-weight:700;" id="odMainThDkPct">% Susp</th>
             <!-- LK sub-cols -->
             <th style="padding:6px 8px; text-align:right;">Reguler</th>
             <th style="padding:6px 8px; text-align:right;">Transit</th>
             <th style="padding:6px 8px; text-align:right; color:#ef4444; font-weight:700;">Suspend</th>
-            <th style="padding:6px 8px; text-align:right; border-right:2px solid var(--border); font-weight:700;">% Susp</th>
+            <th style="padding:6px 8px; text-align:right; border-right:2px solid var(--border); font-weight:700;" id="odMainThLkPct">% Susp</th>
             <!-- Total sub-cols -->
-            <th style="padding:6px 8px; text-align:right;">Total Base</th>
+            <th style="padding:6px 8px; text-align:right;" id="odMainThTotBase">Total Base</th>
             <th style="padding:6px 8px; text-align:right; color:#ef4444; font-weight:700;">Suspend</th>
-            <th style="padding:6px 8px; text-align:right; border-right:1px solid var(--border); font-weight:800;">% Susp</th>
+            <th style="padding:6px 8px; text-align:right; border-right:1px solid var(--border); font-weight:800;" id="odMainThTotPct">% Susp</th>
           </tr>
         </thead>
         <tbody id="odSuspendTableBody">
@@ -22598,8 +22587,9 @@ var allOdSuspendSelmaData = [];
 var OD_SUSPEND_STATE = {
   start: '',
   end: '',
-  area: 'ALL', // 'ALL', 'DK', 'LK'
-  bu: 'ALL',   // 'ALL', 'INFORMA', 'IE', 'SELMA'
+  area: 'ALL',      // 'ALL', 'DK', 'LK'
+  bu: 'ALL',        // 'ALL', 'INFORMA', 'IE', 'SELMA'
+  orderType: 'ALL', // 'ALL' (Reguler + Transit) or 'REGULER' (Reguler only)
   preset: 'all',
   searchQuery: '',
   statusFilter: 'ALL',
@@ -22608,7 +22598,6 @@ var OD_SUSPEND_STATE = {
 };
 
 var odSuspendBuCompareChartInstance = null;
-
 var odSuspendTrendChartInstance = null;
 var odSuspendCompChartInstance = null;
 var odSuspendAreaCompareChartInstance = null;
@@ -22646,34 +22635,79 @@ function parseOdSuspendSheetData(rows) {
       return isNaN(n) ? 0 : n;
     }
 
-    var dkReg = parseNum(r[dateColIdx + 1]);
-    var dkTransit = parseNum(r[dateColIdx + 2]);
-    var dkSusp = parseNum(r[dateColIdx + 3]);
-    var dkPctRaw = String(r[dateColIdx + 4] || '').trim();
+    // Adaptive detection of column structure:
+    // With new column "%SUSPEND REG":
+    // dateColIdx + 1: dkReg
+    // dateColIdx + 2: dkTransit
+    // dateColIdx + 3: dkSusp
+    // dateColIdx + 4: dkPctRegRaw
+    // dateColIdx + 5: dkPctAllRaw
+    // dateColIdx + 6: lkReg
+    // dateColIdx + 7: lkTransit
+    // dateColIdx + 8: lkSusp
+    // dateColIdx + 9: lkPctRegRaw
+    // dateColIdx + 10: lkPctAllRaw
+    // dateColIdx + 11: totPctAllRaw
+    // dateColIdx + 12: totPctRegRaw
+    var col4Str = String(r[dateColIdx + 4] || '').trim();
+    var col5Str = String(r[dateColIdx + 5] || '').trim();
+    var hasRegCol = (col4Str.indexOf('%') !== -1 || col4Str.indexOf('#DIV/0') !== -1) &&
+                    (col5Str.indexOf('%') !== -1 || col5Str.indexOf('#DIV/0') !== -1);
 
-    var lkReg = parseNum(r[dateColIdx + 5]);
-    var lkTransit = parseNum(r[dateColIdx + 6]);
-    var lkSusp = parseNum(r[dateColIdx + 7]);
-    var lkPctRaw = String(r[dateColIdx + 8] || '').trim();
+    var dkReg = 0, dkTransit = 0, dkSusp = 0;
+    var lkReg = 0, lkTransit = 0, lkSusp = 0;
+    var dkPctRegRaw = '0.00%', dkPctAllRaw = '0.00%';
+    var lkPctRegRaw = '0.00%', lkPctAllRaw = '0.00%';
+    var totPctAllRaw = '0.00%', totPctRegRaw = '0.00%';
 
-    var totPctRaw = String(r[dateColIdx + 9] || '').trim();
+    if (hasRegCol) {
+      dkReg = parseNum(r[dateColIdx + 1]);
+      dkTransit = parseNum(r[dateColIdx + 2]);
+      dkSusp = parseNum(r[dateColIdx + 3]);
+      dkPctRegRaw = col4Str;
+      dkPctAllRaw = col5Str;
+
+      lkReg = parseNum(r[dateColIdx + 6]);
+      lkTransit = parseNum(r[dateColIdx + 7]);
+      lkSusp = parseNum(r[dateColIdx + 8]);
+      lkPctRegRaw = String(r[dateColIdx + 9] || '').trim();
+      lkPctAllRaw = String(r[dateColIdx + 10] || '').trim();
+
+      totPctAllRaw = String(r[dateColIdx + 11] || '').trim();
+      totPctRegRaw = String(r[dateColIdx + 12] || '').trim();
+    } else {
+      dkReg = parseNum(r[dateColIdx + 1]);
+      dkTransit = parseNum(r[dateColIdx + 2]);
+      dkSusp = parseNum(r[dateColIdx + 3]);
+      dkPctAllRaw = col4Str;
+
+      lkReg = parseNum(r[dateColIdx + 5]);
+      lkTransit = parseNum(r[dateColIdx + 6]);
+      lkSusp = parseNum(r[dateColIdx + 7]);
+      lkPctAllRaw = String(r[dateColIdx + 8] || '').trim();
+
+      totPctAllRaw = String(r[dateColIdx + 9] || '').trim();
+    }
 
     var dkBase = dkReg + dkTransit;
     var dkTotal = dkBase + dkSusp;
-    var dkPct = dkBase > 0 ? (dkSusp / dkBase) * 100 : 0;
+    var dkPctAll = dkBase > 0 ? (dkSusp / dkBase) * 100 : 0;
+    var dkPctReg = dkReg > 0 ? (dkSusp / dkReg) * 100 : 0;
 
     var lkBase = lkReg + lkTransit;
     var lkTotal = lkBase + lkSusp;
-    var lkPct = lkBase > 0 ? (lkSusp / lkBase) * 100 : 0;
+    var lkPctAll = lkBase > 0 ? (lkSusp / lkBase) * 100 : 0;
+    var lkPctReg = lkReg > 0 ? (lkSusp / lkReg) * 100 : 0;
 
     var totReg = dkReg + lkReg;
     var totTransit = dkTransit + lkTransit;
     var totSusp = dkSusp + lkSusp;
     var totBase = totReg + totTransit;
     var totOrders = totBase + totSusp;
-    var totPct = totBase > 0 ? (totSusp / totBase) * 100 : 0;
+    var totPctAll = totBase > 0 ? (totSusp / totBase) * 100 : 0;
+    var totPctReg = totReg > 0 ? (totSusp / totReg) * 100 : 0;
 
-    var hasValidData = (totOrders > 0) && (dkPctRaw.indexOf('#DIV/0') === -1 || totPctRaw.indexOf('#DIV/0') === -1);
+    var hasValidData = (totOrders > 0) && (dkPctAllRaw.indexOf('#DIV/0') === -1 || totPctAllRaw.indexOf('#DIV/0') === -1);
 
     var y = dObj.getFullYear();
     var m = String(dObj.getMonth() + 1).padStart(2, '0');
@@ -22689,22 +22723,33 @@ function parseOdSuspendSheetData(rows) {
       dkSusp: dkSusp,
       dkBase: dkBase,
       dkTotal: dkTotal,
-      dkPct: dkPct,
-      dkPctRaw: dkPctRaw.indexOf('#DIV/0') !== -1 ? '0.00%' : dkPctRaw,
+      dkPct: dkPctAll,
+      dkPctAll: dkPctAll,
+      dkPctReg: dkPctReg,
+      dkPctRaw: dkPctAllRaw.indexOf('#DIV/0') !== -1 ? '0.00%' : dkPctAllRaw,
+      dkPctRegRaw: dkPctRegRaw.indexOf('#DIV/0') !== -1 ? '0.00%' : dkPctRegRaw,
+
       lkReg: lkReg,
       lkTransit: lkTransit,
       lkSusp: lkSusp,
       lkBase: lkBase,
       lkTotal: lkTotal,
-      lkPct: lkPct,
-      lkPctRaw: lkPctRaw.indexOf('#DIV/0') !== -1 ? '0.00%' : lkPctRaw,
+      lkPct: lkPctAll,
+      lkPctAll: lkPctAll,
+      lkPctReg: lkPctReg,
+      lkPctRaw: lkPctAllRaw.indexOf('#DIV/0') !== -1 ? '0.00%' : lkPctAllRaw,
+      lkPctRegRaw: lkPctRegRaw.indexOf('#DIV/0') !== -1 ? '0.00%' : lkPctRegRaw,
+
       totReg: totReg,
       totTransit: totTransit,
       totSusp: totSusp,
       totBase: totBase,
       totOrders: totOrders,
-      totPct: totPct,
-      totPctRaw: totPctRaw.indexOf('#DIV/0') !== -1 ? '0.00%' : totPctRaw,
+      totPct: totPctAll,
+      totPctAll: totPctAll,
+      totPctReg: totPctReg,
+      totPctRaw: totPctAllRaw.indexOf('#DIV/0') !== -1 ? '0.00%' : totPctAllRaw,
+      totPctRegRaw: totPctRegRaw.indexOf('#DIV/0') !== -1 ? '0.00%' : totPctRegRaw,
       hasValidData: hasValidData
     });
   }
@@ -22753,6 +22798,17 @@ function setOdSuspendBu(bu, btn) {
   if (parent) {
     parent.querySelectorAll('button').forEach(function(b) { b.classList.remove('active'); });
     var activeBtn = btn || parent.querySelector('button[data-bu="' + bu + '"]');
+    if (activeBtn) activeBtn.classList.add('active');
+  }
+  renderOdSuspendPage();
+}
+
+function setOdSuspendOrderType(orderType, btn) {
+  OD_SUSPEND_STATE.orderType = orderType;
+  var parent = document.getElementById('odSuspendOrderTypeToggle');
+  if (parent) {
+    parent.querySelectorAll('button').forEach(function(b) { b.classList.remove('active'); });
+    var activeBtn = btn || parent.querySelector('button[data-ordertype="' + orderType + '"]');
     if (activeBtn) activeBtn.classList.add('active');
   }
   renderOdSuspendPage();
@@ -22956,9 +23012,11 @@ function calculateBuSummary(dataset, sStr, eStr) {
     lkSusp += row.lkSusp;
   });
 
-  var dkBase = dkReg + dkTr;
-  var lkBase = lkReg + lkTr;
-  var totBase = dkBase + lkBase;
+  var isRegOnly = (OD_SUSPEND_STATE.orderType === 'REGULER');
+  var dkBase = isRegOnly ? dkReg : (dkReg + dkTr);
+  var lkBase = isRegOnly ? lkReg : (lkReg + lkTr);
+  var totReg = dkReg + lkReg;
+  var totBase = isRegOnly ? totReg : (totReg + dkTr + lkTr);
   var totSusp = dkSusp + lkSusp;
   var totOrders = totBase + totSusp;
   var dkPct = dkBase > 0 ? (dkSusp / dkBase) * 100 : 0;
@@ -22969,7 +23027,7 @@ function calculateBuSummary(dataset, sStr, eStr) {
   return {
     dkReg: dkReg, dkTr: dkTr, dkSusp: dkSusp, dkBase: dkBase, dkPct: dkPct,
     lkReg: lkReg, lkTr: lkTr, lkSusp: lkSusp, lkBase: lkBase, lkPct: lkPct,
-    totReg: dkReg + lkReg, totTr: dkTr + lkTr, totSusp: totSusp,
+    totReg: totReg, totTr: dkTr + lkTr, totSusp: totSusp,
     totBase: totBase, totOrders: totOrders, totPct: totPct, cleanRate: cleanRate,
     daysCount: filtered.length
   };
@@ -23069,15 +23127,16 @@ function renderOdSuspendPage() {
     }
   });
 
-  var sumDkBase = sumDkReg + sumDkTransit;
-  var sumLkBase = sumLkReg + sumLkTransit;
+  var isRegOnly = (OD_SUSPEND_STATE.orderType === 'REGULER');
+  var sumDkBase = isRegOnly ? sumDkReg : (sumDkReg + sumDkTransit);
+  var sumLkBase = isRegOnly ? sumLkReg : (sumLkReg + sumLkTransit);
   var dkPct = sumDkBase > 0 ? (sumDkSusp / sumDkBase) * 100 : 0;
   var lkPct = sumLkBase > 0 ? (sumLkSusp / sumLkBase) * 100 : 0;
 
   var totalReg = sumDkReg + sumLkReg;
   var totalTransit = sumDkTransit + sumLkTransit;
   var totalSusp = sumDkSusp + sumLkSusp;
-  var totalBase = totalReg + totalTransit;
+  var totalBase = isRegOnly ? totalReg : (totalReg + totalTransit);
   var totalOrders = totalBase + totalSusp;
   var totalPct = totalBase > 0 ? (totalSusp / totalBase) * 100 : 0;
 
@@ -23815,18 +23874,21 @@ function renderOdSuspendTable(data) {
 
   var q = (OD_SUSPEND_STATE.searchQuery || '').toLowerCase().trim();
   var stFilter = OD_SUSPEND_STATE.statusFilter;
+  var isRegOnly = (OD_SUSPEND_STATE.orderType === 'REGULER');
 
   var rowsToDisplay = data.filter(function(r) {
+    var rTotBase = isRegOnly ? r.totReg : r.totBase;
+    var rTotPct = rTotBase > 0 ? (r.totSusp / rTotBase) * 100 : 0;
     if (q) {
       var dMatch = r.dateStr.toLowerCase().indexOf(q) !== -1 || r.isoDate.indexOf(q) !== -1;
       if (!dMatch) return false;
     }
     if (stFilter === 'NORMAL') {
-      return r.totPct < 2.0;
+      return rTotPct < 2.0;
     } else if (stFilter === 'WARNING') {
-      return r.totPct >= 2.0 && r.totPct <= 5.0;
+      return rTotPct >= 2.0 && rTotPct <= 5.0;
     } else if (stFilter === 'CRITICAL') {
-      return r.totPct > 5.0;
+      return rTotPct > 5.0;
     }
     return true;
   });
@@ -23849,21 +23911,29 @@ function renderOdSuspendTable(data) {
     sumLkReg += row.lkReg;
     sumLkTransit += row.lkTransit;
     sumLkSusp += row.lkSusp;
-    sumTotBase += row.totBase;
+
+    var rDkBase = isRegOnly ? row.dkReg : row.dkBase;
+    var rLkBase = isRegOnly ? row.lkReg : row.lkBase;
+    var rTotBase = isRegOnly ? row.totReg : row.totBase;
+    var rDkPct = rDkBase > 0 ? (row.dkSusp / rDkBase) * 100 : 0;
+    var rLkPct = rLkBase > 0 ? (row.lkSusp / rLkBase) * 100 : 0;
+    var rTotPct = rTotBase > 0 ? (row.totSusp / rTotBase) * 100 : 0;
+
+    sumTotBase += rTotBase;
     sumTotSusp += row.totSusp;
 
     var statusBadge = '';
-    if (row.totPct < 2.0) {
+    if (rTotPct < 2.0) {
       statusBadge = '<span class="badge badge-green" style="font-size:10px; padding:2px 8px;">Aman</span>';
-    } else if (row.totPct <= 5.0) {
+    } else if (rTotPct <= 5.0) {
       statusBadge = '<span class="badge badge-amber" style="font-size:10px; padding:2px 8px;">Waspada</span>';
     } else {
       statusBadge = '<span class="badge badge-red" style="font-size:10px; padding:2px 8px;">Kritis</span>';
     }
 
-    var dkPctBadge = row.dkPct > 5.0 ? 'color:#ef4444; font-weight:800;' : (row.dkPct > 2.0 ? 'color:#d97706; font-weight:700;' : 'color:#16a34a;');
-    var lkPctBadge = row.lkPct > 5.0 ? 'color:#ef4444; font-weight:800;' : (row.lkPct > 2.0 ? 'color:#d97706; font-weight:700;' : 'color:#16a34a;');
-    var totPctBadge = row.totPct > 5.0 ? 'color:#ef4444; font-weight:800;' : (row.totPct > 2.0 ? 'color:#d97706; font-weight:700;' : 'color:#16a34a;');
+    var dkPctBadge = rDkPct > 5.0 ? 'color:#ef4444; font-weight:800;' : (rDkPct > 2.0 ? 'color:#d97706; font-weight:700;' : 'color:#16a34a;');
+    var lkPctBadge = rLkPct > 5.0 ? 'color:#ef4444; font-weight:800;' : (rLkPct > 2.0 ? 'color:#d97706; font-weight:700;' : 'color:#16a34a;');
+    var totPctBadge = rTotPct > 5.0 ? 'color:#ef4444; font-weight:800;' : (rTotPct > 2.0 ? 'color:#d97706; font-weight:700;' : 'color:#16a34a;');
 
     html += '<tr style="border-bottom:1px solid var(--border); transition:background .15s;" onmouseover="this.style.background=\'rgba(37,99,235,0.04)\'" onmouseout="this.style.background=\'transparent\'">';
     html += '<td style="padding:8px 8px; text-align:center; font-family:var(--font-mono); color:var(--muted); border-right:1px solid var(--border);">' + (idx + 1) + '</td>';
@@ -23873,18 +23943,18 @@ function renderOdSuspendTable(data) {
     html += '<td style="padding:8px 8px; text-align:right; font-family:var(--font-mono);">' + row.dkReg.toLocaleString('id-ID') + '</td>';
     html += '<td style="padding:8px 8px; text-align:right; font-family:var(--font-mono);">' + row.dkTransit.toLocaleString('id-ID') + '</td>';
     html += '<td style="padding:8px 8px; text-align:right; font-family:var(--font-mono); font-weight:700; color:' + (row.dkSusp > 0 ? '#ef4444' : 'var(--muted)') + ';">' + row.dkSusp.toLocaleString('id-ID') + '</td>';
-    html += '<td style="padding:8px 8px; text-align:right; font-family:var(--font-mono); border-right:2px solid var(--border); ' + dkPctBadge + '">' + row.dkPct.toFixed(2) + '%</td>';
+    html += '<td style="padding:8px 8px; text-align:right; font-family:var(--font-mono); border-right:2px solid var(--border); ' + dkPctBadge + '">' + rDkPct.toFixed(2) + '%</td>';
 
     // LK
     html += '<td style="padding:8px 8px; text-align:right; font-family:var(--font-mono);">' + row.lkReg.toLocaleString('id-ID') + '</td>';
     html += '<td style="padding:8px 8px; text-align:right; font-family:var(--font-mono);">' + row.lkTransit.toLocaleString('id-ID') + '</td>';
     html += '<td style="padding:8px 8px; text-align:right; font-family:var(--font-mono); font-weight:700; color:' + (row.lkSusp > 0 ? '#ef4444' : 'var(--muted)') + ';">' + row.lkSusp.toLocaleString('id-ID') + '</td>';
-    html += '<td style="padding:8px 8px; text-align:right; font-family:var(--font-mono); border-right:2px solid var(--border); ' + lkPctBadge + '">' + row.lkPct.toFixed(2) + '%</td>';
+    html += '<td style="padding:8px 8px; text-align:right; font-family:var(--font-mono); border-right:2px solid var(--border); ' + lkPctBadge + '">' + rLkPct.toFixed(2) + '%</td>';
 
     // Total
-    html += '<td style="padding:8px 8px; text-align:right; font-family:var(--font-mono); font-weight:700;">' + row.totBase.toLocaleString('id-ID') + '</td>';
+    html += '<td style="padding:8px 8px; text-align:right; font-family:var(--font-mono); font-weight:700;">' + rTotBase.toLocaleString('id-ID') + '</td>';
     html += '<td style="padding:8px 8px; text-align:right; font-family:var(--font-mono); font-weight:800; color:' + (row.totSusp > 0 ? '#ef4444' : 'var(--muted)') + ';">' + row.totSusp.toLocaleString('id-ID') + '</td>';
-    html += '<td style="padding:8px 8px; text-align:right; font-family:var(--font-mono); border-right:1px solid var(--border); ' + totPctBadge + '">' + row.totPct.toFixed(2) + '%</td>';
+    html += '<td style="padding:8px 8px; text-align:right; font-family:var(--font-mono); border-right:1px solid var(--border); ' + totPctBadge + '">' + rTotPct.toFixed(2) + '%</td>';
 
     // Status
     html += '<td style="padding:8px 10px; text-align:center;">' + statusBadge + '</td>';
@@ -23895,8 +23965,8 @@ function renderOdSuspendTable(data) {
 
   // Table Footer
   if (tfoot) {
-    var sumDkBase = sumDkReg + sumDkTransit;
-    var sumLkBase = sumLkReg + sumLkTransit;
+    var sumDkBase = isRegOnly ? sumDkReg : (sumDkReg + sumDkTransit);
+    var sumLkBase = isRegOnly ? sumLkReg : (sumLkReg + sumLkTransit);
     var avgDkPct = sumDkBase > 0 ? (sumDkSusp / sumDkBase) * 100 : 0;
     var avgLkPct = sumLkBase > 0 ? (sumLkSusp / sumLkBase) * 100 : 0;
     var avgTotPct = sumTotBase > 0 ? (sumTotSusp / sumTotBase) * 100 : 0;
