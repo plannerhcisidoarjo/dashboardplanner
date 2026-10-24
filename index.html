@@ -25839,6 +25839,7 @@ function exportOdSuspendCsv() {
     wilayah: 'ALL',
     metric: 'CBM', // CBM | OD
     monthlySeries: 'ALL', // ALL | REGULAR | HUB
+    trendGranularity: 'MONTHLY', // MONTHLY | DAILY | BOTH
 
     // Sub-tab & Daily Table Controls
     activeTab: 'monthly', // monthly | category | daily | regional
@@ -26473,20 +26474,34 @@ function exportOdSuspendCsv() {
       '  </div>' +
       '  <div class="ods-insights-grid" id="odsExecutiveInsights"></div>' +
       '</div>' +
-      /* 4. Monthly Performance & Daily Average Chart */
+      /* 4. Unified Trend Performance Chart (Monthly / Daily Toggle) */
       '<div class="ods-section">' +
       '  <div class="ods-section-head">' +
       '    <div>' +
-      '      <div class="ods-section-title" id="odsMonthlyChartTitle">Tren Pengiriman Per Bulan: Regular vs Hub Transit</div>' +
-      '      <div class="ods-section-sub">Komparasi kontribusi bulanan OD Regular (Data H6) dan Hub Transit (GRW &amp; Customer)</div>' +
+      '      <div class="ods-section-title" id="odsMonthlyChartTitle">Tren Pengiriman OD Shipped (Regular vs Hub Transit)</div>' +
+      '      <div class="ods-section-sub">Komparasi tren pengiriman harian dan bulanan OD Regular (Data H6) serta Hub Transit</div>' +
       '    </div>' +
-      '    <div class="ods-segmented" id="odsMonthlySeriesToggle">' +
-      '      <button type="button" class="ods-seg-btn active" data-series="ALL" onclick="window.odsSetMonthlySeries(\'ALL\')">Semua</button>' +
-      '      <button type="button" class="ods-seg-btn" data-series="REGULAR" onclick="window.odsSetMonthlySeries(\'REGULAR\')">Regular</button>' +
-      '      <button type="button" class="ods-seg-btn" data-series="HUB" onclick="window.odsSetMonthlySeries(\'HUB\')">Hub (GRW+Cust)</button>' +
+      '    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">' +
+      '      <div class="ods-field" style="margin:0;">' +
+      '        <span class="ods-field-label">Tampilan Tren:</span>' +
+      '        <div class="ods-segmented" id="odsTrendGranularityToggle">' +
+      '          <button type="button" class="ods-seg-btn active" data-granularity="MONTHLY" onclick="window.odsSetTrendGranularity(\'MONTHLY\')">Bulanan</button>' +
+      '          <button type="button" class="ods-seg-btn" data-granularity="DAILY" onclick="window.odsSetTrendGranularity(\'DAILY\')">Harian</button>' +
+      '          <button type="button" class="ods-seg-btn" data-granularity="BOTH" onclick="window.odsSetTrendGranularity(\'BOTH\')">Semua (Harian &amp; Bulanan)</button>' +
+      '        </div>' +
+      '      </div>' +
+      '      <div class="ods-field" style="margin:0;">' +
+      '        <span class="ods-field-label">Kategori:</span>' +
+      '        <div class="ods-segmented" id="odsMonthlySeriesToggle">' +
+      '          <button type="button" class="ods-seg-btn active" data-series="ALL" onclick="window.odsSetMonthlySeries(\'ALL\')">Semua</button>' +
+      '          <button type="button" class="ods-seg-btn" data-series="REGULAR" onclick="window.odsSetMonthlySeries(\'REGULAR\')">Regular</button>' +
+      '          <button type="button" class="ods-seg-btn" data-series="HUB" onclick="window.odsSetMonthlySeries(\'HUB\')">Hub (GRW+Cust)</button>' +
+      '        </div>' +
+      '      </div>' +
       '    </div>' +
       '  </div>' +
-      '  <div class="ods-chart-box"><canvas id="odsMonthlyChart"></canvas></div>' +
+      '  <div id="odsMonthlyChartWrap" class="ods-chart-box"><canvas id="odsMonthlyChart"></canvas></div>' +
+      '  <div id="odsDailyChartWrap" class="ods-chart-box" style="display:none;margin-top:16px;"><canvas id="odsDailyChart"></canvas></div>' +
       '</div>' +
       /* 5. Split Charts: Category Breakdown & Day-of-Week Load Profile */
       '<div class="ods-charts-split">' +
@@ -26508,16 +26523,6 @@ function exportOdSuspendCsv() {
       '    </div>' +
       '    <div class="ods-chart-box-sm"><canvas id="odsDowChart"></canvas></div>' +
       '  </div>' +
-      '</div>' +
-      /* 6. Daily Trend + 7-Day Moving Average Chart */
-      '<div class="ods-section">' +
-      '  <div class="ods-section-head">' +
-      '    <div>' +
-      '      <div class="ods-section-title">Tren Harian OD Shipped &amp; Rata-Rata Bergerak 7 Hari (MA-7)</div>' +
-      '      <div class="ods-section-sub">Fluktuasi pengiriman harian OD Regular vs Hub Transit serta garis tren Moving Average 7-Hari</div>' +
-      '    </div>' +
-      '  </div>' +
-      '  <div class="ods-chart-box"><canvas id="odsDailyChart"></canvas></div>' +
       '</div>' +
       /* 6.5 Executive Rankings: Top Wilayah, Top Per Hari, Hari & Bulan Tersibuk */
       '<div class="ods-section">' +
@@ -26630,6 +26635,7 @@ function exportOdSuspendCsv() {
     toggleButtons('odsAreaToggle', 'data-area', ODS_STATE.area);
     toggleButtons('odsDetailTabs', 'data-tab', ODS_STATE.activeTab);
     toggleButtons('odsMonthlySeriesToggle', 'data-series', ODS_STATE.monthlySeries);
+    toggleButtons('odsTrendGranularityToggle', 'data-granularity', ODS_STATE.trendGranularity || 'MONTHLY');
   }
 
   function computeAnalytics() {
@@ -27758,51 +27764,76 @@ function exportOdSuspendCsv() {
       var dLabels = comp.dailyAsc.map(function (d) {
         return d.date.slice(8, 10) + '/' + d.date.slice(5, 7);
       });
-      var dReg = comp.dailyAsc.map(function (d) {
-        return isCbm ? Math.round(d.regCbm * 10) / 10 : d.regOrders;
-      });
-      var dHub = comp.dailyAsc.map(function (d) {
-        return isCbm
-          ? Math.round((d.hubGrwCbm + d.hubCustCbm) * 10) / 10
-          : d.hubGrwOrders + d.hubCustOrders;
-      });
-      var dMa7 = comp.dailyAsc.map(function (d) {
-        return isCbm ? Math.round(d.ma7Cbm * 10) / 10 : Math.round(d.ma7Orders);
+
+      var dDatasets = [];
+
+      if (seriesChoice === 'ALL' || seriesChoice === 'REGULAR') {
+        dDatasets.push({
+          type: 'bar',
+          label: 'OD Regular GRW (H6)',
+          data: comp.dailyAsc.map(function (d) {
+            return isCbm ? Math.round((d.regGrwCbm || 0) * 10) / 10 : (d.regGrwOrders || 0);
+          }),
+          backgroundColor: '#1d4ed8',
+          stack: 'dayReg',
+          order: 2,
+        });
+        dDatasets.push({
+          type: 'bar',
+          label: 'OD Regular Customer (H6)',
+          data: comp.dailyAsc.map(function (d) {
+            return isCbm ? Math.round((d.regCustCbm || 0) * 10) / 10 : (d.regCustOrders || 0);
+          }),
+          backgroundColor: '#60a5fa',
+          borderRadius: { topLeft: 4, topRight: 4 },
+          stack: 'dayReg',
+          order: 2,
+        });
+      }
+
+      if (seriesChoice === 'ALL' || seriesChoice === 'HUB') {
+        dDatasets.push({
+          type: 'bar',
+          label: 'Hub Transit GRW (Hub)',
+          data: comp.dailyAsc.map(function (d) {
+            return isCbm ? Math.round((d.hubGrwCbm || 0) * 10) / 10 : (d.hubGrwOrders || 0);
+          }),
+          backgroundColor: '#0d9488',
+          stack: 'dayHub',
+          order: 2,
+        });
+        dDatasets.push({
+          type: 'bar',
+          label: 'Hub Transit Customer (Hub Cust)',
+          data: comp.dailyAsc.map(function (d) {
+            return isCbm ? Math.round((d.hubCustCbm || 0) * 10) / 10 : (d.hubCustOrders || 0);
+          }),
+          backgroundColor: '#7c3aed',
+          borderRadius: { topLeft: 4, topRight: 4 },
+          stack: 'dayHub',
+          order: 2,
+        });
+      }
+
+      dDatasets.push({
+        type: 'line',
+        label: 'Moving Average 7-Hari (MA-7)',
+        data: comp.dailyAsc.map(function (d) {
+          return isCbm ? Math.round(d.ma7Cbm * 10) / 10 : Math.round(d.ma7Orders);
+        }),
+        borderColor: '#dc2626',
+        borderWidth: 2,
+        pointRadius: 0,
+        pointHoverRadius: 4,
+        tension: 0.3,
+        fill: false,
+        order: 1,
       });
 
       charts.daily = new window.Chart(dCanvas.getContext('2d'), {
         data: {
           labels: dLabels,
-          datasets: [
-            {
-              type: 'bar',
-              label: 'OD Regular (H6)',
-              data: dReg,
-              backgroundColor: 'rgba(37, 99, 235, 0.78)',
-              stack: 'day',
-              order: 2,
-            },
-            {
-              type: 'bar',
-              label: 'Hub Transit (Hub + Hub Cust)',
-              data: dHub,
-              backgroundColor: 'rgba(13, 148, 136, 0.85)',
-              stack: 'day',
-              order: 2,
-            },
-            {
-              type: 'line',
-              label: 'Moving Average 7-Hari (MA-7)',
-              data: dMa7,
-              borderColor: '#dc2626',
-              borderWidth: 2,
-              pointRadius: 0,
-              pointHoverRadius: 4,
-              tension: 0.3,
-              fill: false,
-              order: 1,
-            },
-          ],
+          datasets: dDatasets,
         },
         options: {
           responsive: true,
@@ -28390,6 +28421,30 @@ function exportOdSuspendCsv() {
 
   window.odsSetMonthlySeries = function (series) {
     ODS_STATE.monthlySeries = series || 'ALL';
+    syncFilterControls();
+    if (ODS_STATE.lastComputed) {
+      renderAllCharts(ODS_STATE.lastComputed);
+    }
+  };
+
+  window.odsSetTrendGranularity = function (gran) {
+    ODS_STATE.trendGranularity = gran || 'MONTHLY';
+    var mWrap = document.getElementById('odsMonthlyChartWrap');
+    var dWrap = document.getElementById('odsDailyChartWrap');
+
+    if (mWrap && dWrap) {
+      if (gran === 'MONTHLY') {
+        mWrap.style.display = 'block';
+        dWrap.style.display = 'none';
+      } else if (gran === 'DAILY') {
+        mWrap.style.display = 'none';
+        dWrap.style.display = 'block';
+      } else {
+        mWrap.style.display = 'block';
+        dWrap.style.display = 'block';
+      }
+    }
+
     syncFilterControls();
     if (ODS_STATE.lastComputed) {
       renderAllCharts(ODS_STATE.lastComputed);
