@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<base target="_top">
+<base target="_self">
+<meta name="referrer" content="no-referrer">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ORDER FULFILLMENT & PLANNING REPORT · PLANNER HCI</title>
@@ -1229,8 +1230,9 @@
 
   /* Monitoring OD Suspend BU Table Logos tuned scaling & visual balance */
   .od-bu-logo-inf, .od-bu-logo-iel, .od-bu-logo-sel {
-    height: 40px;
-    max-width: 150px;
+    height: 58px;
+    max-width: 190px;
+    width: 100%;
     padding: 2px;
     box-sizing: border-box;
     object-fit: contain;
@@ -3312,6 +3314,7 @@ body.is-fullscreen {
   }
 }
 </style>
+  <link rel="stylesheet" href="/od-shipped.css">
 </head>
 <body>
 
@@ -3355,6 +3358,10 @@ PLANNING REPORT</div>
       <div id="ni-sla" class="ni" onclick="navTo('sla')">
         <span class="ni-icon">⏱</span>
         <span class="ni-text">SLA &amp; OD Suspend</span>
+      </div>
+      <div id="ni-od-shipped" class="ni" onclick="navTo('od-shipped')">
+        <span class="ni-icon">📦</span>
+        <span class="ni-text">Total OD Shipped</span>
       </div>
       <div id="ni-fulfillment-armada" class="ni" onclick="navTo('fulfillment-armada')">
         <span class="ni-icon">🚚</span>
@@ -6770,6 +6777,9 @@ PLANNING REPORT</div>
     </div>
   </div>
 </div>
+
+<!-- PAGE: TOTAL OD SHIPPED & HUB TRANSIT -->
+<div id="pg-od-shipped" class="pg"></div>
 
 <!-- Modal for Top Destinasi -->
 <div id="topDestModal" class="sla-modal">
@@ -23345,7 +23355,7 @@ function renderOdBuTable(inf, ie, sel, tot) {
     html += '<tr style="border-bottom:1px solid var(--border); ' + rowBg + '">';
     // BU Brand Col (Hanya menampilkan logo, seragam dan selaras)
     html += '<td style="padding:10px 14px; text-align:center; vertical-align:middle; border-right:1px solid var(--border); width:200px;">';
-    html += '<div style="display:flex; align-items:center; justify-content:center; height:60px; width:100%;">';
+    html += '<div style="display:flex; align-items:center; justify-content:center; height:66px; width:100%;">';
     html += '<img class="' + item.logoClass + '" src="' + item.logo + '" alt="' + item.name + '" title="' + item.name + '" onerror="this.style.display=\'none\'; this.nextElementSibling.style.display=\'block\';">';
     html += '<span style="display:none; font-size:13px; font-weight:800; color:var(--text);">' + item.name + '</span>';
     html += '</div></td>';
@@ -24216,5 +24226,7 @@ function exportOdSuspendCsv() {
   </a>
 </div>
 
+  <script src="/dashboard-data-fix.js"></script>
+  <script src="/od-shipped.js"></script>
 </body>
 </html>
