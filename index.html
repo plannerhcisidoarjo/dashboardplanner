@@ -25859,6 +25859,7 @@ function exportOdSuspendCsv() {
 
   var charts = {
     monthly: null,
+    quarterly: null,
     category: null,
     dow: null,
     daily: null,
@@ -26474,20 +26475,21 @@ function exportOdSuspendCsv() {
       '  </div>' +
       '  <div class="ods-insights-grid" id="odsExecutiveInsights"></div>' +
       '</div>' +
-      /* 4. Unified Trend Performance Chart (Monthly / Daily Toggle) */
+      /* 4. Unified Trend Performance Chart (Monthly / Quarterly / Daily Toggle) */
       '<div class="ods-section">' +
       '  <div class="ods-section-head">' +
       '    <div>' +
       '      <div class="ods-section-title" id="odsMonthlyChartTitle">Tren Pengiriman OD Shipped (Regular vs Hub Transit)</div>' +
-      '      <div class="ods-section-sub">Komparasi tren pengiriman harian dan bulanan OD Regular (Data H6) serta Hub Transit</div>' +
+      '      <div class="ods-section-sub">Komparasi tren pengiriman harian, bulanan, dan kuartalan OD Regular (Data H6) serta Hub Transit</div>' +
       '    </div>' +
       '    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">' +
       '      <div class="ods-field" style="margin:0;">' +
       '        <span class="ods-field-label">Tampilan Tren:</span>' +
       '        <div class="ods-segmented" id="odsTrendGranularityToggle">' +
       '          <button type="button" class="ods-seg-btn active" data-granularity="MONTHLY" onclick="window.odsSetTrendGranularity(\'MONTHLY\')">Bulanan</button>' +
+      '          <button type="button" class="ods-seg-btn" data-granularity="QUARTERLY" onclick="window.odsSetTrendGranularity(\'QUARTERLY\')">Kuartalan</button>' +
       '          <button type="button" class="ods-seg-btn" data-granularity="DAILY" onclick="window.odsSetTrendGranularity(\'DAILY\')">Harian</button>' +
-      '          <button type="button" class="ods-seg-btn" data-granularity="BOTH" onclick="window.odsSetTrendGranularity(\'BOTH\')">Semua (Harian &amp; Bulanan)</button>' +
+      '          <button type="button" class="ods-seg-btn" data-granularity="BOTH" onclick="window.odsSetTrendGranularity(\'BOTH\')">Semua Grafik</button>' +
       '        </div>' +
       '      </div>' +
       '      <div class="ods-field" style="margin:0;">' +
@@ -26501,6 +26503,7 @@ function exportOdSuspendCsv() {
       '    </div>' +
       '  </div>' +
       '  <div id="odsMonthlyChartWrap" class="ods-chart-box"><canvas id="odsMonthlyChart"></canvas></div>' +
+      '  <div id="odsQuarterlyChartWrap" class="ods-chart-box" style="display:none;margin-top:16px;"><canvas id="odsQuarterlyChart"></canvas></div>' +
       '  <div id="odsDailyChartWrap" class="ods-chart-box" style="display:none;margin-top:16px;"><canvas id="odsDailyChart"></canvas></div>' +
       '</div>' +
       /* 5. Split Charts: Category Breakdown & Day-of-Week Load Profile */
@@ -27091,6 +27094,67 @@ function exportOdSuspendCsv() {
         return b.orders - a.orders;
       });
 
+    // Quarterly array
+    var byQuarter = {};
+    monthlyAsc.forEach(function (m) {
+      var y = m.ym.slice(0, 4);
+      var mNum = parseInt(m.ym.slice(5, 7), 10);
+      var qNum = Math.ceil(mNum / 3);
+      var qKey = y + '-Q' + qNum;
+
+      var qRec = byQuarter[qKey];
+      if (!qRec) {
+        qRec = {
+          qKey: qKey,
+          qLabel: 'Q' + qNum + ' ' + y,
+          year: y,
+          quarter: qNum,
+          orders: 0,
+          cbm: 0,
+          regOrders: 0,
+          regCbm: 0,
+          regGrwOrders: 0,
+          regGrwCbm: 0,
+          regCustOrders: 0,
+          regCustCbm: 0,
+          hubGrwOrders: 0,
+          hubGrwCbm: 0,
+          hubCustOrders: 0,
+          hubCustCbm: 0,
+          dkOrders: 0,
+          lkOrders: 0,
+          activeDays: 0,
+        };
+        byQuarter[qKey] = qRec;
+      }
+      qRec.orders += m.orders;
+      qRec.cbm += m.cbm;
+      qRec.regOrders += m.regOrders;
+      qRec.regCbm += m.regCbm;
+      qRec.regGrwOrders += (m.regGrwOrders || 0);
+      qRec.regGrwCbm += (m.regGrwCbm || 0);
+      qRec.regCustOrders += (m.regCustOrders || 0);
+      qRec.regCustCbm += (m.regCustCbm || 0);
+      qRec.hubGrwOrders += m.hubGrwOrders;
+      qRec.hubGrwCbm += m.hubGrwCbm;
+      qRec.hubCustOrders += m.hubCustOrders;
+      qRec.hubCustCbm += m.hubCustCbm;
+      qRec.dkOrders += m.dkOrders;
+      qRec.lkOrders += m.lkOrders;
+      qRec.activeDays += m.activeDays;
+    });
+
+    var quarterlyAsc = Object.keys(byQuarter)
+      .sort()
+      .map(function (k) {
+        var q = byQuarter[k];
+        q.avgDailyOrders = q.activeDays > 0 ? q.orders / q.activeDays : 0;
+        q.avgDailyCbm = q.activeDays > 0 ? q.cbm / q.activeDays : 0;
+        q.hubTotalOrders = q.hubGrwOrders + q.hubCustOrders;
+        q.hubSharePct = q.orders > 0 ? (q.hubTotalOrders / q.orders) * 100 : 0;
+        return q;
+      });
+
     return {
       totals: totals,
       activeDays: activeDays,
@@ -27108,6 +27172,7 @@ function exportOdSuspendCsv() {
       surgeRatio: avgDailyOrders > 0 && peakDay ? peakDay.orders / avgDailyOrders : 0,
       dailyAsc: dailyAsc,
       monthlyAsc: monthlyAsc,
+      quarterlyAsc: quarterlyAsc,
       categoryList: categoryList,
       macroList: macroListOut,
       wilayahList: wilayahList,
@@ -27658,6 +27723,130 @@ function exportOdSuspendCsv() {
       });
     }
 
+    // 1.5. Quarterly Chart
+    var qCanvas = document.getElementById('odsQuarterlyChart');
+    if (qCanvas) {
+      if (charts.quarterly) charts.quarterly.destroy();
+      var qLabels = comp.quarterlyAsc.map(function (q) {
+        return q.qLabel;
+      });
+      var qRegGrw = comp.quarterlyAsc.map(function (q) {
+        return isCbm ? Math.round((q.regGrwCbm || 0) * 10) / 10 : (q.regGrwOrders || 0);
+      });
+      var qRegCust = comp.quarterlyAsc.map(function (q) {
+        return isCbm ? Math.round((q.regCustCbm || 0) * 10) / 10 : (q.regCustOrders || 0);
+      });
+      var qHubGrw = comp.quarterlyAsc.map(function (q) {
+        return isCbm ? Math.round(q.hubGrwCbm * 10) / 10 : q.hubGrwOrders;
+      });
+      var qHubCust = comp.quarterlyAsc.map(function (q) {
+        return isCbm ? Math.round(q.hubCustCbm * 10) / 10 : q.hubCustOrders;
+      });
+      var qAvgDaily = comp.quarterlyAsc.map(function (q) {
+        return isCbm ? Math.round(q.avgDailyCbm * 10) / 10 : Math.round(q.avgDailyOrders);
+      });
+
+      var qDatasets = [];
+
+      if (seriesChoice === 'ALL' || seriesChoice === 'REGULAR') {
+        qDatasets.push({
+          type: 'bar',
+          label: 'OD Regular GRW (Data H6)',
+          data: qRegGrw,
+          backgroundColor: '#1d4ed8',
+          stack: 'qRegStack',
+          yAxisID: 'y',
+          order: 2,
+          maxBarThickness: seriesChoice === 'ALL' ? 36 : 52,
+        });
+        qDatasets.push({
+          type: 'bar',
+          label: 'OD Regular Customer (Data H6)',
+          data: qRegCust,
+          backgroundColor: '#60a5fa',
+          borderRadius: { topLeft: 4, topRight: 4 },
+          stack: 'qRegStack',
+          yAxisID: 'y',
+          order: 2,
+          maxBarThickness: seriesChoice === 'ALL' ? 36 : 52,
+        });
+      }
+
+      if (seriesChoice === 'ALL' || seriesChoice === 'HUB') {
+        qDatasets.push({
+          type: 'bar',
+          label: 'Hub Transit GRW (Data Hub)',
+          data: qHubGrw,
+          backgroundColor: '#0d9488',
+          stack: 'qHubStack',
+          yAxisID: 'y',
+          order: 2,
+          maxBarThickness: seriesChoice === 'ALL' ? 36 : 52,
+        });
+        qDatasets.push({
+          type: 'bar',
+          label: 'Hub Transit Customer (Data Hub Cust)',
+          data: qHubCust,
+          backgroundColor: '#7c3aed',
+          borderRadius: { topLeft: 4, topRight: 4 },
+          stack: 'qHubStack',
+          yAxisID: 'y',
+          order: 2,
+          maxBarThickness: seriesChoice === 'ALL' ? 36 : 52,
+        });
+      }
+
+      qDatasets.push({
+        type: 'line',
+        label: 'Rata-Rata / Hari (' + (isCbm ? 'm³' : 'OD') + ')',
+        data: qAvgDaily,
+        borderColor: '#d97706',
+        backgroundColor: '#ffffff',
+        borderWidth: 2.5,
+        pointRadius: 5,
+        pointHoverRadius: 7,
+        pointBorderColor: '#d97706',
+        pointBorderWidth: 2,
+        tension: 0.3,
+        yAxisID: 'y1',
+        order: 1,
+      });
+
+      charts.quarterly = new window.Chart(qCanvas.getContext('2d'), {
+        data: {
+          labels: qLabels,
+          datasets: qDatasets,
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { mode: 'index', intersect: false },
+          plugins: {
+            legend: {
+              position: 'top',
+              labels: { boxWidth: 12, font: { family: 'Plus Jakarta Sans', size: 11, weight: '600' } },
+            },
+          },
+          scales: {
+            x: { stacked: true, grid: { display: false } },
+            y: {
+              stacked: true,
+              position: 'left',
+              beginAtZero: true,
+              title: { display: true, text: 'Volume Kuartalan (' + unitLabel + ')', font: { size: 11, weight: '600' } },
+              grid: { color: 'rgba(148,163,184,0.16)' },
+            },
+            y1: {
+              position: 'right',
+              beginAtZero: true,
+              title: { display: true, text: 'Rata-Rata / Hari', font: { size: 11, weight: '600' }, color: '#d97706' },
+              grid: { drawOnChartArea: false },
+            },
+          },
+        },
+      });
+    }
+
     // 2. Category Horizontal Bar Chart (Top 10)
     var cCanvas = document.getElementById('odsCategoryChart');
     if (cCanvas) {
@@ -27916,6 +28105,12 @@ function exportOdSuspendCsv() {
           fmtInt(m.activeDays) +
           '</td>' +
           '<td class="num ods-text-blue" style="font-weight:600;">' +
+          fmtInt(m.regGrwOrders || 0) +
+          '</td>' +
+          '<td class="num ods-text-cyan" style="font-weight:600;">' +
+          fmtInt(m.regCustOrders || 0) +
+          '</td>' +
+          '<td class="num ods-text-blue" style="font-weight:700;">' +
           fmtInt(m.regOrders) +
           '</td>' +
           '<td class="num ods-text-teal">' +
@@ -27965,7 +28160,9 @@ function exportOdSuspendCsv() {
       '      <tr>' +
       '        <th>Bulan</th>' +
       '        <th class="num">Hari Aktif</th>' +
-      '        <th class="num">OD Regular (H6)</th>' +
+      '        <th class="num">REG GRW (H6)</th>' +
+      '        <th class="num">REG CUST (H6)</th>' +
+      '        <th class="num">Subtotal Regular</th>' +
       '        <th class="num">Hub GRW</th>' +
       '        <th class="num">Hub Cust</th>' +
       '        <th class="num">Subtotal Hub</th>' +
@@ -27988,6 +28185,12 @@ function exportOdSuspendCsv() {
       fmtInt(comp.activeDays) +
       '</td>' +
       '        <td class="num">' +
+      fmtInt(t.regGrwOrders) +
+      '</td>' +
+      '        <td class="num">' +
+      fmtInt(t.regCustOrders) +
+      '</td>' +
+      '        <td class="num" style="font-weight:800;">' +
       fmtInt(t.regOrders) +
       '</td>' +
       '        <td class="num">' +
@@ -28201,13 +28404,19 @@ function exportOdSuspendCsv() {
           '<td>' +
           DOW_NAMES_ID[d.dow] +
           '</td>' +
+          '<td class="num ods-text-blue" style="font-weight:600;">' +
+          fmtInt(d.regGrwOrders || 0) +
+          '</td>' +
+          '<td class="num ods-text-cyan" style="font-weight:600;">' +
+          fmtInt(d.regCustOrders || 0) +
+          '</td>' +
           '<td class="num">' +
           fmtInt(d.regDk) +
           '</td>' +
           '<td class="num">' +
           fmtInt(d.regLk) +
           '</td>' +
-          '<td class="num ods-text-blue" style="font-weight:600;">' +
+          '<td class="num ods-text-blue" style="font-weight:700;">' +
           fmtInt(d.regOrders) +
           '</td>' +
           '<td class="num ods-text-teal">' +
@@ -28242,6 +28451,8 @@ function exportOdSuspendCsv() {
       '      <tr>' +
       '        <th onclick="window.odsSortDaily(\'date\')">Tanggal ⬍</th>' +
       '        <th>Hari</th>' +
+      '        <th class="num" onclick="window.odsSortDaily(\'regGrwOrders\')">REG GRW ⬍</th>' +
+      '        <th class="num" onclick="window.odsSortDaily(\'regCustOrders\')">REG CUST ⬍</th>' +
       '        <th class="num">Reg DK</th>' +
       '        <th class="num">Reg LK</th>' +
       '        <th class="num" onclick="window.odsSortDaily(\'regOrders\')">Subtotal Regular ⬍</th>' +
@@ -28255,7 +28466,7 @@ function exportOdSuspendCsv() {
       '    </thead>' +
       '    <tbody>' +
       (rowsHtml ||
-        '<tr><td colspan="11" style="text-align:center;padding:24px;color:#64748b;">Tidak ada tanggal sesuai pencarian.</td></tr>') +
+        '<tr><td colspan="13" style="text-align:center;padding:24px;color:#64748b;">Tidak ada tanggal sesuai pencarian.</td></tr>') +
       '    </tbody>' +
       '  </table>' +
       '</div>' +
