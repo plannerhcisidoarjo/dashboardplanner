@@ -26656,6 +26656,10 @@ function exportOdSuspendCsv() {
       cbm: 0,
       regOrders: 0,
       regCbm: 0,
+      regGrwOrders: 0,
+      regGrwCbm: 0,
+      regCustOrders: 0,
+      regCustCbm: 0,
       hubGrwOrders: 0,
       hubGrwCbm: 0,
       hubCustOrders: 0,
@@ -26715,6 +26719,20 @@ function exportOdSuspendCsv() {
       if (sheetIdx === 0) {
         totals.regOrders += ord;
         totals.regCbm += cbm;
+        var isRegCust =
+          macroName === 'Customer Delivery' ||
+          macroName === 'E-Commerce' ||
+          macroName === 'Tugu' ||
+          catName.toUpperCase().indexOf('CUST') !== -1 ||
+          catName.toUpperCase().indexOf('ECOM') !== -1 ||
+          catName.toUpperCase().indexOf('TUGU') !== -1;
+        if (isRegCust) {
+          totals.regCustOrders += ord;
+          totals.regCustCbm += cbm;
+        } else {
+          totals.regGrwOrders += ord;
+          totals.regGrwCbm += cbm;
+        }
       } else if (sheetIdx === 1) {
         totals.hubGrwOrders += ord;
         totals.hubGrwCbm += cbm;
@@ -26755,6 +26773,10 @@ function exportOdSuspendCsv() {
           cbm: 0,
           regOrders: 0,
           regCbm: 0,
+          regGrwOrders: 0,
+          regGrwCbm: 0,
+          regCustOrders: 0,
+          regCustCbm: 0,
           regDk: 0,
           regLk: 0,
           hubGrwOrders: 0,
@@ -26771,6 +26793,20 @@ function exportOdSuspendCsv() {
       if (sheetIdx === 0) {
         dRec.regOrders += ord;
         dRec.regCbm += cbm;
+        var isRegCustD =
+          macroName === 'Customer Delivery' ||
+          macroName === 'E-Commerce' ||
+          macroName === 'Tugu' ||
+          catName.toUpperCase().indexOf('CUST') !== -1 ||
+          catName.toUpperCase().indexOf('ECOM') !== -1 ||
+          catName.toUpperCase().indexOf('TUGU') !== -1;
+        if (isRegCustD) {
+          dRec.regCustOrders += ord;
+          dRec.regCustCbm += cbm;
+        } else {
+          dRec.regGrwOrders += ord;
+          dRec.regGrwCbm += cbm;
+        }
         if (areaName === 'DK') dRec.regDk += ord;
         else dRec.regLk += ord;
       } else {
@@ -26794,6 +26830,10 @@ function exportOdSuspendCsv() {
           cbm: 0,
           regOrders: 0,
           regCbm: 0,
+          regGrwOrders: 0,
+          regGrwCbm: 0,
+          regCustOrders: 0,
+          regCustCbm: 0,
           hubGrwOrders: 0,
           hubGrwCbm: 0,
           hubCustOrders: 0,
@@ -26809,6 +26849,20 @@ function exportOdSuspendCsv() {
       if (sheetIdx === 0) {
         mRec.regOrders += ord;
         mRec.regCbm += cbm;
+        var isRegCustM =
+          macroName === 'Customer Delivery' ||
+          macroName === 'E-Commerce' ||
+          macroName === 'Tugu' ||
+          catName.toUpperCase().indexOf('CUST') !== -1 ||
+          catName.toUpperCase().indexOf('ECOM') !== -1 ||
+          catName.toUpperCase().indexOf('TUGU') !== -1;
+        if (isRegCustM) {
+          mRec.regCustOrders += ord;
+          mRec.regCustCbm += cbm;
+        } else {
+          mRec.regGrwOrders += ord;
+          mRec.regGrwCbm += cbm;
+        }
       } else if (sheetIdx === 1) {
         mRec.hubGrwOrders += ord;
         mRec.hubGrwCbm += cbm;
@@ -26816,6 +26870,9 @@ function exportOdSuspendCsv() {
         mRec.hubCustOrders += ord;
         mRec.hubCustCbm += cbm;
       }
+      if (areaName === 'DK') mRec.dkOrders += ord;
+      else mRec.lkOrders += ord;
+      mRec.daysMap[dateIso] = (mRec.daysMap[dateIso] || 0) + ord;
       if (areaName === 'DK') mRec.dkOrders += ord;
       else mRec.lkOrders += ord;
       mRec.daysMap[dateIso] = (mRec.daysMap[dateIso] || 0) + ord;
@@ -26885,9 +26942,11 @@ function exportOdSuspendCsv() {
 
     var peakDay = null;
     var sortedDailyOrders = [];
+    var sortedDailyCbm = [];
     for (var dIdx = 0; dIdx < dailyAsc.length; dIdx++) {
       var curD = dailyAsc[dIdx];
       sortedDailyOrders.push(curD.orders);
+      sortedDailyCbm.push(curD.cbm);
       if (!peakDay || curD.orders > peakDay.orders) {
         peakDay = curD;
       }
@@ -26907,6 +26966,10 @@ function exportOdSuspendCsv() {
     sortedDailyOrders.sort(function (a, b) {
       return a - b;
     });
+    sortedDailyCbm.sort(function (a, b) {
+      return a - b;
+    });
+
     var p90Orders =
       sortedDailyOrders.length > 0
         ? sortedDailyOrders[Math.min(sortedDailyOrders.length - 1, Math.floor(sortedDailyOrders.length * 0.9))]
@@ -26914,6 +26977,15 @@ function exportOdSuspendCsv() {
     var medianOrders =
       sortedDailyOrders.length > 0
         ? sortedDailyOrders[Math.floor(sortedDailyOrders.length * 0.5)]
+        : 0;
+
+    var p90Cbm =
+      sortedDailyCbm.length > 0
+        ? sortedDailyCbm[Math.min(sortedDailyCbm.length - 1, Math.floor(sortedDailyCbm.length * 0.9))]
+        : 0;
+    var medianCbm =
+      sortedDailyCbm.length > 0
+        ? sortedDailyCbm[Math.floor(sortedDailyCbm.length * 0.5)]
         : 0;
 
     // Day-of-week profile
@@ -27025,6 +27097,8 @@ function exportOdSuspendCsv() {
       peakDay: peakDay,
       p90Orders: p90Orders,
       medianOrders: medianOrders,
+      p90Cbm: p90Cbm,
+      medianCbm: medianCbm,
       surgeRatio: avgDailyOrders > 0 && peakDay ? peakDay.orders / avgDailyOrders : 0,
       dailyAsc: dailyAsc,
       monthlyAsc: monthlyAsc,
@@ -27187,18 +27261,17 @@ function exportOdSuspendCsv() {
 
     // 1. Capacity & Fleet Planning Insight
     var wingboxAvg = comp.avgDailyCbm / 40;
-    var p90CbmEst = comp.p90Orders * comp.avgCbmPerOrder;
-    var wingboxP90 = p90CbmEst / 40;
+    var wingboxP90 = comp.p90Cbm / 40;
 
     var busiestDow = comp.dowAcc.slice().sort(function (a, b) {
-      return b.avgOrders - a.avgOrders;
+      return b.avgCbm - a.avgCbm;
     })[0];
     var quietestDow = comp.dowAcc
       .filter(function (d) {
         return d.days > 0;
       })
       .sort(function (a, b) {
-        return a.avgOrders - b.avgOrders;
+        return a.avgCbm - b.avgCbm;
       })[0];
 
     // 2. MoM Trend Insight (compare latest 2 months with >=15 days if available, else latest 2)
@@ -27212,21 +27285,21 @@ function exportOdSuspendCsv() {
       var prevM = mPair[0];
       var currM = mPair[1];
       var diffAvgPct =
-        prevM.avgDailyOrders > 0
-          ? ((currM.avgDailyOrders - prevM.avgDailyOrders) / prevM.avgDailyOrders) * 100
+        prevM.avgDailyCbm > 0
+          ? ((currM.avgDailyCbm - prevM.avgDailyCbm) / prevM.avgDailyCbm) * 100
           : 0;
       var sign = diffAvgPct >= 0 ? '+' : '';
-      momHeadline = sign + fmtPct(diffAvgPct, 1) + ' Avg/Hari';
+      momHeadline = sign + fmtPct(diffAvgPct, 1) + ' Avg CBM/Hari';
       momDesc =
         'Rata-rata harian <strong>' +
         formatYmShort(currM.ym) +
         '</strong> (' +
-        fmtInt(currM.avgDailyOrders) +
-        ' OD/hr) dibanding <strong>' +
+        fmtDec(currM.avgDailyCbm, 0) +
+        ' m³/hr) dibanding <strong>' +
         formatYmShort(prevM.ym) +
         '</strong> (' +
-        fmtInt(prevM.avgDailyOrders) +
-        ' OD/hr). Porsi Hub Transit di ' +
+        fmtDec(prevM.avgDailyCbm, 0) +
+        ' m³/hr). Porsi Hub Transit di ' +
         formatYmShort(currM.ym) +
         ' mencapai <strong>' +
         fmtPct(currM.hubSharePct, 1) +
@@ -27235,7 +27308,7 @@ function exportOdSuspendCsv() {
 
     // 3. Category & Regional Concentration
     var topCat = comp.categoryList.slice().sort(function (a, b) {
-      return b.orders - a.orders;
+      return b.cbm - a.cbm;
     })[0];
     var topWil = comp.wilayahList[0];
     var lkCbmShare = t.cbm > 0 ? (t.lkCbm / t.cbm) * 100 : 0;
@@ -27250,25 +27323,31 @@ function exportOdSuspendCsv() {
       '<div class="ods-insight-item">' +
       '  <div class="ods-insight-title">1. Standar Kapasitas &amp; Buffer Harian</div>' +
       '  <div class="ods-insight-metric">' +
-      fmtInt(comp.avgDailyOrders) +
-      ' → ' +
-      fmtInt(comp.p90Orders) +
-      ' OD/hr</div>' +
-      '  <div class="ods-insight-desc">Baseline harian setara <strong>~' +
-      fmtDec(wingboxAvg, 1) +
-      ' Wingbox</strong> (' +
       fmtDec(comp.avgDailyCbm, 0) +
-      ' m³), namun manajemen disarankan menyiapkan buffer kapasitas P90 sebesar <strong>~' +
+      ' → ' +
+      fmtDec(comp.p90Cbm, 0) +
+      ' CBM/hari</div>' +
+      '  <div class="ods-insight-desc">Baseline harian setara <strong>~' +
+      fmtDec(comp.avgDailyCbm, 0) +
+      ' m³/hari</strong> (~' +
+      fmtDec(wingboxAvg, 1) +
+      ' Wingbox), namun tim planning disarankan menyiapkan buffer kapasitas P90 sebesar <strong>~' +
+      fmtDec(comp.p90Cbm, 0) +
+      ' CBM/hari</strong> (~' +
       fmtDec(wingboxP90, 1) +
-      ' Wingbox/hari</strong> terutama setiap hari <strong>' +
+      ' Wingbox/hari) terutama pada hari <strong>' +
       escHtml(busiestDow ? busiestDow.name : '—') +
       '</strong> (rata-rata tertinggi ' +
-      fmtInt(busiestDow ? busiestDow.avgOrders : 0) +
-      ' OD, vs terendah ' +
+      fmtDec(busiestDow ? busiestDow.avgCbm : 0, 0) +
+      ' m³/hr vs terendah ' +
       escHtml(quietestDow ? quietestDow.name : '—') +
       ' ' +
-      fmtInt(quietestDow ? quietestDow.avgOrders : 0) +
-      ' OD).</div>' +
+      fmtDec(quietestDow ? quietestDow.avgCbm : 0, 0) +
+      ' m³/hr). Baseline OD: ' +
+      fmtInt(comp.avgDailyOrders) +
+      ' OD/hr (P90: ' +
+      fmtInt(comp.p90Orders) +
+      ' OD/hr).</div>' +
       '</div>' +
       '<div class="ods-insight-item">' +
       '  <div class="ods-insight-title">2. Laju Pertumbuhan Bulanan (MoM)</div>' +
@@ -27456,8 +27535,11 @@ function exportOdSuspendCsv() {
       var mLabels = comp.monthlyAsc.map(function (m) {
         return formatYmShort(m.ym);
       });
-      var mReg = comp.monthlyAsc.map(function (m) {
-        return isCbm ? Math.round(m.regCbm * 10) / 10 : m.regOrders;
+      var mRegGrw = comp.monthlyAsc.map(function (m) {
+        return isCbm ? Math.round((m.regGrwCbm || 0) * 10) / 10 : (m.regGrwOrders || 0);
+      });
+      var mRegCust = comp.monthlyAsc.map(function (m) {
+        return isCbm ? Math.round((m.regCustCbm || 0) * 10) / 10 : (m.regCustOrders || 0);
       });
       var mHubGrw = comp.monthlyAsc.map(function (m) {
         return isCbm ? Math.round(m.hubGrwCbm * 10) / 10 : m.hubGrwOrders;
@@ -27474,9 +27556,19 @@ function exportOdSuspendCsv() {
       if (seriesChoice === 'ALL' || seriesChoice === 'REGULAR') {
         mDatasets.push({
           type: 'bar',
-          label: 'OD Regular (Data H6)',
-          data: mReg,
-          backgroundColor: '#2563eb',
+          label: 'OD Regular GRW (Data H6)',
+          data: mRegGrw,
+          backgroundColor: '#1d4ed8',
+          stack: 'regStack',
+          yAxisID: 'y',
+          order: 2,
+          maxBarThickness: seriesChoice === 'ALL' ? 28 : 44,
+        });
+        mDatasets.push({
+          type: 'bar',
+          label: 'OD Regular Customer (Data H6)',
+          data: mRegCust,
+          backgroundColor: '#60a5fa',
           borderRadius: { topLeft: 4, topRight: 4 },
           stack: 'regStack',
           yAxisID: 'y',
