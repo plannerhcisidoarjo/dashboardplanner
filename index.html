@@ -3541,6 +3541,7 @@ body.is-fullscreen {
 }
 
 .ods-text-blue { color: #2563eb; }
+.ods-text-cyan { color: #0284c7; }
 .ods-text-teal { color: #0d9488; }
 .ods-text-indigo { color: #4f46e5; }
 .ods-text-amber { color: #d97706; }
@@ -3748,6 +3749,224 @@ body.is-fullscreen {
   align-items: start;
 }
 
+/* Section 7: Centralized Q1-Q4 Regional & Hub Matrix */
+.ods-table-toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.ods-metric-pill-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  padding: 3px 6px 3px 10px;
+  border-radius: 9px;
+}
+
+.ods-metric-pill-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #475569;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+.ods-q-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.ods-q-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-top-width: 3px;
+  border-radius: 10px;
+  padding: 13px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  cursor: pointer;
+  transition: border-color 150ms ease, box-shadow 150ms ease, background-color 150ms ease;
+}
+
+.ods-q-card:hover {
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+}
+
+.ods-q-card.q1 { border-top-color: #2563eb; }
+.ods-q-card.q2 { border-top-color: #0d9488; }
+.ods-q-card.q3 { border-top-color: #4f46e5; }
+.ods-q-card.q4 { border-top-color: #d97706; }
+
+.ods-q-card.active-q {
+  background: #f8fafc;
+  box-shadow: 0 0 0 2px #2563eb;
+}
+
+.ods-q-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.ods-q-card-val {
+  font-family: var(--font-display, 'Outfit', sans-serif);
+  font-size: 20px;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.15;
+  font-variant-numeric: tabular-nums;
+}
+
+.ods-q-card-sub {
+  font-size: 11.5px;
+  color: #64748b;
+  font-variant-numeric: tabular-nums;
+}
+
+.ods-q-card-meta {
+  border-top: 1px dashed #e2e8f0;
+  padding-top: 7px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-size: 11.5px;
+  color: #334155;
+}
+
+.ods-q-card-meta-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.ods-q-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 7px;
+  border-radius: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  font-family: var(--font-mono, 'Fira Code', monospace);
+}
+
+.ods-q-badge.q1 { background: #dbeafe; color: #1d4ed8; }
+.ods-q-badge.q2 { background: #ccfbf1; color: #0f766e; }
+.ods-q-badge.q3 { background: #e0e7ff; color: #4338ca; }
+.ods-q-badge.q4 { background: #fef3c7; color: #b45309; }
+
+.ods-reg-block {
+  margin-bottom: 18px;
+}
+
+.ods-reg-block:last-child {
+  margin-bottom: 0;
+}
+
+.ods-reg-block-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.ods-reg-block-title {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.ods-reg-block-sub {
+  font-size: 11.5px;
+  color: #64748b;
+}
+
+.ods-matrix-table thead tr.ods-thead-group th {
+  text-align: center;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  padding: 7px 10px;
+  border-bottom: 1px solid #cbd5e1;
+}
+
+.ods-matrix-table thead tr.ods-thead-group th.th-left {
+  text-align: left;
+}
+
+.ods-matrix-table thead th.q1-grp { background: #eff6ff; color: #1e40af; border-left: 2px solid #bfdbfe; }
+.ods-matrix-table thead th.q2-grp { background: #f0fdfa; color: #115e59; border-left: 2px solid #99f6e4; }
+.ods-matrix-table thead th.q3-grp { background: #eef2ff; color: #3730a3; border-left: 2px solid #c7d2fe; }
+.ods-matrix-table thead th.q4-grp { background: #fffbeb; color: #92400e; border-left: 2px solid #fde68a; }
+.ods-matrix-table thead th.tot-grp { background: #f1f5f9; color: #0f172a; border-left: 2px solid #cbd5e1; }
+
+.ods-matrix-table thead th.q-first,
+.ods-matrix-table tbody td.q-first,
+.ods-matrix-table tfoot td.q-first {
+  border-left: 2px solid #e2e8f0;
+}
+
+.ods-matrix-table thead th.q-sub-col {
+  background: #f1f5f9;
+  color: #0f172a;
+  font-weight: 800;
+}
+
+.ods-matrix-table tbody td.q-sub-col {
+  background: #f8fafc;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.ods-matrix-table tbody tr:hover td.q-sub-col {
+  background: #f1f5f9;
+}
+
+.ods-matrix-table thead th.ods-sticky-col,
+.ods-matrix-table tbody td.ods-sticky-col,
+.ods-matrix-table tfoot td.ods-sticky-col {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+}
+
+.ods-matrix-table thead th.ods-sticky-col {
+  background: #f8fafc;
+  z-index: 3;
+  box-shadow: 1px 0 0 #e2e8f0;
+}
+
+.ods-matrix-table tbody td.ods-sticky-col {
+  background: #ffffff;
+  box-shadow: 1px 0 0 #e2e8f0;
+}
+
+.ods-matrix-table tbody tr:hover td.ods-sticky-col {
+  background: #f8fafc;
+}
+
+.ods-matrix-table tfoot td.ods-sticky-col {
+  background: #0f172a;
+  box-shadow: 1px 0 0 #334155;
+}
+
+.ods-zero-cell {
+  color: #cbd5e1;
+}
+
 /* Loading & Error States */
 .ods-state-box {
   background: #ffffff;
@@ -3776,7 +3995,8 @@ body.is-fullscreen {
   .ods-kpi-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
-  .ods-insights-grid {
+  .ods-insights-grid,
+  .ods-q-cards-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
@@ -3795,10 +4015,24 @@ body.is-fullscreen {
   .ods-toolbar,
   .ods-kpi-box,
   .ods-section,
-  .ods-state-box {
+  .ods-state-box,
+  .ods-q-card {
     background: rgba(15, 23, 42, 0.88);
     border-color: rgba(56, 189, 248, 0.22);
     color: #f1f5f9;
+  }
+  .ods-q-card.active-q {
+    background: rgba(30, 41, 59, 0.95);
+  }
+  .ods-metric-pill-wrap {
+    background: rgba(15, 23, 42, 0.9);
+    border-color: rgba(56, 189, 248, 0.22);
+  }
+  .ods-metric-pill-label,
+  .ods-q-card-sub,
+  .ods-q-card-meta,
+  .ods-reg-block-sub {
+    color: #cbd5e1;
   }
   .ods-insight-item {
     background: rgba(30, 41, 59, 0.7);
@@ -3807,6 +4041,8 @@ body.is-fullscreen {
   .ods-kpi-main,
   .ods-section-title,
   .ods-insight-title,
+  .ods-q-card-val,
+  .ods-reg-block-title,
   .ods-table tbody td {
     color: #f8fafc;
   }
@@ -3838,10 +4074,17 @@ body.is-fullscreen {
   .ods-table {
     background: rgba(15, 23, 42, 0.95);
   }
-  .ods-table thead th {
+  .ods-table thead th,
+  .ods-matrix-table thead th.ods-sticky-col,
+  .ods-matrix-table thead th.q-sub-col {
     background: rgba(30, 41, 59, 0.95);
     color: #cbd5e1;
     border-bottom-color: rgba(148, 163, 184, 0.2);
+  }
+  .ods-matrix-table tbody td.ods-sticky-col,
+  .ods-matrix-table tbody td.q-sub-col {
+    background: rgba(15, 23, 42, 0.98);
+    color: #f8fafc;
   }
   .ods-table tbody tr {
     border-bottom-color: rgba(148, 163, 184, 0.12);
@@ -3852,7 +4095,8 @@ body.is-fullscreen {
   .ods-kpi-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-  .ods-insights-grid {
+  .ods-insights-grid,
+  .ods-q-cards-grid {
     grid-template-columns: 1fr;
   }
 }
@@ -3862,8 +4106,7 @@ body.is-fullscreen {
     grid-template-columns: 1fr;
   }
 }
-
-</style>
+  </style>
 </head>
 <body>
 
@@ -25853,8 +26096,13 @@ function exportOdSuspendCsv() {
     monthlySeries: 'ALL', // ALL | REGULAR | HUB
     trendGranularity: 'MONTHLY', // MONTHLY | DAILY | BOTH
 
-    // Sub-tab & Daily Table Controls
+    // Sub-tab & Detail Section Controls
     activeTab: 'monthly', // monthly | category | daily | regional
+    tableMetric: 'CBM', // CBM | OD (dedicated toggle for Section 7 tables)
+    regionalQuarter: 'ALL', // ALL | Q1 | Q2 | Q3 | Q4
+    regionalViewMode: 'MONTHLY_QUARTER', // MONTHLY_QUARTER | QUARTER_ONLY
+    regionalSearch: '',
+    regionalLimit: '20', // 15 | 20 | 50 | ALL
     dailySearch: '',
     dailyDayType: 'ALL', // ALL | WEEKDAY | WEEKEND | PEAK
     dailySortCol: 'date',
@@ -25862,7 +26110,7 @@ function exportOdSuspendCsv() {
     dailyPage: 1,
     dailyPageSize: 31,
 
-    catSortCol: 'orders',
+    catSortCol: 'cbm',
     catSortDir: -1,
 
     // Cached Computed Result for Export / Table Pagination
@@ -26558,8 +26806,17 @@ function exportOdSuspendCsv() {
       '      <button type="button" class="ods-seg-btn" data-tab="daily" onclick="window.odsSwitchTab(\'daily\')">3. Rekap Per Tanggal</button>' +
       '      <button type="button" class="ods-seg-btn" data-tab="regional" onclick="window.odsSwitchTab(\'regional\')">4. Analisa Wilayah &amp; Asal Hub</button>' +
       '    </div>' +
-      '    <div id="odsTabExtraControls" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;"></div>' +
+      '    <div class="ods-table-toolbar-right">' +
+      '      <div class="ods-metric-pill-wrap">' +
+      '        <span class="ods-metric-pill-label">Satuan Tabel:</span>' +
+      '        <div class="ods-segmented" id="odsTableMetricToggle">' +
+      '          <button type="button" class="ods-seg-btn active" data-tmetric="CBM" onclick="window.odsSetTableMetric(\'CBM\')">Kubikasi (CBM)</button>' +
+      '          <button type="button" class="ods-seg-btn" data-tmetric="OD" onclick="window.odsSetTableMetric(\'OD\')">Total OD</button>' +
+      '        </div>' +
+      '      </div>' +
+      '    </div>' +
       '  </div>' +
+      '  <div id="odsTabExtraControls" style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:14px;"></div>' +
       '  <div id="odsTabContentArea"></div>' +
       '</div>';
 
@@ -26646,6 +26903,7 @@ function exportOdSuspendCsv() {
 
     toggleButtons('odsStreamToggle', 'data-stream', ODS_STATE.stream);
     toggleButtons('odsMetricToggle', 'data-metric', ODS_STATE.metric);
+    toggleButtons('odsTableMetricToggle', 'data-tmetric', ODS_STATE.tableMetric || 'CBM');
     toggleButtons('odsPresetToggle', 'data-preset', ODS_STATE.preset);
     toggleButtons('odsAreaToggle', 'data-area', ODS_STATE.area);
     toggleButtons('odsDetailTabs', 'data-tab', ODS_STATE.activeTab);
@@ -26701,6 +26959,13 @@ function exportOdSuspendCsv() {
     var byMacro = {};
     var byWilayah = {};
     var byOriginHubCust = {};
+    var byOriginAll = {};
+    var yearSet = {};
+    var mTotalOrders = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    var mTotalCbm = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    var qTotalOrders = [0, 0, 0, 0];
+    var qTotalCbm = [0, 0, 0, 0];
+    var qActiveDayMaps = [{}, {}, {}, {}];
 
     var tuples = cube.tuples;
     for (var i = 0; i < tuples.length; i++) {
@@ -26734,20 +26999,32 @@ function exportOdSuspendCsv() {
       var ltSum = t[11];
       var ltCnt = t[12];
 
+      var yrStr = dateIso.slice(0, 4);
+      yearSet[yrStr] = true;
+      var mIdx0 = Math.max(0, Math.min(11, parseInt(dateIso.slice(5, 7), 10) - 1));
+      var qIdx0 = Math.floor(mIdx0 / 3);
+      mTotalOrders[mIdx0] += ord;
+      mTotalCbm[mIdx0] += cbm;
+      qTotalOrders[qIdx0] += ord;
+      qTotalCbm[qIdx0] += cbm;
+      qActiveDayMaps[qIdx0][dateIso] = true;
+
+      var isRegCustRow =
+        sheetIdx === 0 &&
+        (macroName === 'Customer Delivery' ||
+          macroName === 'E-Commerce' ||
+          macroName === 'Tugu' ||
+          catName.toUpperCase().indexOf('CUST') !== -1 ||
+          catName.toUpperCase().indexOf('ECOM') !== -1 ||
+          catName.toUpperCase().indexOf('TUGU') !== -1);
+
       totals.orders += ord;
       totals.cbm += cbm;
 
       if (sheetIdx === 0) {
         totals.regOrders += ord;
         totals.regCbm += cbm;
-        var isRegCust =
-          macroName === 'Customer Delivery' ||
-          macroName === 'E-Commerce' ||
-          macroName === 'Tugu' ||
-          catName.toUpperCase().indexOf('CUST') !== -1 ||
-          catName.toUpperCase().indexOf('ECOM') !== -1 ||
-          catName.toUpperCase().indexOf('TUGU') !== -1;
-        if (isRegCust) {
+        if (isRegCustRow) {
           totals.regCustOrders += ord;
           totals.regCustCbm += cbm;
         } else {
@@ -26776,6 +27053,39 @@ function exportOdSuspendCsv() {
         byOriginHubCust[origName].delay += del;
       }
 
+      // Unified Origin & Hub bucket (covers Regular DC + Hub Store/GRW + Hub Cust Booking Sites)
+      var origKey = sheetIdx + '|' + origName;
+      var oAll = byOriginAll[origKey];
+      if (!oAll) {
+        oAll = {
+          origin: origName,
+          sheetIdx: sheetIdx,
+          streamLabel:
+            sheetIdx === 0
+              ? 'OD Regular (H6)'
+              : sheetIdx === 1
+                ? 'Hub Store / GRW'
+                : 'Hub Customer (Booking Site)',
+          orders: 0,
+          cbm: 0,
+          onTime: 0,
+          delay: 0,
+          mOrders: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          mCbm: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          qOrders: [0, 0, 0, 0],
+          qCbm: [0, 0, 0, 0],
+        };
+        byOriginAll[origKey] = oAll;
+      }
+      oAll.orders += ord;
+      oAll.cbm += cbm;
+      oAll.onTime += onT;
+      oAll.delay += del;
+      oAll.mOrders[mIdx0] += ord;
+      oAll.mCbm[mIdx0] += cbm;
+      oAll.qOrders[qIdx0] += ord;
+      oAll.qCbm[qIdx0] += cbm;
+
       if (areaName === 'DK') {
         totals.dkOrders += ord;
         totals.dkCbm += cbm;
@@ -26799,13 +27109,17 @@ function exportOdSuspendCsv() {
           regCustOrders: 0,
           regCustCbm: 0,
           regDk: 0,
+          regDkCbm: 0,
           regLk: 0,
+          regLkCbm: 0,
           hubGrwOrders: 0,
           hubGrwCbm: 0,
           hubCustOrders: 0,
           hubCustCbm: 0,
           hubDk: 0,
+          hubDkCbm: 0,
           hubLk: 0,
+          hubLkCbm: 0,
         };
         byDate[dateIso] = dRec;
       }
@@ -26814,22 +27128,20 @@ function exportOdSuspendCsv() {
       if (sheetIdx === 0) {
         dRec.regOrders += ord;
         dRec.regCbm += cbm;
-        var isRegCustD =
-          macroName === 'Customer Delivery' ||
-          macroName === 'E-Commerce' ||
-          macroName === 'Tugu' ||
-          catName.toUpperCase().indexOf('CUST') !== -1 ||
-          catName.toUpperCase().indexOf('ECOM') !== -1 ||
-          catName.toUpperCase().indexOf('TUGU') !== -1;
-        if (isRegCustD) {
+        if (isRegCustRow) {
           dRec.regCustOrders += ord;
           dRec.regCustCbm += cbm;
         } else {
           dRec.regGrwOrders += ord;
           dRec.regGrwCbm += cbm;
         }
-        if (areaName === 'DK') dRec.regDk += ord;
-        else dRec.regLk += ord;
+        if (areaName === 'DK') {
+          dRec.regDk += ord;
+          dRec.regDkCbm += cbm;
+        } else {
+          dRec.regLk += ord;
+          dRec.regLkCbm += cbm;
+        }
       } else {
         if (sheetIdx === 1) {
           dRec.hubGrwOrders += ord;
@@ -26838,8 +27150,13 @@ function exportOdSuspendCsv() {
           dRec.hubCustOrders += ord;
           dRec.hubCustCbm += cbm;
         }
-        if (areaName === 'DK') dRec.hubDk += ord;
-        else dRec.hubLk += ord;
+        if (areaName === 'DK') {
+          dRec.hubDk += ord;
+          dRec.hubDkCbm += cbm;
+        } else {
+          dRec.hubLk += ord;
+          dRec.hubLkCbm += cbm;
+        }
       }
 
       // Monthly bucket
@@ -26860,8 +27177,11 @@ function exportOdSuspendCsv() {
           hubCustOrders: 0,
           hubCustCbm: 0,
           dkOrders: 0,
+          dkCbm: 0,
           lkOrders: 0,
+          lkCbm: 0,
           daysMap: {},
+          daysCbmMap: {},
         };
         byMonth[ym] = mRec;
       }
@@ -26870,14 +27190,7 @@ function exportOdSuspendCsv() {
       if (sheetIdx === 0) {
         mRec.regOrders += ord;
         mRec.regCbm += cbm;
-        var isRegCustM =
-          macroName === 'Customer Delivery' ||
-          macroName === 'E-Commerce' ||
-          macroName === 'Tugu' ||
-          catName.toUpperCase().indexOf('CUST') !== -1 ||
-          catName.toUpperCase().indexOf('ECOM') !== -1 ||
-          catName.toUpperCase().indexOf('TUGU') !== -1;
-        if (isRegCustM) {
+        if (isRegCustRow) {
           mRec.regCustOrders += ord;
           mRec.regCustCbm += cbm;
         } else {
@@ -26891,12 +27204,15 @@ function exportOdSuspendCsv() {
         mRec.hubCustOrders += ord;
         mRec.hubCustCbm += cbm;
       }
-      if (areaName === 'DK') mRec.dkOrders += ord;
-      else mRec.lkOrders += ord;
+      if (areaName === 'DK') {
+        mRec.dkOrders += ord;
+        mRec.dkCbm += cbm;
+      } else {
+        mRec.lkOrders += ord;
+        mRec.lkCbm += cbm;
+      }
       mRec.daysMap[dateIso] = (mRec.daysMap[dateIso] || 0) + ord;
-      if (areaName === 'DK') mRec.dkOrders += ord;
-      else mRec.lkOrders += ord;
-      mRec.daysMap[dateIso] = (mRec.daysMap[dateIso] || 0) + ord;
+      mRec.daysCbmMap[dateIso] = (mRec.daysCbmMap[dateIso] || 0) + cbm;
 
       // Category bucket
       var catKey = sheetIdx + '|' + catName;
@@ -26910,14 +27226,21 @@ function exportOdSuspendCsv() {
           orders: 0,
           cbm: 0,
           dkOrders: 0,
+          dkCbm: 0,
           lkOrders: 0,
+          lkCbm: 0,
         };
         byCategory[catKey] = cRec;
       }
       cRec.orders += ord;
       cRec.cbm += cbm;
-      if (areaName === 'DK') cRec.dkOrders += ord;
-      else cRec.lkOrders += ord;
+      if (areaName === 'DK') {
+        cRec.dkOrders += ord;
+        cRec.dkCbm += cbm;
+      } else {
+        cRec.lkOrders += ord;
+        cRec.lkCbm += cbm;
+      }
 
       // Macro group
       if (!byMacro[macroName]) {
@@ -26926,7 +27249,7 @@ function exportOdSuspendCsv() {
       byMacro[macroName].orders += ord;
       byMacro[macroName].cbm += cbm;
 
-      // Wilayah bucket
+      // Wilayah bucket (with Monthly & Q1-Q4 arrays)
       var wRec = byWilayah[wilName];
       if (!wRec) {
         wRec = {
@@ -26934,20 +27257,57 @@ function exportOdSuspendCsv() {
           orders: 0,
           cbm: 0,
           regOrders: 0,
+          regCbm: 0,
+          regGrwOrders: 0,
+          regGrwCbm: 0,
+          regCustOrders: 0,
+          regCustCbm: 0,
           hubGrwOrders: 0,
+          hubGrwCbm: 0,
           hubCustOrders: 0,
+          hubCustCbm: 0,
           dkOrders: 0,
+          dkCbm: 0,
           lkOrders: 0,
+          lkCbm: 0,
+          mOrders: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          mCbm: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          qOrders: [0, 0, 0, 0],
+          qCbm: [0, 0, 0, 0],
         };
         byWilayah[wilName] = wRec;
       }
       wRec.orders += ord;
       wRec.cbm += cbm;
-      if (sheetIdx === 0) wRec.regOrders += ord;
-      else if (sheetIdx === 1) wRec.hubGrwOrders += ord;
-      else wRec.hubCustOrders += ord;
-      if (areaName === 'DK') wRec.dkOrders += ord;
-      else wRec.lkOrders += ord;
+      wRec.mOrders[mIdx0] += ord;
+      wRec.mCbm[mIdx0] += cbm;
+      wRec.qOrders[qIdx0] += ord;
+      wRec.qCbm[qIdx0] += cbm;
+
+      if (sheetIdx === 0) {
+        wRec.regOrders += ord;
+        wRec.regCbm += cbm;
+        if (isRegCustRow) {
+          wRec.regCustOrders += ord;
+          wRec.regCustCbm += cbm;
+        } else {
+          wRec.regGrwOrders += ord;
+          wRec.regGrwCbm += cbm;
+        }
+      } else if (sheetIdx === 1) {
+        wRec.hubGrwOrders += ord;
+        wRec.hubGrwCbm += cbm;
+      } else {
+        wRec.hubCustOrders += ord;
+        wRec.hubCustCbm += cbm;
+      }
+      if (areaName === 'DK') {
+        wRec.dkOrders += ord;
+        wRec.dkCbm += cbm;
+      } else {
+        wRec.lkOrders += ord;
+        wRec.lkCbm += cbm;
+      }
     }
 
     var dailyAsc = Object.keys(byDate)
@@ -26962,6 +27322,7 @@ function exportOdSuspendCsv() {
     var avgDailyCbm = activeDays > 0 ? totals.cbm / activeDays : 0;
 
     var peakDay = null;
+    var peakCbmDay = null;
     var sortedDailyOrders = [];
     var sortedDailyCbm = [];
     for (var dIdx = 0; dIdx < dailyAsc.length; dIdx++) {
@@ -26970,6 +27331,9 @@ function exportOdSuspendCsv() {
       sortedDailyCbm.push(curD.cbm);
       if (!peakDay || curD.orders > peakDay.orders) {
         peakDay = curD;
+      }
+      if (!peakCbmDay || curD.cbm > peakCbmDay.cbm) {
+        peakCbmDay = curD;
       }
       var winStart = Math.max(0, dIdx - 6);
       var sumOd = 0,
@@ -27028,38 +27392,53 @@ function exportOdSuspendCsv() {
       b.avgHubOrders = b.days > 0 ? b.hubOrders / b.days : 0;
     });
 
-    // Monthly array with MoM growth & peak day per month
+    // Monthly array with MoM growth & peak day per month (both OD & CBM)
     var monthlyAsc = Object.keys(byMonth)
       .sort()
       .map(function (ym, idx, arr) {
         var m = byMonth[ym];
         var dayKeys = Object.keys(m.daysMap);
         m.activeDays = dayKeys.length;
+        m.quarter = Math.ceil(parseInt(ym.slice(5, 7), 10) / 3);
+        m.qCode = 'Q' + m.quarter;
         m.avgDailyOrders = m.activeDays > 0 ? m.orders / m.activeDays : 0;
         m.avgDailyCbm = m.activeDays > 0 ? m.cbm / m.activeDays : 0;
         m.hubTotalOrders = m.hubGrwOrders + m.hubCustOrders;
+        m.hubTotalCbm = m.hubGrwCbm + m.hubCustCbm;
         m.hubSharePct = m.orders > 0 ? (m.hubTotalOrders / m.orders) * 100 : 0;
+        m.hubShareCbmPct = m.cbm > 0 ? (m.hubTotalCbm / m.cbm) * 100 : 0;
 
         var bestDate = '';
         var bestVal = -1;
+        var bestCbmDate = '';
+        var bestCbmVal = -1;
         dayKeys.forEach(function (dk) {
           if (m.daysMap[dk] > bestVal) {
             bestVal = m.daysMap[dk];
             bestDate = dk;
           }
+          var cbmDayVal = m.daysCbmMap[dk] || 0;
+          if (cbmDayVal > bestCbmVal) {
+            bestCbmVal = cbmDayVal;
+            bestCbmDate = dk;
+          }
         });
         m.peakDate = bestDate;
         m.peakOrders = bestVal > 0 ? bestVal : 0;
+        m.peakCbmDate = bestCbmDate;
+        m.peakCbm = bestCbmVal > 0 ? bestCbmVal : 0;
 
         if (idx > 0) {
           var prev = byMonth[arr[idx - 1]];
-          // Compare daily average MoM as well as total MoM (handles partial current month fairly)
           m.momTotalPct = prev.orders > 0 ? ((m.orders - prev.orders) / prev.orders) * 100 : null;
           var prevAvg = prev.activeDays > 0 ? prev.orders / prev.activeDays : 0;
           m.momDailyAvgPct = prevAvg > 0 ? ((m.avgDailyOrders - prevAvg) / prevAvg) * 100 : null;
+          var prevAvgCbm = prev.activeDays > 0 ? prev.cbm / prev.activeDays : 0;
+          m.momDailyAvgCbmPct = prevAvgCbm > 0 ? ((m.avgDailyCbm - prevAvgCbm) / prevAvgCbm) * 100 : null;
         } else {
           m.momTotalPct = null;
           m.momDailyAvgPct = null;
+          m.momDailyAvgCbmPct = null;
         }
         return m;
       });
@@ -27069,6 +27448,7 @@ function exportOdSuspendCsv() {
       c.shareOrdersPct = totals.orders > 0 ? (c.orders / totals.orders) * 100 : 0;
       c.shareCbmPct = totals.cbm > 0 ? (c.cbm / totals.cbm) * 100 : 0;
       c.avgDailyOrders = activeDays > 0 ? c.orders / activeDays : 0;
+      c.avgDailyCbm = activeDays > 0 ? c.cbm / activeDays : 0;
       c.avgCbmPerOrder = c.orders > 0 ? c.cbm / c.orders : 0;
       return c;
     });
@@ -27077,6 +27457,7 @@ function exportOdSuspendCsv() {
       .map(function (k) {
         var w = byWilayah[k];
         w.hubOrders = w.hubGrwOrders + w.hubCustOrders;
+        w.hubCbm = w.hubGrwCbm + w.hubCustCbm;
         w.shareOrdersPct = totals.orders > 0 ? (w.orders / totals.orders) * 100 : 0;
         w.shareCbmPct = totals.cbm > 0 ? (w.cbm / totals.cbm) * 100 : 0;
         w.avgCbmPerOrder = w.orders > 0 ? w.cbm / w.orders : 0;
@@ -27098,6 +27479,21 @@ function exportOdSuspendCsv() {
         return b.orders - a.orders;
       });
 
+    var originAllList = Object.keys(byOriginAll)
+      .map(function (k) {
+        var o = byOriginAll[k];
+        var totSla = o.onTime + o.delay;
+        o.hasSla = o.sheetIdx !== 0 && totSla > 0;
+        o.slaPct = totSla > 0 ? (o.onTime / totSla) * 100 : 100;
+        o.shareOrdersPct = totals.orders > 0 ? (o.orders / totals.orders) * 100 : 0;
+        o.shareCbmPct = totals.cbm > 0 ? (o.cbm / totals.cbm) * 100 : 0;
+        o.avgCbmPerOrder = o.orders > 0 ? o.cbm / o.orders : 0;
+        return o;
+      })
+      .sort(function (a, b) {
+        return b.cbm - a.cbm;
+      });
+
     var macroListOut = Object.keys(byMacro)
       .map(function (k) {
         return byMacro[k];
@@ -27106,7 +27502,7 @@ function exportOdSuspendCsv() {
         return b.orders - a.orders;
       });
 
-    // Quarterly array
+    // Quarterly array (for charts)
     var byQuarter = {};
     monthlyAsc.forEach(function (m) {
       var y = m.ym.slice(0, 4);
@@ -27143,10 +27539,10 @@ function exportOdSuspendCsv() {
       qRec.cbm += m.cbm;
       qRec.regOrders += m.regOrders;
       qRec.regCbm += m.regCbm;
-      qRec.regGrwOrders += (m.regGrwOrders || 0);
-      qRec.regGrwCbm += (m.regGrwCbm || 0);
-      qRec.regCustOrders += (m.regCustOrders || 0);
-      qRec.regCustCbm += (m.regCustCbm || 0);
+      qRec.regGrwOrders += m.regGrwOrders || 0;
+      qRec.regGrwCbm += m.regGrwCbm || 0;
+      qRec.regCustOrders += m.regCustOrders || 0;
+      qRec.regCustCbm += m.regCustCbm || 0;
       qRec.hubGrwOrders += m.hubGrwOrders;
       qRec.hubGrwCbm += m.hubGrwCbm;
       qRec.hubCustOrders += m.hubCustOrders;
@@ -27167,16 +27563,106 @@ function exportOdSuspendCsv() {
         return q;
       });
 
+    // Canonical Q1-Q4 Summary (for Tab 4 centralized regional & hub matrix)
+    var yearsSorted = Object.keys(yearSet).sort();
+    if (!yearsSorted.length && dates.length) {
+      yearsSorted = [dates[dates.length - 1].slice(0, 4)];
+    }
+    var activeYearLabel =
+      yearsSorted.length === 1
+        ? yearsSorted[0]
+        : yearsSorted.length > 1
+          ? yearsSorted[0] + '–' + yearsSorted[yearsSorted.length - 1]
+          : '';
+
+    var qRangeLabels = ['Jan – Mar', 'Apr – Jun', 'Jul – Sep', 'Okt – Des'];
+    var quarterSummaryFixed = [0, 1, 2, 3].map(function (qi) {
+      var qDays = Object.keys(qActiveDayMaps[qi]).length;
+      var qOd = qTotalOrders[qi];
+      var qCb = qTotalCbm[qi];
+
+      var bestWilCbm = null,
+        bestWilOd = null;
+      for (var wi = 0; wi < wilayahList.length; wi++) {
+        var wItem = wilayahList[wi];
+        if (wItem.qCbm[qi] > 0 && (!bestWilCbm || wItem.qCbm[qi] > bestWilCbm.val)) {
+          bestWilCbm = { name: wItem.wilayah, val: wItem.qCbm[qi] };
+        }
+        if (wItem.qOrders[qi] > 0 && (!bestWilOd || wItem.qOrders[qi] > bestWilOd.val)) {
+          bestWilOd = { name: wItem.wilayah, val: wItem.qOrders[qi] };
+        }
+      }
+
+      var bestHubCbm = null,
+        bestHubOd = null,
+        bestAnyCbm = null,
+        bestAnyOd = null;
+      for (var oi = 0; oi < originAllList.length; oi++) {
+        var oItem = originAllList[oi];
+        if (oItem.qCbm[qi] > 0) {
+          if (!bestAnyCbm || oItem.qCbm[qi] > bestAnyCbm.val) {
+            bestAnyCbm = { name: oItem.origin, val: oItem.qCbm[qi] };
+          }
+          if (oItem.sheetIdx !== 0 && (!bestHubCbm || oItem.qCbm[qi] > bestHubCbm.val)) {
+            bestHubCbm = { name: oItem.origin, val: oItem.qCbm[qi] };
+          }
+        }
+        if (oItem.qOrders[qi] > 0) {
+          if (!bestAnyOd || oItem.qOrders[qi] > bestAnyOd.val) {
+            bestAnyOd = { name: oItem.origin, val: oItem.qOrders[qi] };
+          }
+          if (oItem.sheetIdx !== 0 && (!bestHubOd || oItem.qOrders[qi] > bestHubOd.val)) {
+            bestHubOd = { name: oItem.origin, val: oItem.qOrders[qi] };
+          }
+        }
+      }
+
+      var prevQOd = qi > 0 ? qTotalOrders[qi - 1] : 0;
+      var prevQCb = qi > 0 ? qTotalCbm[qi - 1] : 0;
+      var prevQDays = qi > 0 ? Object.keys(qActiveDayMaps[qi - 1]).length : 0;
+      var curAvgOd = qDays > 0 ? qOd / qDays : 0;
+      var curAvgCb = qDays > 0 ? qCb / qDays : 0;
+      var prevAvgOd = prevQDays > 0 ? prevQOd / prevQDays : 0;
+      var prevAvgCb = prevQDays > 0 ? prevQCb / prevQDays : 0;
+
+      return {
+        qIdx: qi,
+        qNum: qi + 1,
+        qCode: 'Q' + (qi + 1),
+        rangeLabel: qRangeLabels[qi],
+        orders: qOd,
+        cbm: qCb,
+        activeDays: qDays,
+        avgDailyOrders: curAvgOd,
+        avgDailyCbm: curAvgCb,
+        shareOrdersPct: totals.orders > 0 ? (qOd / totals.orders) * 100 : 0,
+        shareCbmPct: totals.cbm > 0 ? (qCb / totals.cbm) * 100 : 0,
+        qoqAvgOdPct: qi > 0 && qDays > 0 && prevAvgOd > 0 ? ((curAvgOd - prevAvgOd) / prevAvgOd) * 100 : null,
+        qoqAvgCbmPct: qi > 0 && qDays > 0 && prevAvgCb > 0 ? ((curAvgCb - prevAvgCb) / prevAvgCb) * 100 : null,
+        topWilCbm: bestWilCbm,
+        topWilOd: bestWilOd,
+        topOriginCbm: bestHubCbm || bestAnyCbm,
+        topOriginOd: bestHubOd || bestAnyOd,
+      };
+    });
+
     return {
       totals: totals,
       activeDays: activeDays,
       activeMonths: monthlyAsc.length,
+      activeYearLabel: activeYearLabel,
+      mTotalOrders: mTotalOrders,
+      mTotalCbm: mTotalCbm,
+      qTotalOrders: qTotalOrders,
+      qTotalCbm: qTotalCbm,
+      quarterSummaryFixed: quarterSummaryFixed,
       avgDailyOrders: avgDailyOrders,
       avgDailyCbm: avgDailyCbm,
       avgMonthlyOrders: monthlyAsc.length > 0 ? totals.orders / monthlyAsc.length : 0,
       avgMonthlyCbm: monthlyAsc.length > 0 ? totals.cbm / monthlyAsc.length : 0,
       avgCbmPerOrder: totals.orders > 0 ? totals.cbm / totals.orders : 0,
       peakDay: peakDay,
+      peakCbmDay: peakCbmDay,
       p90Orders: p90Orders,
       medianOrders: medianOrders,
       p90Cbm: p90Cbm,
@@ -27189,6 +27675,7 @@ function exportOdSuspendCsv() {
       macroList: macroListOut,
       wilayahList: wilayahList,
       originList: originList,
+      originAllList: originAllList,
       dowAcc: dowAcc,
     };
   }
@@ -28057,37 +28544,117 @@ function exportOdSuspendCsv() {
     var area = document.getElementById('odsTabContentArea');
     if (!area || !extra) return;
 
+    var isCbm = (ODS_STATE.tableMetric || 'CBM') === 'CBM';
+    var unitBadge = isCbm ? 'Kubikasi (m³)' : 'Total OD (Order)';
+
     if (ODS_STATE.activeTab === 'monthly') {
       extra.innerHTML =
-        '<span style="font-size:12px;color:#64748b;">Klik baris bulan untuk memfilter seluruh dashboard ke bulan tersebut</span>';
+        '<span style="font-size:12px;color:#64748b;">Menampilkan rincian bulanan berpenanda kuartal dalam satuan <strong>' +
+        unitBadge +
+        '</strong> · Klik baris bulan untuk memfilter periode</span>';
       renderMonthlyTable(comp, area);
     } else if (ODS_STATE.activeTab === 'category') {
       extra.innerHTML =
-        '<span style="font-size:12px;color:#64748b;">Klik baris kategori untuk memfilter analisa spesifik per kategori</span>';
+        '<span style="font-size:12px;color:#64748b;">Menampilkan distribusi kategori dalam satuan <strong>' +
+        unitBadge +
+        '</strong> · Klik baris kategori untuk memfilter analisa</span>';
       renderCategoryTable(comp, area);
     } else if (ODS_STATE.activeTab === 'daily') {
       extra.innerHTML =
-        '<input type="text" class="ods-input" placeholder="Cari tanggal (YYYY-MM-DD) / hari…" value="' +
+        '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">' +
+        '  <input type="text" class="ods-input" placeholder="Cari tanggal (YYYY-MM-DD) / hari…" value="' +
         escHtml(ODS_STATE.dailySearch) +
-        '" oninput="window.odsOnDailySearch(this.value)" style="width:210px;">' +
-        '<select class="ods-select" onchange="window.odsOnDailyTypeFilter(this.value)">' +
-        '  <option value="ALL"' +
+        '" oninput="window.odsOnDailySearch(this.value)" style="width:220px;">' +
+        '  <select class="ods-select" onchange="window.odsOnDailyTypeFilter(this.value)">' +
+        '    <option value="ALL"' +
         (ODS_STATE.dailyDayType === 'ALL' ? ' selected' : '') +
         '>Semua Hari</option>' +
-        '  <option value="WEEKDAY"' +
+        '    <option value="WEEKDAY"' +
         (ODS_STATE.dailyDayType === 'WEEKDAY' ? ' selected' : '') +
         '>Senin – Jumat</option>' +
-        '  <option value="WEEKEND"' +
+        '    <option value="WEEKEND"' +
         (ODS_STATE.dailyDayType === 'WEEKEND' ? ' selected' : '') +
         '>Sabtu – Minggu</option>' +
-        '  <option value="PEAK"' +
+        '    <option value="PEAK"' +
         (ODS_STATE.dailyDayType === 'PEAK' ? ' selected' : '') +
-        '>Lonjakan Tinggi (&ge; 1.2x Avg)</option>' +
-        '</select>';
+        '>Lonjakan Tinggi (&ge; 1.2x Avg ' +
+        (isCbm ? 'CBM' : 'OD') +
+        ')</option>' +
+        '  </select>' +
+        '</div>' +
+        '<span style="font-size:12px;color:#64748b;">Satuan aktif: <strong>' +
+        unitBadge +
+        '</strong></span>';
       renderDailyTable(comp, area);
     } else {
+      var qF = ODS_STATE.regionalQuarter || 'ALL';
+      var vMode = ODS_STATE.regionalViewMode || 'MONTHLY_QUARTER';
+      var lim = ODS_STATE.regionalLimit || '20';
+      var activeWilChip =
+        ODS_STATE.wilayah && ODS_STATE.wilayah !== 'ALL'
+          ? '<button type="button" class="ods-btn" style="height:30px;padding:0 10px;border-color:#2563eb;color:#2563eb;background:#eff6ff;" onclick="window.odsSetWilayah(\'ALL\')">Filter Wilayah: ' +
+            escHtml(ODS_STATE.wilayah) +
+            ' &times;</button>'
+          : '';
+
       extra.innerHTML =
-        '<span style="font-size:12px;color:#64748b;">Klik wilayah untuk memfilter koridor pengiriman</span>';
+        '<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">' +
+        '  <div class="ods-field">' +
+        '    <span class="ods-field-label">Kuartal:</span>' +
+        '    <div class="ods-segmented">' +
+        '      <button type="button" class="ods-seg-btn' +
+        (qF === 'ALL' ? ' active' : '') +
+        '" onclick="window.odsSetRegionalQuarter(\'ALL\')">Semua (Q1–Q4)</button>' +
+        '      <button type="button" class="ods-seg-btn' +
+        (qF === 'Q1' ? ' active' : '') +
+        '" onclick="window.odsSetRegionalQuarter(\'Q1\')">Q1</button>' +
+        '      <button type="button" class="ods-seg-btn' +
+        (qF === 'Q2' ? ' active' : '') +
+        '" onclick="window.odsSetRegionalQuarter(\'Q2\')">Q2</button>' +
+        '      <button type="button" class="ods-seg-btn' +
+        (qF === 'Q3' ? ' active' : '') +
+        '" onclick="window.odsSetRegionalQuarter(\'Q3\')">Q3</button>' +
+        '      <button type="button" class="ods-seg-btn' +
+        (qF === 'Q4' ? ' active' : '') +
+        '" onclick="window.odsSetRegionalQuarter(\'Q4\')">Q4</button>' +
+        '    </div>' +
+        '  </div>' +
+        (qF === 'ALL'
+          ? '  <div class="ods-field">' +
+            '    <span class="ods-field-label">Kolom:</span>' +
+            '    <div class="ods-segmented">' +
+            '      <button type="button" class="ods-seg-btn' +
+            (vMode === 'MONTHLY_QUARTER' ? ' active' : '') +
+            '" onclick="window.odsSetRegionalViewMode(\'MONTHLY_QUARTER\')">Per Bulan + Kuartal</button>' +
+            '      <button type="button" class="ods-seg-btn' +
+            (vMode === 'QUARTER_ONLY' ? ' active' : '') +
+            '" onclick="window.odsSetRegionalViewMode(\'QUARTER_ONLY\')">Ringkasan Q1–Q4</button>' +
+            '    </div>' +
+            '  </div>'
+          : '') +
+        activeWilChip +
+        '</div>' +
+        '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">' +
+        '  <input type="text" class="ods-input" placeholder="Cari wilayah / asal hub…" value="' +
+        escHtml(ODS_STATE.regionalSearch || '') +
+        '" oninput="window.odsOnRegionalSearch(this.value)" style="width:190px;height:32px;">' +
+        '  <select class="ods-select" style="height:32px;" onchange="window.odsSetRegionalLimit(this.value)">' +
+        '    <option value="15"' +
+        (lim === '15' ? ' selected' : '') +
+        '>Top 15 Wilayah</option>' +
+        '    <option value="20"' +
+        (lim === '20' ? ' selected' : '') +
+        '>Top 20 Wilayah</option>' +
+        '    <option value="50"' +
+        (lim === '50' ? ' selected' : '') +
+        '>Top 50 Wilayah</option>' +
+        '    <option value="ALL"' +
+        (lim === 'ALL' ? ' selected' : '') +
+        '>Semua Wilayah (' +
+        fmtInt(comp.wilayahList.length) +
+        ')</option>' +
+        '  </select>' +
+        '</div>';
       renderRegionalAndOriginTables(comp, area);
     }
   }
@@ -28098,64 +28665,82 @@ function exportOdSuspendCsv() {
       return;
     }
 
+    var isCbm = (ODS_STATE.tableMetric || 'CBM') === 'CBM';
+    var uShort = isCbm ? 'm³' : 'OD';
+
     var rowsHtml = comp.monthlyAsc
       .map(function (m) {
+        var momVal = isCbm ? m.momDailyAvgCbmPct : m.momDailyAvgPct;
         var momStr = '—';
-        if (m.momDailyAvgPct !== null) {
-          var col = m.momDailyAvgPct >= 0 ? '#16a34a' : '#dc2626';
-          var sign = m.momDailyAvgPct >= 0 ? '+' : '';
-          momStr = '<span style="color:' + col + ';font-weight:700;">' + sign + fmtPct(m.momDailyAvgPct, 1) + '</span>';
+        if (momVal !== null && momVal !== undefined) {
+          var col = momVal >= 0 ? '#16a34a' : '#dc2626';
+          var sign = momVal >= 0 ? '+' : '';
+          momStr = '<span style="color:' + col + ';font-weight:700;">' + sign + fmtPct(momVal, 1) + '</span>';
         }
+        var qNum = m.quarter || Math.ceil(parseInt(m.ym.slice(5, 7), 10) / 3);
+        var qBadge = '<span class="ods-q-badge q' + qNum + '" style="margin-right:7px;">Q' + qNum + '</span>';
+
+        var regGrwCell = isCbm ? fmtDec(m.regGrwCbm || 0, 1) : fmtInt(m.regGrwOrders || 0);
+        var regCustCell = isCbm ? fmtDec(m.regCustCbm || 0, 1) : fmtInt(m.regCustOrders || 0);
+        var regSubCell = isCbm ? fmtDec(m.regCbm || 0, 1) : fmtInt(m.regOrders || 0);
+        var hubGrwCell = isCbm ? fmtDec(m.hubGrwCbm || 0, 1) : fmtInt(m.hubGrwOrders || 0);
+        var hubCustCell = isCbm ? fmtDec(m.hubCustCbm || 0, 1) : fmtInt(m.hubCustOrders || 0);
+        var hubSubCell = isCbm ? fmtDec(m.hubTotalCbm || 0, 1) : fmtInt(m.hubTotalOrders || 0);
+        var mainTotalCell = isCbm ? fmtDec(m.cbm, 1) : fmtInt(m.orders);
+        var mainAvgCell = isCbm ? fmtDec(m.avgDailyCbm, 1) : fmtInt(m.avgDailyOrders);
+        var secTotalCell = isCbm ? fmtInt(m.orders) : fmtDec(m.cbm, 1);
+        var hubShareCell = fmtPct(isCbm ? m.hubShareCbmPct : m.hubSharePct, 1);
+        var pkDate = isCbm ? m.peakCbmDate || m.peakDate : m.peakDate;
+        var pkValStr = isCbm ? fmtDec(m.peakCbm || 0, 1) + ' m³' : fmtInt(m.peakOrders || 0) + ' OD';
+
         return (
           '<tr class="ods-clickable" onclick="window.odsOnMonthSelect(\'' +
           m.ym +
           '\')">' +
           '<td style="font-weight:700;">' +
+          qBadge +
           formatYmLabel(m.ym) +
           '</td>' +
           '<td class="num">' +
           fmtInt(m.activeDays) +
           '</td>' +
           '<td class="num ods-text-blue" style="font-weight:600;">' +
-          fmtInt(m.regGrwOrders || 0) +
+          regGrwCell +
           '</td>' +
           '<td class="num ods-text-cyan" style="font-weight:600;">' +
-          fmtInt(m.regCustOrders || 0) +
+          regCustCell +
           '</td>' +
           '<td class="num ods-text-blue" style="font-weight:700;">' +
-          fmtInt(m.regOrders) +
+          regSubCell +
           '</td>' +
           '<td class="num ods-text-teal">' +
-          fmtInt(m.hubGrwOrders) +
+          hubGrwCell +
           '</td>' +
           '<td class="num ods-text-indigo">' +
-          fmtInt(m.hubCustOrders) +
+          hubCustCell +
           '</td>' +
           '<td class="num" style="font-weight:700;">' +
-          fmtInt(m.hubTotalOrders) +
+          hubSubCell +
+          '</td>' +
+          '<td class="num" style="font-weight:800;">' +
+          mainTotalCell +
           '</td>' +
           '<td class="num" style="font-weight:700;">' +
-          fmtInt(m.orders) +
+          mainAvgCell +
           '</td>' +
-          '<td class="num" style="font-weight:700;">' +
-          fmtInt(m.avgDailyOrders) +
-          '</td>' +
-          '<td class="num">' +
-          fmtDec(m.cbm, 1) +
+          '<td class="num" style="color:#475569;">' +
+          secTotalCell +
           '</td>' +
           '<td class="num">' +
-          fmtDec(m.avgDailyCbm, 1) +
-          '</td>' +
-          '<td class="num">' +
-          fmtPct(m.hubSharePct, 1) +
+          hubShareCell +
           '</td>' +
           '<td class="num">' +
           momStr +
           '</td>' +
           '<td>' +
-          formatIsoToIdShort(m.peakDate) +
+          formatIsoToIdShort(pkDate) +
           ' <span class="ods-num" style="color:#64748b;">(' +
-          fmtInt(m.peakOrders) +
+          pkValStr +
           ')</span></td>' +
           '</tr>'
         );
@@ -28163,28 +28748,55 @@ function exportOdSuspendCsv() {
       .join('');
 
     var t = comp.totals;
-    var hubAll = t.hubGrwOrders + t.hubCustOrders;
+    var hubAllOd = t.hubGrwOrders + t.hubCustOrders;
+    var hubAllCbm = t.hubGrwCbm + t.hubCustCbm;
+    var grandPkDay = isCbm ? comp.peakCbmDay || comp.peakDay : comp.peakDay;
+    var grandPkStr = grandPkDay
+      ? formatIsoToIdShort(grandPkDay.date) +
+        ' (' +
+        (isCbm ? fmtDec(grandPkDay.cbm, 1) + ' m³' : fmtInt(grandPkDay.orders) + ' OD') +
+        ')'
+      : '—';
 
     container.innerHTML =
       '<div class="ods-table-scroll">' +
       '  <table class="ods-table">' +
       '    <thead>' +
       '      <tr>' +
-      '        <th>Bulan</th>' +
+      '        <th>Kuartal &amp; Bulan</th>' +
       '        <th class="num">Hari Aktif</th>' +
-      '        <th class="num">REG GRW (H6)</th>' +
-      '        <th class="num">REG CUST (H6)</th>' +
-      '        <th class="num">Subtotal Regular</th>' +
-      '        <th class="num">Hub GRW</th>' +
-      '        <th class="num">Hub Cust</th>' +
-      '        <th class="num">Subtotal Hub</th>' +
-      '        <th class="num">Total OD Shipped</th>' +
-      '        <th class="num">Avg OD / Hari</th>' +
-      '        <th class="num">Total CBM (m³)</th>' +
-      '        <th class="num">Avg CBM / Hari</th>' +
+      '        <th class="num">REG GRW (' +
+      uShort +
+      ')</th>' +
+      '        <th class="num">REG CUST (' +
+      uShort +
+      ')</th>' +
+      '        <th class="num">Subtotal Reg (' +
+      uShort +
+      ')</th>' +
+      '        <th class="num">Hub GRW (' +
+      uShort +
+      ')</th>' +
+      '        <th class="num">Hub Cust (' +
+      uShort +
+      ')</th>' +
+      '        <th class="num">Subtotal Hub (' +
+      uShort +
+      ')</th>' +
+      '        <th class="num">Total ' +
+      (isCbm ? 'CBM (m³)' : 'OD Shipped') +
+      '</th>' +
+      '        <th class="num">Avg ' +
+      uShort +
+      ' / Hari</th>' +
+      '        <th class="num">' +
+      (isCbm ? 'Ref Total OD' : 'Ref Total CBM (m³)') +
+      '</th>' +
       '        <th class="num">% Porsi Hub</th>' +
       '        <th class="num">MoM (Avg/Hr)</th>' +
-      '        <th>Puncak Harian</th>' +
+      '        <th>Puncak Harian (' +
+      uShort +
+      ')</th>' +
       '      </tr>' +
       '    </thead>' +
       '    <tbody>' +
@@ -28197,41 +28809,47 @@ function exportOdSuspendCsv() {
       fmtInt(comp.activeDays) +
       '</td>' +
       '        <td class="num">' +
-      fmtInt(t.regGrwOrders) +
+      (isCbm ? fmtDec(t.regGrwCbm, 1) : fmtInt(t.regGrwOrders)) +
       '</td>' +
       '        <td class="num">' +
-      fmtInt(t.regCustOrders) +
+      (isCbm ? fmtDec(t.regCustCbm, 1) : fmtInt(t.regCustOrders)) +
       '</td>' +
       '        <td class="num" style="font-weight:800;">' +
-      fmtInt(t.regOrders) +
+      (isCbm ? fmtDec(t.regCbm, 1) : fmtInt(t.regOrders)) +
       '</td>' +
       '        <td class="num">' +
-      fmtInt(t.hubGrwOrders) +
+      (isCbm ? fmtDec(t.hubGrwCbm, 1) : fmtInt(t.hubGrwOrders)) +
       '</td>' +
       '        <td class="num">' +
-      fmtInt(t.hubCustOrders) +
+      (isCbm ? fmtDec(t.hubCustCbm, 1) : fmtInt(t.hubCustOrders)) +
       '</td>' +
       '        <td class="num">' +
-      fmtInt(hubAll) +
+      (isCbm ? fmtDec(hubAllCbm, 1) : fmtInt(hubAllOd)) +
       '</td>' +
       '        <td class="num">' +
-      fmtInt(t.orders) +
+      (isCbm ? fmtDec(t.cbm, 1) : fmtInt(t.orders)) +
       '</td>' +
       '        <td class="num">' +
-      fmtInt(comp.avgDailyOrders) +
+      (isCbm ? fmtDec(comp.avgDailyCbm, 1) : fmtInt(comp.avgDailyOrders)) +
       '</td>' +
       '        <td class="num">' +
-      fmtDec(t.cbm, 1) +
+      (isCbm ? fmtInt(t.orders) : fmtDec(t.cbm, 1)) +
       '</td>' +
       '        <td class="num">' +
-      fmtDec(comp.avgDailyCbm, 1) +
-      '</td>' +
-      '        <td class="num">' +
-      fmtPct(t.orders > 0 ? (hubAll / t.orders) * 100 : 0, 1) +
+      fmtPct(
+        isCbm
+          ? t.cbm > 0
+            ? (hubAllCbm / t.cbm) * 100
+            : 0
+          : t.orders > 0
+            ? (hubAllOd / t.orders) * 100
+            : 0,
+        1
+      ) +
       '</td>' +
       '        <td class="num">—</td>' +
       '        <td>' +
-      (comp.peakDay ? formatIsoToIdShort(comp.peakDay.date) + ' (' + fmtInt(comp.peakDay.orders) + ')' : '—') +
+      grandPkStr +
       '</td>' +
       '      </tr>' +
       '    </tfoot>' +
@@ -28240,12 +28858,15 @@ function exportOdSuspendCsv() {
   }
 
   function renderCategoryTable(comp, container) {
+    var isCbm = (ODS_STATE.tableMetric || 'CBM') === 'CBM';
+    var uShort = isCbm ? 'm³' : 'OD';
+
     var list = comp.categoryList.slice().sort(function (a, b) {
       var col = ODS_STATE.catSortCol;
       var va = a[col],
         vb = b[col];
       if (typeof va === 'string') return va.localeCompare(vb) * ODS_STATE.catSortDir;
-      return (va - vb) * ODS_STATE.catSortDir;
+      return ((va || 0) - (vb || 0)) * ODS_STATE.catSortDir;
     });
 
     if (!list.length) {
@@ -28256,6 +28877,13 @@ function exportOdSuspendCsv() {
     var rowsHtml = list
       .map(function (c, i) {
         var barColor = c.sheetIdx === 0 ? '#2563eb' : c.sheetIdx === 1 ? '#0d9488' : '#7c3aed';
+        var dkCell = isCbm ? fmtDec(c.dkCbm || 0, 1) : fmtInt(c.dkOrders || 0);
+        var lkCell = isCbm ? fmtDec(c.lkCbm || 0, 1) : fmtInt(c.lkOrders || 0);
+        var priCell = isCbm ? fmtDec(c.cbm, 2) : fmtInt(c.orders);
+        var priShare = isCbm ? c.shareCbmPct : c.shareOrdersPct;
+        var avgDailyCell = isCbm ? fmtDec(c.avgDailyCbm || 0, 1) : fmtDec(c.avgDailyOrders, 1);
+        var secCell = isCbm ? fmtInt(c.orders) : fmtDec(c.cbm, 2);
+
         return (
           '<tr class="ods-clickable" onclick="window.odsSetCategory(\'' +
           escHtml(c.category).replace(/'/g, "\\'") +
@@ -28273,34 +28901,31 @@ function exportOdSuspendCsv() {
           escHtml(c.macro) +
           '</td>' +
           '<td class="num">' +
-          fmtInt(c.dkOrders) +
+          dkCell +
           '</td>' +
           '<td class="num">' +
-          fmtInt(c.lkOrders) +
+          lkCell +
           '</td>' +
-          '<td class="num" style="font-weight:700;">' +
-          fmtInt(c.orders) +
+          '<td class="num" style="font-weight:800;">' +
+          priCell +
           '</td>' +
           '<td class="num">' +
           '  <div class="ods-bar-inline">' +
           '    <div class="ods-bar-track"><div class="ods-bar-fill" style="width:' +
-          Math.min(100, c.shareOrdersPct).toFixed(1) +
+          Math.min(100, priShare).toFixed(1) +
           '%;background:' +
           barColor +
           ';"></div></div>' +
           '    <span>' +
-          fmtPct(c.shareOrdersPct, 1) +
+          fmtPct(priShare, 1) +
           '</span>' +
           '  </div>' +
           '</td>' +
           '<td class="num" style="font-weight:600;">' +
-          fmtDec(c.cbm, 2) +
+          avgDailyCell +
           '</td>' +
-          '<td class="num">' +
-          fmtPct(c.shareCbmPct, 1) +
-          '</td>' +
-          '<td class="num">' +
-          fmtDec(c.avgDailyOrders, 1) +
+          '<td class="num" style="color:#475569;">' +
+          secCell +
           '</td>' +
           '<td class="num">' +
           fmtDec(c.avgCbmPerOrder, 3) +
@@ -28311,6 +28936,13 @@ function exportOdSuspendCsv() {
       .join('');
 
     var t = comp.totals;
+    var dkSortKey = isCbm ? 'dkCbm' : 'dkOrders';
+    var lkSortKey = isCbm ? 'lkCbm' : 'lkOrders';
+    var priSortKey = isCbm ? 'cbm' : 'orders';
+    var shareSortKey = isCbm ? 'shareCbmPct' : 'shareOrdersPct';
+    var avgSortKey = isCbm ? 'avgDailyCbm' : 'avgDailyOrders';
+    var secSortKey = isCbm ? 'orders' : 'cbm';
+
     container.innerHTML =
       '<div class="ods-table-scroll">' +
       '  <table class="ods-table">' +
@@ -28320,13 +28952,36 @@ function exportOdSuspendCsv() {
       '        <th onclick="window.odsSortCategory(\'category\')">Kategori Order ⬍</th>' +
       '        <th onclick="window.odsSortCategory(\'sourceSheet\')">Sumber Sheet ⬍</th>' +
       '        <th onclick="window.odsSortCategory(\'macro\')">Kelompok Makro ⬍</th>' +
-      '        <th class="num" onclick="window.odsSortCategory(\'dkOrders\')">DK (OD) ⬍</th>' +
-      '        <th class="num" onclick="window.odsSortCategory(\'lkOrders\')">LK (OD) ⬍</th>' +
-      '        <th class="num" onclick="window.odsSortCategory(\'orders\')">Total OD ⬍</th>' +
-      '        <th class="num" onclick="window.odsSortCategory(\'shareOrdersPct\')">% Porsi OD ⬍</th>' +
-      '        <th class="num" onclick="window.odsSortCategory(\'cbm\')">Total CBM (m³) ⬍</th>' +
-      '        <th class="num" onclick="window.odsSortCategory(\'shareCbmPct\')">% Porsi CBM ⬍</th>' +
-      '        <th class="num" onclick="window.odsSortCategory(\'avgDailyOrders\')">Avg OD/Hari ⬍</th>' +
+      '        <th class="num" onclick="window.odsSortCategory(\'' +
+      dkSortKey +
+      '\')">DK (' +
+      uShort +
+      ') ⬍</th>' +
+      '        <th class="num" onclick="window.odsSortCategory(\'' +
+      lkSortKey +
+      '\')">LK (' +
+      uShort +
+      ') ⬍</th>' +
+      '        <th class="num" onclick="window.odsSortCategory(\'' +
+      priSortKey +
+      '\')">Total ' +
+      (isCbm ? 'CBM (m³)' : 'OD') +
+      ' ⬍</th>' +
+      '        <th class="num" onclick="window.odsSortCategory(\'' +
+      shareSortKey +
+      '\')">% Porsi ' +
+      (isCbm ? 'CBM' : 'OD') +
+      ' ⬍</th>' +
+      '        <th class="num" onclick="window.odsSortCategory(\'' +
+      avgSortKey +
+      '\')">Avg ' +
+      uShort +
+      '/Hari ⬍</th>' +
+      '        <th class="num" onclick="window.odsSortCategory(\'' +
+      secSortKey +
+      '\')">' +
+      (isCbm ? 'Ref Total OD' : 'Ref Total CBM (m³)') +
+      ' ⬍</th>' +
       '        <th class="num" onclick="window.odsSortCategory(\'avgCbmPerOrder\')">Avg CBM/OD ⬍</th>' +
       '      </tr>' +
       '    </thead>' +
@@ -28337,21 +28992,20 @@ function exportOdSuspendCsv() {
       '      <tr>' +
       '        <td colspan="4">GRAND TOTAL</td>' +
       '        <td class="num">' +
-      fmtInt(t.dkOrders) +
+      (isCbm ? fmtDec(t.dkCbm, 1) : fmtInt(t.dkOrders)) +
       '</td>' +
       '        <td class="num">' +
-      fmtInt(t.lkOrders) +
+      (isCbm ? fmtDec(t.lkCbm, 1) : fmtInt(t.lkOrders)) +
       '</td>' +
       '        <td class="num">' +
-      fmtInt(t.orders) +
-      '</td>' +
-      '        <td class="num">100,0%</td>' +
-      '        <td class="num">' +
-      fmtDec(t.cbm, 2) +
+      (isCbm ? fmtDec(t.cbm, 2) : fmtInt(t.orders)) +
       '</td>' +
       '        <td class="num">100,0%</td>' +
       '        <td class="num">' +
-      fmtDec(comp.avgDailyOrders, 1) +
+      (isCbm ? fmtDec(comp.avgDailyCbm, 1) : fmtDec(comp.avgDailyOrders, 1)) +
+      '</td>' +
+      '        <td class="num">' +
+      (isCbm ? fmtInt(t.orders) : fmtDec(t.cbm, 2)) +
       '</td>' +
       '        <td class="num">' +
       fmtDec(comp.avgCbmPerOrder, 3) +
@@ -28363,8 +29017,10 @@ function exportOdSuspendCsv() {
   }
 
   function renderDailyTable(comp, container) {
+    var isCbm = (ODS_STATE.tableMetric || 'CBM') === 'CBM';
+    var uShort = isCbm ? 'm³' : 'OD';
     var q = (ODS_STATE.dailySearch || '').toLowerCase().trim();
-    var avg = comp.avgDailyOrders || 1;
+    var avgRef = (isCbm ? comp.avgDailyCbm : comp.avgDailyOrders) || 1;
 
     var filtered = comp.dailyAsc.filter(function (d) {
       var dayName = DOW_NAMES_ID[d.dow];
@@ -28374,16 +29030,23 @@ function exportOdSuspendCsv() {
       }
       if (ODS_STATE.dailyDayType === 'WEEKDAY' && (d.dow === 0 || d.dow === 6)) return false;
       if (ODS_STATE.dailyDayType === 'WEEKEND' && d.dow !== 0 && d.dow !== 6) return false;
-      if (ODS_STATE.dailyDayType === 'PEAK' && d.orders < avg * 1.2) return false;
+      var dayVal = isCbm ? d.cbm : d.orders;
+      if (ODS_STATE.dailyDayType === 'PEAK' && dayVal < avgRef * 1.2) return false;
       return true;
     });
 
     filtered.sort(function (a, b) {
       var col = ODS_STATE.dailySortCol;
-      var va = col === 'hubTotal' ? a.hubGrwOrders + a.hubCustOrders : a[col];
-      var vb = col === 'hubTotal' ? b.hubGrwOrders + b.hubCustOrders : b[col];
+      var va, vb;
+      if (col === 'hubTotal') {
+        va = isCbm ? a.hubGrwCbm + a.hubCustCbm : a.hubGrwOrders + a.hubCustOrders;
+        vb = isCbm ? b.hubGrwCbm + b.hubCustCbm : b.hubGrwOrders + b.hubCustOrders;
+      } else {
+        va = a[col];
+        vb = b[col];
+      }
       if (typeof va === 'string') return va.localeCompare(vb) * ODS_STATE.dailySortDir;
-      return (va - vb) * ODS_STATE.dailySortDir;
+      return ((va || 0) - (vb || 0)) * ODS_STATE.dailySortDir;
     });
 
     var totalRows = filtered.length;
@@ -28394,8 +29057,10 @@ function exportOdSuspendCsv() {
 
     var rowsHtml = pageItems
       .map(function (d) {
-        var hubTot = d.hubGrwOrders + d.hubCustOrders;
-        var ratio = avg > 0 ? d.orders / avg : 0;
+        var hubTotOd = d.hubGrwOrders + d.hubCustOrders;
+        var hubTotCbm = (d.hubGrwCbm || 0) + (d.hubCustCbm || 0);
+        var curMetricVal = isCbm ? d.cbm : d.orders;
+        var ratio = avgRef > 0 ? curMetricVal / avgRef : 0;
         var loadLabel = 'Normal';
         var loadColor = '#16a34a';
         if (ratio >= 1.35) {
@@ -28417,34 +29082,34 @@ function exportOdSuspendCsv() {
           DOW_NAMES_ID[d.dow] +
           '</td>' +
           '<td class="num ods-text-blue" style="font-weight:600;">' +
-          fmtInt(d.regGrwOrders || 0) +
+          (isCbm ? fmtDec(d.regGrwCbm || 0, 1) : fmtInt(d.regGrwOrders || 0)) +
           '</td>' +
           '<td class="num ods-text-cyan" style="font-weight:600;">' +
-          fmtInt(d.regCustOrders || 0) +
+          (isCbm ? fmtDec(d.regCustCbm || 0, 1) : fmtInt(d.regCustOrders || 0)) +
           '</td>' +
           '<td class="num">' +
-          fmtInt(d.regDk) +
+          (isCbm ? fmtDec(d.regDkCbm || 0, 1) : fmtInt(d.regDk)) +
           '</td>' +
           '<td class="num">' +
-          fmtInt(d.regLk) +
+          (isCbm ? fmtDec(d.regLkCbm || 0, 1) : fmtInt(d.regLk)) +
           '</td>' +
           '<td class="num ods-text-blue" style="font-weight:700;">' +
-          fmtInt(d.regOrders) +
+          (isCbm ? fmtDec(d.regCbm || 0, 1) : fmtInt(d.regOrders)) +
           '</td>' +
           '<td class="num ods-text-teal">' +
-          fmtInt(d.hubGrwOrders) +
+          (isCbm ? fmtDec(d.hubGrwCbm || 0, 1) : fmtInt(d.hubGrwOrders)) +
           '</td>' +
           '<td class="num ods-text-indigo">' +
-          fmtInt(d.hubCustOrders) +
+          (isCbm ? fmtDec(d.hubCustCbm || 0, 1) : fmtInt(d.hubCustOrders)) +
           '</td>' +
           '<td class="num" style="font-weight:600;">' +
-          fmtInt(hubTot) +
+          (isCbm ? fmtDec(hubTotCbm, 1) : fmtInt(hubTotOd)) +
           '</td>' +
-          '<td class="num" style="font-weight:700;">' +
-          fmtInt(d.orders) +
+          '<td class="num" style="font-weight:800;">' +
+          (isCbm ? fmtDec(d.cbm, 2) : fmtInt(d.orders)) +
           '</td>' +
-          '<td class="num">' +
-          fmtDec(d.cbm, 2) +
+          '<td class="num" style="color:#475569;">' +
+          (isCbm ? fmtInt(d.orders) : fmtDec(d.cbm, 2)) +
           '</td>' +
           '<td style="color:' +
           loadColor +
@@ -28456,6 +29121,14 @@ function exportOdSuspendCsv() {
       })
       .join('');
 
+    var sortRegGrw = isCbm ? 'regGrwCbm' : 'regGrwOrders';
+    var sortRegCust = isCbm ? 'regCustCbm' : 'regCustOrders';
+    var sortRegSub = isCbm ? 'regCbm' : 'regOrders';
+    var sortHubGrw = isCbm ? 'hubGrwCbm' : 'hubGrwOrders';
+    var sortHubCust = isCbm ? 'hubCustCbm' : 'hubCustOrders';
+    var sortPrimary = isCbm ? 'cbm' : 'orders';
+    var sortSecondary = isCbm ? 'orders' : 'cbm';
+
     container.innerHTML =
       '<div class="ods-table-scroll">' +
       '  <table class="ods-table">' +
@@ -28463,16 +29136,50 @@ function exportOdSuspendCsv() {
       '      <tr>' +
       '        <th onclick="window.odsSortDaily(\'date\')">Tanggal ⬍</th>' +
       '        <th>Hari</th>' +
-      '        <th class="num" onclick="window.odsSortDaily(\'regGrwOrders\')">REG GRW ⬍</th>' +
-      '        <th class="num" onclick="window.odsSortDaily(\'regCustOrders\')">REG CUST ⬍</th>' +
-      '        <th class="num">Reg DK</th>' +
-      '        <th class="num">Reg LK</th>' +
-      '        <th class="num" onclick="window.odsSortDaily(\'regOrders\')">Subtotal Regular ⬍</th>' +
-      '        <th class="num" onclick="window.odsSortDaily(\'hubGrwOrders\')">Hub GRW ⬍</th>' +
-      '        <th class="num" onclick="window.odsSortDaily(\'hubCustOrders\')">Hub Cust ⬍</th>' +
-      '        <th class="num" onclick="window.odsSortDaily(\'hubTotal\')">Subtotal Hub ⬍</th>' +
-      '        <th class="num" onclick="window.odsSortDaily(\'orders\')">Total OD ⬍</th>' +
-      '        <th class="num" onclick="window.odsSortDaily(\'cbm\')">Total CBM (m³) ⬍</th>' +
+      '        <th class="num" onclick="window.odsSortDaily(\'' +
+      sortRegGrw +
+      '\')">REG GRW (' +
+      uShort +
+      ') ⬍</th>' +
+      '        <th class="num" onclick="window.odsSortDaily(\'' +
+      sortRegCust +
+      '\')">REG CUST (' +
+      uShort +
+      ') ⬍</th>' +
+      '        <th class="num">Reg DK (' +
+      uShort +
+      ')</th>' +
+      '        <th class="num">Reg LK (' +
+      uShort +
+      ')</th>' +
+      '        <th class="num" onclick="window.odsSortDaily(\'' +
+      sortRegSub +
+      '\')">Subtotal Reg (' +
+      uShort +
+      ') ⬍</th>' +
+      '        <th class="num" onclick="window.odsSortDaily(\'' +
+      sortHubGrw +
+      '\')">Hub GRW (' +
+      uShort +
+      ') ⬍</th>' +
+      '        <th class="num" onclick="window.odsSortDaily(\'' +
+      sortHubCust +
+      '\')">Hub Cust (' +
+      uShort +
+      ') ⬍</th>' +
+      '        <th class="num" onclick="window.odsSortDaily(\'hubTotal\')">Subtotal Hub (' +
+      uShort +
+      ') ⬍</th>' +
+      '        <th class="num" onclick="window.odsSortDaily(\'' +
+      sortPrimary +
+      '\')">Total ' +
+      (isCbm ? 'CBM (m³)' : 'OD') +
+      ' ⬍</th>' +
+      '        <th class="num" onclick="window.odsSortDaily(\'' +
+      sortSecondary +
+      '\')">' +
+      (isCbm ? 'Ref OD' : 'Ref CBM (m³)') +
+      ' ⬍</th>' +
       '        <th>Indeks vs Avg Harian</th>' +
       '      </tr>' +
       '    </thead>' +
@@ -28507,115 +29214,572 @@ function exportOdSuspendCsv() {
   }
 
   function renderRegionalAndOriginTables(comp, container) {
-    var topWil = comp.wilayahList.slice(0, 20);
-    var wilRows = topWil
-      .map(function (w, idx) {
+    var isCbm = (ODS_STATE.tableMetric || 'CBM') === 'CBM';
+    var uShort = isCbm ? 'm³' : 'OD';
+    var qFilter = ODS_STATE.regionalQuarter || 'ALL';
+    var viewMode = ODS_STATE.regionalViewMode || 'MONTHLY_QUARTER';
+    var searchQ = (ODS_STATE.regionalSearch || '').toLowerCase().trim();
+    var limitSetting = ODS_STATE.regionalLimit || '20';
+    var yrSuffix = comp.activeYearLabel ? ' ' + comp.activeYearLabel : '';
+
+    function fmtCellVal(v) {
+      if (!v || v <= 0) return '<span class="ods-zero-cell">—</span>';
+      return isCbm ? fmtDec(v, 1) : fmtInt(v);
+    }
+
+    function fmtFootVal(v) {
+      if (!v || v <= 0) return '—';
+      return isCbm ? fmtDec(v, 1) : fmtInt(v);
+    }
+
+    // 1. Build Centralized 4-Quarter Summary Cards (Q1 - Q4)
+    var qCardsHtml = (comp.quarterSummaryFixed || [])
+      .map(function (qs) {
+        var isSelected = qFilter === qs.qCode;
+        var nextQArg = isSelected ? 'ALL' : qs.qCode;
+        var priVal = isCbm ? qs.cbm : qs.orders;
+        var priStr = isCbm ? fmtDec(priVal, 1) + ' m³' : fmtInt(priVal) + ' OD';
+        var secStr = isCbm ? fmtInt(qs.orders) + ' OD' : fmtDec(qs.cbm, 1) + ' m³';
+        var avgStr = isCbm ? fmtDec(qs.avgDailyCbm, 1) + ' m³/hr' : fmtInt(qs.avgDailyOrders) + ' OD/hr';
+        var sharePct = isCbm ? qs.shareCbmPct : qs.shareOrdersPct;
+        var qoqVal = isCbm ? qs.qoqAvgCbmPct : qs.qoqAvgOdPct;
+
+        var qoqHtml = '';
+        if (qs.activeDays === 0) {
+          qoqHtml = '<span style="font-size:11px;color:#94a3b8;font-weight:600;">Belum Aktif</span>';
+        } else if (qoqVal !== null && qoqVal !== undefined) {
+          var qCol = qoqVal >= 0 ? '#16a34a' : '#dc2626';
+          var qSign = qoqVal >= 0 ? '+' : '';
+          qoqHtml =
+            '<span style="font-size:11px;font-weight:700;color:' +
+            qCol +
+            ';">' +
+            qSign +
+            fmtPct(qoqVal, 1) +
+            ' QoQ</span>';
+        } else {
+          qoqHtml = '<span style="font-size:11px;color:#64748b;font-weight:600;">Baseline ' + qs.qCode + '</span>';
+        }
+
+        var topW = isCbm ? qs.topWilCbm : qs.topWilOd;
+        var topWStr = topW
+          ? '<strong>' +
+            escHtml(topW.name) +
+            '</strong> <span class="ods-num" style="color:#64748b;">(' +
+            (isCbm ? fmtDec(topW.val, 0) + ' m³' : fmtInt(topW.val) + ' OD') +
+            ')</span>'
+          : '<span style="color:#94a3b8;">—</span>';
+
+        var topO = isCbm ? qs.topOriginCbm : qs.topOriginOd;
+        var shortOrig = topO ? topO.name.replace(/^H\d+\s*-\s*/, '').replace('HUB TRANSIT (STORE/GRW)', 'HUB STORE/GRW') : '';
+        var topOStr = topO
+          ? '<strong title="' +
+            escHtml(topO.name) +
+            '">' +
+            escHtml(shortOrig) +
+            '</strong> <span class="ods-num" style="color:#64748b;">(' +
+            (isCbm ? fmtDec(topO.val, 0) + ' m³' : fmtInt(topO.val) + ' OD') +
+            ')</span>'
+          : '<span style="color:#94a3b8;">—</span>';
+
         return (
-          '<tr class="ods-clickable" onclick="window.odsSetWilayah(\'' +
-          escHtml(w.wilayah).replace(/'/g, "\\'") +
-          '\')">' +
+          '<div class="ods-q-card q' +
+          qs.qNum +
+          (isSelected ? ' active-q' : '') +
+          '" onclick="window.odsSetRegionalQuarter(\'' +
+          nextQArg +
+          '\')" title="Klik untuk memfokuskan tabel ke ' +
+          qs.qCode +
+          '">' +
+          '  <div class="ods-q-card-head">' +
+          '    <div style="display:flex;align-items:center;gap:6px;">' +
+          '      <span class="ods-q-badge q' +
+          qs.qNum +
+          '">' +
+          qs.qCode +
+          '</span>' +
+          '      <span style="font-size:11.5px;font-weight:700;color:#475569;">' +
+          qs.rangeLabel +
+          escHtml(yrSuffix) +
+          '</span>' +
+          '    </div>' +
+          qoqHtml +
+          '  </div>' +
+          '  <div>' +
+          '    <div class="ods-q-card-val">' +
+          (qs.activeDays > 0 ? priStr : '—') +
+          '</div>' +
+          '    <div class="ods-q-card-sub">' +
+          (qs.activeDays > 0
+            ? 'Porsi <strong>' + fmtPct(sharePct, 1) + '</strong> · ' + avgStr + ' · ' + secStr
+            : '0 hari aktif pada filter ini') +
+          '    </div>' +
+          '  </div>' +
+          '  <div class="ods-q-card-meta">' +
+          '    <div class="ods-q-card-meta-row"><span style="color:#64748b;">Wilayah #1:</span><span style="text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' +
+          topWStr +
+          '</span></div>' +
+          '    <div class="ods-q-card-meta-row"><span style="color:#64748b;">Asal Hub #1:</span><span style="text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' +
+          topOStr +
+          '</span></div>' +
+          '  </div>' +
+          '</div>'
+        );
+      })
+      .join('');
+
+    // Determine active quarter indices for matrix columns
+    var qDefs = [
+      { qi: 0, qCode: 'Q1', label: 'Q1 · JAN–MAR', mIndices: [0, 1, 2], grpClass: 'q1-grp' },
+      { qi: 1, qCode: 'Q2', label: 'Q2 · APR–JUN', mIndices: [3, 4, 5], grpClass: 'q2-grp' },
+      { qi: 2, qCode: 'Q3', label: 'Q3 · JUL–SEP', mIndices: [6, 7, 8], grpClass: 'q3-grp' },
+      { qi: 3, qCode: 'Q4', label: 'Q4 · OKT–DES', mIndices: [9, 10, 11], grpClass: 'q4-grp' },
+    ];
+    var activeQDefs =
+      qFilter === 'ALL'
+        ? qDefs
+        : qDefs.filter(function (qd) {
+            return qd.qCode === qFilter;
+          });
+    var singleQIdx = qFilter === 'ALL' ? -1 : activeQDefs[0].qi;
+    var showMonthsInMatrix = qFilter !== 'ALL' || viewMode === 'MONTHLY_QUARTER';
+
+    function buildPeriodHeaderRows(leftColspan, leftRow2Html, rightGroupLabel, rightRow2Html, rightColspan) {
+      var r1 = '<tr class="ods-thead-group">';
+      r1 += '<th colspan="' + leftColspan + '" class="th-left ods-sticky-col">KORIDOR &amp; SUMBER</th>';
+
+      if (showMonthsInMatrix) {
+        activeQDefs.forEach(function (qd) {
+          r1 += '<th colspan="4" class="' + qd.grpClass + '">' + qd.label + escHtml(yrSuffix) + '</th>';
+        });
+      } else {
+        r1 +=
+          '<th colspan="4" class="q1-grp">REKAP PER KUARTAL (Q1 – Q4' +
+          escHtml(yrSuffix) +
+          ') · ' +
+          (isCbm ? 'CBM (m³)' : 'TOTAL OD') +
+          '</th>';
+      }
+      r1 += '<th colspan="' + rightColspan + '" class="tot-grp">' + rightGroupLabel + '</th>';
+      r1 += '</tr>';
+
+      var r2 = '<tr>' + leftRow2Html;
+      if (showMonthsInMatrix) {
+        activeQDefs.forEach(function (qd) {
+          qd.mIndices.forEach(function (mi, subIdx) {
+            r2 +=
+              '<th class="num' +
+              (subIdx === 0 ? ' q-first' : '') +
+              '">' +
+              MONTH_SHORT_ID[mi] +
+              '</th>';
+          });
+          r2 += '<th class="num q-sub-col">Total ' + qd.qCode + '</th>';
+        });
+      } else {
+        activeQDefs.forEach(function (qd, idx) {
+          r2 +=
+            '<th class="num q-sub-col' +
+            (idx === 0 ? ' q-first' : '') +
+            '">' +
+            qd.qCode +
+            ' (' +
+            MONTH_SHORT_ID[qd.mIndices[0]] +
+            '–' +
+            MONTH_SHORT_ID[qd.mIndices[2]] +
+            ')</th>';
+        });
+      }
+      r2 += rightRow2Html + '</tr>';
+      return r1 + r2;
+    }
+
+    function buildPeriodBodyCells(mArr, qArr) {
+      var cells = '';
+      if (showMonthsInMatrix) {
+        activeQDefs.forEach(function (qd) {
+          qd.mIndices.forEach(function (mi, subIdx) {
+            cells +=
+              '<td class="num' +
+              (subIdx === 0 ? ' q-first' : '') +
+              '">' +
+              fmtCellVal(mArr[mi]) +
+              '</td>';
+          });
+          cells += '<td class="num q-sub-col">' + fmtCellVal(qArr[qd.qi]) + '</td>';
+        });
+      } else {
+        activeQDefs.forEach(function (qd, idx) {
+          cells +=
+            '<td class="num q-sub-col' +
+            (idx === 0 ? ' q-first' : '') +
+            '">' +
+            fmtCellVal(qArr[qd.qi]) +
+            '</td>';
+        });
+      }
+      return cells;
+    }
+
+    function buildPeriodFootCells(mArr, qArr) {
+      var cells = '';
+      if (showMonthsInMatrix) {
+        activeQDefs.forEach(function (qd) {
+          qd.mIndices.forEach(function (mi, subIdx) {
+            cells +=
+              '<td class="num' +
+              (subIdx === 0 ? ' q-first' : '') +
+              '">' +
+              fmtFootVal(mArr[mi]) +
+              '</td>';
+          });
+          cells += '<td class="num">' + fmtFootVal(qArr[qd.qi]) + '</td>';
+        });
+      } else {
+        activeQDefs.forEach(function (qd, idx) {
+          cells +=
+            '<td class="num' +
+            (idx === 0 ? ' q-first' : '') +
+            '">' +
+            fmtFootVal(qArr[qd.qi]) +
+            '</td>';
+        });
+      }
+      return cells;
+    }
+
+    var grandScopeTotal =
+      singleQIdx >= 0
+        ? isCbm
+          ? comp.qTotalCbm[singleQIdx]
+          : comp.qTotalOrders[singleQIdx]
+        : isCbm
+          ? comp.totals.cbm
+          : comp.totals.orders;
+
+    // 2. Centralized Table A: Asal Gudang & Hub Pengiriman (Monthly + Q1-Q4)
+    var originsFiltered = (comp.originAllList || [])
+      .filter(function (o) {
+        if (!searchQ) return true;
+        return (
+          o.origin.toLowerCase().indexOf(searchQ) !== -1 ||
+          o.streamLabel.toLowerCase().indexOf(searchQ) !== -1
+        );
+      });
+    // If user searched a destination wilayah name that didn't match origin names, keep all origins visible for context
+    if (searchQ && originsFiltered.length === 0) {
+      originsFiltered = (comp.originAllList || []).slice();
+    }
+
+    originsFiltered.sort(function (a, b) {
+      var va = singleQIdx >= 0 ? (isCbm ? a.qCbm[singleQIdx] : a.qOrders[singleQIdx]) : isCbm ? a.cbm : a.orders;
+      var vb = singleQIdx >= 0 ? (isCbm ? b.qCbm[singleQIdx] : b.qOrders[singleQIdx]) : isCbm ? b.cbm : b.orders;
+      return vb - va;
+    });
+
+    var originRowsHtml = originsFiltered
+      .map(function (o) {
+        var mArr = isCbm ? o.mCbm : o.mOrders;
+        var qArr = isCbm ? o.qCbm : o.qOrders;
+        var rowTot = singleQIdx >= 0 ? qArr[singleQIdx] : isCbm ? o.cbm : o.orders;
+        var rowShare = grandScopeTotal > 0 ? (rowTot / grandScopeTotal) * 100 : 0;
+        var streamColor = o.sheetIdx === 0 ? '#2563eb' : o.sheetIdx === 1 ? '#0d9488' : '#7c3aed';
+        var slaCell = o.hasSla
+          ? '<span class="ods-text-green" style="font-weight:700;">' + fmtPct(o.slaPct, 1) + '</span>'
+          : '<span style="color:#64748b;font-size:11.5px;">Direct DC</span>';
+
+        return (
+          '<tr>' +
+          '<td class="ods-sticky-col" style="font-weight:700;">' +
+          escHtml(o.origin) +
+          '</td>' +
+          '<td><span style="display:inline-block;padding:2px 7px;border-radius:4px;font-size:11px;font-weight:700;background:#f1f5f9;color:' +
+          streamColor +
+          ';">' +
+          escHtml(o.streamLabel) +
+          '</span></td>' +
+          buildPeriodBodyCells(mArr, qArr) +
+          '<td class="num q-first" style="font-weight:800;">' +
+          fmtCellVal(rowTot) +
+          '</td>' +
+          '<td class="num">' +
+          '  <div class="ods-bar-inline" style="min-width:96px;">' +
+          '    <div class="ods-bar-track" style="width:44px;"><div class="ods-bar-fill" style="width:' +
+          Math.min(100, rowShare).toFixed(1) +
+          '%;background:' +
+          streamColor +
+          ';"></div></div>' +
+          '    <span>' +
+          fmtPct(rowShare, 1) +
+          '</span>' +
+          '  </div>' +
+          '</td>' +
+          '<td class="num">' +
+          slaCell +
+          '</td>' +
+          '</tr>'
+        );
+      })
+      .join('');
+
+    var originThead = buildPeriodHeaderRows(
+      2,
+      '<th class="ods-sticky-col">Asal Gudang / Hub Origin</th><th>Kategori Alur</th>',
+      'REKAP TERPUSAT (' + uShort.toUpperCase() + ')',
+      '<th class="num q-first">Total ' +
+        (qFilter === 'ALL' ? 'YTD' : qFilter) +
+        ' (' +
+        uShort +
+        ')</th><th class="num">% Porsi</th><th class="num">SLA Hub</th>',
+      3
+    );
+
+    var hubSlaDenom = comp.totals.hubOnTime + comp.totals.hubDelay;
+    var hubSlaOverall = hubSlaDenom > 0 ? fmtPct((comp.totals.hubOnTime / hubSlaDenom) * 100, 1) : '—';
+    var originColCount = 2 + (showMonthsInMatrix ? activeQDefs.length * 4 : activeQDefs.length) + 3;
+
+    var originTableHtml =
+      '<div class="ods-reg-block">' +
+      '  <div class="ods-reg-block-head">' +
+      '    <div>' +
+      '      <div class="ods-reg-block-title">A. Rekap Bulanan &amp; Kuartalan (Q1–Q4) Asal Gudang &amp; Hub Pengiriman</div>' +
+      '      <div class="ods-reg-block-sub">Konsolidasi hulu pengiriman dari NDC Sidoarjo, Hub Store/GRW, dan Booking Site Hub Customer dalam satuan <strong>' +
+      (isCbm ? 'Kubikasi (m³)' : 'Total OD') +
+      '</strong></div>' +
+      '    </div>' +
+      '  </div>' +
+      '  <div class="ods-table-scroll">' +
+      '    <table class="ods-table ods-matrix-table">' +
+      '      <thead>' +
+      originThead +
+      '</thead>' +
+      '      <tbody>' +
+      (originRowsHtml ||
+        '<tr><td colspan="' +
+          originColCount +
+          '" style="text-align:center;padding:20px;color:#64748b;">Tidak ada data asal hub pada filter ini.</td></tr>') +
+      '      </tbody>' +
+      '      <tfoot>' +
+      '        <tr>' +
+      '          <td class="ods-sticky-col">TOTAL KONSOLIDASI ASAL</td>' +
+      '          <td>Semua Sumber</td>' +
+      buildPeriodFootCells(
+        isCbm ? comp.mTotalCbm : comp.mTotalOrders,
+        isCbm ? comp.qTotalCbm : comp.qTotalOrders
+      ) +
+      '          <td class="num q-first">' +
+      fmtFootVal(grandScopeTotal) +
+      '</td>' +
+      '          <td class="num">' +
+      (grandScopeTotal > 0 ? '100,0%' : '—') +
+      '</td>' +
+      '          <td class="num">' +
+      hubSlaOverall +
+      '</td>' +
+      '        </tr>' +
+      '      </tfoot>' +
+      '    </table>' +
+      '  </div>' +
+      '</div>';
+
+    // 3. Centralized Table B: Wilayah Tujuan (Monthly + Q1-Q4)
+    var wilSorted = (comp.wilayahList || [])
+      .filter(function (w) {
+        if (!searchQ) return true;
+        return w.wilayah.toLowerCase().indexOf(searchQ) !== -1;
+      })
+      .slice()
+      .sort(function (a, b) {
+        var va = singleQIdx >= 0 ? (isCbm ? a.qCbm[singleQIdx] : a.qOrders[singleQIdx]) : isCbm ? a.cbm : a.orders;
+        var vb = singleQIdx >= 0 ? (isCbm ? b.qCbm[singleQIdx] : b.qOrders[singleQIdx]) : isCbm ? b.cbm : b.orders;
+        return vb - va;
+      });
+
+    var limitNum = limitSetting === 'ALL' ? wilSorted.length : parseInt(limitSetting, 10) || 20;
+    var displayedWil = wilSorted.slice(0, limitNum);
+    var hiddenWil = wilSorted.slice(limitNum);
+
+    var wilRowsHtml = displayedWil
+      .map(function (w, idx) {
+        var mArr = isCbm ? w.mCbm : w.mOrders;
+        var qArr = isCbm ? w.qCbm : w.qOrders;
+        var rowTot = singleQIdx >= 0 ? qArr[singleQIdx] : isCbm ? w.cbm : w.orders;
+        var rowShare = grandScopeTotal > 0 ? (rowTot / grandScopeTotal) * 100 : 0;
+
+        var regPart = isCbm ? w.regCbm : w.regOrders;
+        var totAllQ = isCbm ? w.cbm : w.orders;
+        var regPct = totAllQ > 0 ? Math.round((regPart / totAllQ) * 100) : 0;
+        var hubPct = totAllQ > 0 ? 100 - regPct : 0;
+
+        var bestQi = -1;
+        var bestQv = 0;
+        for (var qi = 0; qi < 4; qi++) {
+          if (qArr[qi] > bestQv) {
+            bestQv = qArr[qi];
+            bestQi = qi;
+          }
+        }
+        var peakQBadge =
+          bestQi >= 0
+            ? '<span class="ods-q-badge q' + (bestQi + 1) + '">Q' + (bestQi + 1) + '</span>'
+            : '<span class="ods-zero-cell">—</span>';
+
+        var isFilteredWil = ODS_STATE.wilayah === w.wilayah;
+        var clickTarget = isFilteredWil ? 'ALL' : w.wilayah;
+
+        return (
+          '<tr class="ods-clickable"' +
+          (isFilteredWil ? ' style="background:#eff6ff;"' : '') +
+          ' onclick="window.odsSetWilayah(\'' +
+          escHtml(clickTarget).replace(/'/g, "\\'") +
+          '\')" title="Klik untuk memfilter koridor ' +
+          escHtml(w.wilayah) +
+          '">' +
           '<td class="num" style="color:#64748b;">' +
           (idx + 1) +
           '</td>' +
-          '<td style="font-weight:700;">' +
+          '<td class="ods-sticky-col" style="font-weight:700;">' +
           escHtml(w.wilayah) +
           '</td>' +
-          '<td class="num ods-text-blue">' +
-          fmtInt(w.regOrders) +
-          '</td>' +
-          '<td class="num ods-text-teal">' +
-          fmtInt(w.hubGrwOrders) +
-          '</td>' +
-          '<td class="num ods-text-indigo">' +
-          fmtInt(w.hubCustOrders) +
-          '</td>' +
-          '<td class="num" style="font-weight:700;">' +
-          fmtInt(w.orders) +
+          buildPeriodBodyCells(mArr, qArr) +
+          '<td class="num q-first" style="font-weight:800;">' +
+          fmtCellVal(rowTot) +
           '</td>' +
           '<td class="num">' +
-          fmtPct(w.shareOrdersPct, 1) +
+          '  <div class="ods-bar-inline" style="min-width:96px;">' +
+          '    <div class="ods-bar-track" style="width:44px;"><div class="ods-bar-fill" style="width:' +
+          Math.min(100, rowShare).toFixed(1) +
+          '%;background:#2563eb;"></div></div>' +
+          '    <span>' +
+          fmtPct(rowShare, 1) +
+          '</span>' +
+          '  </div>' +
           '</td>' +
-          '<td class="num" style="font-weight:600;">' +
-          fmtDec(w.cbm, 1) +
-          '</td>' +
-          '<td class="num">' +
-          fmtDec(w.avgCbmPerOrder, 2) +
+          '<td class="num" style="font-size:11.5px;color:#475569;">' +
+          regPct +
+          '% Reg · ' +
+          hubPct +
+          '% Hub</td>' +
+          '<td style="text-align:center;">' +
+          peakQBadge +
           '</td>' +
           '</tr>'
         );
       })
       .join('');
 
-    var origRows = comp.originList
-      .map(function (o) {
-        return (
-          '<tr>' +
-          '<td style="font-weight:700;">' +
-          escHtml(o.origin) +
-          '</td>' +
-          '<td class="num" style="font-weight:700;">' +
-          fmtInt(o.orders) +
-          '</td>' +
-          '<td class="num">' +
-          fmtPct(o.sharePct, 1) +
-          '</td>' +
-          '<td class="num">' +
-          fmtDec(o.cbm, 1) +
-          '</td>' +
-          '<td class="num ods-text-green" style="font-weight:600;">' +
-          fmtPct(o.slaPct, 2) +
-          '</td>' +
-          '</tr>'
-        );
-      })
-      .join('');
+    // Rollup row for remaining wilayahs when Top-N is active so totals reconcile 100%
+    var othersRowHtml = '';
+    if (hiddenWil.length > 0 && !searchQ) {
+      var othM = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+      var othQ = [0, 0, 0, 0];
+      var othReg = 0;
+      var othAll = 0;
+      hiddenWil.forEach(function (hw) {
+        var hm = isCbm ? hw.mCbm : hw.mOrders;
+        var hq = isCbm ? hw.qCbm : hw.qOrders;
+        for (var m = 0; m < 12; m++) othM[m] += hm[m];
+        for (var q = 0; q < 4; q++) othQ[q] += hq[q];
+        othReg += isCbm ? hw.regCbm : hw.regOrders;
+        othAll += isCbm ? hw.cbm : hw.orders;
+      });
+      var othScopeTot = singleQIdx >= 0 ? othQ[singleQIdx] : othAll;
+      var othShare = grandScopeTotal > 0 ? (othScopeTot / grandScopeTotal) * 100 : 0;
+      var othRegPct = othAll > 0 ? Math.round((othReg / othAll) * 100) : 0;
 
-    container.innerHTML =
-      '<div class="ods-split-tables">' +
-      '  <div>' +
-      '    <div style="font-size:13px;font-weight:700;margin-bottom:8px;">Top 20 Wilayah Tujuan (OD Regular + Hub Transit)</div>' +
-      '    <div class="ods-table-scroll">' +
-      '      <table class="ods-table">' +
-      '        <thead>' +
-      '          <tr>' +
-      '            <th class="num">#</th>' +
-      '            <th>Wilayah</th>' +
-      '            <th class="num">OD Regular</th>' +
-      '            <th class="num">Hub GRW</th>' +
-      '            <th class="num">Hub Cust</th>' +
-      '            <th class="num">Total OD</th>' +
-      '            <th class="num">% OD</th>' +
-      '            <th class="num">Total CBM</th>' +
-      '            <th class="num">CBM/OD</th>' +
-      '          </tr>' +
-      '        </thead>' +
-      '        <tbody>' +
-      (wilRows || '<tr><td colspan="9" style="text-align:center;padding:20px;">Tidak ada data wilayah.</td></tr>') +
-      '        </tbody>' +
-      '      </table>' +
+      othersRowHtml =
+        '<tr style="background:#f8fafc;color:#475569;">' +
+        '<td class="num" style="color:#94a3b8;">+</td>' +
+        '<td class="ods-sticky-col" style="font-weight:600;color:#475569;background:#f8fafc;">Wilayah Lainnya (' +
+        fmtInt(hiddenWil.length) +
+        ' wilayah)</td>' +
+        buildPeriodBodyCells(othM, othQ) +
+        '<td class="num q-first" style="font-weight:700;">' +
+        fmtCellVal(othScopeTot) +
+        '</td>' +
+        '<td class="num">' +
+        fmtPct(othShare, 1) +
+        '</td>' +
+        '<td class="num" style="font-size:11.5px;">' +
+        othRegPct +
+        '% Reg · ' +
+        (othAll > 0 ? 100 - othRegPct : 0) +
+        '% Hub</td>' +
+        '<td style="text-align:center;color:#94a3b8;">—</td>' +
+        '</tr>';
+    }
+
+    var wilThead = buildPeriodHeaderRows(
+      2,
+      '<th class="num">#</th><th class="ods-sticky-col">Wilayah Tujuan</th>',
+      'REKAP TERPUSAT (' + uShort.toUpperCase() + ')',
+      '<th class="num q-first">Total ' +
+        (qFilter === 'ALL' ? 'YTD' : qFilter) +
+        ' (' +
+        uShort +
+        ')</th><th class="num">% Porsi</th><th class="num">Komposisi Stream</th><th style="text-align:center;">Kuartal Puncak</th>',
+      4
+    );
+
+    var totRegOverall = isCbm ? comp.totals.regCbm : comp.totals.regOrders;
+    var totAllOverall = isCbm ? comp.totals.cbm : comp.totals.orders;
+    var totRegPctOverall = totAllOverall > 0 ? Math.round((totRegOverall / totAllOverall) * 100) : 0;
+    var wilColCount = 2 + (showMonthsInMatrix ? activeQDefs.length * 4 : activeQDefs.length) + 4;
+
+    var wilTableHtml =
+      '<div class="ods-reg-block">' +
+      '  <div class="ods-reg-block-head">' +
+      '    <div>' +
+      '      <div class="ods-reg-block-title">B. Rekap Bulanan &amp; Kuartalan (Q1–Q4) Wilayah Tujuan Distribusi</div>' +
+      '      <div class="ods-reg-block-sub">Sebaran volume pengiriman hilir per bulan dan kuartal dalam satuan <strong>' +
+      (isCbm ? 'Kubikasi (m³)' : 'Total OD') +
+      '</strong> · Klik baris wilayah untuk memfilter koridor</div>' +
       '    </div>' +
       '  </div>' +
-      '  <div>' +
-      '    <div style="font-size:13px;font-weight:700;margin-bottom:8px;">Asal Gudang Booking Site (Hub Transit Customer)</div>' +
-      '    <div class="ods-table-scroll">' +
-      '      <table class="ods-table">' +
-      '        <thead>' +
-      '          <tr>' +
-      '            <th>Booking Site Origin</th>' +
-      '            <th class="num">Total OD</th>' +
-      '            <th class="num">% Share</th>' +
-      '            <th class="num">CBM (m³)</th>' +
-      '            <th class="num">SLA On-Time</th>' +
-      '          </tr>' +
-      '        </thead>' +
-      '        <tbody>' +
-      (origRows ||
-        '<tr><td colspan="5" style="text-align:center;padding:20px;color:#64748b;">Pilih stream Semua atau Hub Customer untuk melihat asal Booking Site.</td></tr>') +
-      '        </tbody>' +
-      '      </table>' +
-      '    </div>' +
+      '  <div class="ods-table-scroll">' +
+      '    <table class="ods-table ods-matrix-table">' +
+      '      <thead>' +
+      wilThead +
+      '</thead>' +
+      '      <tbody>' +
+      (wilRowsHtml
+        ? wilRowsHtml + othersRowHtml
+        : '<tr><td colspan="' +
+          wilColCount +
+          '" style="text-align:center;padding:24px;color:#64748b;">Tidak ada wilayah yang cocok dengan pencarian.</td></tr>') +
+      '      </tbody>' +
+      '      <tfoot>' +
+      '        <tr>' +
+      '          <td class="num">—</td>' +
+      '          <td class="ods-sticky-col">GRAND TOTAL SELURUH WILAYAH</td>' +
+      buildPeriodFootCells(
+        isCbm ? comp.mTotalCbm : comp.mTotalOrders,
+        isCbm ? comp.qTotalCbm : comp.qTotalOrders
+      ) +
+      '          <td class="num q-first">' +
+      fmtFootVal(grandScopeTotal) +
+      '</td>' +
+      '          <td class="num">' +
+      (grandScopeTotal > 0 ? '100,0%' : '—') +
+      '</td>' +
+      '          <td class="num">' +
+      totRegPctOverall +
+      '% Reg · ' +
+      (totAllOverall > 0 ? 100 - totRegPctOverall : 0) +
+      '% Hub</td>' +
+      '          <td style="text-align:center;">Q1–Q4</td>' +
+      '        </tr>' +
+      '      </tfoot>' +
+      '    </table>' +
       '  </div>' +
       '</div>';
+
+    container.innerHTML =
+      '<div class="ods-q-cards-grid">' +
+      qCardsHtml +
+      '</div>' +
+      originTableHtml +
+      wilTableHtml;
   }
 
   function renderOdShippedView() {
@@ -28638,8 +29802,59 @@ function exportOdSuspendCsv() {
 
   window.odsSetMetric = function (metric) {
     ODS_STATE.metric = metric;
+    ODS_STATE.tableMetric = metric;
+    if (metric === 'CBM' && ODS_STATE.catSortCol === 'orders') ODS_STATE.catSortCol = 'cbm';
+    if (metric === 'OD' && ODS_STATE.catSortCol === 'cbm') ODS_STATE.catSortCol = 'orders';
     syncFilterControls();
     recomputeAndRender();
+  };
+
+  window.odsSetTableMetric = function (tMetric) {
+    var m = tMetric === 'OD' ? 'OD' : 'CBM';
+    ODS_STATE.tableMetric = m;
+    if (m === 'CBM') {
+      if (ODS_STATE.catSortCol === 'orders') ODS_STATE.catSortCol = 'cbm';
+      if (ODS_STATE.catSortCol === 'shareOrdersPct') ODS_STATE.catSortCol = 'shareCbmPct';
+      if (ODS_STATE.catSortCol === 'avgDailyOrders') ODS_STATE.catSortCol = 'avgDailyCbm';
+    } else {
+      if (ODS_STATE.catSortCol === 'cbm') ODS_STATE.catSortCol = 'orders';
+      if (ODS_STATE.catSortCol === 'shareCbmPct') ODS_STATE.catSortCol = 'shareOrdersPct';
+      if (ODS_STATE.catSortCol === 'avgDailyCbm') ODS_STATE.catSortCol = 'avgDailyOrders';
+    }
+    syncFilterControls();
+    if (ODS_STATE.lastComputed) {
+      renderActiveDetailTab(ODS_STATE.lastComputed);
+    }
+  };
+
+  window.odsSetRegionalQuarter = function (qCode) {
+    ODS_STATE.regionalQuarter = qCode || 'ALL';
+    if (ODS_STATE.lastComputed) {
+      renderActiveDetailTab(ODS_STATE.lastComputed);
+    }
+  };
+
+  window.odsSetRegionalViewMode = function (mode) {
+    ODS_STATE.regionalViewMode = mode || 'MONTHLY_QUARTER';
+    if (ODS_STATE.lastComputed) {
+      renderActiveDetailTab(ODS_STATE.lastComputed);
+    }
+  };
+
+  window.odsOnRegionalSearch = function (val) {
+    ODS_STATE.regionalSearch = val || '';
+    if (ODS_STATE.lastComputed) {
+      var area = document.getElementById('odsTabContentArea');
+      if (area) renderRegionalAndOriginTables(ODS_STATE.lastComputed, area);
+    }
+  };
+
+  window.odsSetRegionalLimit = function (lim) {
+    ODS_STATE.regionalLimit = lim || '20';
+    if (ODS_STATE.lastComputed) {
+      var area = document.getElementById('odsTabContentArea');
+      if (area) renderRegionalAndOriginTables(ODS_STATE.lastComputed, area);
+    }
   };
 
   window.odsSetMonthlySeries = function (series) {
@@ -28787,6 +30002,8 @@ function exportOdSuspendCsv() {
     ODS_STATE.wilayah = 'ALL';
     ODS_STATE.month = 'ALL';
     ODS_STATE.preset = 'ALL';
+    ODS_STATE.regionalQuarter = 'ALL';
+    ODS_STATE.regionalSearch = '';
     ODS_STATE.dailySearch = '';
     ODS_STATE.dailyDayType = 'ALL';
     ODS_STATE.dailyPage = 1;
@@ -28866,39 +30083,58 @@ function exportOdSuspendCsv() {
 
     var rows = [];
     var filename = 'Laporan_OD_Shipped_';
+    var isCbm = (ODS_STATE.tableMetric || 'CBM') === 'CBM';
 
     if (ODS_STATE.activeTab === 'monthly') {
       filename += 'Bulanan.csv';
       rows.push([
+        'Kuartal',
         'Bulan',
         'Hari Aktif',
-        'OD Regular (Data H6)',
-        'Hub GRW (Data Hub)',
-        'Hub Cust (Data Hub Cust)',
-        'Total Hub Transit',
+        'REG GRW OD',
+        'REG CUST OD',
+        'Subtotal Regular OD',
+        'REG GRW CBM',
+        'REG CUST CBM',
+        'Subtotal Regular CBM',
+        'Hub GRW OD',
+        'Hub Cust OD',
+        'Subtotal Hub OD',
+        'Hub GRW CBM',
+        'Hub Cust CBM',
+        'Subtotal Hub CBM',
         'Total OD Shipped',
         'Avg OD/Hari',
         'Total CBM',
         'Avg CBM/Hari',
-        'Porsi Hub (%)',
+        'Porsi Hub OD (%)',
+        'Porsi Hub CBM (%)',
         'Tanggal Puncak',
-        'OD Puncak',
       ]);
       comp.monthlyAsc.forEach(function (m) {
         rows.push([
+          m.qCode || 'Q' + Math.ceil(parseInt(m.ym.slice(5, 7), 10) / 3),
           m.ym,
           m.activeDays,
+          m.regGrwOrders || 0,
+          m.regCustOrders || 0,
           m.regOrders,
+          (m.regGrwCbm || 0).toFixed(2),
+          (m.regCustCbm || 0).toFixed(2),
+          (m.regCbm || 0).toFixed(2),
           m.hubGrwOrders,
           m.hubCustOrders,
           m.hubTotalOrders,
+          (m.hubGrwCbm || 0).toFixed(2),
+          (m.hubCustCbm || 0).toFixed(2),
+          (m.hubTotalCbm || 0).toFixed(2),
           m.orders,
           m.avgDailyOrders.toFixed(1),
           m.cbm.toFixed(2),
           m.avgDailyCbm.toFixed(2),
           m.hubSharePct.toFixed(2),
-          m.peakDate,
-          m.peakOrders,
+          (m.hubShareCbmPct || 0).toFixed(2),
+          isCbm ? m.peakCbmDate || m.peakDate : m.peakDate,
         ]);
       });
     } else if (ODS_STATE.activeTab === 'category') {
@@ -28911,9 +30147,12 @@ function exportOdSuspendCsv() {
         'LK OD',
         'Total OD',
         'Share OD (%)',
+        'DK CBM',
+        'LK CBM',
         'Total CBM',
         'Share CBM (%)',
         'Avg OD/Hari',
+        'Avg CBM/Hari',
         'Avg CBM/OD',
       ]);
       comp.categoryList.forEach(function (c) {
@@ -28925,10 +30164,98 @@ function exportOdSuspendCsv() {
           c.lkOrders,
           c.orders,
           c.shareOrdersPct.toFixed(2),
+          (c.dkCbm || 0).toFixed(2),
+          (c.lkCbm || 0).toFixed(2),
           c.cbm.toFixed(2),
           c.shareCbmPct.toFixed(2),
           c.avgDailyOrders.toFixed(2),
+          (c.avgDailyCbm || 0).toFixed(2),
           c.avgCbmPerOrder.toFixed(3),
+        ]);
+      });
+    } else if (ODS_STATE.activeTab === 'regional') {
+      filename += 'Wilayah_dan_Hub_Q1_Q4_' + (isCbm ? 'CBM' : 'OD') + '.csv';
+      rows.push([
+        'Tipe Entitas',
+        'Nama Wilayah / Asal Hub',
+        'Satuan',
+        'Jan (Q1)',
+        'Feb (Q1)',
+        'Mar (Q1)',
+        'Subtotal Q1',
+        'Apr (Q2)',
+        'Mei (Q2)',
+        'Jun (Q2)',
+        'Subtotal Q2',
+        'Jul (Q3)',
+        'Agu (Q3)',
+        'Sep (Q3)',
+        'Subtotal Q3',
+        'Okt (Q4)',
+        'Nov (Q4)',
+        'Des (Q4)',
+        'Subtotal Q4',
+        'Grand Total YTD',
+        'Share (%)',
+      ]);
+      (comp.originAllList || []).forEach(function (o) {
+        var mA = isCbm ? o.mCbm : o.mOrders;
+        var qA = isCbm ? o.qCbm : o.qOrders;
+        var fmtCsv = function (v) {
+          return isCbm ? (v || 0).toFixed(2) : Math.round(v || 0);
+        };
+        rows.push([
+          'ASAL HUB / DC',
+          '"' + o.origin.replace(/"/g, '""') + '"',
+          isCbm ? 'CBM' : 'OD',
+          fmtCsv(mA[0]),
+          fmtCsv(mA[1]),
+          fmtCsv(mA[2]),
+          fmtCsv(qA[0]),
+          fmtCsv(mA[3]),
+          fmtCsv(mA[4]),
+          fmtCsv(mA[5]),
+          fmtCsv(qA[1]),
+          fmtCsv(mA[6]),
+          fmtCsv(mA[7]),
+          fmtCsv(mA[8]),
+          fmtCsv(qA[2]),
+          fmtCsv(mA[9]),
+          fmtCsv(mA[10]),
+          fmtCsv(mA[11]),
+          fmtCsv(qA[3]),
+          fmtCsv(isCbm ? o.cbm : o.orders),
+          (isCbm ? o.shareCbmPct : o.shareOrdersPct).toFixed(2),
+        ]);
+      });
+      (comp.wilayahList || []).forEach(function (w) {
+        var mA = isCbm ? w.mCbm : w.mOrders;
+        var qA = isCbm ? w.qCbm : w.qOrders;
+        var fmtCsv = function (v) {
+          return isCbm ? (v || 0).toFixed(2) : Math.round(v || 0);
+        };
+        rows.push([
+          'WILAYAH TUJUAN',
+          '"' + w.wilayah.replace(/"/g, '""') + '"',
+          isCbm ? 'CBM' : 'OD',
+          fmtCsv(mA[0]),
+          fmtCsv(mA[1]),
+          fmtCsv(mA[2]),
+          fmtCsv(qA[0]),
+          fmtCsv(mA[3]),
+          fmtCsv(mA[4]),
+          fmtCsv(mA[5]),
+          fmtCsv(qA[1]),
+          fmtCsv(mA[6]),
+          fmtCsv(mA[7]),
+          fmtCsv(mA[8]),
+          fmtCsv(qA[2]),
+          fmtCsv(mA[9]),
+          fmtCsv(mA[10]),
+          fmtCsv(mA[11]),
+          fmtCsv(qA[3]),
+          fmtCsv(isCbm ? w.cbm : w.orders),
+          (isCbm ? w.shareCbmPct : w.shareOrdersPct).toFixed(2),
         ]);
       });
     } else {
@@ -28936,12 +30263,16 @@ function exportOdSuspendCsv() {
       rows.push([
         'Tanggal',
         'Hari',
-        'Regular DK',
-        'Regular LK',
+        'REG GRW OD',
+        'REG CUST OD',
+        'Regular DK OD',
+        'Regular LK OD',
         'Subtotal OD Regular',
-        'Hub GRW',
-        'Hub Customer',
-        'Subtotal Hub Transit',
+        'Subtotal CBM Regular',
+        'Hub GRW OD',
+        'Hub Customer OD',
+        'Subtotal Hub Transit OD',
+        'Subtotal Hub Transit CBM',
         'Total OD Shipped',
         'Total CBM',
       ]);
@@ -28949,12 +30280,16 @@ function exportOdSuspendCsv() {
         rows.push([
           d.date,
           DOW_NAMES_ID[d.dow],
+          d.regGrwOrders || 0,
+          d.regCustOrders || 0,
           d.regDk,
           d.regLk,
           d.regOrders,
+          (d.regCbm || 0).toFixed(2),
           d.hubGrwOrders,
           d.hubCustOrders,
           d.hubGrwOrders + d.hubCustOrders,
+          ((d.hubGrwCbm || 0) + (d.hubCustCbm || 0)).toFixed(2),
           d.orders,
           d.cbm.toFixed(2),
         ]);
@@ -29049,7 +30384,6 @@ function exportOdSuspendCsv() {
     hookDashboardNavigation();
   }
 })();
-
-</script>
+  </script>
 </body>
 </html>
