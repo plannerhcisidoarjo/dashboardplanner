@@ -9670,10 +9670,22 @@ function initOverviewMap() {
       tap: false
     }).setView([-7.4478, 112.7183], 5);
     
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-  maxZoom: 19
-}).addTo(mapInstance);
+    var primaryTileLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
+      attribution: 'Tiles &copy; Esri &mdash; Source: Esri, OpenStreetMap contributors',
+      maxZoom: 19
+    });
+    var fallbackApplied = false;
+    primaryTileLayer.on('tileerror', function() {
+      if (!fallbackApplied && mapInstance) {
+        fallbackApplied = true;
+        mapInstance.removeLayer(primaryTileLayer);
+        L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
+          attribution: 'Tiles &copy; Esri &mdash; Source: Esri, TomTom, FAO, NOAA, USGS',
+          maxZoom: 19
+        }).addTo(mapInstance);
+      }
+    });
+    primaryTileLayer.addTo(mapInstance);
     
     userStartPoint = [-7.4478, 112.7183]; // NDC Sidoarjo directly
     hasUserGeolocation = false;
