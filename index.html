@@ -7025,6 +7025,75 @@ PLANNING REPORT</div>
           <div>Tidak ada data sesuai filter.</div>
         </div>
       </div>
+
+      <!-- ── DETAIL CUSTOMER DK (PRIORITY 1) — OD & KETERANGAN STORE (KOLOM X) ── -->
+      <div id="cr-dkp1-store-section" style="margin-top: 24px; padding-top: 20px; border-top: 2px dashed var(--border);">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px; margin-bottom: 14px;">
+          <div>
+            <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+              <span style="background: #ef4444; color: #fff; font-size: 10px; font-weight: 800; padding: 3px 8px; border-radius: 6px; letter-spacing: 0.4px; text-transform: uppercase;">🔥 DK PRIORITY 1</span>
+              <span style="font-size: 15px; font-weight: 800; color: var(--text);">🏪 DETAIL OD CUSTOMER DK PRIORITY 1 — KETERANGAN STORE</span>
+              <span id="cr-dkp1-source-badge" style="background: rgba(37, 99, 235, 0.1); color: var(--blue); border: 1px solid rgba(37, 99, 235, 0.25); font-size: 10px; font-weight: 800; padding: 2px 8px; border-radius: 6px; font-family: var(--font-mono);">Filter: Kolom X (Store Terisi)</span>
+            </div>
+            <div style="font-size: 11.5px; color: var(--muted); margin-top: 4px; line-height: 1.45;">
+              Menampilkan khusus <strong>OD Customer DK Priority 1</strong> yang memiliki nama Store pada <strong>Kolom X</strong> di sheet · <strong>Klik nama Store</strong> pada kartu atau tabel di bawah untuk membuka popup detail Order, SKU, Qty, Deskripsi SKU, Dept, dan status Perlu QC.
+            </div>
+          </div>
+
+          <div id="cr-dkp1-kpi-strip" style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+            <!-- Rendered via JS -->
+          </div>
+        </div>
+
+        <!-- Clickable Store Summary Cards (Column X Stores) -->
+        <div id="cr-dkp1-store-cards" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-bottom: 16px;">
+          <!-- Rendered via JS -->
+        </div>
+
+        <!-- Filter & Search Bar for DK Priority 1 OD Table -->
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; background: var(--surface2); padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 10px;">
+          <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+            <span style="font-size: 11px; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: 0.4px;">Filter OD:</span>
+            <select class="filter-select" id="cr-dkp1-filter-store" onchange="applyCrDkP1OdFilters()" style="min-width: 190px;">
+              <option value="ALL">Semua Store (Kolom X)</option>
+            </select>
+            <select class="filter-select" id="cr-dkp1-filter-qc" onchange="applyCrDkP1OdFilters()">
+              <option value="ALL">Semua Status QC</option>
+              <option value="NEED_QC">🛡️ Perlu QC</option>
+              <option value="NO_QC">✓ Tidak Perlu QC</option>
+            </select>
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+            <input type="text" id="cr-dkp1-search" class="search-box" style="width: 250px;" placeholder="🔍 Cari No. OD / Customer / Store / SKU..." oninput="applyCrDkP1OdFilters()">
+            <span id="cr-dkp1-od-count-info" style="font-size: 11px; font-weight: 700; color: var(--muted); font-family: var(--font-mono);">0 OD</span>
+          </div>
+        </div>
+
+        <!-- OD Detail Table with Clickable Store -->
+        <div class="table-wrap" style="max-height: 440px; overflow-y: auto; border: 1px solid var(--border); border-radius: 8px;">
+          <table class="dt" style="width: 100%; border-collapse: collapse;">
+            <thead style="position: sticky; top: 0; z-index: 4;">
+              <tr>
+                <th class="hn" style="width: 4%; text-align: center;">No</th>
+                <th class="hn" style="width: 24%;">Detail OD / No. Order</th>
+                <th class="hn" style="width: 20%;">Customer (Ship-To)</th>
+                <th class="hn" style="width: 22%;">Keterangan Store (Kolom X)</th>
+                <th class="hn nh" style="width: 10%; text-align: center;">SKU &amp; Case</th>
+                <th class="hn nh" style="width: 7%; text-align: center;">Total Qty</th>
+                <th class="hn nh" style="width: 6%; text-align: center;">CBM</th>
+                <th class="hn nh" style="width: 7%; text-align: center;">Perlu QC</th>
+              </tr>
+            </thead>
+            <tbody id="cr-dkp1-od-tbody">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+          <div id="cr-dkp1-od-empty" class="empty-state" style="display: none; padding: 28px 16px;">
+            <div class="empty-icon">🏪</div>
+            <div id="cr-dkp1-od-empty-msg">Tidak ada OD Customer DK Priority 1 dengan nama Store pada Kolom X yang sesuai filter.</div>
+          </div>
+        </div>
+      </div>
     </div>
 
   </div>
@@ -7776,6 +7845,81 @@ PLANNING REPORT</div>
 
     <div id="topSkuModalList" style="display:flex; flex-direction:column; gap:12px; max-height: 400px; overflow-y: auto; padding-right: 4px;">
       <!-- rendered via JS -->
+    </div>
+  </div>
+</div>
+
+<!-- Modal Popup: Detail Store & Order Customer DK Priority 1 (Kolom X) -->
+<div id="crDkP1StoreModal" class="sla-modal" onclick="if(event.target===this) closeCrDkP1StoreModal()">
+  <div class="sla-modal-content" style="max-width: 980px; width: 94%; padding: 0; overflow: hidden; border-radius: 14px; border: 1px solid rgba(148, 163, 184, 0.25); box-shadow: 0 24px 60px rgba(15, 23, 42, 0.45);">
+    <!-- Modal Header -->
+    <div style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); padding: 20px 24px; color: #fff; position: relative; border-bottom: 1px solid rgba(255,255,255,0.1);">
+      <button onclick="closeCrDkP1StoreModal()" title="Tutup (ESC)" style="position: absolute; top: 16px; right: 18px; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); color: #fff; width: 32px; height: 32px; border-radius: 8px; font-size: 15px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center;">✕</button>
+
+      <div style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 14px; padding-right: 40px;">
+        <div>
+          <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 6px;">
+            <span style="background: #ef4444; color: #fff; font-size: 10px; font-weight: 800; padding: 2px 8px; border-radius: 5px; letter-spacing: 0.5px;">CUSTOMER DK PRIORITY 1</span>
+            <span id="crDkP1ModalSiteBadge" style="background: rgba(56, 189, 248, 0.18); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.35); font-size: 10px; font-weight: 800; padding: 2px 8px; border-radius: 5px; font-family: var(--font-mono);">KOLOM X STORE</span>
+          </div>
+          <h2 id="crDkP1ModalStoreTitle" style="margin: 0; font-size: 20px; font-weight: 900; color: #fff; letter-spacing: 0.2px;">🏪 STORE DETAIL</h2>
+          <p id="crDkP1ModalSubtitle" style="margin: 4px 0 0 0; font-size: 12px; color: #cbd5e1;">Rincian Order (OD), SKU, Qty, Deskripsi SKU, Dept &amp; Status Perlu QC</p>
+        </div>
+
+        <div id="crDkP1ModalKpis" style="display: flex; gap: 8px; flex-wrap: wrap;">
+          <!-- Rendered via JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Controls & Content -->
+    <div style="padding: 16px 22px 20px 22px; background: var(--surface); max-height: 76vh; overflow-y: auto;">
+      <!-- Scope Switch + Filter Toolbar -->
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 12px; background: var(--surface2); padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border);">
+        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+          <div id="crDkP1ModalScopeBtns" style="display: flex; gap: 6px; flex-wrap: wrap;">
+            <!-- Rendered via JS -->
+          </div>
+          <select id="crDkP1ModalOdSelect" class="filter-select" onchange="onCrDkP1ModalOdSelectChange(this.value)" style="max-width: 280px; font-family: var(--font-mono); font-size: 11px;">
+            <option value="ALL">Semua Order di Store Ini</option>
+          </select>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+          <select id="crDkP1ModalQcFilter" class="filter-select" onchange="renderCrDkP1ModalBody()">
+            <option value="ALL">Semua Status QC</option>
+            <option value="NEED_QC">🛡️ Perlu QC</option>
+            <option value="NO_QC">✓ Tidak Perlu QC</option>
+          </select>
+          <input type="text" id="crDkP1ModalSearch" class="search-box" style="width: 220px;" placeholder="🔍 Cari Order / SKU / Deskripsi / Dept..." oninput="renderCrDkP1ModalBody()">
+        </div>
+      </div>
+
+      <!-- Focused Order Metadata Banner (shown when viewing a single OD) -->
+      <div id="crDkP1ModalOrderBanner" style="display: none; margin-bottom: 12px; padding: 10px 14px; border-radius: 8px; background: rgba(37, 99, 235, 0.05); border: 1px solid rgba(37, 99, 235, 0.2);"></div>
+
+      <!-- Itemized Table: Detail Order, SKU, Deskripsi SKU, Qty, Dept, Apakah Perlu QC -->
+      <div style="overflow-x: auto; border: 1px solid var(--border); border-radius: 8px;">
+        <table style="width: 100%; border-collapse: collapse; font-size: 12px; text-align: left;">
+          <thead style="position: sticky; top: 0; z-index: 3;">
+            <tr style="background: #1e293b; color: #f8fafc; font-size: 11px; text-transform: uppercase; letter-spacing: 0.3px;">
+              <th style="padding: 10px 12px; font-weight: 800; width: 4%; text-align: center;">No</th>
+              <th style="padding: 10px 12px; font-weight: 800; width: 25%;">Detail Order (OD)</th>
+              <th style="padding: 10px 12px; font-weight: 800; width: 12%;">SKU</th>
+              <th style="padding: 10px 12px; font-weight: 800; width: 29%;">Deskripsi SKU</th>
+              <th style="padding: 10px 12px; font-weight: 800; width: 8%; text-align: center;">Qty</th>
+              <th style="padding: 10px 12px; font-weight: 800; width: 9%; text-align: center;">Dept</th>
+              <th style="padding: 10px 12px; font-weight: 800; width: 13%; text-align: center;">Apakah Perlu QC</th>
+            </tr>
+          </thead>
+          <tbody id="crDkP1ModalTableBody">
+            <!-- Rendered via JS -->
+          </tbody>
+          <tfoot id="crDkP1ModalTableFoot">
+            <!-- Rendered via JS -->
+          </tfoot>
+        </table>
+      </div>
     </div>
   </div>
 </div>
@@ -13071,11 +13215,11 @@ function loadData() {
 var csvFulfillmentFallbackUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1bEBI18zlEeXDqg4G4sFljZETceLvsyP-fcuMB1nLtsM/gviz/tq?tqx=out:csv&gid=0');
   var csvOlfUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1q-qxELBQZr3ABhVg-mw6Kvhl-e11RGQUmCTQjsXtz9g/gviz/tq?tqx=out:csv&sheet=OLF');
   var csvCaseIdReleaseUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1MpFVzgYBAT00HFZNMi_chgdTKU3rnMTBGOYFKspncwk/gviz/tq?tqx=out:csv&gid=0');
-  var csvCaseIdReleaseP1Url = getProxyUrl('https://docs.google.com/spreadsheets/d/1MpFVzgYBAT00HFZNMi_chgdTKU3rnMTBGOYFKspncwk/gviz/tq?tqx=out:csv&gid=2036255569');
-var csvCaseIdReleaseP2Url = getProxyUrl('https://docs.google.com/spreadsheets/d/1MpFVzgYBAT00HFZNMi_chgdTKU3rnMTBGOYFKspncwk/gviz/tq?tqx=out:csv&gid=552992544');
-var csvCaseIdReleaseHubLkUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1MpFVzgYBAT00HFZNMi_chgdTKU3rnMTBGOYFKspncwk/gviz/tq?tqx=out:csv&gid=362212909');
-var csvCaseIdReleaseLpUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1MpFVzgYBAT00HFZNMi_chgdTKU3rnMTBGOYFKspncwk/gviz/tq?tqx=out:csv&gid=1480106733');
-  var csvCaseIdReleaseQcSkusUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1MpFVzgYBAT00HFZNMi_chgdTKU3rnMTBGOYFKspncwk/gviz/tq?tqx=out:csv&gid=1387841996');
+  var csvCaseIdReleaseP1Url = getProxyUrl('https://docs.google.com/spreadsheets/d/1MpFVzgYBAT00HFZNMi_chgdTKU3rnMTBGOYFKspncwk/export?format=csv&gid=2036255569');
+  var csvCaseIdReleaseP2Url = getProxyUrl('https://docs.google.com/spreadsheets/d/1MpFVzgYBAT00HFZNMi_chgdTKU3rnMTBGOYFKspncwk/export?format=csv&gid=552992544');
+  var csvCaseIdReleaseHubLkUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1MpFVzgYBAT00HFZNMi_chgdTKU3rnMTBGOYFKspncwk/export?format=csv&gid=362212909');
+  var csvCaseIdReleaseLpUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1MpFVzgYBAT00HFZNMi_chgdTKU3rnMTBGOYFKspncwk/export?format=csv&gid=1480106733');
+  var csvCaseIdReleaseQcSkusUrl = getProxyUrl('https://docs.google.com/spreadsheets/d/1MpFVzgYBAT00HFZNMi_chgdTKU3rnMTBGOYFKspncwk/export?format=csv&gid=1387841996');
 
 
   // Reading separate sheets SLA GRW and SLA CUST from the spreadsheet
@@ -17417,10 +17561,14 @@ function applyCRDetailFilters() {
     var grpPct = grandCases > 0 ? (item.totalCaseId / grandCases) * 100 : 0;
 
     // ── BARIS HEADER GRUP (dengan bar kontribusi grup) ──
+    var dkP1QuickJumpBtn = '';
+    if (item.groupNo === 1 && typeof CR_DKP1_OD_LIST !== 'undefined' && CR_DKP1_OD_LIST.length > 0) {
+      dkP1QuickJumpBtn = ' <button type="button" onclick="scrollToCrDkP1StoreSection()" style="margin-left:8px; background:rgba(239,68,68,0.12); color:#dc2626; border:1px solid rgba(239,68,68,0.35); border-radius:5px; padding:2px 8px; font-size:10px; font-weight:800; cursor:pointer; font-family:var(--font-mono); vertical-align:middle;" title="Lihat detail OD Customer DK Priority 1 yang memiliki nama Store di Kolom X">🏪 Detail OD Store Kolom X (' + CR_DKP1_OD_LIST.length + ' OD · ' + CR_DKP1_STORE_LIST.length + ' Store) ↓</button>';
+    }
     html += '<tr style="background:linear-gradient(90deg,' + meta.bg + ', transparent);">' +
       '<td style="text-align:center;"><span style="display:inline-flex; align-items:center; justify-content:center; width:30px; height:30px; border-radius:50%; background:' + meta.color + '; color:#fff; font-weight:800; font-family:var(--font-mono); font-size:13px;">' + item.rank + '</span></td>' +
       '<td colspan="3">' +
-        '<div style="font-weight:800; color:var(--text); font-size:13px;">' + esc(item.groupName) + '</div>' +
+        '<div style="font-weight:800; color:var(--text); font-size:13px;">' + esc(item.groupName) + dkP1QuickJumpBtn + '</div>' +
         '<div style="font-size:9px; color:' + meta.color + '; font-weight:700; text-transform:uppercase; margin-top:2px;">' + meta.label + ' · ' + esc(item.batchLabel) + '</div>' +
       '</td>' +
       '<td style="text-align:center; font-weight:800; font-family:var(--font-mono); font-size:14px; color:' + meta.color + ';">' + item.totalCaseId.toLocaleString() + '</td>' +
@@ -18527,6 +18675,44 @@ function renderAisleDistribution() {
   }
 }
 
+// Normalisasi & validasi SKU universal (mendukung awalan angka 0-9 maupun huruf A-Z seperti X075955, A12345, S001, dll.)
+function normalizeCrSku(rawVal) {
+  if (rawVal === undefined || rawVal === null) return '';
+  var s = String(rawVal)
+    .replace(/[\u200B-\u200D\uFEFF]/g, '')
+    .replace(/"/g, '')
+    .trim()
+    .replace(/^'+/, '')
+    .trim();
+  if (!s) return '';
+  if (/^\d+\.0+$/.test(s)) {
+    s = s.replace(/\.0+$/, '');
+  }
+  var u = s.toUpperCase();
+  if (
+    u === '-' ||
+    u === '—' ||
+    u === '#N/A' ||
+    u === 'N/A' ||
+    u === 'NA' ||
+    u === 'NULL' ||
+    u === 'NONE' ||
+    u === 'TANPA SKU' ||
+    u === '(TANPA SKU)' ||
+    u === 'NO SKU' ||
+    u.charAt(0) === '#'
+  ) {
+    return '';
+  }
+  return u;
+}
+
+function isValidCrSku(rawVal) {
+  var s = normalizeCrSku(rawVal);
+  if (!s) return false;
+  return /^[A-Z0-9]/i.test(s);
+}
+
 // Menyeragamkan struktur baris dari sheet P1/P2/HUB&LK/LP menjadi 1 format.
 // 1 baris = 1 Case ID fisik. Tidak boleh dikalikan dengan kolom QTY apa pun.
 function normalizeCaseDetailSheet(rawRows, sourceTag, batchTag) {
@@ -18550,12 +18736,12 @@ function normalizeCaseDetailSheet(rawRows, sourceTag, batchTag) {
     
     // Extra requested columns
     if ((h === 'ORDERKEY' || h === 'ORDERNO' || h === 'NOMORORDER') && orderkeyIdx === -1) orderkeyIdx = c;
-    else if ((h === 'EXTRENORDERKEY' || h === 'EXTRNORDERKEY' || h === 'EXTERNALORDERKEY') && extrnorderkeyIdx === -1) extrnorderkeyIdx = c;
+    else if ((h === 'EXTRENORDERKEY' || h === 'EXTRNORDERKEY' || h === 'EXTERNALORDERKEY' || h === 'EXTERNORDERKEY') && extrnorderkeyIdx === -1) extrnorderkeyIdx = c;
     else if ((h === 'TYPE' || h === 'ORDERTYPE' || h === 'JENIS' || h === 'JENISORDER') && typeIdx === -1) typeIdx = c;
     else if ((h === 'DOCTYPE' || h === 'DOCUMENTTYPE' || h === 'TIPIKASI') && doctypeIdx === -1) doctypeIdx = c;
     else if ((h === 'SHIPTONAME' || h === 'CUSTOMERNAME' || h === 'SHIPTONAMA' || h === 'NAMASHIPTO') && shiptonameIdx === -1) shiptonameIdx = c;
     else if ((h === 'STOREBOOKING' || h === 'BOOKINGSTORE' || h === 'BOOKING') && storebookingIdx === -1) storebookingIdx = c;
-    else if ((h === 'CBM' || h === 'VOLUME') && cbmIdx === -1) cbmIdx = c;
+    else if ((h === 'CBM' || h === 'VOLUME' || h === 'CBMFIX' || h === 'FIXCBM') && cbmIdx === -1) cbmIdx = c;
     else if (h === 'CUBE' && cubeIdx === -1) cubeIdx = c;
     else if ((h === 'ROUTE' || h === 'ROUTECODE') && routeIdx === -1) routeIdx = c;
   }
@@ -18592,7 +18778,7 @@ function normalizeCaseDetailSheet(rawRows, sourceTag, batchTag) {
 
     var rec = caseMap[caseIdRaw];
     // Isi field yang masih kosong dengan nilai dari baris ini (kalau ada)
-    if (!rec.sku && skuIdx !== -1) rec.sku = String(row[skuIdx] || '').trim().replace(/"/g, '');
+    if (!rec.sku && skuIdx !== -1) rec.sku = normalizeCrSku(row[skuIdx]);
     if (!rec.desc && descIdx !== -1) rec.desc = String(row[descIdx] || '').trim().replace(/"/g, '');
     if (!rec.shipto && shiptoIdx !== -1) rec.shipto = String(row[shiptoIdx] || '').trim();
     if (!rec.dep && depIdx !== -1) rec.dep = String(row[depIdx] || '').trim();
@@ -19016,7 +19202,7 @@ function initCrQcSkuMap() {
   for (var i = 1; i < rawList.length; i++) {
     var r = rawList[i];
     if (!r) continue;
-    var sku = String(r[0] || '').trim().toUpperCase();
+    var sku = normalizeCrSku(r[0]);
     if (!sku || sku === 'SKU') continue;
     var descr = String(r[1] || '').trim();
     var dept = String(r[2] || '').trim();
@@ -19088,7 +19274,8 @@ function buildCrQcAnalytics() {
 
   (CR_UNIFIED_ROWS || []).forEach(function(item) {
     if (!item || !item.sku) return;
-    var cleanSku = String(item.sku).trim().toUpperCase();
+    var cleanSku = normalizeCrSku(item.sku);
+    if (!cleanSku) return;
     
     // Check against Master QC SKU list
     var isQc = Boolean(CR_QC_SKU_MAP[cleanSku]);
@@ -19329,8 +19516,8 @@ function renderCaseIdReleaseQcSection() {
     var fullSkuMap = {};
     (CR_UNIFIED_ROWS || []).forEach(function(r) {
       if (!r || !r.sku) return;
-      var s = String(r.sku).trim().toUpperCase();
-      if (!s || s === '-' || s === '#N/A') return;
+      var s = normalizeCrSku(r.sku);
+      if (!isValidCrSku(s)) return;
       if (!fullSkuMap[s]) {
         fullSkuMap[s] = {
           sku: s,
@@ -19553,29 +19740,20 @@ function renderCaseIdReleasePage() {
       }
     }
 
-    var skuVal = item.sku || ('(TANPA SKU)');
+    var cleanItemSku = normalizeCrSku(item.sku);
+    var skuVal = cleanItemSku || '(TANPA SKU)';
     var descVal = item.desc || '';
 
     // 1 baris = 1 Case ID fisik. JANGAN dikalikan kolom QTY.
     var caseCount = 1;
 
-    // Check if SKU is valid (numeric OR starts with 'X' case-insensitively)
-    var sClean = String(skuVal).trim().toUpperCase();
-    var isNoSku = false;
-    if (!sClean || sClean === '-' || sClean === '—' || sClean === '#N/A' || sClean === 'N/A' || sClean === 'TANPA SKU' || sClean === '(TANPA SKU)' || sClean === 'NO SKU') {
-      isNoSku = true;
-    } else {
-      if (/^\d+$/.test(sClean) || /^X/i.test(sClean)) {
-        isNoSku = false;
-      } else {
-        isNoSku = true;
-      }
-    }
+    // Validasi SKU: menerima SKU berawalan angka (0-9) maupun huruf apa pun (A-Z, termasuk X, dll.)
+    var isNoSku = !isValidCrSku(cleanItemSku);
 
     // ── Total per SKU (untuk Top 5 SKU keseluruhan) ──
     // Case ID tanpa SKU tetap dihitung, tapi dikelompokkan terpisah
     // supaya tidak mengotori daftar Top 5 SKU asli.
-    if (item.sku) {
+    if (cleanItemSku) {
       if (!skuMap[skuVal]) skuMap[skuVal] = { count: 0, desc: descVal, isNoSku: isNoSku };
       skuMap[skuVal].count += caseCount;
     }
@@ -20031,10 +20209,16 @@ function renderCaseIdReleasePage() {
     }).join('');
   }
 
+  // ── Build Customer DK Priority 1 Column X Store & OD Data first so summary table & store section stay synced ──
+  buildCrDkP1StoreData();
+
   // ── Priority Queue + Detail Table ──
   CR_PRIORITY_GROUPS = buildCrPriorityGroups(data);
   renderPriorityQueue(CR_PRIORITY_GROUPS);
   applyCRDetailFilters();
+
+  // ── Render Customer DK Priority 1 OD & Store Section (Kolom X) ──
+  renderCrDkP1StoreSection();
 
   // ── Level Racking ──
   renderRackingDistribution();
@@ -20046,6 +20230,726 @@ function renderCaseIdReleasePage() {
   // ── Render QC Inspection Analytics & Priority Matrix ──
   renderCaseIdReleaseQcSection();
 }
+
+// ── CUSTOMER DK (PRIORITY 1) — DETAIL OD & STORE (KOLOM X) + POPUP MODAL ──
+var CR_DKP1_OD_LIST = [];
+var CR_DKP1_STORE_LIST = [];
+var CR_DKP1_STORE_MAP = {};
+var CR_DKP1_MODAL_STATE = {
+  store: '',
+  clickedOd: '',
+  selectedOd: 'ALL'
+};
+
+function crDkEsc(val) {
+  return String(val === undefined || val === null ? '' : val)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function isValidCrColXStore(rawVal) {
+  if (rawVal === undefined || rawVal === null) return false;
+  var s = String(rawVal).trim();
+  if (!s) return false;
+  var u = s.toUpperCase().replace(/\s+/g, ' ');
+  if (
+    u === '#N/A' ||
+    u === 'N/A' ||
+    u === 'NA' ||
+    u === '-' ||
+    u === '—' ||
+    u === '0' ||
+    u === 'NULL' ||
+    u === 'NONE' ||
+    u === 'KODE CUST' ||
+    u === 'STORE' ||
+    u === 'NAMA STORE' ||
+    u.charAt(0) === '#'
+  ) {
+    return false;
+  }
+  return true;
+}
+
+function buildCrDkP1StoreData() {
+  initCrQcSkuMap();
+
+  CR_DKP1_OD_LIST = [];
+  CR_DKP1_STORE_LIST = [];
+  CR_DKP1_STORE_MAP = {};
+
+  var rawRows = (window.allCaseIdReleaseP1Data && window.allCaseIdReleaseP1Data.length > 1)
+    ? window.allCaseIdReleaseP1Data
+    : (typeof allCaseIdReleaseP1Data !== 'undefined' && allCaseIdReleaseP1Data && allCaseIdReleaseP1Data.length > 1)
+      ? allCaseIdReleaseP1Data
+      : [];
+
+  if (!rawRows || rawRows.length < 2) return;
+
+  var headers = rawRows[0] || [];
+  var shiptoIdx = -1, orderKeyIdx = -1, extOrderIdx = -1, routeIdx = -1, typeIdx = -1;
+  var reqShipIdx = -1, caseIdIdx = -1, locIdx = -1, skuIdx = -1, descIdx = -1;
+  var deptIdx = -1, qtyIdx = -1, areaIdx = -1, depBrandIdx = -1, typeOrderIdx = -1;
+  var cbmFixIdx = -1, siteCodeIdx = -1;
+
+  for (var c = 0; c < headers.length; c++) {
+    var h = String(headers[c] || '').toUpperCase().trim().replace(/[\s_.\-/]/g, '');
+    if ((h === 'SHIPTO' || h === 'SHIPTOCODE') && shiptoIdx === -1) shiptoIdx = c;
+    else if ((h === 'ORDERKEY' || h === 'ORDERNO') && orderKeyIdx === -1) orderKeyIdx = c;
+    else if ((h === 'EXTERNORDERKEY' || h === 'EXTRENORDERKEY' || h === 'EXTERNALORDERKEY') && extOrderIdx === -1) extOrderIdx = c;
+    else if ((h === 'ROUTE' || h === 'ROUTECODE') && routeIdx === -1) routeIdx = c;
+    else if (h === 'TYPE' && typeIdx === -1) typeIdx = c;
+    else if (h.indexOf('REQUESTEDSHIPDATE') !== -1 && reqShipIdx === -1) reqShipIdx = c;
+    else if (h === 'CASEID' && caseIdIdx === -1) caseIdIdx = c;
+    else if ((h === 'LOC' || h === 'LOCATION') && locIdx === -1) locIdx = c;
+    else if (h === 'SKU' && skuIdx === -1) skuIdx = c;
+    else if ((h === 'DESCR' || h === 'DESCRIPTION') && descIdx === -1) descIdx = c;
+    else if ((h === 'DEPT' || h === 'DEPARTMENT') && deptIdx === -1) deptIdx = c;
+    else if ((h === 'QTY' || h === 'QUANTITY') && qtyIdx === -1) qtyIdx = c;
+    else if (areaIdx === -1 && h.indexOf('AREA') !== -1) areaIdx = c;
+    else if (h === 'DEP' && depBrandIdx === -1) depBrandIdx = c;
+    else if (h === 'TYPEORDER' && typeOrderIdx === -1) typeOrderIdx = c;
+    else if ((h === 'CBMFIX' || h === 'FIXCBM') && cbmFixIdx === -1) cbmFixIdx = c;
+    else if (h === 'SITECODE' && siteCodeIdx === -1) siteCodeIdx = c;
+  }
+
+  // Fallback to standard P1 sheet column positions if header text changed slightly
+  if (shiptoIdx === -1) shiptoIdx = 1;
+  if (orderKeyIdx === -1) orderKeyIdx = 2;
+  if (extOrderIdx === -1) extOrderIdx = 3;
+  if (routeIdx === -1) routeIdx = 4;
+  if (typeIdx === -1) typeIdx = 5;
+  if (reqShipIdx === -1) reqShipIdx = 6;
+  if (caseIdIdx === -1) caseIdIdx = 7;
+  if (locIdx === -1) locIdx = 10;
+  if (skuIdx === -1) skuIdx = 11;
+  if (descIdx === -1) descIdx = 12;
+  if (deptIdx === -1) deptIdx = 13;
+  if (qtyIdx === -1) qtyIdx = 14;
+  if (areaIdx === -1) areaIdx = 17;
+  if (depBrandIdx === -1) depBrandIdx = 18;
+  if (typeOrderIdx === -1) typeOrderIdx = 19;
+  if (cbmFixIdx === -1) cbmFixIdx = 21;
+  if (siteCodeIdx === -1) siteCodeIdx = 22;
+
+  // Strictly Column X = 0-based index 23 (A=0 ... X=23)
+  var COL_X_IDX = 23;
+
+  var odMap = {};
+  var odOrderKeys = [];
+
+  for (var r = 1; r < rawRows.length; r++) {
+    var row = rawRows[r];
+    if (!row || row.length <= COL_X_IDX) continue;
+
+    var storeColX = String(row[COL_X_IDX] || '').trim().replace(/\s+/g, ' ');
+    if (!isValidCrColXStore(storeColX)) continue;
+
+    var typeVal = String(row[typeIdx] || '').trim();
+    var typeOrderVal = String(row[typeOrderIdx] || '').trim();
+    if (typeVal.toUpperCase() === 'GRW' || typeOrderVal.toUpperCase() === 'GRW') continue;
+
+    var extOd = String(row[extOrderIdx] || '').trim();
+    var ordKey = String(row[orderKeyIdx] || '').trim();
+    var odId = extOd || ordKey;
+    if (!odId || odId === '-' || odId === '#N/A') continue;
+
+    var shipto = String(row[shiptoIdx] || '').trim() || '-';
+    var route = String(row[routeIdx] || '').trim() || '-';
+    var reqShip = String(row[reqShipIdx] || '').trim() || '-';
+    var caseId = String(row[caseIdIdx] || '').trim();
+    var loc = String(row[locIdx] || '').trim();
+    var sku = normalizeCrSku(row[skuIdx]);
+    var desc = String(row[descIdx] || '').trim().replace(/"/g, '') || 'Tanpa Deskripsi';
+    var dept = String(row[deptIdx] || '').trim() || '-';
+    var brand = String(row[depBrandIdx] || '').trim() || 'INFORMA';
+    var qtyNum = parseFloat(String(row[qtyIdx] || '0').replace(/,/g, ''));
+    if (isNaN(qtyNum) || qtyNum < 0) qtyNum = 0;
+    var cbmNum = parseFloat(String(row[cbmFixIdx] || '0').replace(/,/g, ''));
+    if (isNaN(cbmNum) || cbmNum < 0) cbmNum = 0;
+    var areaRaw = String(row[areaIdx] || '').trim();
+    var siteCode = String(row[siteCodeIdx] || '').trim();
+
+    var masterQc = sku && CR_QC_SKU_MAP ? CR_QC_SKU_MAP[sku] : null;
+    var isQc = Boolean(masterQc);
+    if (dept === '-' && masterQc && masterQc.dept) {
+      dept = masterQc.dept;
+    }
+
+    var odGroupKey = storeColX + '||' + odId;
+    if (!odMap[odGroupKey]) {
+      odMap[odGroupKey] = {
+        od: odId,
+        orderKey: ordKey || '-',
+        shipto: shipto,
+        store: storeColX,
+        siteCode: siteCode,
+        route: route,
+        reqShip: reqShip,
+        caseSet: {},
+        skuLineMap: {},
+        skuLineOrder: [],
+        totalQty: 0,
+        totalCbm: 0,
+        qcLineCount: 0,
+        qcCaseCount: 0
+      };
+      odOrderKeys.push(odGroupKey);
+    }
+
+    var odEntry = odMap[odGroupKey];
+    if (caseId && caseId !== '-') {
+      odEntry.caseSet[caseId] = true;
+    }
+    odEntry.totalQty += qtyNum;
+    odEntry.totalCbm += cbmNum;
+    if (isQc) odEntry.qcCaseCount += 1;
+
+    var skuDisplay = sku || '(TANPA SKU)';
+    var skuKey = sku ? sku : ('__NOSKU__||' + desc);
+    if (!odEntry.skuLineMap[skuKey]) {
+      odEntry.skuLineMap[skuKey] = {
+        od: odId,
+        orderKey: ordKey || '-',
+        shipto: shipto,
+        store: storeColX,
+        siteCode: siteCode,
+        route: route,
+        reqShip: reqShip,
+        sku: skuDisplay,
+        desc: desc,
+        dept: dept,
+        brand: brand,
+        qty: 0,
+        cbm: 0,
+        caseIds: [],
+        caseSeen: {},
+        locs: [],
+        locSeen: {},
+        area: areaRaw ? ('Area ' + areaRaw.replace(/[^0-9]/g, '')) : '',
+        isQc: isQc
+      };
+      odEntry.skuLineOrder.push(skuKey);
+    }
+
+    var line = odEntry.skuLineMap[skuKey];
+    line.qty += qtyNum;
+    line.cbm += cbmNum;
+    if (isQc) line.isQc = true;
+    if (caseId && !line.caseSeen[caseId]) {
+      line.caseSeen[caseId] = true;
+      line.caseIds.push(caseId);
+    }
+    if (loc && !line.locSeen[loc]) {
+      line.locSeen[loc] = true;
+      line.locs.push(loc);
+    }
+  }
+
+  var storeAcc = {};
+
+  odOrderKeys.forEach(function(gKey) {
+    var entry = odMap[gKey];
+    var skuLines = entry.skuLineOrder.map(function(sk) { return entry.skuLineMap[sk]; });
+    var qcLines = skuLines.filter(function(l) { return l.isQc; }).length;
+    var caseCount = Object.keys(entry.caseSet).length;
+
+    var odRecord = {
+      od: entry.od,
+      orderKey: entry.orderKey,
+      shipto: entry.shipto,
+      store: entry.store,
+      siteCode: entry.siteCode,
+      route: entry.route,
+      reqShip: entry.reqShip,
+      caseCount: caseCount,
+      skuCount: skuLines.length,
+      totalQty: entry.totalQty,
+      totalCbm: entry.totalCbm,
+      qcLineCount: qcLines,
+      needsQc: qcLines > 0,
+      skuLines: skuLines
+    };
+
+    CR_DKP1_OD_LIST.push(odRecord);
+
+    if (!storeAcc[entry.store]) {
+      storeAcc[entry.store] = {
+        store: entry.store,
+        siteCode: entry.siteCode || '',
+        odCount: 0,
+        caseCount: 0,
+        uniqueSkus: {},
+        totalQty: 0,
+        totalCbm: 0,
+        qcOdCount: 0,
+        qcLineCount: 0,
+        ods: [],
+        allSkuLines: []
+      };
+    }
+
+    var st = storeAcc[entry.store];
+    if (!st.siteCode && entry.siteCode) st.siteCode = entry.siteCode;
+    st.odCount += 1;
+    st.caseCount += caseCount;
+    st.totalQty += entry.totalQty;
+    st.totalCbm += entry.totalCbm;
+    if (odRecord.needsQc) st.qcOdCount += 1;
+    st.qcLineCount += qcLines;
+    st.ods.push(odRecord);
+    skuLines.forEach(function(ln) {
+      st.uniqueSkus[ln.sku] = true;
+      st.allSkuLines.push(ln);
+    });
+  });
+
+  CR_DKP1_STORE_LIST = Object.keys(storeAcc).map(function(k) {
+    var s = storeAcc[k];
+    s.uniqueSkuCount = Object.keys(s.uniqueSkus).length;
+    CR_DKP1_STORE_MAP[k] = s;
+    return s;
+  });
+
+  CR_DKP1_STORE_LIST.sort(function(a, b) {
+    if (b.odCount !== a.odCount) return b.odCount - a.odCount;
+    return b.totalQty - a.totalQty;
+  });
+}
+
+function scrollToCrDkP1StoreSection() {
+  var sec = document.getElementById('cr-dkp1-store-section');
+  if (sec) {
+    sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+
+function renderCrDkP1StoreSection() {
+  var kpiStrip = document.getElementById('cr-dkp1-kpi-strip');
+  var cardsEl = document.getElementById('cr-dkp1-store-cards');
+  var storeSelect = document.getElementById('cr-dkp1-filter-store');
+  if (!cardsEl || !storeSelect) return;
+
+  var totalStores = CR_DKP1_STORE_LIST.length;
+  var totalOds = CR_DKP1_OD_LIST.length;
+  var totalCases = CR_DKP1_OD_LIST.reduce(function(s, o) { return s + o.caseCount; }, 0);
+  var totalQty = CR_DKP1_OD_LIST.reduce(function(s, o) { return s + o.totalQty; }, 0);
+  var totalQcLines = CR_DKP1_OD_LIST.reduce(function(s, o) { return s + o.qcLineCount; }, 0);
+
+  if (kpiStrip) {
+    kpiStrip.innerHTML =
+      '<div style="background:var(--surface2); border:1px solid var(--border); padding:6px 12px; border-radius:8px; text-align:center;">' +
+        '<div style="font-size:9px; font-weight:800; color:var(--muted); text-transform:uppercase;">Store (Kolom X)</div>' +
+        '<div style="font-size:15px; font-weight:900; font-family:var(--font-mono); color:var(--blue);">' + totalStores.toLocaleString() + '</div>' +
+      '</div>' +
+      '<div style="background:var(--surface2); border:1px solid var(--border); padding:6px 12px; border-radius:8px; text-align:center;">' +
+        '<div style="font-size:9px; font-weight:800; color:var(--muted); text-transform:uppercase;">Total OD</div>' +
+        '<div style="font-size:15px; font-weight:900; font-family:var(--font-mono); color:var(--text);">' + totalOds.toLocaleString() + '</div>' +
+      '</div>' +
+      '<div style="background:var(--surface2); border:1px solid var(--border); padding:6px 12px; border-radius:8px; text-align:center;">' +
+        '<div style="font-size:9px; font-weight:800; color:var(--muted); text-transform:uppercase;">Case ID</div>' +
+        '<div style="font-size:15px; font-weight:900; font-family:var(--font-mono); color:var(--text);">' + totalCases.toLocaleString() + '</div>' +
+      '</div>' +
+      '<div style="background:var(--surface2); border:1px solid var(--border); padding:6px 12px; border-radius:8px; text-align:center;">' +
+        '<div style="font-size:9px; font-weight:800; color:var(--muted); text-transform:uppercase;">Total Qty</div>' +
+        '<div style="font-size:15px; font-weight:900; font-family:var(--font-mono); color:#0d9488;">' + totalQty.toLocaleString() + ' pcs</div>' +
+      '</div>' +
+      '<div style="background:' + (totalQcLines > 0 ? 'rgba(239,68,68,0.08)' : 'var(--surface2)') + '; border:1px solid ' + (totalQcLines > 0 ? 'rgba(239,68,68,0.35)' : 'var(--border)') + '; padding:6px 12px; border-radius:8px; text-align:center;">' +
+        '<div style="font-size:9px; font-weight:800; color:' + (totalQcLines > 0 ? '#dc2626' : 'var(--muted)') + '; text-transform:uppercase;">Item Perlu QC</div>' +
+        '<div style="font-size:15px; font-weight:900; font-family:var(--font-mono); color:' + (totalQcLines > 0 ? '#dc2626' : '#059669') + ';">' + totalQcLines.toLocaleString() + '</div>' +
+      '</div>';
+  }
+
+  // Populate Store filter dropdown while preserving user selection if still valid
+  var prevSelectedStore = storeSelect.value || 'ALL';
+  var optHtml = '<option value="ALL">Semua Store Kolom X (' + totalStores + ' Store)</option>';
+  CR_DKP1_STORE_LIST.forEach(function(st) {
+    optHtml += '<option value="' + crDkEsc(st.store) + '">' + crDkEsc(st.store) + ' (' + st.odCount + ' OD)</option>';
+  });
+  storeSelect.innerHTML = optHtml;
+  if (prevSelectedStore !== 'ALL' && CR_DKP1_STORE_MAP[prevSelectedStore]) {
+    storeSelect.value = prevSelectedStore;
+  } else {
+    storeSelect.value = 'ALL';
+  }
+
+  // Render Clickable Store Summary Cards
+  if (CR_DKP1_STORE_LIST.length === 0) {
+    var loadingMsg = !window.isCaseIdReleaseFetchedFromSheets
+      ? '⏳ Memuat data sheet Customer DK Priority 1 (Kolom X)...'
+      : 'Belum ada baris OD pada sheet Customer DK Priority 1 yang memiliki nama Store di Kolom X.';
+    cardsEl.innerHTML =
+      '<div style="grid-column:1/-1; padding:18px; border:1px dashed var(--border); border-radius:8px; background:var(--surface2); text-align:center; font-size:12px; color:var(--muted);">' +
+        loadingMsg +
+      '</div>';
+  } else {
+    var storeColors = ['#2563eb', '#0d9488', '#7c3aed', '#d97706', '#dc2626'];
+    cardsEl.innerHTML = CR_DKP1_STORE_LIST.map(function(st, idx) {
+      var accent = storeColors[idx % storeColors.length];
+      var encStore = encodeURIComponent(st.store);
+      var qcPill = st.qcLineCount > 0
+        ? '<span style="background:rgba(239,68,68,0.12); color:#dc2626; border:1px solid rgba(239,68,68,0.3); font-size:10px; font-weight:800; padding:2px 7px; border-radius:5px;">🛡️ ' + st.qcLineCount + ' SKU Perlu QC</span>'
+        : '<span style="background:rgba(16,185,129,0.1); color:#059669; border:1px solid rgba(16,185,129,0.28); font-size:10px; font-weight:700; padding:2px 7px; border-radius:5px;">✓ 0 Perlu QC</span>';
+
+      return '<div role="button" tabindex="0" onclick="openCrDkP1StoreModal(decodeURIComponent(\'' + encStore + '\'), \'\')" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();openCrDkP1StoreModal(decodeURIComponent(\'' + encStore + '\'), \'\');}" ' +
+        'style="cursor:pointer; border:1px solid var(--border); border-left:4px solid ' + accent + '; border-radius:10px; padding:14px 16px; background:var(--surface); transition:transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease; box-shadow:0 2px 6px rgba(15,23,42,0.04);" ' +
+        'onmouseover="this.style.transform=\'translateY(-2px)\'; this.style.boxShadow=\'0 8px 20px rgba(15,23,42,0.10)\';" ' +
+        'onmouseout="this.style.transform=\'none\'; this.style.boxShadow=\'0 2px 6px rgba(15,23,42,0.04)\';">' +
+          '<div style="display:flex; justify-content:space-between; align-items:flex-start; gap:8px;">' +
+            '<div style="min-width:0;">' +
+              '<div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">' +
+                '<span style="font-size:10px; font-weight:800; color:' + accent + '; text-transform:uppercase; letter-spacing:0.4px;">🏪 STORE KOLOM X</span>' +
+                (st.siteCode ? '<span style="font-size:10px; font-family:var(--font-mono); font-weight:800; background:var(--surface2); border:1px solid var(--border); padding:1px 6px; border-radius:4px; color:var(--text);">Site: ' + crDkEsc(st.siteCode) + '</span>' : '') +
+              '</div>' +
+              '<div style="font-size:14px; font-weight:900; color:var(--text); margin-top:4px; line-height:1.25;">' + crDkEsc(st.store) + '</div>' +
+            '</div>' +
+            '<span style="flex-shrink:0; font-size:10px; font-weight:800; color:' + accent + '; background:rgba(37,99,235,0.08); padding:3px 8px; border-radius:6px;">Klik Detail ↗</span>' +
+          '</div>' +
+          '<div style="display:grid; grid-template-columns:repeat(4,1fr); gap:6px; margin-top:12px; padding-top:10px; border-top:1px dashed var(--border); text-align:center;">' +
+            '<div><div style="font-size:14px; font-weight:900; font-family:var(--font-mono); color:var(--text);">' + st.odCount.toLocaleString() + '</div><div style="font-size:9px; color:var(--muted); font-weight:700; text-transform:uppercase;">OD</div></div>' +
+            '<div><div style="font-size:14px; font-weight:900; font-family:var(--font-mono); color:var(--text);">' + st.uniqueSkuCount.toLocaleString() + '</div><div style="font-size:9px; color:var(--muted); font-weight:700; text-transform:uppercase;">SKU</div></div>' +
+            '<div><div style="font-size:14px; font-weight:900; font-family:var(--font-mono); color:var(--text);">' + st.caseCount.toLocaleString() + '</div><div style="font-size:9px; color:var(--muted); font-weight:700; text-transform:uppercase;">Case</div></div>' +
+            '<div><div style="font-size:14px; font-weight:900; font-family:var(--font-mono); color:' + accent + ';">' + st.totalQty.toLocaleString() + '</div><div style="font-size:9px; color:var(--muted); font-weight:700; text-transform:uppercase;">Qty</div></div>' +
+          '</div>' +
+          '<div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px; font-size:11px;">' +
+            '<span style="font-family:var(--font-mono); color:var(--muted); font-weight:700;">' + st.totalCbm.toFixed(2) + ' CBM</span>' +
+            qcPill +
+          '</div>' +
+        '</div>';
+    }).join('');
+  }
+
+  applyCrDkP1OdFilters();
+}
+
+function applyCrDkP1OdFilters() {
+  var tbody = document.getElementById('cr-dkp1-od-tbody');
+  var emptyEl = document.getElementById('cr-dkp1-od-empty');
+  var emptyMsgEl = document.getElementById('cr-dkp1-od-empty-msg');
+  var countInfoEl = document.getElementById('cr-dkp1-od-count-info');
+  if (!tbody) return;
+
+  var storeFilter = (document.getElementById('cr-dkp1-filter-store') || {}).value || 'ALL';
+  var qcFilter = (document.getElementById('cr-dkp1-filter-qc') || {}).value || 'ALL';
+  var q = ((document.getElementById('cr-dkp1-search') || {}).value || '').toLowerCase().trim();
+
+  var filtered = CR_DKP1_OD_LIST.filter(function(item) {
+    if (storeFilter !== 'ALL' && item.store !== storeFilter) return false;
+    if (qcFilter === 'NEED_QC' && !item.needsQc) return false;
+    if (qcFilter === 'NO_QC' && item.needsQc) return false;
+    if (q) {
+      var skuHay = item.skuLines.map(function(l) { return l.sku + ' ' + l.desc + ' ' + l.dept; }).join(' ');
+      var hay = (item.od + ' ' + item.orderKey + ' ' + item.shipto + ' ' + item.store + ' ' + item.route + ' ' + skuHay).toLowerCase();
+      if (hay.indexOf(q) === -1) return false;
+    }
+    return true;
+  });
+
+  if (countInfoEl) {
+    countInfoEl.textContent = 'Menampilkan ' + filtered.length.toLocaleString() + ' dari ' + CR_DKP1_OD_LIST.length.toLocaleString() + ' OD';
+  }
+
+  if (filtered.length === 0) {
+    tbody.innerHTML = '';
+    if (emptyEl) emptyEl.style.display = 'flex';
+    if (emptyMsgEl) {
+      emptyMsgEl.textContent = !window.isCaseIdReleaseFetchedFromSheets && CR_DKP1_OD_LIST.length === 0
+        ? 'Sedang mengambil data OD & Store Customer DK Priority 1 dari Google Sheets...'
+        : 'Tidak ada OD Customer DK Priority 1 dengan nama Store pada Kolom X yang sesuai filter.';
+    }
+    return;
+  }
+
+  if (emptyEl) emptyEl.style.display = 'none';
+
+  var sumCases = 0, sumSkus = 0, sumQty = 0, sumCbm = 0, sumQcOds = 0;
+
+  var rowsHtml = filtered.map(function(item, idx) {
+    sumCases += item.caseCount;
+    sumSkus += item.skuCount;
+    sumQty += item.totalQty;
+    sumCbm += item.totalCbm;
+    if (item.needsQc) sumQcOds += 1;
+
+    var encStore = encodeURIComponent(item.store);
+    var encOd = encodeURIComponent(item.od);
+
+    var qcCellHtml = item.needsQc
+      ? '<span style="display:inline-flex; align-items:center; gap:4px; background:rgba(239,68,68,0.12); color:#dc2626; border:1px solid rgba(239,68,68,0.35); padding:3px 7px; border-radius:5px; font-size:10px; font-weight:800; font-family:var(--font-mono);">🛡️ Ya (' + item.qcLineCount + ')</span>'
+      : '<span style="display:inline-flex; align-items:center; gap:4px; background:rgba(16,185,129,0.10); color:#059669; border:1px solid rgba(16,185,129,0.28); padding:3px 7px; border-radius:5px; font-size:10px; font-weight:700;">✓ Tidak</span>';
+
+    return '<tr style="border-bottom:1px solid var(--border); transition:background 0.15s ease;" onmouseover="this.style.background=\'var(--surface2)\'" onmouseout="this.style.background=\'transparent\'">' +
+      '<td style="text-align:center; font-family:var(--font-mono); font-size:11px; color:var(--muted);">' + (idx + 1) + '</td>' +
+      '<td>' +
+        '<div style="font-family:var(--font-mono); font-weight:800; font-size:12px; color:var(--text);">' + crDkEsc(item.od) + '</div>' +
+        '<div style="font-size:10.5px; color:var(--muted); margin-top:2px; font-family:var(--font-mono);">OrderKey: <strong style="color:var(--text);">' + crDkEsc(item.orderKey) + '</strong> · Rute: ' + crDkEsc(item.route) + (item.reqShip && item.reqShip !== '-' ? ' · Kirim: ' + crDkEsc(item.reqShip) : '') + '</div>' +
+      '</td>' +
+      '<td>' +
+        '<div style="font-weight:700; font-size:12px; color:var(--text);">' + crDkEsc(item.shipto) + '</div>' +
+      '</td>' +
+      '<td>' +
+        '<button type="button" onclick="openCrDkP1StoreModal(decodeURIComponent(\'' + encStore + '\'), decodeURIComponent(\'' + encOd + '\'))" ' +
+          'title="Klik untuk membuka popup detail Order, SKU, Qty, Deskripsi SKU, Dept & status Perlu QC" ' +
+          'style="cursor:pointer; display:inline-flex; align-items:center; gap:6px; background:rgba(37,99,235,0.08); color:var(--blue); border:1px solid rgba(37,99,235,0.3); padding:5px 10px; border-radius:7px; font-size:11.5px; font-weight:800; text-align:left; transition:all 0.15s ease;" ' +
+          'onmouseover="this.style.background=\'var(--blue)\'; this.style.color=\'#fff\';" ' +
+          'onmouseout="this.style.background=\'rgba(37,99,235,0.08)\'; this.style.color=\'var(--blue)\';">' +
+          '<span>🏪 ' + crDkEsc(item.store) + '</span>' +
+          (item.siteCode ? '<span style="font-family:var(--font-mono); font-size:10px; opacity:0.85;">(' + crDkEsc(item.siteCode) + ')</span>' : '') +
+          '<span style="font-size:10px; opacity:0.9;">↗</span>' +
+        '</button>' +
+      '</td>' +
+      '<td style="text-align:center; font-family:var(--font-mono); font-size:11.5px; font-weight:700; color:var(--text);">' + item.skuCount + ' SKU · ' + item.caseCount + ' Case</td>' +
+      '<td style="text-align:center; font-family:var(--font-mono); font-weight:800; font-size:12.5px; color:#0d9488;">' + item.totalQty.toLocaleString() + '</td>' +
+      '<td style="text-align:center; font-family:var(--font-mono); font-size:11.5px; color:var(--muted);">' + item.totalCbm.toFixed(2) + '</td>' +
+      '<td style="text-align:center;">' + qcCellHtml + '</td>' +
+    '</tr>';
+  }).join('');
+
+  rowsHtml += '<tr style="background:var(--text); color:#fff; position:sticky; bottom:0;">' +
+    '<td colspan="4" style="padding:9px 12px; color:#fff; font-weight:800; font-family:var(--font-mono); font-size:11.5px;">Σ TOTAL OD STORE KOLOM X (' + filtered.length.toLocaleString() + ' OD)</td>' +
+    '<td style="text-align:center; color:#fff; font-family:var(--font-mono); font-weight:800; font-size:11.5px;">' + sumSkus.toLocaleString() + ' SKU · ' + sumCases.toLocaleString() + ' Case</td>' +
+    '<td style="text-align:center; color:#5eead4; font-family:var(--font-mono); font-weight:900; font-size:12.5px;">' + sumQty.toLocaleString() + '</td>' +
+    '<td style="text-align:center; color:#fff; font-family:var(--font-mono); font-weight:800; font-size:11.5px;">' + sumCbm.toFixed(2) + '</td>' +
+    '<td style="text-align:center; color:#fff; font-family:var(--font-mono); font-weight:800; font-size:11px;">' + sumQcOds + ' OD QC</td>' +
+  '</tr>';
+
+  tbody.innerHTML = rowsHtml;
+}
+
+function openCrDkP1StoreModal(storeName, odId) {
+  var stObj = CR_DKP1_STORE_MAP[storeName];
+  if (!stObj) return;
+
+  CR_DKP1_MODAL_STATE.store = storeName;
+  CR_DKP1_MODAL_STATE.clickedOd = odId || '';
+  CR_DKP1_MODAL_STATE.selectedOd = odId ? odId : 'ALL';
+
+  var qcSel = document.getElementById('crDkP1ModalQcFilter');
+  if (qcSel) qcSel.value = 'ALL';
+  var searchEl = document.getElementById('crDkP1ModalSearch');
+  if (searchEl) searchEl.value = '';
+
+  // Populate OD dropdown inside modal
+  var odSelect = document.getElementById('crDkP1ModalOdSelect');
+  if (odSelect) {
+    var opts = '<option value="ALL">Semua Order di ' + crDkEsc(storeName) + ' (' + stObj.odCount + ' OD)</option>';
+    stObj.ods.forEach(function(o) {
+      opts += '<option value="' + crDkEsc(o.od) + '">' + crDkEsc(o.od) + ' — ' + crDkEsc(o.shipto) + ' (' + o.skuCount + ' SKU)</option>';
+    });
+    odSelect.innerHTML = opts;
+    odSelect.value = CR_DKP1_MODAL_STATE.selectedOd;
+  }
+
+  renderCrDkP1ModalBody();
+
+  var modal = document.getElementById('crDkP1StoreModal');
+  if (modal) modal.classList.add('active');
+}
+
+function closeCrDkP1StoreModal() {
+  var modal = document.getElementById('crDkP1StoreModal');
+  if (modal) modal.classList.remove('active');
+}
+
+function setCrDkP1ModalOdScope(odVal) {
+  CR_DKP1_MODAL_STATE.selectedOd = odVal || 'ALL';
+  var odSelect = document.getElementById('crDkP1ModalOdSelect');
+  if (odSelect) odSelect.value = CR_DKP1_MODAL_STATE.selectedOd;
+  renderCrDkP1ModalBody();
+}
+
+function onCrDkP1ModalOdSelectChange(val) {
+  CR_DKP1_MODAL_STATE.selectedOd = val || 'ALL';
+  renderCrDkP1ModalBody();
+}
+
+function renderCrDkP1ModalBody() {
+  var storeName = CR_DKP1_MODAL_STATE.store;
+  var stObj = CR_DKP1_STORE_MAP[storeName];
+  if (!stObj) return;
+
+  var selectedOd = CR_DKP1_MODAL_STATE.selectedOd || 'ALL';
+  var clickedOd = CR_DKP1_MODAL_STATE.clickedOd || '';
+  var qcFilter = (document.getElementById('crDkP1ModalQcFilter') || {}).value || 'ALL';
+  var q = ((document.getElementById('crDkP1ModalSearch') || {}).value || '').toLowerCase().trim();
+
+  var titleEl = document.getElementById('crDkP1ModalStoreTitle');
+  var siteBadgeEl = document.getElementById('crDkP1ModalSiteBadge');
+  var subEl = document.getElementById('crDkP1ModalSubtitle');
+  var kpisEl = document.getElementById('crDkP1ModalKpis');
+  var scopeBtnsEl = document.getElementById('crDkP1ModalScopeBtns');
+  var bannerEl = document.getElementById('crDkP1ModalOrderBanner');
+  var tbodyEl = document.getElementById('crDkP1ModalTableBody');
+  var tfootEl = document.getElementById('crDkP1ModalTableFoot');
+
+  if (titleEl) titleEl.textContent = '🏪 ' + storeName;
+  if (siteBadgeEl) {
+    siteBadgeEl.textContent = stObj.siteCode ? ('KOLOM X · SITE ' + stObj.siteCode) : 'KOLOM X STORE';
+  }
+
+  // Scope buttons (allow 1-click toggle between clicked OD and all ODs in this store)
+  if (scopeBtnsEl) {
+    if (clickedOd) {
+      var encClicked = encodeURIComponent(clickedOd);
+      var isSingleActive = (selectedOd === clickedOd);
+      var isAllActive = (selectedOd === 'ALL');
+      scopeBtnsEl.innerHTML =
+        '<button type="button" onclick="setCrDkP1ModalOdScope(decodeURIComponent(\'' + encClicked + '\'))" ' +
+          'style="cursor:pointer; padding:5px 10px; border-radius:6px; font-size:11px; font-weight:800; border:1px solid ' + (isSingleActive ? '#2563eb' : 'var(--border)') + '; background:' + (isSingleActive ? '#2563eb' : 'var(--surface)') + '; color:' + (isSingleActive ? '#fff' : 'var(--text)') + ';">' +
+          '📄 OD Terpilih' +
+        '</button>' +
+        '<button type="button" onclick="setCrDkP1ModalOdScope(\'ALL\')" ' +
+          'style="cursor:pointer; padding:5px 10px; border-radius:6px; font-size:11px; font-weight:800; border:1px solid ' + (isAllActive ? '#2563eb' : 'var(--border)') + '; background:' + (isAllActive ? '#2563eb' : 'var(--surface)') + '; color:' + (isAllActive ? '#fff' : 'var(--text)') + ';">' +
+          '🏪 Semua OD Store Ini (' + stObj.odCount + ' OD)' +
+        '</button>';
+    } else {
+      scopeBtnsEl.innerHTML =
+        '<span style="font-size:11px; font-weight:800; color:var(--muted); text-transform:uppercase;">Cakupan Order:</span>';
+    }
+  }
+
+  // Filter lines by selected OD, QC filter, and search query
+  var sourceLines = stObj.allSkuLines;
+  var focusedOdObj = null;
+  if (selectedOd !== 'ALL') {
+    focusedOdObj = stObj.ods.find(function(o) { return o.od === selectedOd; }) || null;
+    sourceLines = focusedOdObj ? focusedOdObj.skuLines : [];
+  }
+
+  var filteredLines = sourceLines.filter(function(ln) {
+    if (qcFilter === 'NEED_QC' && !ln.isQc) return false;
+    if (qcFilter === 'NO_QC' && ln.isQc) return false;
+    if (q) {
+      var hay = (ln.od + ' ' + ln.orderKey + ' ' + ln.shipto + ' ' + ln.sku + ' ' + ln.desc + ' ' + ln.dept + ' ' + ln.brand + ' ' + ln.caseIds.join(' ')).toLowerCase();
+      if (hay.indexOf(q) === -1) return false;
+    }
+    return true;
+  });
+
+  // Update Subtitle & Focused Order Banner
+  if (subEl) {
+    if (focusedOdObj) {
+      subEl.textContent = 'Menampilkan rincian Order ' + focusedOdObj.od + ' (' + focusedOdObj.shipto + ') pada store ' + storeName;
+    } else {
+      subEl.textContent = 'Menampilkan seluruh Order Customer DK Priority 1 (' + stObj.odCount + ' OD) untuk store ' + storeName;
+    }
+  }
+
+  if (bannerEl) {
+    if (focusedOdObj) {
+      bannerEl.style.display = 'block';
+      bannerEl.innerHTML =
+        '<div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; font-size:12px;">' +
+          '<div style="display:flex; flex-wrap:wrap; gap:16px; align-items:center;">' +
+            '<div><span style="color:var(--muted); font-size:10.5px; text-transform:uppercase; font-weight:700;">No. OD:</span> <strong style="font-family:var(--font-mono); color:var(--text);">' + crDkEsc(focusedOdObj.od) + '</strong></div>' +
+            '<div><span style="color:var(--muted); font-size:10.5px; text-transform:uppercase; font-weight:700;">OrderKey:</span> <strong style="font-family:var(--font-mono); color:var(--text);">' + crDkEsc(focusedOdObj.orderKey) + '</strong></div>' +
+            '<div><span style="color:var(--muted); font-size:10.5px; text-transform:uppercase; font-weight:700;">Customer:</span> <strong style="color:var(--text);">' + crDkEsc(focusedOdObj.shipto) + '</strong></div>' +
+            '<div><span style="color:var(--muted); font-size:10.5px; text-transform:uppercase; font-weight:700;">Rute / Jadwal:</span> <strong style="font-family:var(--font-mono); color:var(--text);">' + crDkEsc(focusedOdObj.route) + ' · ' + crDkEsc(focusedOdObj.reqShip) + '</strong></div>' +
+          '</div>' +
+          '<div style="font-family:var(--font-mono); font-size:11.5px; font-weight:800; color:var(--blue);">' +
+            focusedOdObj.caseCount + ' Case ID · ' + focusedOdObj.totalCbm.toFixed(2) + ' CBM' +
+          '</div>' +
+        '</div>';
+    } else {
+      bannerEl.style.display = 'none';
+      bannerEl.innerHTML = '';
+    }
+  }
+
+  // Modal Header KPIs (reflecting active scope)
+  var odSeen = {};
+  var kpiSkuSeen = {};
+  var kpiQty = 0;
+  var kpiQcCount = 0;
+  filteredLines.forEach(function(ln) {
+    odSeen[ln.od] = true;
+    kpiSkuSeen[ln.sku] = true;
+    kpiQty += ln.qty;
+    if (ln.isQc) kpiQcCount += 1;
+  });
+
+  if (kpisEl) {
+    var kpiOdTotal = Object.keys(odSeen).length;
+    var kpiSkuTotal = Object.keys(kpiSkuSeen).length;
+    kpisEl.innerHTML =
+      '<div style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.12); padding:6px 12px; border-radius:8px; text-align:center; min-width:74px;">' +
+        '<div style="font-size:9px; color:#94a3b8; font-weight:700; text-transform:uppercase;">Order (OD)</div>' +
+        '<div style="font-size:15px; font-weight:900; font-family:var(--font-mono); color:#38bdf8;">' + kpiOdTotal.toLocaleString() + '</div>' +
+      '</div>' +
+      '<div style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.12); padding:6px 12px; border-radius:8px; text-align:center; min-width:74px;">' +
+        '<div style="font-size:9px; color:#94a3b8; font-weight:700; text-transform:uppercase;">SKU Unik</div>' +
+        '<div style="font-size:15px; font-weight:900; font-family:var(--font-mono); color:#fff;">' + kpiSkuTotal.toLocaleString() + '</div>' +
+      '</div>' +
+      '<div style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.12); padding:6px 12px; border-radius:8px; text-align:center; min-width:74px;">' +
+        '<div style="font-size:9px; color:#94a3b8; font-weight:700; text-transform:uppercase;">Total Qty</div>' +
+        '<div style="font-size:15px; font-weight:900; font-family:var(--font-mono); color:#34d399;">' + kpiQty.toLocaleString() + '</div>' +
+      '</div>' +
+      '<div style="background:' + (kpiQcCount > 0 ? 'rgba(239,68,68,0.22)' : 'rgba(255,255,255,0.08)') + '; border:1px solid ' + (kpiQcCount > 0 ? 'rgba(248,113,113,0.5)' : 'rgba(255,255,255,0.12)') + '; padding:6px 12px; border-radius:8px; text-align:center; min-width:82px;">' +
+        '<div style="font-size:9px; color:' + (kpiQcCount > 0 ? '#fecaca' : '#94a3b8') + '; font-weight:700; text-transform:uppercase;">Perlu QC</div>' +
+        '<div style="font-size:15px; font-weight:900; font-family:var(--font-mono); color:' + (kpiQcCount > 0 ? '#fca5a5' : '#34d399') + ';">' + kpiQcCount.toLocaleString() + ' Item</div>' +
+      '</div>';
+  }
+
+  if (!tbodyEl) return;
+
+  if (filteredLines.length === 0) {
+    tbodyEl.innerHTML = '<tr><td colspan="7" style="padding:28px 16px; text-align:center; color:var(--muted); font-style:italic;">Tidak ada item SKU yang sesuai dengan filter pencarian.</td></tr>';
+    if (tfootEl) tfootEl.innerHTML = '';
+    return;
+  }
+
+  tbodyEl.innerHTML = filteredLines.map(function(ln, i) {
+    var qcBadge = ln.isQc
+      ? '<span style="display:inline-flex; align-items:center; gap:4px; background:rgba(239,68,68,0.14); color:#dc2626; border:1px solid rgba(239,68,68,0.4); padding:4px 9px; border-radius:6px; font-size:11px; font-weight:800;">🛡️ Perlu QC</span>'
+      : '<span style="display:inline-flex; align-items:center; gap:4px; background:rgba(16,185,129,0.10); color:#059669; border:1px solid rgba(16,185,129,0.28); padding:4px 9px; border-radius:6px; font-size:11px; font-weight:700;">✓ Tidak Perlu QC</span>';
+
+    var casePreview = ln.caseIds.length > 0
+      ? 'Case ID: ' + crDkEsc(ln.caseIds.slice(0, 3).join(', ')) + (ln.caseIds.length > 3 ? ' (+' + (ln.caseIds.length - 3) + ')' : '')
+      : '';
+
+    return '<tr style="border-bottom:1px solid var(--border); background:' + (ln.isQc ? 'rgba(239,68,68,0.03)' : 'transparent') + ';">' +
+      '<td style="padding:10px 12px; text-align:center; font-family:var(--font-mono); font-size:11px; color:var(--muted);">' + (i + 1) + '</td>' +
+      '<td style="padding:10px 12px;">' +
+        '<div style="font-family:var(--font-mono); font-weight:800; font-size:11.5px; color:var(--text);">' + crDkEsc(ln.od) + '</div>' +
+        '<div style="font-size:11px; color:var(--text); font-weight:600; margin-top:2px;">' + crDkEsc(ln.shipto) + '</div>' +
+        '<div style="font-size:10px; color:var(--muted); font-family:var(--font-mono); margin-top:2px;">OrderKey: ' + crDkEsc(ln.orderKey) + (casePreview ? ' · ' + casePreview : '') + '</div>' +
+      '</td>' +
+      '<td style="padding:10px 12px; font-family:var(--font-mono); font-weight:800; font-size:12px; color:var(--blue);">' + crDkEsc(ln.sku) + '</td>' +
+      '<td style="padding:10px 12px;">' +
+        '<div style="font-weight:600; color:var(--text); font-size:12px; line-height:1.35;">' + crDkEsc(ln.desc) + '</div>' +
+        (ln.locs.length > 0 ? '<div style="font-size:10px; color:var(--muted); font-family:var(--font-mono); margin-top:2px;">Lokasi Rak: ' + crDkEsc(ln.locs.join(', ')) + (ln.area ? ' (' + crDkEsc(ln.area) + ')' : '') + '</div>' : '') +
+      '</td>' +
+      '<td style="padding:10px 12px; text-align:center; font-family:var(--font-mono); font-weight:900; font-size:13px; color:var(--text);">' + ln.qty.toLocaleString() + '</td>' +
+      '<td style="padding:10px 12px; text-align:center;">' +
+        '<span style="display:inline-block; font-family:var(--font-mono); font-weight:800; font-size:11px; background:var(--surface2); border:1px solid var(--border); padding:2px 7px; border-radius:5px; color:var(--text);">' + crDkEsc(ln.dept) + '</span>' +
+        (ln.brand ? '<div style="font-size:9.5px; color:var(--muted); font-weight:700; margin-top:2px;">' + crDkEsc(ln.brand) + '</div>' : '') +
+      '</td>' +
+      '<td style="padding:10px 12px; text-align:center;">' + qcBadge + '</td>' +
+    '</tr>';
+  }).join('');
+
+  if (tfootEl) {
+    tfootEl.innerHTML =
+      '<tr style="background:#0f172a; color:#fff; font-family:var(--font-mono); font-size:11.5px;">' +
+        '<td colspan="4" style="padding:10px 12px; font-weight:800;">Σ TOTAL (' + Object.keys(odSeen).length.toLocaleString() + ' Order · ' + filteredLines.length.toLocaleString() + ' Baris SKU)</td>' +
+        '<td style="padding:10px 12px; text-align:center; font-weight:900; font-size:13px; color:#34d399;">' + kpiQty.toLocaleString() + '</td>' +
+        '<td style="padding:10px 12px; text-align:center; color:#94a3b8;">—</td>' +
+        '<td style="padding:10px 12px; text-align:center; font-weight:800; color:' + (kpiQcCount > 0 ? '#fca5a5' : '#34d399') + ';">' + (kpiQcCount > 0 ? (kpiQcCount + ' Perlu QC') : '0 Perlu QC') + '</td>' +
+      '</tr>';
+  }
+}
+
+document.addEventListener('keydown', function(ev) {
+  if (ev.key === 'Escape') {
+    var m = document.getElementById('crDkP1StoreModal');
+    if (m && m.classList.contains('active')) {
+      closeCrDkP1StoreModal();
+    }
+  }
+});
 
 function getCRFallbackRawData() {
   return [
@@ -20141,7 +21045,7 @@ function getRiskItemsFromSpreadsheets() {
         var row = window.allCaseIdReleaseP1Data[i];
         if (!row || row.length <= Math.max(skuIdx, descIdx)) continue;
         
-        var skuVal = String(row[skuIdx] || '').trim();
+        var skuVal = normalizeCrSku(row[skuIdx]);
         var descVal = String(row[descIdx] || '').trim();
         var shiptoVal = shiptoIdx !== -1 ? String(row[shiptoIdx] || '').trim() : "HCI STORE";
         var routeVal = routeIdx !== -1 ? String(row[routeIdx] || '').trim() : "N/A";
@@ -25434,12 +26338,19 @@ function exportOdSuspendCsv() {
     var csvFulfillmentUrl = gp('https://docs.google.com/spreadsheets/d/1bEBI18zlEeXDqg4G4sFljZETceLvsyP-fcuMB1nLtsM/gviz/tq?tqx=out:csv&sheet=Data');
     var csvFulfillmentFallbackUrl = gp('https://docs.google.com/spreadsheets/d/1bEBI18zlEeXDqg4G4sFljZETceLvsyP-fcuMB1nLtsM/gviz/tq?tqx=out:csv&gid=0');
     var csvOlfUrl = gp('https://docs.google.com/spreadsheets/d/1q-qxELBQZr3ABhVg-mw6Kvhl-e11RGQUmCTQjsXtz9g/gviz/tq?tqx=out:csv&sheet=OLF');
-    var csvCaseIdReleaseUrl = gp('https://docs.google.com/spreadsheets/d/1MpFVzgYBAT00HFZNMi_chgdTKU3rnMTBGOYFKspncwk/gviz/tq?tqx=out:csv&gid=0');
-    var csvCaseIdReleaseP1Url = gp('https://docs.google.com/spreadsheets/d/1MpFVzgYBAT00HFZNMi_chgdTKU3rnMTBGOYFKspncwk/gviz/tq?tqx=out:csv&gid=2036255569');
-    var csvCaseIdReleaseP2Url = gp('https://docs.google.com/spreadsheets/d/1MpFVzgYBAT00HFZNMi_chgdTKU3rnMTBGOYFKspncwk/gviz/tq?tqx=out:csv&gid=552992544');
-    var csvCaseIdReleaseHubLkUrl = gp('https://docs.google.com/spreadsheets/d/1MpFVzgYBAT00HFZNMi_chgdTKU3rnMTBGOYFKspncwk/gviz/tq?tqx=out:csv&gid=362212909');
-    var csvCaseIdReleaseLpUrl = gp('https://docs.google.com/spreadsheets/d/1MpFVzgYBAT00HFZNMi_chgdTKU3rnMTBGOYFKspncwk/gviz/tq?tqx=out:csv&gid=1480106733');
-    var csvCaseIdReleaseQcSkusUrl = gp('https://docs.google.com/spreadsheets/d/1MpFVzgYBAT00HFZNMi_chgdTKU3rnMTBGOYFKspncwk/gviz/tq?tqx=out:csv&gid=1387841996');
+    var crBaseSheet = 'https://docs.google.com/spreadsheets/d/1MpFVzgYBAT00HFZNMi_chgdTKU3rnMTBGOYFKspncwk';
+    var csvCaseIdReleaseUrl = gp(crBaseSheet + '/gviz/tq?tqx=out:csv&gid=0');
+    // Use raw /export?format=csv for detail & SKU sheets so mixed numeric/alphanumeric SKU columns (e.g. X075955, A12345) are never wiped by gviz type coercion
+    var csvCaseIdReleaseP1Url = gp(crBaseSheet + '/export?format=csv&gid=2036255569');
+    var csvCaseIdReleaseP1FbUrl = gp(crBaseSheet + '/gviz/tq?tqx=out:csv&gid=2036255569');
+    var csvCaseIdReleaseP2Url = gp(crBaseSheet + '/export?format=csv&gid=552992544');
+    var csvCaseIdReleaseP2FbUrl = gp(crBaseSheet + '/gviz/tq?tqx=out:csv&gid=552992544');
+    var csvCaseIdReleaseHubLkUrl = gp(crBaseSheet + '/export?format=csv&gid=362212909');
+    var csvCaseIdReleaseHubLkFbUrl = gp(crBaseSheet + '/gviz/tq?tqx=out:csv&gid=362212909');
+    var csvCaseIdReleaseLpUrl = gp(crBaseSheet + '/export?format=csv&gid=1480106733');
+    var csvCaseIdReleaseLpFbUrl = gp(crBaseSheet + '/gviz/tq?tqx=out:csv&gid=1480106733');
+    var csvCaseIdReleaseQcSkusUrl = gp(crBaseSheet + '/export?format=csv&gid=1387841996');
+    var csvCaseIdReleaseQcSkusFbUrl = gp(crBaseSheet + '/gviz/tq?tqx=out:csv&gid=1387841996');
 
     var csvOdSuspendUrl = gp('https://docs.google.com/spreadsheets/d/1BbfYhsVU2khVjv6-jzrlHPiTYMga92RZKgl-stkpA-8/gviz/tq?tqx=out:csv&gid=284586222');
     var csvOdSuspendFallbackUrl = gp('https://docs.google.com/spreadsheets/d/1BbfYhsVU2khVjv6-jzrlHPiTYMga92RZKgl-stkpA-8/export?format=csv&gid=284586222');
@@ -25463,6 +26374,13 @@ function exportOdSuspendCsv() {
     function pCsv(u, opts) {
       return new Promise(function (resolve) {
         window.fetchAndParseCsv(u, opts, resolve);
+      });
+    }
+
+    function pCsvWithFallback(primaryUrl, fallbackUrl, opts) {
+      return pCsv(primaryUrl, opts).then(function (d) {
+        if (d && d.length > 0) return d;
+        return pCsv(fallbackUrl, opts);
       });
     }
 
@@ -25504,7 +26422,7 @@ function exportOdSuspendCsv() {
       return typeof window.parseOlfSheet === 'function' ? window.parseOlfSheet(d) : [];
     });
 
-    var fetchQcSkus = pCsv(csvCaseIdReleaseQcSkusUrl, { header: false, skipEmptyLines: true }).then(function (d) {
+    var fetchQcSkus = pCsvWithFallback(csvCaseIdReleaseQcSkusUrl, csvCaseIdReleaseQcSkusFbUrl, { header: false, skipEmptyLines: true }).then(function (d) {
       if (d && d.length > 1) return d;
       return typeof window.getCRFallbackQcSkusData === 'function' ? window.getCRFallbackQcSkusData() : [];
     });
@@ -25558,10 +26476,10 @@ function exportOdSuspendCsv() {
       Promise.resolve(fulfillmentResolvedRows), // 6 (populated immediately if cached, or updated seamlessly by fetchFulfillmentBg)
       safePromise(fetchOlf, []), // 7
       safePromise(pCsv(csvCaseIdReleaseUrl, { header: false, skipEmptyLines: true }), []), // 8
-      safePromise(pCsv(csvCaseIdReleaseP1Url, { header: false, skipEmptyLines: true }), []), // 9
-      safePromise(pCsv(csvCaseIdReleaseP2Url, { header: false, skipEmptyLines: true }), []), // 10
-      safePromise(pCsv(csvCaseIdReleaseHubLkUrl, { header: false, skipEmptyLines: true }), []), // 11
-      safePromise(pCsv(csvCaseIdReleaseLpUrl, { header: false, skipEmptyLines: true }), []), // 12
+      safePromise(pCsvWithFallback(csvCaseIdReleaseP1Url, csvCaseIdReleaseP1FbUrl, { header: false, skipEmptyLines: true }), []), // 9
+      safePromise(pCsvWithFallback(csvCaseIdReleaseP2Url, csvCaseIdReleaseP2FbUrl, { header: false, skipEmptyLines: true }), []), // 10
+      safePromise(pCsvWithFallback(csvCaseIdReleaseHubLkUrl, csvCaseIdReleaseHubLkFbUrl, { header: false, skipEmptyLines: true }), []), // 11
+      safePromise(pCsvWithFallback(csvCaseIdReleaseLpUrl, csvCaseIdReleaseLpFbUrl, { header: false, skipEmptyLines: true }), []), // 12
       safePromise(pCsv(csvBacklogUrl, { header: true, skipEmptyLines: true }), []), // 13
       safePromise(pCsv(csvOrgChartUrl, { header: true, skipEmptyLines: true }), []), // 14
       safePromise(pCsv(csvAgingReasonUrl, { header: true, skipEmptyLines: true }), []), // 15
