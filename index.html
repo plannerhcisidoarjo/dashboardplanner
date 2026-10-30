@@ -10,6 +10,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <style>
@@ -7064,8 +7065,14 @@ PLANNING REPORT</div>
             </select>
           </div>
           <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-            <input type="text" id="cr-dkp1-search" class="search-box" style="width: 250px;" placeholder="🔍 Cari No. OD / Customer / Store / SKU..." oninput="applyCrDkP1OdFilters()">
+            <input type="text" id="cr-dkp1-search" class="search-box" style="width: 240px;" placeholder="🔍 Cari No. OD / Customer / Store / SKU..." oninput="applyCrDkP1OdFilters()">
             <span id="cr-dkp1-od-count-info" style="font-size: 11px; font-weight: 700; color: var(--muted); font-family: var(--font-mono);">0 OD</span>
+            <button type="button" id="cr-dkp1-btn-export-od" onclick="exportCrDkP1StoreDataXls('od')" title="Export data tabel OD yang sedang ditampilkan ke file Excel (.xls)" style="background: #10b981; border: 1px solid #059669; color: #fff; font-size: 11px; padding: 6px 11px; border-radius: 6px; font-weight: 800; display: inline-flex; align-items: center; gap: 5px; cursor: pointer; box-shadow: 0 2px 4px rgba(16, 185, 129, 0.18); transition: all 0.2s ease;" onmouseover="if(!this.disabled) this.style.background='#059669'" onmouseout="if(!this.disabled) this.style.background='#10b981'">
+              <span>📥 Export OD (.xls)</span>
+            </button>
+            <button type="button" id="cr-dkp1-btn-export-sku" onclick="exportCrDkP1StoreDataXls('sku')" title="Export rincian lengkap Order + SKU + Qty + Deskripsi + Dept + Status QC sesuai filter saat ini ke file Excel (.xls)" style="background: #2563eb; border: 1px solid #1d4ed8; color: #fff; font-size: 11px; padding: 6px 11px; border-radius: 6px; font-weight: 800; display: inline-flex; align-items: center; gap: 5px; cursor: pointer; box-shadow: 0 2px 4px rgba(37, 99, 235, 0.18); transition: all 0.2s ease;" onmouseover="if(!this.disabled) this.style.background='#1d4ed8'" onmouseout="if(!this.disabled) this.style.background='#2563eb'">
+              <span>📋 Export Detail SKU (.xls)</span>
+            </button>
           </div>
         </div>
 
@@ -7891,7 +7898,10 @@ PLANNING REPORT</div>
             <option value="NEED_QC">🛡️ Perlu QC</option>
             <option value="NO_QC">✓ Tidak Perlu QC</option>
           </select>
-          <input type="text" id="crDkP1ModalSearch" class="search-box" style="width: 220px;" placeholder="🔍 Cari Order / SKU / Deskripsi / Dept..." oninput="renderCrDkP1ModalBody()">
+          <input type="text" id="crDkP1ModalSearch" class="search-box" style="width: 210px;" placeholder="🔍 Cari Order / SKU / Deskripsi / Dept..." oninput="renderCrDkP1ModalBody()">
+          <button type="button" id="crDkP1ModalExportBtn" onclick="exportCrDkP1ModalDataXls()" title="Export rincian Order & SKU yang sedang ditampilkan di popup ini ke file Excel (.xls)" style="background: #10b981; border: 1px solid #059669; color: #fff; font-size: 11px; padding: 6px 11px; border-radius: 6px; font-weight: 800; display: inline-flex; align-items: center; gap: 5px; cursor: pointer; box-shadow: 0 2px 4px rgba(16, 185, 129, 0.18); transition: all 0.2s ease;" onmouseover="if(!this.disabled) this.style.background='#059669'" onmouseout="if(!this.disabled) this.style.background='#10b981'">
+            <span>📥 Export XLS</span>
+          </button>
         </div>
       </div>
 
@@ -20625,18 +20635,12 @@ function renderCrDkP1StoreSection() {
   applyCrDkP1OdFilters();
 }
 
-function applyCrDkP1OdFilters() {
-  var tbody = document.getElementById('cr-dkp1-od-tbody');
-  var emptyEl = document.getElementById('cr-dkp1-od-empty');
-  var emptyMsgEl = document.getElementById('cr-dkp1-od-empty-msg');
-  var countInfoEl = document.getElementById('cr-dkp1-od-count-info');
-  if (!tbody) return;
-
+function getFilteredCrDkP1OdList() {
   var storeFilter = (document.getElementById('cr-dkp1-filter-store') || {}).value || 'ALL';
   var qcFilter = (document.getElementById('cr-dkp1-filter-qc') || {}).value || 'ALL';
   var q = ((document.getElementById('cr-dkp1-search') || {}).value || '').toLowerCase().trim();
 
-  var filtered = CR_DKP1_OD_LIST.filter(function(item) {
+  return CR_DKP1_OD_LIST.filter(function(item) {
     if (storeFilter !== 'ALL' && item.store !== storeFilter) return false;
     if (qcFilter === 'NEED_QC' && !item.needsQc) return false;
     if (qcFilter === 'NO_QC' && item.needsQc) return false;
@@ -20647,12 +20651,245 @@ function applyCrDkP1OdFilters() {
     }
     return true;
   });
+}
+
+function crDkFileSlug(val) {
+  var cleaned = String(val || '').trim().replace(/[^A-Za-z0-9_-]+/g, '_').replace(/^_+|_+$/g, '');
+  return cleaned || 'Semua';
+}
+
+function triggerCrDkXlsDownload(rows, filename, sheetName, numericCols, decimalCols) {
+  if (!rows || rows.length <= 1) return;
+  var finalFilename = /\.xls$/i.test(filename) ? filename : (filename.replace(/\.[a-z0-9]+$/i, '') + '.xls');
+  var numMap = {};
+  (numericCols || []).forEach(function(idx) { numMap[idx] = true; });
+  var decMap = {};
+  (decimalCols || []).forEach(function(idx) { decMap[idx] = true; });
+  var safeSheet = String(sheetName || 'Data DK P1').replace(/[:\\/?*\[\]]+/g, ' ').trim().slice(0, 31) || 'Data DK P1';
+
+  var blob;
+  if (typeof XLSX !== 'undefined' && XLSX.utils && typeof XLSX.write === 'function') {
+    var ws = {};
+    var colWidths = [];
+    var rowCount = rows.length;
+    var colCount = 0;
+
+    for (var r = 0; r < rowCount; r++) {
+      var row = rows[r] || [];
+      if (row.length > colCount) colCount = row.length;
+      for (var c = 0; c < row.length; c++) {
+        var rawVal = row[c];
+        var strVal = String(rawVal === undefined || rawVal === null ? '' : rawVal);
+        var cellRef = XLSX.utils.encode_cell({ r: r, c: c });
+        if (r > 0 && (numMap[c] || decMap[c]) && rawVal !== '' && rawVal !== null && rawVal !== undefined && !isNaN(Number(rawVal))) {
+          var numVal = Number(rawVal);
+          ws[cellRef] = decMap[c]
+            ? { t: 'n', v: numVal, z: '0.00' }
+            : { t: 'n', v: numVal, z: '#,##0' };
+        } else {
+          ws[cellRef] = { t: 's', v: strVal };
+        }
+        var len = strVal.length + 3;
+        if (!colWidths[c] || len > colWidths[c]) {
+          colWidths[c] = len;
+        }
+      }
+    }
+
+    ws['!ref'] = XLSX.utils.encode_range({ s: { r: 0, c: 0 }, e: { r: Math.max(0, rowCount - 1), c: Math.max(0, colCount - 1) } });
+    ws['!cols'] = colWidths.map(function(w) {
+      return { wch: Math.min(Math.max(w || 10, 8), 46) };
+    });
+
+    var wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, safeSheet);
+    var wbOut = XLSX.write(wb, { bookType: 'biff8', type: 'array' });
+    blob = new Blob([wbOut], { type: 'application/vnd.ms-excel' });
+  } else {
+    var tableRowsHtml = rows.map(function(row, rIdx) {
+      var tag = rIdx === 0 ? 'th' : 'td';
+      var cellsHtml = (row || []).map(function(cell, cIdx) {
+        var s = String(cell === undefined || cell === null ? '' : cell);
+        if (rIdx === 0) {
+          return '<th style="background:#0f172a;color:#ffffff;font-weight:bold;border:1px solid #cbd5e1;padding:6px 8px;">' + crDkEsc(s) + '</th>';
+        }
+        if ((numMap[cIdx] || decMap[cIdx]) && cell !== '' && !isNaN(Number(cell))) {
+          var fmt = decMap[cIdx] ? 'mso-number-format:\'0\\.00\';' : 'mso-number-format:\'\\#\\,\\#\\#0\';';
+          return '<td style="border:1px solid #cbd5e1;padding:5px 8px;' + fmt + '">' + Number(cell) + '</td>';
+        }
+        return '<td style="border:1px solid #cbd5e1;padding:5px 8px;mso-number-format:\'\\@\';">' + crDkEsc(s) + '</td>';
+      }).join('');
+      return '<tr>' + cellsHtml + '</tr>';
+    }).join('');
+
+    var excelHtml =
+      '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">' +
+      '<head><meta charset="UTF-8"><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>' +
+      crDkEsc(safeSheet) +
+      '</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head>' +
+      '<body><table>' + tableRowsHtml + '</table></body></html>';
+    blob = new Blob(['\uFEFF' + excelHtml], { type: 'application/vnd.ms-excel;charset=utf-8;' });
+  }
+
+  var url = URL.createObjectURL(blob);
+  var link = document.createElement('a');
+  link.setAttribute('href', url);
+  link.setAttribute('download', finalFilename);
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  setTimeout(function() { URL.revokeObjectURL(url); }, 1500);
+}
+
+function exportCrDkP1StoreDataXls(mode) {
+  var filtered = getFilteredCrDkP1OdList();
+  if (!filtered || filtered.length === 0) return;
+
+  var storeFilter = (document.getElementById('cr-dkp1-filter-store') || {}).value || 'ALL';
+  var qcFilter = (document.getElementById('cr-dkp1-filter-qc') || {}).value || 'ALL';
+  var q = ((document.getElementById('cr-dkp1-search') || {}).value || '').toLowerCase().trim();
+  var now = new Date();
+  var dateSuffix = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
+  var storeSlug = storeFilter === 'ALL' ? 'Semua_Store' : crDkFileSlug(storeFilter);
+  var qcSlug = qcFilter === 'ALL' ? '' : ('_' + crDkFileSlug(qcFilter));
+
+  if (mode === 'sku') {
+    var skuRows = [[
+      'No',
+      'No. OD (ExternOrderKey)',
+      'OrderKey',
+      'Customer (Ship-To)',
+      'Keterangan Store (Kolom X)',
+      'Site Code',
+      'Rute',
+      'Jadwal Kirim',
+      'SKU',
+      'Deskripsi SKU',
+      'Qty',
+      'CBM',
+      'Dept',
+      'Brand',
+      'Case ID',
+      'Lokasi Rak',
+      'Area Storing',
+      'Perlu QC'
+    ]];
+    var lineNo = 0;
+    filtered.forEach(function(item) {
+      item.skuLines.forEach(function(ln) {
+        if (qcFilter === 'NEED_QC' && !ln.isQc) return;
+        if (qcFilter === 'NO_QC' && ln.isQc) return;
+        if (q) {
+          var itemLevelMatch = (item.od + ' ' + item.orderKey + ' ' + item.shipto + ' ' + item.store + ' ' + item.route).toLowerCase().indexOf(q) !== -1;
+          var lineLevelMatch = (ln.sku + ' ' + ln.desc + ' ' + ln.dept + ' ' + ln.brand + ' ' + ln.caseIds.join(' ')).toLowerCase().indexOf(q) !== -1;
+          if (!itemLevelMatch && !lineLevelMatch) return;
+        }
+        lineNo += 1;
+        skuRows.push([
+          lineNo,
+          ln.od,
+          ln.orderKey,
+          ln.shipto,
+          ln.store,
+          ln.siteCode || '-',
+          ln.route,
+          ln.reqShip,
+          ln.sku,
+          ln.desc,
+          ln.qty,
+          Number(ln.cbm.toFixed(2)),
+          ln.dept,
+          ln.brand || '-',
+          ln.caseIds.join('; '),
+          ln.locs.join('; '),
+          ln.area || '-',
+          ln.isQc ? 'Perlu QC' : 'Tidak Perlu QC'
+        ]);
+      });
+    });
+    triggerCrDkXlsDownload(
+      skuRows,
+      'Detail_SKU_Customer_DK_P1_Store_' + storeSlug + qcSlug + '_' + dateSuffix + '.xls',
+      'Detail SKU DK P1',
+      [0, 10],
+      [11]
+    );
+    return;
+  }
+
+  var odRows = [[
+    'No',
+    'No. OD (ExternOrderKey)',
+    'OrderKey',
+    'Rute',
+    'Jadwal Kirim',
+    'Customer (Ship-To)',
+    'Keterangan Store (Kolom X)',
+    'Site Code',
+    'Jumlah SKU',
+    'Jumlah Case ID',
+    'Total Qty',
+    'Total CBM',
+    'Perlu QC',
+    'Jumlah SKU Perlu QC'
+  ]];
+
+  filtered.forEach(function(item, idx) {
+    odRows.push([
+      idx + 1,
+      item.od,
+      item.orderKey,
+      item.route,
+      item.reqShip,
+      item.shipto,
+      item.store,
+      item.siteCode || '-',
+      item.skuCount,
+      item.caseCount,
+      item.totalQty,
+      Number(item.totalCbm.toFixed(2)),
+      item.needsQc ? 'Ya' : 'Tidak',
+      item.qcLineCount
+    ]);
+  });
+
+  triggerCrDkXlsDownload(
+    odRows,
+    'Detail_OD_Customer_DK_P1_Store_' + storeSlug + qcSlug + '_' + dateSuffix + '.xls',
+    'Detail OD DK P1',
+    [0, 8, 9, 10, 13],
+    [11]
+  );
+}
+var exportCrDkP1StoreDataCsv = exportCrDkP1StoreDataXls;
+
+function applyCrDkP1OdFilters() {
+  var tbody = document.getElementById('cr-dkp1-od-tbody');
+  var emptyEl = document.getElementById('cr-dkp1-od-empty');
+  var emptyMsgEl = document.getElementById('cr-dkp1-od-empty-msg');
+  var countInfoEl = document.getElementById('cr-dkp1-od-count-info');
+  var btnExportOd = document.getElementById('cr-dkp1-btn-export-od');
+  var btnExportSku = document.getElementById('cr-dkp1-btn-export-sku');
+  if (!tbody) return;
+
+  var filtered = getFilteredCrDkP1OdList();
 
   if (countInfoEl) {
     countInfoEl.textContent = 'Menampilkan ' + filtered.length.toLocaleString() + ' dari ' + CR_DKP1_OD_LIST.length.toLocaleString() + ' OD';
   }
 
-  if (filtered.length === 0) {
+  var hasData = filtered.length > 0;
+  [btnExportOd, btnExportSku].forEach(function(btn, idx) {
+    if (!btn) return;
+    btn.disabled = !hasData;
+    btn.style.opacity = hasData ? '1' : '0.45';
+    btn.style.cursor = hasData ? 'pointer' : 'not-allowed';
+    if (!hasData) {
+      btn.style.background = idx === 0 ? '#10b981' : '#2563eb';
+    }
+  });
+
+  if (!hasData) {
     tbody.innerHTML = '';
     if (emptyEl) emptyEl.style.display = 'flex';
     if (emptyMsgEl) {
@@ -20812,22 +21049,17 @@ function renderCrDkP1ModalBody() {
   }
 
   // Filter lines by selected OD, QC filter, and search query
-  var sourceLines = stObj.allSkuLines;
-  var focusedOdObj = null;
-  if (selectedOd !== 'ALL') {
-    focusedOdObj = stObj.ods.find(function(o) { return o.od === selectedOd; }) || null;
-    sourceLines = focusedOdObj ? focusedOdObj.skuLines : [];
-  }
+  var modalCtx = getFilteredCrDkP1ModalContext();
+  var focusedOdObj = modalCtx.focusedOdObj;
+  var filteredLines = modalCtx.filteredLines;
 
-  var filteredLines = sourceLines.filter(function(ln) {
-    if (qcFilter === 'NEED_QC' && !ln.isQc) return false;
-    if (qcFilter === 'NO_QC' && ln.isQc) return false;
-    if (q) {
-      var hay = (ln.od + ' ' + ln.orderKey + ' ' + ln.shipto + ' ' + ln.sku + ' ' + ln.desc + ' ' + ln.dept + ' ' + ln.brand + ' ' + ln.caseIds.join(' ')).toLowerCase();
-      if (hay.indexOf(q) === -1) return false;
-    }
-    return true;
-  });
+  var modalExportBtn = document.getElementById('crDkP1ModalExportBtn');
+  if (modalExportBtn) {
+    var modalHasRows = filteredLines.length > 0;
+    modalExportBtn.disabled = !modalHasRows;
+    modalExportBtn.style.opacity = modalHasRows ? '1' : '0.45';
+    modalExportBtn.style.cursor = modalHasRows ? 'pointer' : 'not-allowed';
+  }
 
   // Update Subtitle & Focused Order Banner
   if (subEl) {
@@ -20941,6 +21173,104 @@ function renderCrDkP1ModalBody() {
       '</tr>';
   }
 }
+
+function getFilteredCrDkP1ModalContext() {
+  var storeName = CR_DKP1_MODAL_STATE.store;
+  var stObj = CR_DKP1_STORE_MAP[storeName];
+  if (!stObj) {
+    return { storeName: storeName, stObj: null, selectedOd: 'ALL', focusedOdObj: null, filteredLines: [] };
+  }
+  var selectedOd = CR_DKP1_MODAL_STATE.selectedOd || 'ALL';
+  var qcFilter = (document.getElementById('crDkP1ModalQcFilter') || {}).value || 'ALL';
+  var q = ((document.getElementById('crDkP1ModalSearch') || {}).value || '').toLowerCase().trim();
+
+  var sourceLines = stObj.allSkuLines;
+  var focusedOdObj = null;
+  if (selectedOd !== 'ALL') {
+    focusedOdObj = stObj.ods.find(function(o) { return o.od === selectedOd; }) || null;
+    sourceLines = focusedOdObj ? focusedOdObj.skuLines : [];
+  }
+
+  var filteredLines = sourceLines.filter(function(ln) {
+    if (qcFilter === 'NEED_QC' && !ln.isQc) return false;
+    if (qcFilter === 'NO_QC' && ln.isQc) return false;
+    if (q) {
+      var hay = (ln.od + ' ' + ln.orderKey + ' ' + ln.shipto + ' ' + ln.sku + ' ' + ln.desc + ' ' + ln.dept + ' ' + ln.brand + ' ' + ln.caseIds.join(' ')).toLowerCase();
+      if (hay.indexOf(q) === -1) return false;
+    }
+    return true;
+  });
+
+  return {
+    storeName: storeName,
+    stObj: stObj,
+    selectedOd: selectedOd,
+    focusedOdObj: focusedOdObj,
+    filteredLines: filteredLines
+  };
+}
+
+function exportCrDkP1ModalDataXls() {
+  var ctx = getFilteredCrDkP1ModalContext();
+  if (!ctx.stObj || ctx.filteredLines.length === 0) return;
+
+  var rows = [[
+    'No',
+    'No. OD (ExternOrderKey)',
+    'OrderKey',
+    'Customer (Ship-To)',
+    'Keterangan Store (Kolom X)',
+    'Site Code',
+    'Rute',
+    'Jadwal Kirim',
+    'SKU',
+    'Deskripsi SKU',
+    'Qty',
+    'CBM',
+    'Dept',
+    'Brand',
+    'Case ID',
+    'Lokasi Rak',
+    'Area Storing',
+    'Apakah Perlu QC'
+  ]];
+
+  ctx.filteredLines.forEach(function(ln, idx) {
+    rows.push([
+      idx + 1,
+      ln.od,
+      ln.orderKey,
+      ln.shipto,
+      ln.store,
+      ln.siteCode || '-',
+      ln.route,
+      ln.reqShip,
+      ln.sku,
+      ln.desc,
+      ln.qty,
+      Number(ln.cbm.toFixed(2)),
+      ln.dept,
+      ln.brand || '-',
+      ln.caseIds.join('; '),
+      ln.locs.join('; '),
+      ln.area || '-',
+      ln.isQc ? 'Perlu QC' : 'Tidak Perlu QC'
+    ]);
+  });
+
+  var now = new Date();
+  var dateSuffix = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
+  var storeSlug = crDkFileSlug(ctx.storeName);
+  var odSlug = ctx.selectedOd === 'ALL' ? 'Semua_OD' : crDkFileSlug(ctx.selectedOd);
+  triggerCrDkXlsDownload(
+    rows,
+    'Detail_Store_DK_P1_' + storeSlug + '_' + odSlug + '_' + dateSuffix + '.xls',
+    'Store ' + ctx.storeName,
+    [0, 10],
+    [11]
+  );
+}
+var exportCrDkP1ModalDataCsv = exportCrDkP1ModalDataXls;
 
 document.addEventListener('keydown', function(ev) {
   if (ev.key === 'Escape') {
