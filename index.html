@@ -24817,6 +24817,54 @@ function parseOdSuspendSheetData(rows) {
   if (!rows || !Array.isArray(rows) || rows.length < 2) return [];
   var result = [];
 
+  // Determine column format for the sheet:
+  // Standard sheet format has 13 columns (including "%SUSPEND REG" for both DK and LK)
+  // Legacy format had 10 columns (without "%SUSPEND REG").
+  var hasRegCol = true;
+  var headerFound = false;
+  for (var h = 0; h < Math.min(8, rows.length); h++) {
+    var hr = rows[h];
+    if (!Array.isArray(hr)) continue;
+    var headerStr = hr.join(' ').toUpperCase();
+    if (headerStr.indexOf('TGL') !== -1 || headerStr.indexOf('DATE') !== -1) {
+      headerFound = true;
+      if (headerStr.indexOf('SUSPEND REG') !== -1 || headerStr.indexOf('%SUSPEND REG') !== -1) {
+        hasRegCol = true;
+      } else if (headerStr.indexOf('DK ORDER REGULER') !== -1) {
+        hasRegCol = false;
+      }
+      break;
+    }
+  }
+
+  // If header check was inconclusive, inspect data rows
+  if (!headerFound) {
+    for (var s = 0; s < Math.min(25, rows.length); s++) {
+      var sr = rows[s];
+      if (!Array.isArray(sr)) continue;
+      var dIdx = -1;
+      for (var c = 0; c < Math.min(6, sr.length); c++) {
+        var v = String(sr[c] || '').trim();
+        if (v.match(/^\d{1,2}\/\d{1,2}\/\d{2,4}$/) || v.match(/^\d{4}-\d{2}-\d{2}$/)) {
+          dIdx = c; break;
+        }
+      }
+      if (dIdx !== -1) {
+        var c5 = String(sr[dIdx + 5] || '').trim();
+        var c6 = String(sr[dIdx + 6] || '').trim();
+        if (c5.indexOf('%') !== -1) {
+          hasRegCol = true;
+          break;
+        }
+        var c4 = String(sr[dIdx + 4] || '').trim();
+        if (c4.indexOf('%') !== -1 && c5.indexOf('%') === -1 && c5.match(/^\d+$/)) {
+          hasRegCol = false;
+          break;
+        }
+      }
+    }
+  }
+
   for (var i = 0; i < rows.length; i++) {
     var r = rows[i];
     if (!r || !Array.isArray(r)) continue;
@@ -24839,30 +24887,14 @@ function parseOdSuspendSheetData(rows) {
     if (!dObj || isNaN(dObj.getTime())) continue;
 
     function parseNum(val) {
-      if (!val) return 0;
+      if (val === undefined || val === null) return 0;
       var clean = String(val).replace(/,/g, '').trim();
       var n = parseInt(clean, 10);
       return isNaN(n) ? 0 : n;
     }
 
-    // Adaptive detection of column structure:
-    // With new column "%SUSPEND REG":
-    // dateColIdx + 1: dkReg
-    // dateColIdx + 2: dkTransit
-    // dateColIdx + 3: dkSusp
-    // dateColIdx + 4: dkPctRegRaw
-    // dateColIdx + 5: dkPctAllRaw
-    // dateColIdx + 6: lkReg
-    // dateColIdx + 7: lkTransit
-    // dateColIdx + 8: lkSusp
-    // dateColIdx + 9: lkPctRegRaw
-    // dateColIdx + 10: lkPctAllRaw
-    // dateColIdx + 11: totPctAllRaw
-    // dateColIdx + 12: totPctRegRaw
     var col4Str = String(r[dateColIdx + 4] || '').trim();
     var col5Str = String(r[dateColIdx + 5] || '').trim();
-    var hasRegCol = (col4Str.indexOf('%') !== -1 || col4Str.indexOf('#DIV/0') !== -1) &&
-                    (col5Str.indexOf('%') !== -1 || col5Str.indexOf('#DIV/0') !== -1);
 
     var dkReg = 0, dkTransit = 0, dkSusp = 0;
     var lkReg = 0, lkTransit = 0, lkSusp = 0;
@@ -24874,29 +24906,29 @@ function parseOdSuspendSheetData(rows) {
       dkReg = parseNum(r[dateColIdx + 1]);
       dkTransit = parseNum(r[dateColIdx + 2]);
       dkSusp = parseNum(r[dateColIdx + 3]);
-      dkPctRegRaw = col4Str;
-      dkPctAllRaw = col5Str;
+      dkPctRegRaw = col4Str || '0.00%';
+      dkPctAllRaw = col5Str || '0.00%';
 
       lkReg = parseNum(r[dateColIdx + 6]);
       lkTransit = parseNum(r[dateColIdx + 7]);
       lkSusp = parseNum(r[dateColIdx + 8]);
-      lkPctRegRaw = String(r[dateColIdx + 9] || '').trim();
-      lkPctAllRaw = String(r[dateColIdx + 10] || '').trim();
+      lkPctRegRaw = String(r[dateColIdx + 9] || '').trim() || '0.00%';
+      lkPctAllRaw = String(r[dateColIdx + 10] || '').trim() || '0.00%';
 
-      totPctAllRaw = String(r[dateColIdx + 11] || '').trim();
-      totPctRegRaw = String(r[dateColIdx + 12] || '').trim();
+      totPctAllRaw = String(r[dateColIdx + 11] || '').trim() || '0.00%';
+      totPctRegRaw = String(r[dateColIdx + 12] || '').trim() || '0.00%';
     } else {
       dkReg = parseNum(r[dateColIdx + 1]);
       dkTransit = parseNum(r[dateColIdx + 2]);
       dkSusp = parseNum(r[dateColIdx + 3]);
-      dkPctAllRaw = col4Str;
+      dkPctAllRaw = col4Str || '0.00%';
 
       lkReg = parseNum(r[dateColIdx + 5]);
       lkTransit = parseNum(r[dateColIdx + 6]);
       lkSusp = parseNum(r[dateColIdx + 7]);
-      lkPctAllRaw = String(r[dateColIdx + 8] || '').trim();
+      lkPctAllRaw = String(r[dateColIdx + 8] || '').trim() || '0.00%';
 
-      totPctAllRaw = String(r[dateColIdx + 9] || '').trim();
+      totPctAllRaw = String(r[dateColIdx + 9] || '').trim() || '0.00%';
     }
 
     var dkBase = dkReg + dkTransit;
@@ -24917,7 +24949,7 @@ function parseOdSuspendSheetData(rows) {
     var totPctAll = totBase > 0 ? (totSusp / totBase) * 100 : 0;
     var totPctReg = totReg > 0 ? (totSusp / totReg) * 100 : 0;
 
-    var hasValidData = (totOrders > 0) && (dkPctAllRaw.indexOf('#DIV/0') === -1 || totPctAllRaw.indexOf('#DIV/0') === -1);
+    var hasValidData = (totOrders > 0);
 
     var y = dObj.getFullYear();
     var m = String(dObj.getMonth() + 1).padStart(2, '0');
